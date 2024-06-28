@@ -60,4 +60,26 @@ void Mouse::Update()
 	positionY[1] = positionY[0];
 	positionX[0] = (LONG)(cursor.x / static_cast<float>(viewportW) * static_cast<float>(screenW));
 	positionY[0] = (LONG)(cursor.y / static_cast<float>(viewportH) * static_cast<float>(screenH));
+
+	if ((buttonState[0] & BTN_LEFT) && !(buttonState[1] & BTN_LEFT))
+	{
+		// ドラッグ開始
+		dragStartPosition = cursor;
+		isDragging = true;
+	}
+	else if (!(buttonState[0] & BTN_LEFT) && (buttonState[1] & BTN_LEFT))
+	{
+		// ドラッグ終了
+		isDragging = false;
+	}
+}
+
+// マウスカーソルのワールド座標を取得
+POINT Mouse::GetMousePosition(HWND hWnd)
+{
+	POINT cursorPos;
+	GetCursorPos(&cursorPos);
+	ScreenToClient(hWnd, &cursorPos);
+
+	return cursorPos;
 }

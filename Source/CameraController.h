@@ -15,6 +15,9 @@ public:
 	// ターゲット位置設定
 	void SetTarget(const DirectX::XMFLOAT3& target) { this->target = target; }
 
+	// 回転設定
+	void SetAngle(const DirectX::XMFLOAT3& angle) { this->angle = angle; }
+
 	void DrawDebugGUI();
 
 private:

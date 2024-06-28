@@ -47,6 +47,10 @@ void SceneGame::Initialize()
 
 	//カメラコントローラー初期化
 	cameraController = new CameraController;
+	cameraController->SetAngle(DirectX::XMFLOAT3(
+		DirectX::XMConvertToRadians(0),
+		0,
+		0));
 
 	// エネミー初期化
 	EnemyManager& enemyManager = EnemyManager::Instance();
@@ -150,28 +154,6 @@ void SceneGame::Render()
 	Camera& camera = Camera::Instance();
 	rc.view = camera.GetView();
 	rc.projection = camera.GetProjection();
-
-	//// ビュー行列
-	//{
-	//	DirectX::XMFLOAT3 eye = { 0, 10, -10 };	// カメラの視点（位置）
-	//	DirectX::XMFLOAT3 focus = { 0, 0, 0 };	// カメラの注視点（ターゲット）
-	//	DirectX::XMFLOAT3 up = { 0, 1, 0 };		// カメラの上方向
-
-	//	DirectX::XMVECTOR Eye = DirectX::XMLoadFloat3(&eye);
-	//	DirectX::XMVECTOR Focus = DirectX::XMLoadFloat3(&focus);
-	//	DirectX::XMVECTOR Up = DirectX::XMLoadFloat3(&up);
-	//	DirectX::XMMATRIX View = DirectX::XMMatrixLookAtLH(Eye, Focus, Up);
-	//	DirectX::XMStoreFloat4x4(&rc.view, View);
-	//}
-	//// プロジェクション行列
-	//{
-	//	float fovY = DirectX::XMConvertToRadians(45);	// 視野角
-	//	float aspectRatio = graphics.GetScreenWidth() / graphics.GetScreenHeight();	// 画面縦横比率
-	//	float nearZ = 0.1f;	// カメラが映し出すの最近距離
-	//	float farZ = 1000.0f;	// カメラが映し出すの最遠距離
-	//	DirectX::XMMATRIX Projection = DirectX::XMMatrixPerspectiveFovLH(fovY, aspectRatio, nearZ, farZ);
-	//	DirectX::XMStoreFloat4x4(&rc.projection, Projection);
-	//}
 
 	// 3Dモデル描画
 	{
@@ -303,69 +285,5 @@ void SceneGame::RenderEnemyGauge(
 			0,			 //angle
 			1, 0, 0, 1   //color
 		);
-
-		// エネミー配置処理
-		Mouse& mouse = Input::Instance().GetMouse();
-		if (mouse.GetButtonDown() & Mouse::BTN_LEFT)
-		{
-			// マウスカーソル座標を取得
-			DirectX::XMFLOAT3 screenPosition;
-			screenPosition.x = static_cast<float>(mouse.GetPositionX());
-			screenPosition.y = static_cast<float>(mouse.GetPositionY());
-			screenPosition.z = 1.0f;
-
-			// スクリーン座標をワールド座標に変換
-			DirectX::XMVECTOR ScreenPos = DirectX::XMLoadFloat3(&screenPosition);
-			DirectX::XMVECTOR WorldPos = DirectX::XMVector3Unproject(
-				ScreenPos,
-				viewport.TopLeftX,
-				viewport.TopLeftY,
-				viewport.Width,
-				viewport.Height,
-				viewport.MinDepth,
-				viewport.MaxDepth,
-				Projection,
-				View,
-				World
-			);
-
-			// 地面との交差点を計算
-			DirectX::XMFLOAT3 worldPos;
-			DirectX::XMStoreFloat3(&worldPos, WorldPos);
-
-#if 0
-			Camera& camera = Camera::Instance();
-
-			// カメラの位置と注視点からレイを計算
-			DirectX::XMFLOAT3 cameraPos = camera.GetEye();
-			DirectX::XMFLOAT3 cameraFocus = camera.GetFocus();
-			DirectX::XMVECTOR rayOrigin = DirectX::XMLoadFloat3(&cameraPos);
-			DirectX::XMVECTOR rayDir = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(WorldPos, DirectX::XMLoadFloat3(&cameraFocus)));
-
-			// 地面はy=0平面と仮定し、交差点を計算
-			float t = -DirectX::XMVectorGetY(rayOrigin) / DirectX::XMVectorGetY(rayDir);
-			DirectX::XMVECTOR groundIntersect = DirectX::XMVectorMultiply(DirectX::XMVectorAdd(rayOrigin, DirectX::XMVectorReplicate(t)), rayDir);
-
-			// 新しいエネミーの位置を設定
-			DirectX::XMStoreFloat3(&worldPos, groundIntersect);
-
-#endif
-			// カメラのインスタンス取得
-			Camera& camera = camera.Instance();
-
-			DirectX::XMFLOAT3 start = camera.GetEye(); // レイの開始点はカメラの位置
-			DirectX::XMFLOAT3 end = worldPos; // レイの終了点はマウスカーソルのワールド座標
-
-			HitResult hitResult;
-			if (StageManager::Instance().RayCast(start, end, hitResult))
-			{
-				worldPos = hitResult.position; // レイがヒットした位置を新しいエネミーの位置として使用
-			}
-
-			// エネミーを配置
-			Enemy* newEnemy = new EnemySlime(); // 新しいエネミーを生成
-			newEnemy->SetPosition(worldPos); // 位置を設定
-			enemyManager.Register(newEnemy); // エネミーをマネージャーに追加
-		}
 	}
 }

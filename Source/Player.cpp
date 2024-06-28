@@ -1,4 +1,5 @@
 #include <imgui.h>
+#include <cmath>
 #include "Player.h"
 #include "Input/Input.h"
 #include "Camera.h"
@@ -46,53 +47,6 @@ Player::~Player()
 // 更新処理
 void Player::Update(float elapsedTime)
 {
-#if 0
-	const GamePadButton ArrowButton =
-		GamePad::BTN_UP    |
-		GamePad::BTN_LEFT  |
-		GamePad::BTN_RIGHT |
-		GamePad::BTN_DOWN;
-
-	// Bボタン押下でワンショットアニメーション再生
-	GamePad& gamePad = Input::Instance().GetGamePad();
-	if (gamePad.GetButtonDown() & GamePad::BTN_B)
-	{
-		model->PlayAnimation(Anim_Attack, false, 0.1f);
-	}
-	else if (gamePad.GetButtonDown() & ArrowButton)
-	{
-		model->PlayAnimation(Anim_Running, true, 1.0f);
-		playerAnimeWait++;
-		playerWalk = true;
-	}
-	else if (!(gamePad.GetButtonHeld() & ArrowButton) && playerWalk == true)
-	{
-		model->PlayAnimation(Anim_Idle, false, 0.1f);
-		playerWalk = false;
-	}
-
-	// ワンショットアニメーション再生が終わったらループアニメーション再生
-	if (!model->IsPlayAnimation())
-	{
-		//model->PlayAnimation(1, true); //死亡
-		//model->PlayAnimation(2, true); //空中
-		//model->PlayAnimation(3, true); //荒ぶる
-		//model->PlayAnimation(4, true); //さらに荒ぶる
-		model->PlayAnimation(Anim_Idle, true); //待機
-	}
-
-
-	// 移動入力処理
-	InputMove(elapsedTime);
-
-	// ジャンプ入力処理
-	InputJump();
-
-	// 弾丸入力処理
-	InputProjectile();
-
-#endif
-
 	// ステート毎の処理
 	switch (state)
 	{
@@ -123,10 +77,7 @@ void Player::Update(float elapsedTime)
 	}
 
 	// 速力更新処理
-	UpdateVelocity(elapsedTime);
-
-	// 弾丸更新処理
-	projectileManager.Update(elapsedTime);
+	//UpdateVelocity(elapsedTime);
 
 	// プレイヤーと敵との衝突処理
 	CollisionPlayerVsEnemies();
@@ -137,67 +88,6 @@ void Player::Update(float elapsedTime)
 	// 弾丸と敵に衝突処理
 	CollisionProjectilesVsEnemies();
 
-#if 0
-	// 進行ベクトル取得
-	DirectX::XMFLOAT3 moveVec = GetMoveVec();
-
-	// 移動処理
-	float moveSpeed = this->moveSpeed * elapsedTime;
-	position.x += moveVec.x * moveSpeed;
-	position.z += moveVec.z * moveSpeed;
-
-	// 入力情報を取得
-	GamePad& gamePad = Input::Instance().GetGamePad();
-	float ax = gamePad.GetAxisLX();
-	float ay = gamePad.GetAxisLY();
-#endif
-
-#if 0
-	// 移動操作
-	float moveSpeed = 5.0f * elapsedTime;
-	{
-		// X移動
-		if (ax == 1)
-		{
-			position.x += 0.1;
-		}
-		else if (ax == -1)
-		{
-			position.x -= 0.1;
-		}
-
-		// Z移動
-		if (ay == 1)
-		{
-			position.z += 0.1;
-		}
-		else if (ay == -1)
-		{
-			position.z -= 0.1;
-		}
-	}
-
-	// 回転処理
-	float rotateSpeed = DirectX::XMConvertToRadians(360) * elapsedTime;
-	if (gamePad.GetButton() & GamePad::BTN_A)
-	{
-		// X軸回転操作
-		angle.x += 0.1;
-	}
-
-	if (gamePad.GetButton() & GamePad::BTN_B)
-	{
-		// Y軸回転操作
-		angle.y += 0.1;
-	}
-
-	if (gamePad.GetButton() & GamePad::BTN_X)
-	{
-		// Z軸回転操作
-		angle.z += 0.1;
-	}
-#endif
-
 	// オブジェクト行列を更新
 	UpdateTransform();
 
@@ -206,6 +96,9 @@ void Player::Update(float elapsedTime)
 
 	// モデル更新処理
 	model->UpdateTransform(transform);
+
+	// 位置制御
+	PositionControll();
 }
 
 // 描画処理
@@ -215,6 +108,23 @@ void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
 
 	// 弾丸描画処理
 	projectileManager.Render(dc, shader);
+}
+
+// 位置調整
+void Player::PositionControll()
+{
+	position.z = 0;
+
+	Mouse& mouse = Input::Instance().GetMouse();
+
+	if (mouse.IsDragging())
+	{
+		float deltaX = static_cast<float>(mouse.GetPositionX() - mouse.GetOldPositionX());
+		float deltaY = static_cast<float>(mouse.GetPositionY() - mouse.GetOldPositionY());
+
+		position.x += (deltaX * 0.08f) * -1;
+		position.y += deltaY * 0.08f;
+	}
 }
 
 // 移動入力処理

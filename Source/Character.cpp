@@ -28,13 +28,6 @@ void Character::UpdateTransform()
 	DirectX::XMStoreFloat4x4(&transform, W);
 }
 
-//void Character::Move(float elapsedTime, float vx, float vz, float speed)
-//{
-//	speed *= elapsedTime;
-//	position.x += vx * speed;
-//	position.z += vz * speed;
-//}
-
 void Character::Move(float vx, float vz, float speed)
 {
 	// 移動方向ベクトルを設定
@@ -104,70 +97,12 @@ void Character::UpdateVelocity(float elapsedTime)
 	// 経過フレーム
 	float elapsedFrame = 60.0f * elapsedTime;
 
-	// 垂直速力更新処理
-	UpdateVerticalVelocity(elapsedFrame);
-
 	// 水平速力更新処理
 	UpdateHorizontalVelocity(elapsedFrame);
 
-	// 垂直移動更新処理
-	UpdateVerticalMove(elapsedTime);
-
 	// 水平移動更新処理
 	UpdateHorizontalMove(elapsedTime);
-
-#if 0
-	//// 重力処理
-	//velocity.y += gravity * elapsedFrame;
-
-	//// 移動処理
-	//position.y += velocity.y * elapsedTime;
-
-	//// 地面判定
-	//if (position.y < 0.0f)
-	//{
-	//	position.y = 0.0f;
-	//	velocity.y = 0.0f;
-
-	//	// 着地した
-	//	if (!isGround)
-	//	{
-	//		OnLanding();
-	//	}
-	//	isGround = true;
-	//}
-	//else
-	//{
-	//	isGround = false;
-	//}
-#endif
 }
-
-//bool Character::ApplyDamage(int damage)
-//{
-//	// ダメージが0の場合は健康状態を変更する必要がない
-//	if (damage == 0) return false;
-//
-//	// 死亡している場合は健康状態を変更しない
-//	if (health <= 0) return false;
-//
-//	// ダメージ処理
-//	health -= damage;
-//
-//	// 死亡通知
-//	if (health == 0)
-//	{
-//		OnDead();
-//	}
-//	// ダメージ通知
-//	else
-//	{
-//		OnDamaged();
-//	}
-//
-//	// 健康状態が変更した場合はtrueを返す
-//	return true;
-//}
 
 // ダメージを与える
 bool Character::ApplyDamage(int damage, float invincibleTime)
@@ -439,20 +374,6 @@ void Character::UpdateHorizontalVelocity(float elapsedFrame)
 // 水平移動更新処理
 void Character::UpdateHorizontalMove(float elapsedTime)
 {
-#if 0
-	// 移動処理 //
-	// 現在の速度を基に位置を更新
-	DirectX::XMFLOAT3 displacement = {
-		velocity.x * elapsedTime,
-		0.0f,
-		velocity.z * elapsedTime
-	};
-
-	position.x += displacement.x;
-	position.z += displacement.z;
-
-#endif
-
 	// 水平速力量計算
 	float velocityLengthXZ = sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
 	if (velocityLengthXZ > 0.0f)
@@ -558,4 +479,3 @@ DirectX::XMFLOAT3 Character::GetMoveVec() const
 
 	return vec;
 }
-

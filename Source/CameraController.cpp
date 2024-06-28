@@ -7,31 +7,6 @@
 
 void CameraController::Update(float elapsedTime)
 {
-	GamePad& gamePad = Input::Instance().GetGamePad();
-	float ax = gamePad.GetAxisRX();
-	float ay = gamePad.GetAxisRY();
-	// カメラの回転速度
-	float speed = rollSpeed * elapsedTime;
-	{
-		//スティックの入力値に合わせてX軸とY軸を回転
-		if (ax == -1)
-		{
-			angle.y += speed;
-		}
-		if (ax == 1)
-		{
-			angle.y -= speed;
-		}
-		if (ay == -1)
-		{
-			angle.x -= speed;
-		}
-		if (ay == 1)
-		{
-			angle.x += speed;
-		}
-	}
-
 	// X軸のカメラ回転を制限
 	if (angle.x < minAngleX)
 	{
@@ -54,10 +29,6 @@ void CameraController::Update(float elapsedTime)
 
 	// カメラの回転値を回転行列に変換
 	DirectX::XMMATRIX Transform = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
-	//{
-	//	angle.x,-angle.y,
-	//	angle.y,angle.x
-	//};
 
 	// 回転行列から前方向ベクトルを取り出す
 	DirectX::XMVECTOR Front = Transform.r[2];

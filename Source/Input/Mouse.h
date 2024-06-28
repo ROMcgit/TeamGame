@@ -58,14 +58,25 @@ public:
 	// スクリーン高さ取得
 	int GetScreenHeight() const { return screenHeight; }
 
+	// ドラッグ情報取得
+	bool IsDragging() const { return isDragging; }
+
+	// ドラッグ開始位置取得
+	POINT GetDragStartPosition() const { return dragStartPosition; }
+
+	// マウスカーソルのワールド座標を取得
+	POINT GetMousePosition(HWND hWnd);
+
 private:
-	MouseButton		buttonState[2] = { 0 };
-	MouseButton		buttonDown = 0;
-	MouseButton		buttonUp = 0;
-	int				positionX[2];
-	int				positionY[2];
-	int				wheel[2];
-	int				screenWidth = 0;
-	int				screenHeight = 0;
-	HWND			hWnd = nullptr;
+	MouseButton	buttonState[2] = { 0 };
+	MouseButton	buttonDown = 0;
+	MouseButton	buttonUp = 0;
+	int			positionX[2];
+	int			positionY[2];
+	int			wheel[2];
+	int			screenWidth = 0;
+	int			screenHeight = 0;
+	HWND		hWnd = nullptr;
+	bool        isDragging = false;
+	POINT       dragStartPosition;
 };

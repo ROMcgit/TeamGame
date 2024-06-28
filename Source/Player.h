@@ -46,6 +46,9 @@ protected:
 
 private:
 
+	// ˆÊ’u’²®
+	void PositionControll();
+
 	// ˆÚ“®“ü—Íˆ—
 	//void InputMove(float elapsedTime);
 	bool InputMove(float elapsedTime);

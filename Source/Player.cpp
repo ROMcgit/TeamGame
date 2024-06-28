@@ -122,8 +122,8 @@ void Player::PositionControll()
 		float deltaX = static_cast<float>(mouse.GetPositionX() - mouse.GetOldPositionX());
 		float deltaY = static_cast<float>(mouse.GetPositionY() - mouse.GetOldPositionY());
 
-		position.x += (deltaX * 0.08f) * -1;
-		position.y += deltaY * 0.08f;
+		position.x += (deltaX * 0.05f) * -1;
+		position.y += deltaY * 0.05f;
 	}
 }
 

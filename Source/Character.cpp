@@ -85,11 +85,11 @@ void Character::Turn(float elapsedTime, float vx, float vz, float speed)
 }
 
 // ジャンプ処理
-void Character::Jump(float speed)
-{
-	// 上方向の力を設定
-	velocity.y = speed;
-}
+//void Character::Jump(float speed)
+//{
+//	// 上方向の力を設定
+//	velocity.y = speed;
+//}
 
 // 加速度更新処理
 void Character::UpdateVelocity(float elapsedTime)
@@ -165,12 +165,12 @@ void Character::UpdateInvincibleTimer(float elapsedTime)
 	if (invincibleTime < 0) enemyHit = false;
 }
 
-// 垂直速力更新処理
-void Character::UpdateVerticalVelocity(float elapsedFrame)
-{
-	// 重力処理
-	velocity.y += gravity * elapsedFrame;
-}
+//// 垂直速力更新処理
+//void Character::UpdateVerticalVelocity(float elapsedFrame)
+//{
+//	// 重力処理
+//	velocity.y += gravity * elapsedFrame;
+//}
 
 // 垂直移動更新処理
 void Character::UpdateVerticalMove(float elapsedTime)

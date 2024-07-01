@@ -55,7 +55,7 @@ private:
 
 	// ƒWƒƒƒ“ƒv“ü—Íˆ—
 	//void InputJump();
-	bool InputJump();
+	//bool InputJump();
 
 	// ’eŠÛ“ü—Íˆ—
 	void InputProjectile();

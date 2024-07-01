@@ -77,7 +77,7 @@ void Player::Update(float elapsedTime)
 	}
 
 	// 速力更新処理
-	//UpdateVelocity(elapsedTime);
+	UpdateVelocity(elapsedTime);
 
 	// プレイヤーと敵との衝突処理
 	CollisionPlayerVsEnemies();
@@ -114,17 +114,6 @@ void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
 void Player::PositionControll()
 {
 	position.z = 0;
-
-	Mouse& mouse = Input::Instance().GetMouse();
-
-	if (mouse.IsDragging())
-	{
-		float deltaX = static_cast<float>(mouse.GetPositionX() - mouse.GetOldPositionX());
-		float deltaY = static_cast<float>(mouse.GetPositionY() - mouse.GetOldPositionY());
-
-		position.x += (deltaX * 0.05f) * -1;
-		position.y += deltaY * 0.05f;
-	}
 }
 
 // 移動入力処理
@@ -134,7 +123,6 @@ bool Player::InputMove(float elapsedTime)
 	DirectX::XMFLOAT3 moveVec = GetMoveVec();
 
 	// 移動処理
-	//Move(elapsedTime, moveVec.x, moveVec.z, moveSpeed);
 	Move(moveVec.x, moveVec.z, moveSpeed);
 
 	// 旋回処理
@@ -259,7 +247,7 @@ void Player::UpdateIdleState(float elapsedTime)
 		TransitionJumpState();
 	}
 
-	InputJump();
+	//InputJump();
 
 	// 弾丸入力処理
 	InputProjectile();
@@ -312,7 +300,7 @@ void Player::UpdateMoveState(float elapsedTime)
 		TransitionJumpState();
 	}
 
-	InputJump();
+	//InputJump();
 
 	// 弾丸入力処理
 	InputProjectile();
@@ -347,7 +335,7 @@ void Player::UpdateJumpState(float elapsedTime)
 	InputMove(elapsedTime);
 
 	// ジャンプ入力処理
-	InputJump();
+	//InputJump();
 
 	// 弾丸入力処理
 	InputProjectile();
@@ -574,17 +562,17 @@ void Player::CollisionPlayerVsEnemies()
 			DirectX::XMVECTOR N = DirectX::XMVector3Normalize(V);
 			DirectX::XMFLOAT3 normal;
 			DirectX::XMStoreFloat3(&normal, N);
-			// 上から踏んづけた場合は小ジャンプする
-			if (normal.y > 0.8f)
-			{
-				// 小ジャンプする
-				Jump(jumpSpeed * 0.5f);
-			}
-			else
-			{
-				// 押し出し後の位置設定
-				enemy->SetPosition(outPosition);
-			}
+			//// 上から踏んづけた場合は小ジャンプする
+			//if (normal.y > 0.8f)
+			//{
+			//	// 小ジャンプする
+			//	Jump(jumpSpeed * 0.5f);
+			//}
+			//else
+			//{
+			//	// 押し出し後の位置設定
+			//	enemy->SetPosition(outPosition);
+			//}
 			
 		}
 
@@ -661,26 +649,26 @@ void Player::OnDead()
 }
 
 // ジャンプ入力処理
-bool Player::InputJump()
-{
-	GamePad& gamePad = Input::Instance().GetGamePad();
-	{
-		if (gamePad.GetButtonDown() & GamePad::BTN_A) //Zキー
-		{
-			// ジャンプ回数制限
-			if (jumpCount < jumpLimit)
-			{
-				// ジャンプ
-				Jump(jumpSpeed);
-				jumpCount++;
-
-				// ジャンプ入力した
-				return true;
-			}
-		}
-		return false;
-	}
-}
+//bool Player::InputJump()
+//{
+//	GamePad& gamePad = Input::Instance().GetGamePad();
+//	{
+//		if (gamePad.GetButtonDown() & GamePad::BTN_A) //Zキー
+//		{
+//			// ジャンプ回数制限
+//			if (jumpCount < jumpLimit)
+//			{
+//				// ジャンプ
+//				Jump(jumpSpeed);
+//				jumpCount++;
+//
+//				// ジャンプ入力した
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
+//}
 
 // 弾丸と敵の衝突処理
 void Player::CollisionProjectilesVsEnemies()

@@ -60,7 +60,7 @@ protected:
 	void Turn(float elapsedTime, float vx, float vz, float speed);
 
 	// ジャンプ処理
-	void Jump(float speed);
+	//void Jump(float speed);
 
 	// 速力処理更新
 	void UpdateVelocity(float elapsedTime);
@@ -73,7 +73,7 @@ protected:
 	void UpdateInvincibleTimer(float elapsedTime);
 
 	// 垂直速力更新処理
-	void UpdateVerticalVelocity(float elapsedFrame);
+	//void UpdateVerticalVelocity(float elapsedFrame);
 
 	// 垂直移動更新処理
 	void UpdateVerticalMove(float elapsedTime);

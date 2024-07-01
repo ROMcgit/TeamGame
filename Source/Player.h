@@ -75,17 +75,17 @@ private:
 	// 移動ステート更新処理
 	void UpdateMoveState(float elapsedTime);
 
-	// ジャンプステートへ遷移
-	void TransitionJumpState();
+	//// ジャンプステートへ遷移
+	//void TransitionJumpState();
 
-	// ジャンプステート更新処理
-	void UpdateJumpState(float elapsedTime);
+	//// ジャンプステート更新処理
+	//void UpdateJumpState(float elapsedTime);
 
-	// 着地ステートへ遷移
-	void TransitionLandState();
+	//// 着地ステートへ遷移
+	//void TransitionLandState();
 
-	// 着地ステート更新処理
-	void UpdateLandState(float elapsedTime);
+	//// 着地ステート更新処理
+	//void UpdateLandState(float elapsedTime);
 
 	// 攻撃ステートへ遷移
 	void TransitionAttackState();

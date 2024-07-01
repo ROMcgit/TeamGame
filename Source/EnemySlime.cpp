@@ -70,6 +70,12 @@ void EnemySlime::Update(float elapsedTime)
 
 	// モデル行列更新
 	model->UpdateTransform(transform);
+
+	// 位置調整
+	PositionControll();
+
+	// HP制御
+	HpControll();
 }
 
 // 描画処理
@@ -105,6 +111,12 @@ void EnemySlime::SetTerritory(const DirectX::XMFLOAT3& origin, float range)
 {
 	territoryOrigin = origin;
 	territoryRange = range;
+}
+
+// 位置調整
+void EnemySlime::PositionControll()
+{
+	position.z = 0;
 }
 
 // ターゲット位置をランダム設定

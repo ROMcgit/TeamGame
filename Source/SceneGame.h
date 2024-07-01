@@ -5,6 +5,7 @@
 #include "EnemySlime.h"
 #include "Scene.h"
 #include "Graphics/Sprite.h"
+#include <memory>
 
 // ゲームシーン
 //class SceneGame
@@ -32,6 +33,10 @@ public:
 	void Render() override;
 
 private:
+
+	// プレイヤーUI
+	void PlayerUI();
+
 	// エネミーHPゲージ描画
 	void RenderEnemyGauge(
 		ID3D11DeviceContext* dc,
@@ -41,7 +46,8 @@ private:
 
 private:
 	//Stage* stage = nullptr;
-	Player* player = nullptr;
+	std::unique_ptr<Player> player;
+	std::unique_ptr<Sprite> uiSprite[4];
 	CameraController* cameraController = nullptr;
 	EnemySlime* enemySlime = nullptr;
 	Sprite* gauge = nullptr;

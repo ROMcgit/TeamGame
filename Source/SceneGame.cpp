@@ -8,6 +8,9 @@
 #include "StageManager.h"
 #include "StageMain.h"
 #include "StageMoveFloor.h"
+#include "SceneLoading.h"
+#include "SceneGameOver.h"
+#include "SceneManager.h"
 
 Sprite* EnemyHp;
 
@@ -28,7 +31,11 @@ void SceneGame::Initialize()
 	EnemyHp = new Sprite;
 
 	// プレイヤー初期化
-	player = new Player();
+	player = std::make_unique<Player>();
+
+	// HP
+	uiSprite[1] = std::make_unique<Sprite>();
+	uiSprite[2] = std::make_unique<Sprite>();
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
@@ -96,16 +103,15 @@ void SceneGame::Finalize()
 	//}
 	StageManager::Instance().Clear();
 
-	// プレイヤー終了化
-	if (player != nullptr)
-	{
-		delete player;
-		player = nullptr;
-	}
+	//// プレイヤー終了化
+	//if (player != nullptr)
+	//{
+	//	delete player;
+	//	player = nullptr;
+	//}
 
 	// エネミー終了化
 	EnemyManager::Instance().Clear();
-
 }
 
 // 更新処理
@@ -121,7 +127,6 @@ void SceneGame::Update(float elapsedTime)
 	//stage->Update(elapsedTime);
 	StageManager::Instance().Update(elapsedTime);
 
-
 	// プレイヤー更新処理
 	player->Update(elapsedTime);
 
@@ -130,6 +135,14 @@ void SceneGame::Update(float elapsedTime)
 
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
+
+	if (player->GetHealth() <= 0)
+	{
+		SceneLoading* loadingScene = new SceneLoading(new SceneGameOver);
+
+		// シーンマネージャーにローディングシーンへの切り替えを指示
+		SceneManager::Instance().ChangeScene(loadingScene);
+	}
 }
 
 // 描画処理
@@ -194,6 +207,8 @@ void SceneGame::Render()
 
 	// 2Dスプライト描画
 	{
+		PlayerUI();
+
 		RenderEnemyGauge(dc, rc.view, rc.projection);
 	}
 
@@ -204,6 +219,39 @@ void SceneGame::Render()
 		camera.DrawDebugGUI();
 		cameraController->DrawDebugGUI();
 	}
+}
+
+// プレイヤーUI
+void SceneGame::PlayerUI()
+{
+	Graphics& graphics = Graphics::Instance();
+	ID3D11DeviceContext* dc = graphics.GetDeviceContext();
+	ID3D11RenderTargetView* rtv = graphics.GetRenderTargetView();
+	ID3D11DepthStencilView* dsv = graphics.GetDepthStencilView();
+
+	float screenWidth = static_cast<float>(graphics.GetScreenWidth());
+	float screenHeight = static_cast<float>(graphics.GetScreenHeight());
+	float textureWidth = static_cast<float>(uiSprite[2]->GetTextureWidth());
+	float textureHeight = static_cast<float>(uiSprite[2]->GetTextureHeight());
+
+	// ダメージゲージ
+	uiSprite[2]->Render(dc,
+		20, 20, 
+		player->GetDamageHealth() * 14, 25,
+		0, 0, textureWidth, textureHeight,
+		0,
+		1, 0, 0, 1);
+
+	textureWidth = static_cast<float>(uiSprite[1]->GetTextureWidth());
+	textureHeight = static_cast<float>(uiSprite[1]->GetTextureHeight());
+
+	// ダメージゲージ
+	uiSprite[1]->Render(dc,
+		20, 20,
+		player->GetHealth() * 14, 25,
+		0, 0, textureWidth, textureHeight,
+		0,
+		0, 1, 0, 1);
 }
 
 // エネミーHPゲージ描画

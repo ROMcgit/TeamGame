@@ -49,10 +49,17 @@ public:
 	// 健康状態を取得
 	int GetHealth() const { return health; }
 
+	// HPダメージ取得
+	int GetDamageHealth() { return damageHelth; }
+
 	// 最大健康状態を取得
 	int GetMaxHealth() const { return maxHealth; }
 
 protected:
+
+	// HP管理
+	void HpControll();
+
 	// スティック入力値から移動ベクトルを習得
 	DirectX::XMFLOAT3 GetMoveVec() const;
 
@@ -112,6 +119,7 @@ protected:
 	float height = 2.0f;
 	int health = 10;
 	int maxHealth = 5;
+	int damageHelth = 5;
 
 	bool enemyHit = false;
 	float invincibleTime = 1.0f;
@@ -128,4 +136,11 @@ protected:
 	float stepOffset = 1.0f;
 
 	float slopeRate = 1.0f;
+
+	int damageCount = 0;
+	int waitCount = 0;
+	int maxWaitCount = 0;
+
+	int deathWaitTimer = 0;
+	int maxDeathWaitTimer = 0;
 };

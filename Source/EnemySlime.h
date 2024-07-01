@@ -32,6 +32,10 @@ protected:
 	void OnDead() override;
 
 private:
+
+	// 位置調整
+	void PositionControll();
+
 	// ターゲット位置をランダム設定
 	void SetRandomTargetPosition();
 

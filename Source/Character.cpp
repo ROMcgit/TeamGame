@@ -428,6 +428,33 @@ void Character::UpdateHorizontalMove(float elapsedTime)
 	}
 }
 
+// HPŠÇ—
+void Character::HpControll()
+{
+	// HP‚ªãŒÀ‚ð’´‚¦‚È‚¢‚æ‚¤‚É
+	if (health > maxHealth) health = maxHealth;
+
+	// ƒ_ƒ[ƒWˆ—
+	if (damageHelth > health)
+	{
+
+		damageCount++;
+		if (damageCount >= 60)
+		{
+			waitCount++;
+			if (waitCount >= maxWaitCount)
+			{
+				damageHelth--;
+				waitCount = 0;
+			}
+		}
+	}
+	// ‰ñ•œ‚µ‚½Žž
+	else if (damageHelth < health) damageHelth = health;
+
+	if (damageHelth == health) damageCount = 0;
+}
+
 DirectX::XMFLOAT3 Character::GetMoveVec() const
 {
 	// “ü—Íî•ñ‚ðŽæ“¾

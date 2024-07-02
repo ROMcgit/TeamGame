@@ -51,6 +51,7 @@ void Camera::DrawDebugGUI()
 	{
 		ImGui::InputFloat3("Eye",&eye.x);
 		ImGui::InputFloat3("Focus",&focus.x);
+		ImGui::InputFloat3("Up", &up.x);
 	}
 	ImGui::End();
 }

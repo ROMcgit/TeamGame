@@ -8,7 +8,7 @@
 // コンストラクタ
 EnemySlime::EnemySlime()
 {
-	model = new Model("Data/Model/Slime/Slime.mdl");
+	model = new Model("Data/Model/敵.mdl");
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.01f;
@@ -117,6 +117,9 @@ void EnemySlime::SetTerritory(const DirectX::XMFLOAT3& origin, float range)
 void EnemySlime::PositionControll()
 {
 	position.z = 0;
+	position.y = 5;
+	if (position.x < -6.66) position.x = -6.66;
+	if (position.x > 6.6) position.x = 6.6;
 }
 
 // ターゲット位置をランダム設定

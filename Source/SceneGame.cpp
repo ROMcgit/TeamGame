@@ -22,11 +22,11 @@ void SceneGame::Initialize()
 	StageManager& stageManager = StageManager::Instance();
 	StageMain* stageMain = new StageMain();
 	stageManager.Register(stageMain);
-	StageMoveFloor* stageMoveFloor = new StageMoveFloor();
-	stageMoveFloor->SetStartPoint(DirectX::XMFLOAT3(0, 1, 3));
-	stageMoveFloor->SetGoalPoint(DirectX::XMFLOAT3(10, 2, 3));
-	stageMoveFloor->SetTorque(DirectX::XMFLOAT3(0, 1.0f, 0));
-	stageManager.Register(stageMoveFloor);
+	//StageMoveFloor* stageMoveFloor = new StageMoveFloor();
+	//stageMoveFloor->SetStartPoint(DirectX::XMFLOAT3(0, 1, 3));
+	//stageMoveFloor->SetGoalPoint(DirectX::XMFLOAT3(10, 2, 3));
+	//stageMoveFloor->SetTorque(DirectX::XMFLOAT3(0, 1.0f, 0));
+	//stageManager.Register(stageMoveFloor);
 
 	EnemyHp = new Sprite;
 
@@ -118,8 +118,8 @@ void SceneGame::Finalize()
 void SceneGame::Update(float elapsedTime)
 {
 	// カメラコントローラー更新処理
-	DirectX::XMFLOAT3 target = player->GetPosition();
-	target.y += 0.5f;
+	DirectX::XMFLOAT3 target;
+	target = { 0 ,3.1f, 0 };
 	cameraController->SetTarget(target);
 	cameraController->Update(elapsedTime);
 

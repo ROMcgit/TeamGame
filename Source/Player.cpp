@@ -121,6 +121,8 @@ void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
 void Player::PositionControll()
 {
 	position.z = 0;
+	if(position.x < -6.66) position.x = -6.66;
+	if (position.x > 6.6) position.x = 6.6;
 }
 
 // ˆÚ“®“ü—Íˆ—

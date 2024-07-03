@@ -108,11 +108,11 @@ private:
 	// 死亡ステート更新処理
 	void UpdateDeathState(float elapsedTimae);
 
-	// 復活ステートへ遷移
-	void TransitionReviveState();
+	//// 復活ステートへ遷移
+	//void TransitionReviveState();
 
-	// 復活ステート更新処理
-	void UpdateReviveState(float elapsedTime);
+	//// 復活ステート更新処理
+	//void UpdateReviveState(float elapsedTime);
 
 private:
 

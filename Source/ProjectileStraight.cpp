@@ -35,7 +35,6 @@ void ProjectileStraight::Update(float elapsedTime)
 		Destroy();
 	}
 
-
 	// ˆÚ“®
 	float speed = this->speed * elapsedTime;
 

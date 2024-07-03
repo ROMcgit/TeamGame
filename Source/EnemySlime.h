@@ -4,6 +4,8 @@
 #include "Enemy.h"
 #include "Graphics/Graphics.h"
 #include "Mathf.h"
+#include "EnemyProjec.h"
+#include "ProjectileManager.h"
 
 // スライム
 class EnemySlime : public Enemy
@@ -55,7 +57,7 @@ private:
 	void UpdateIdleState(float elapsedTime);
 
 	// プレイヤー索敵
-	bool SearchPlayer();
+	//bool SearchPlayer();
 
 	// 追跡ステートへ遷移
 	void TransitionPursuitState();
@@ -136,4 +138,14 @@ private:
 	float stateTimer = 0.0f;
 	float searchRange = 5.0f;
 	float attackRange = 1.5f;
+
+	float positionRandamuL = 0;
+	float positionRandamuR = 0;
+
+	int waitL = 0;
+	int waitR = 0;
+
+	bool moveR = false;
+
+	ProjectileManager projectileManager;
 };

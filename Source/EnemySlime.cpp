@@ -4,6 +4,7 @@
 #include "Mathf.h"
 #include "Player.h"
 #include "Collision.h"
+#include <ProjectileStraight.h>
 
 // コンストラクタ
 EnemySlime::EnemySlime()
@@ -92,18 +93,18 @@ void EnemySlime::DrawDebugPrimitive()
 
 	DebugRenderer* debugRender = Graphics::Instance().GetDebugRenderer();
 
-	// 縄張り範囲をデバッグ円柱描画
-	debugRender->DrawCylinder(territoryOrigin, territoryRange, 1.0f,
-		DirectX::XMFLOAT4(0, 1, 0, 1));
+	//// 縄張り範囲をデバッグ円柱描画
+	//debugRender->DrawCylinder(territoryOrigin, territoryRange, 1.0f,
+	//	DirectX::XMFLOAT4(0, 1, 0, 1));
 
 	// ターゲット位置をデバッグ球描画
 	debugRender->DrawSphere(targetPosition, radius, DirectX::XMFLOAT4(1, 1, 0, 1));
 
-	// 索敵範囲をデバッグ円柱描画
-	debugRender->DrawCylinder(position, searchRange, 1.0f, DirectX::XMFLOAT4(0, 0, 1, 1));
+	//// 索敵範囲をデバッグ円柱描画
+	//debugRender->DrawCylinder(position, searchRange, 1.0f, DirectX::XMFLOAT4(0, 0, 1, 1));
 
-	// 攻撃範囲をデバッグ円柱描画
-	debugRender->DrawCylinder(position, attackRange, 1.0f, DirectX::XMFLOAT4(1, 0, 0, 1));
+	//// 攻撃範囲をデバッグ円柱描画
+	//debugRender->DrawCylinder(position, attackRange, 1.0f, DirectX::XMFLOAT4(1, 0, 0, 1));
 }
 
 // 縄張り設定
@@ -159,7 +160,10 @@ void EnemySlime::TransitionWanderState()
 	state = State::Wander;
 
 	// 目標地点設定
-	SetRandomTargetPosition();
+	//SetRandomTargetPosition();
+
+	positionRandamuL = 240;
+	positionRandamuR = 240;
 
 	// 歩きアニメーション再生
 	model->PlayAnimation(Anim_WalkFWD, true);
@@ -168,28 +172,57 @@ void EnemySlime::TransitionWanderState()
 // 徘徊ステート更新処理
 void EnemySlime::UpdateWanderState(float elapsedTime)
 {
-	// 目標地点までXZ平面での距離判定
-	float vx = targetPosition.x - position.x;
-	float vz = targetPosition.z - position.z;
-	float distSq = vx * vx + vz * vz;
-	if (distSq < radius * radius)
-	{
-		// 次の目標地点設定
-		//SetRandomTargetPosition();
+	//// 目標地点までXZ平面での距離判定
+	//float vx = targetPosition.x - position.x;
+	//float vz = targetPosition.z - position.z;
+	//float distSq = vx * vx + vz * vz;
+	//if (distSq < radius * radius)
+	//{
+	//	// 次の目標地点設定
+	//	//SetRandomTargetPosition();
+	//	// 待機ステートへ遷移
+	//	TransitionIdleState();
+	//}
+	//// 目標地点へ移動
+	//MoveToTarget(elapsedTime, 0.5f);
+	//// プレイヤー索敵
+	//if (SearchPlayer())
+	//{
+	//	// 見つかったら追跡ステートへ遷移
+	//	TransitionPursuitState();
+	//}
+	TransitionWanderState();
 
-		// 待機ステートへ遷移
-		TransitionIdleState();
+	if (moveR == false)
+	{
+		velocity.x = -1;
+		waitL++;
+	}
+	if (waitL > positionRandamuL)
+	{
+		positionRandamuL = 0;
+		moveR = true;
+		waitL = 0;
 	}
 
-	// 目標地点へ移動
-	MoveToTarget(elapsedTime, 0.5f);
-
-	// プレイヤー索敵
-	if (SearchPlayer())
+	if (moveR == true)
 	{
-		// 見つかったら追跡ステートへ遷移
-		TransitionPursuitState();
+		velocity.x = 1;
+		waitR++;
 	}
+	if (waitR > positionRandamuR)
+	{
+		positionRandamuR = 0;
+		moveR = false;
+		waitR = 0;
+	}
+
+	if (waitCount > 100)
+	{
+		waitCount = 0;
+	}
+
+	waitCount++;
 }
 
 // 待機ステートへ遷移
@@ -214,44 +247,37 @@ void EnemySlime::UpdateIdleState(float elapsedTime)
 		// 徘徊ステートへ遷移
 		TransitionIdleState();
 	}
-
-	// プレイヤー索敵
-	if (SearchPlayer())
-	{
-		// 見つかったら追跡ステートへ遷移
-		TransitionPursuitState();
-	}
 }
 
-// プレイヤー索敵
-bool EnemySlime::SearchPlayer()
-{
-	// プレイヤーとの高低差を考慮して3Dでの距離判定をする
-	const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
-	float vx = playerPosition.x - position.x;
-	float vy = playerPosition.y - position.y;
-	float vz = playerPosition.z - position.z;
-	float dist = sqrt(vx * vx + vy * vy + vz * vz);
-
-	if (dist < searchRange)
-	{
-		float distXZ = sqrtf(vx * vx + vz * vz);
-		// 単位ベクトル化
-		vx /= distXZ;
-		vz /= distXZ;
-		// 前方ベクトル
-		float frontX = sinf(angle.y);
-		float frontZ = cosf(angle.y);
-		// 2つのベクトルの内積値で前後判定
-		float dot = (frontX * vx) + (frontZ * vz);
-		if (dot > 0.0f)
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
+//// プレイヤー索敵
+//bool EnemySlime::SearchPlayer()
+//{
+//	// プレイヤーとの高低差を考慮して3Dでの距離判定をする
+//	const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
+//	float vx = playerPosition.x - position.x;
+//	float vy = playerPosition.y - position.y;
+//	float vz = playerPosition.z - position.z;
+//	float dist = sqrt(vx * vx + vy * vy + vz * vz);
+//
+//	if (dist < searchRange)
+//	{
+//		float distXZ = sqrtf(vx * vx + vz * vz);
+//		// 単位ベクトル化
+//		vx /= distXZ;
+//		vz /= distXZ;
+//		// 前方ベクトル
+//		float frontX = sinf(angle.y);
+//		float frontZ = cosf(angle.y);
+//		// 2つのベクトルの内積値で前後判定
+//		float dot = (frontX * vx) + (frontZ * vz);
+//		if (dot > 0.0f)
+//		{
+//			return true;
+//		}
+//	}
+//
+//	return false;
+//}
 
 // 追跡ステートへ遷移
 void EnemySlime::TransitionPursuitState()

@@ -8,6 +8,7 @@
 #include "Collision.h"
 #include "ProjectileStraight.h"
 #include "ProjectileHoming.h"
+#include <EnemyProjec.h>
 
 static Player* instance = nullptr;
 
@@ -141,7 +142,7 @@ bool Player::InputMove(float elapsedTime)
 	return !(moveVec.x == 0.0f && moveVec.z == 0.0f);
 }
 
-// 弾丸入力処理
+ //弾丸入力処理
 void Player::InputProjectile()
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
@@ -312,7 +313,7 @@ void Player::UpdateMoveState(float elapsedTime)
 	//InputJump();
 
 	// 弾丸入力処理
-	InputProjectile();
+	/*InputProjectile();*/
 
 	// プレイヤー移動カウント
 	playerMove++;

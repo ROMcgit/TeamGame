@@ -25,7 +25,6 @@ void Projectile::Destroy()
 // 更新行列処理
 void Projectile::UpdateTransform()
 {
-
 	DirectX::XMVECTOR Front, Up, Right;
 
 	// 前ベクトルを算出

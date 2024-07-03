@@ -1,5 +1,6 @@
 #include "ProjectileStraight.h"
 #include "ProjectileManager.h"
+#include "Player.h"
 
 // コンストラクタ
 //ProjectileStraight::ProjectileStraight()
@@ -17,7 +18,9 @@ ProjectileStraight::ProjectileStraight(ProjectileManager* manager) : Projectile(
 	//scale.x = scale.y = scale.z = 0.5f;
 	scale.x = scale.y = scale.z = 0.01f;
 
-	offset.x = -0.1f;
+	const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
+	if (playerPosition.x <= position.x) offset.x = -0.1f;
+	if (playerPosition.x >= position.x) offset.x = 0.1f;
 }
 
 // デストラクタ

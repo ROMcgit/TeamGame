@@ -77,12 +77,17 @@ void EnemySlime::Update(float elapsedTime)
 
 	// HP制御
 	HpControll();
+
+	// 弾丸更新処理
+	projectileManager.Update(elapsedTime);
 }
 
 // 描画処理
 void EnemySlime::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	shader->Draw(dc, model);
+	// 弾丸描画処理
+	projectileManager.Render(dc, shader);
 }
 
 // デバッグプリミティブ描画
@@ -99,6 +104,9 @@ void EnemySlime::DrawDebugPrimitive()
 
 	// ターゲット位置をデバッグ球描画
 	debugRender->DrawSphere(targetPosition, radius, DirectX::XMFLOAT4(1, 1, 0, 1));
+
+	// 弾丸デバッグプリミティブ描画
+	projectileManager.DrawDebugPrimitive();
 
 	//// 索敵範囲をデバッグ円柱描画
 	//debugRender->DrawCylinder(position, searchRange, 1.0f, DirectX::XMFLOAT4(0, 0, 1, 1));
@@ -217,8 +225,30 @@ void EnemySlime::UpdateWanderState(float elapsedTime)
 		waitR = 0;
 	}
 
-	if (waitCount > 100)
+	if (waitCount > 300)
 	{
+		const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
+
+		// 前方向
+		DirectX::XMFLOAT3 dir;
+
+		dir.x = playerPosition.x - position.x;
+		dir.y = playerPosition.y - position.y;
+		dir.z = playerPosition.z - position.z;
+
+		DirectX::XMVECTOR DIR;
+		DIR = DirectX::XMLoadFloat3(&dir);
+		DIR = DirectX::XMVector3Normalize(DIR);
+		DirectX::XMStoreFloat3(&dir, DIR);
+
+		// 発射位置(プレイヤーの腰あたり)
+		DirectX::XMFLOAT3 pos;
+		pos.x = position.x;
+		pos.y = position.y;
+		pos.z = position.z;
+
+		ProjectileStraight* projectile = new ProjectileStraight(&projectileManager);
+		projectile->Launch(dir, pos);
 		waitCount = 0;
 	}
 

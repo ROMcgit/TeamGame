@@ -47,5 +47,6 @@ protected:
 	DirectX::XMFLOAT3 scale = { 1, 1, 1 };
 	DirectX::XMFLOAT4X4 transform = { 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1 };
 	ProjectileManager* manager = nullptr;
-	float radius = 0.5f;
+	float radius = 0.2f;
+	DirectX::XMFLOAT3 offset = { 0,0,0 };
 };

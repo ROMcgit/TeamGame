@@ -11,11 +11,13 @@
 ProjectileStraight::ProjectileStraight(ProjectileManager* manager) : Projectile(manager)
 {
 	//model = new Model("./Data/Model/SpikeBall/SpikeBall.mdl");
-	model = new Model("./Data/Model/Sword/Sword.mdl");
+	model = new Model("./Data/Model/敵.mdl");
 
 	// 表示サイズを調整
 	//scale.x = scale.y = scale.z = 0.5f;
-	scale.x = scale.y = scale.z = 6.0f;
+	scale.x = scale.y = scale.z = 0.01f;
+
+	offset.x = -0.1f;
 }
 
 // デストラクタ
@@ -35,7 +37,7 @@ void ProjectileStraight::Update(float elapsedTime)
 		Destroy();
 	}
 
-	// 移動
+	 //移動
 	float speed = this->speed * elapsedTime;
 
 	// 位置を更新

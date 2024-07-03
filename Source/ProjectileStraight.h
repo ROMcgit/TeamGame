@@ -22,6 +22,8 @@ public:
 
 private:
 	Model* model = nullptr;
-	float  speed = 10.0f;
-	float  lifeTimer = 3.0f;
+	float  speed = 1.0f;
+	float  lifeTimer = 20.0f;
+
+	bool moveUp = false;
 };

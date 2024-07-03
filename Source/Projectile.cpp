@@ -13,7 +13,13 @@ void Projectile::DrawDebugPrimitive()
 {
 	DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
 
-	debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
+	DirectX::XMFLOAT3 offsetPosition = {
+	position.x + offset.x,
+	position.y + offset.y,
+	position.z + offset.z
+	};
+
+	debugRenderer->DrawSphere(offsetPosition, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
 }
 
 // ”jŠü

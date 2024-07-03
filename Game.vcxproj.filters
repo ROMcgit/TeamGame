@@ -216,9 +216,6 @@
     <ClInclude Include="Source\SceneClear.h">
       <Filter>Source\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Source\EnemyProjec.h">
-      <Filter>Source\Character\Enemy</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -361,9 +358,6 @@
     </ClCompile>
     <ClCompile Include="Source\SceneClear.cpp">
       <Filter>Source\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\EnemyProjec.cpp">
-      <Filter>Source\Character\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

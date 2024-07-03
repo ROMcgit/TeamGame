@@ -4,7 +4,6 @@
 #include "Enemy.h"
 #include "Graphics/Graphics.h"
 #include "Mathf.h"
-#include "EnemyProjec.h"
 #include "ProjectileManager.h"
 
 // ƒXƒ‰ƒCƒ€

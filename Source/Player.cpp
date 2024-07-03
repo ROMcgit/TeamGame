@@ -8,7 +8,6 @@
 #include "Collision.h"
 #include "ProjectileStraight.h"
 #include "ProjectileHoming.h"
-#include <EnemyProjec.h>
 
 static Player* instance = nullptr;
 
@@ -92,6 +91,9 @@ void Player::Update(float elapsedTime)
 
 	// 弾丸と敵に衝突処理
 	CollisionProjectilesVsEnemies();
+
+	// 弾丸更新処理
+	projectileManager.Update(elapsedTime);
 
 	// オブジェクト行列を更新
 	UpdateTransform();

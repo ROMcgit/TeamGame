@@ -72,6 +72,9 @@ void EnemySlime::Update(float elapsedTime)
 	// モデル行列更新
 	model->UpdateTransform(transform);
 
+	// 弾の当たり判定
+	CollisionProjectilesVsPlayer();
+
 	// 位置調整
 	PositionControll();
 
@@ -131,6 +134,38 @@ void EnemySlime::PositionControll()
 	if (position.x > 6.6) position.x = 6.6;
 }
 
+// 弾丸とプレイヤーの衝突処理
+void EnemySlime::CollisionProjectilesVsPlayer()
+{
+	Player& player = Player::Instance();
+
+	// 全ての弾丸と全ての敵を総当たりで衝突処理
+	int projectileCount = projectileManager.GetProjectileCount();
+	for (int i = 0; i < projectileCount; ++i)
+	{
+		Projectile* projectile = projectileManager.GetProjectile(i);
+
+			// 衝突処理
+			DirectX::XMFLOAT3 outPosition;
+			if (Collision::IntersectSphereVsCylinder(
+				projectile->GetPosition(),
+				projectile->GetRadius(),
+				player.GetPosition(),
+				player.GetRadius(),
+				player.GetHeight(),
+				outPosition))
+			{
+				// ダメージを与える
+				if (player.ApplyDamage(10, 6.0f))
+				{
+					// 弾丸破棄
+					projectile->Destroy();
+				}
+			}
+		
+	}
+}
+
 // ターゲット位置をランダム設定
 void EnemySlime::SetRandomTargetPosition()
 {
@@ -180,25 +215,6 @@ void EnemySlime::TransitionWanderState()
 // 徘徊ステート更新処理
 void EnemySlime::UpdateWanderState(float elapsedTime)
 {
-	//// 目標地点までXZ平面での距離判定
-	//float vx = targetPosition.x - position.x;
-	//float vz = targetPosition.z - position.z;
-	//float distSq = vx * vx + vz * vz;
-	//if (distSq < radius * radius)
-	//{
-	//	// 次の目標地点設定
-	//	//SetRandomTargetPosition();
-	//	// 待機ステートへ遷移
-	//	TransitionIdleState();
-	//}
-	//// 目標地点へ移動
-	//MoveToTarget(elapsedTime, 0.5f);
-	//// プレイヤー索敵
-	//if (SearchPlayer())
-	//{
-	//	// 見つかったら追跡ステートへ遷移
-	//	TransitionPursuitState();
-	//}
 	TransitionWanderState();
 
 	if (moveR == false)

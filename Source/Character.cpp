@@ -113,14 +113,14 @@ bool Character::ApplyDamage(int damage, float invincibleTime)
 	// €–S‚µ‚Ä‚¢‚éê‡‚ÍŒ’Nó‘Ô‚ğ•ÏX‚µ‚È‚¢
 	if (health <= 0) return false;
 
-	// –³“GŠÔ
-	if (invincibleTime)
-		if (enemyHit == true) return false;
+	// –³“GŠÔ‚È‚ç
+	if (invincibleTimer > 0) return false;
 
 	// ƒ_ƒ[ƒWˆ—
 	health -= damage;
 
-	if (invincibleTime > 0) enemyHit = true;
+	// –³“GŠÔ‚ğ‘ã“ü
+	invincibleTimer = invincibleTime;
 
 	// €–S’Ê’m
 	if (health == 0)
@@ -158,11 +158,10 @@ void Character::AddImpulse(const DirectX::XMFLOAT3& impulse)
 // –³“GŠÔXV
 void Character::UpdateInvincibleTimer(float elapsedTime)
 {
-	if (invincibleTime > 0.0f)
+	if (invincibleTimer > 0.0f)
 	{
-		invincibleTime -= elapsedTime;
+		invincibleTimer -= elapsedTime;
 	}
-	if (invincibleTime < 0) enemyHit = false;
 }
 
 //// ‚’¼‘¬—ÍXVˆ—

@@ -37,6 +37,8 @@ private:
 	// 位置調整
 	void PositionControll();
 
+	void CollisionProjectilesVsPlayer();
+
 	// ターゲット位置をランダム設定
 	void SetRandomTargetPosition();
 

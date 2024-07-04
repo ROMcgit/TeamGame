@@ -127,21 +127,6 @@ bool Collision::IntersectRayVsModel(
 	const Model* model,
 	HitResult& result)
 {
-#if 0
-	// ˆÈ‘O‚Ìˆ—‚ª³‚µ‚­“®‚­‚æ‚¤‚É‰¼‚ÌÀ‘•
-	if (end.y < 0.0f)
-	{
-		result.position.x = end.x;
-		result.position.y = 0.0f;
-		result.position.z = end.z;
-		result.normal.x = 0.0f;
-		result.normal.y = 1.0f;
-		result.normal.z = 0.0f;
-		return true;
-	}
-	return false;
-#endif
-
 	DirectX::XMVECTOR WorldStart = DirectX::XMLoadFloat3(&start);
 	DirectX::XMVECTOR WorldEnd = DirectX::XMLoadFloat3(&end);
 	DirectX::XMVECTOR WorldRayVec = DirectX::XMVectorSubtract(WorldEnd, WorldStart);

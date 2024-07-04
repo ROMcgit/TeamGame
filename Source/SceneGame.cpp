@@ -237,7 +237,7 @@ void SceneGame::PlayerUI()
 	// ダメージゲージ
 	uiSprite[2]->Render(dc,
 		20, 20, 
-		player->GetDamageHealth() * 14, 25,
+		player->GetDamageHealth() * 0.9f, 25,
 		0, 0, textureWidth, textureHeight,
 		0,
 		1, 0, 0, 1);
@@ -245,10 +245,10 @@ void SceneGame::PlayerUI()
 	textureWidth = static_cast<float>(uiSprite[1]->GetTextureWidth());
 	textureHeight = static_cast<float>(uiSprite[1]->GetTextureHeight());
 
-	// ダメージゲージ
+	// HPゲージ
 	uiSprite[1]->Render(dc,
 		20, 20,
-		player->GetHealth() * 14, 25,
+		player->GetHealth() * 0.9f, 25,
 		0, 0, textureWidth, textureHeight,
 		0,
 		0, 1, 0, 1);

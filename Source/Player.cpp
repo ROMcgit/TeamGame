@@ -35,7 +35,7 @@ Player::Player()
 	// 待機ステートへ遷移
 	TransitionIdleState();
 
-	health = damageHelth = maxHealth = 60;
+	health = damageHelth = maxHealth = 200;
 
 	maxWaitCount = 5;
 }

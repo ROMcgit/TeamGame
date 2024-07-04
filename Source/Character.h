@@ -102,6 +102,7 @@ protected:
 
 protected:
 	DirectX::XMFLOAT3    position = { 0, 0, 0, };
+	DirectX::XMFLOAT3    velocity = { 0, 0, 0, };
 	DirectX::XMFLOAT3    angle = { 0, 0, 0 };
 	DirectX::XMFLOAT3    scale = { 1,1,1 };
 	DirectX::XMFLOAT4X4  transform = {
@@ -112,8 +113,7 @@ protected:
 	};
 	float radius = 0.5f;
 
-	float			  gravity = -0.3f;
-	DirectX::XMFLOAT3 velocity = { 0, 0, 0, };
+	float gravity = -0.3f;
 
 	bool isGround = false;
 	float height = 2.0f;
@@ -121,8 +121,7 @@ protected:
 	int maxHealth = 5;
 	int damageHelth = 5;
 
-	bool enemyHit = false;
-	float invincibleTime = 1.0f;
+	float invincibleTimer = 1.0f;
 
 	float friction = 0.5f;
 

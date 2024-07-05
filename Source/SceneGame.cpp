@@ -11,6 +11,7 @@
 #include "SceneLoading.h"
 #include "SceneGameOver.h"
 #include "SceneManager.h"
+#include "SceneClear.h"
 
 Sprite* EnemyHp;
 
@@ -135,6 +136,15 @@ void SceneGame::Update(float elapsedTime)
 
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
+
+	EnemyManager& enemyManager = EnemyManager::Instance();
+	if (enemyManager.GetEnemyCount() <= 0)
+	{
+		SceneLoading* loadingScene = new SceneLoading(new SceneClear);
+
+		// シーンマネージャーにローディングシーンへの切り替えを指示
+		SceneManager::Instance().ChangeScene(loadingScene);
+	}
 
 	if (player->GetHealth() <= 0)
 	{

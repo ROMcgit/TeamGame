@@ -162,7 +162,7 @@ void EnemySlime::CollisionProjectilesVsPlayer()
 	{
 		Projectile* projectile = projectileManager.GetProjectile(i);
 
-		if (gamePad.GetButtonDown() & GamePad::BTN_B) damageWaitTime = 60;
+		if (gamePad.GetButtonDown() & GamePad::BTN_START) damageWaitTime = 60;
 		
 			// è’ìÀèàóù
 			DirectX::XMFLOAT3 outPosition;
@@ -174,7 +174,7 @@ void EnemySlime::CollisionProjectilesVsPlayer()
 				player.GetHeight(),
 				outPosition))
 			{
-				if (gamePad.GetButtonDown() & GamePad::BTN_B)
+				if (gamePad.GetButtonDown() & GamePad::BTN_START)
 				{
 					damageWaitTime = 60;
 					// íeä€îjä¸

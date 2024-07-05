@@ -31,7 +31,8 @@ void SceneTitle::Update(float elapsedTime)
 	// なにかボタンを押したらローディングシーンを挟んでゲームシーンへ切り替え
 	const GamePadButton anyButton =
 		GamePad::BTN_A |
-		GamePad::BTN_B;
+		GamePad::BTN_B |
+		GamePad::BTN_START;
 	if (gamePad.GetButtonDown() & anyButton)
 	{
 		SceneLoading* loadingScene = new SceneLoading(new SceneGame);

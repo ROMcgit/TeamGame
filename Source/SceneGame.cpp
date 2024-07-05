@@ -55,7 +55,7 @@ void SceneGame::Initialize()
 	//カメラコントローラー初期化
 	cameraController = new CameraController;
 	cameraController->SetAngle(DirectX::XMFLOAT3(
-		DirectX::XMConvertToRadians(0),
+		DirectX::XMConvertToRadians(12),
 		0,
 		0));
 

@@ -165,7 +165,7 @@ private:
 	int playerMove;
 	int playerAnimeCount;
 
-	float leftHandRadius = 0.4f;
+	float leftHandRadius = 1.4f;
 
 	bool attackCollisionFlag = false;
 };

@@ -144,7 +144,7 @@ bool Player::InputMove(float elapsedTime)
 	return !(moveVec.x == 0.0f && moveVec.z == 0.0f);
 }
 
- //弾丸入力処理
+ // TODO:弾丸入力処理
 void Player::InputProjectile()
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
@@ -415,7 +415,7 @@ void Player::UpdateAttackState(float elapsedTime)
 	}
 }
 
-// ノードと敵の衝突処理
+// TODO:ノードと敵の衝突処理
 void Player::CollisionNodeVsEnemies(const char* nodeName, float nodeRadius)
 {
 	// ノード取得
@@ -433,26 +433,55 @@ void Player::CollisionNodeVsEnemies(const char* nodeName, float nodeRadius)
 	// 敵マネージャーのインスタンスを取得
 	EnemyManager& enemyManager = EnemyManager::Instance();
 
+	int projectileCount = projectileManager.GetProjectileCount();
+
 	// 指定のノードと全ての敵を総当たりで衝突処理
-	int enemyCount = enemyManager.GetEnemyCount();
-	for (int i = 0; i < enemyCount; ++i)
+	//int enemyCount = enemyManager.GetEnemyCount();
+	for (int i = 0; i < projectileCount; ++i)
 	{
-		Enemy* enemy = enemyManager.GetEnemy(i);
+		Projectile* projectile = projectileManager.GetProjectile(i);
 
 		// 衝突処理
 		DirectX::XMFLOAT3 outPosition;
 		if (Collision::IntersectSphereVsSphere(
 			nodePosition,
 			nodeRadius,
-			enemy->GetPosition(),
-			enemy->GetRadius(),
+			projectile->GetPosition(),
+			projectile->GetRadius(),
 			outPosition
 		))
 		{
-			// 押し出しの後の位置設定
-			enemy->SetPosition(outPosition);
+			EnemyManager& enemyManager = EnemyManager::Instance();
+			int enemyCount = enemyManager.GetEnemyCount();
+			for (int i = 0; i < enemyCount; ++i)
+			{
+				Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
+				const DirectX::XMFLOAT3& enemyPosition = enemy->GetPosition();
 
-			enemy->ApplyDamage(1, 4.5f);
+				// 前方向
+				DirectX::XMFLOAT3 dir;
+
+				dir.x = enemyPosition.x - position.x;
+				dir.y = enemyPosition.y - position.y;
+				dir.z = enemyPosition.z - position.z;
+
+				DirectX::XMVECTOR DIR;
+				DIR = DirectX::XMLoadFloat3(&dir);
+				DIR = DirectX::XMVector3Normalize(DIR);
+				DirectX::XMStoreFloat3(&dir, DIR);
+
+				// 発射位置(プレイヤーの腰あたり)
+				DirectX::XMFLOAT3 pos;
+				pos.x = position.x;
+				pos.y = position.y + 1;
+				pos.z = position.z;
+
+				DirectX::XMFLOAT3 target = { 0,0,0 };
+
+				ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
+				projectile->Launch(dir, pos ,target);
+			}
+		
 		}
 	}
 }

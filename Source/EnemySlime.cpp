@@ -212,7 +212,7 @@ void EnemySlime::TransitionWanderState()
 	model->PlayAnimation(Anim_WalkFWD, true);
 }
 
-// œpœjƒXƒe[ƒgXVˆ—
+// TODO:s“®ˆ—(“G)
 void EnemySlime::UpdateWanderState(float elapsedTime)
 {
 	TransitionWanderState();
@@ -241,6 +241,7 @@ void EnemySlime::UpdateWanderState(float elapsedTime)
 		waitR = 0;
 	}
 
+	// ’e‚Ì”­ŽË(“G)
 	if (waitCount > 300)
 	{
 		const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();

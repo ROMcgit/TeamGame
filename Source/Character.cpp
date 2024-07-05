@@ -223,7 +223,7 @@ void Character::UpdateVerticalMove(float elapsedTime)
 			//position.y = hit.position.y;
 			position = hit.position;
 
-			// TODO:回転(現状だと、前を向いてしまう
+			// 回転(現状だと、前を向いてしまう
 			//angle = hit.rotation;
 
 			// 着地した

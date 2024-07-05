@@ -162,7 +162,8 @@ void EnemySlime::CollisionProjectilesVsPlayer()
 	{
 		Projectile* projectile = projectileManager.GetProjectile(i);
 
-		if (gamePad.GetButtonDown() & GamePad::BTN_START) damageWaitTime = 60;
+		if (gamePad.GetButtonDown() & GamePad::BTN_START || gamePad.GetButtonDown() & GamePad::BTN_SPACE && damageWaitTime <= 0) 
+			damageWaitTime = 60;
 		
 			// 衝突処理
 			DirectX::XMFLOAT3 outPosition;
@@ -174,9 +175,8 @@ void EnemySlime::CollisionProjectilesVsPlayer()
 				player.GetHeight(),
 				outPosition))
 			{
-				if (gamePad.GetButtonDown() & GamePad::BTN_START)
+				if (damageWaitTime > 0)
 				{
-					damageWaitTime = 60;
 					// 弾丸破棄
 					projectile->Destroy();
 
@@ -197,7 +197,7 @@ void EnemySlime::CollisionProjectilesVsPlayer()
 					// 発射位置(プレイヤーの腰あたり)
 					DirectX::XMFLOAT3 pos;
 					pos.x = playerPosition.x;
-					pos.y = playerPosition.y + player.GetHeight();
+					pos.y = playerPosition.y + player.GetHeight() + 0.2;
 					pos.z = playerPosition.z;
 
 					ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
@@ -205,7 +205,7 @@ void EnemySlime::CollisionProjectilesVsPlayer()
 				}
 
 				// ダメージを与える
-				else if (damageWaitTime <= 0)
+				else if(damageWaitTime <= 0)
 				{
 					if (player.ApplyDamage(10, 6.0f))
 					{

@@ -22,7 +22,7 @@ public:
 private:
 	Model* model = nullptr;
 	DirectX::XMFLOAT3 target = { 0, 0, 0, };
-	float moveSpeed = 1.0f;
+	float moveSpeed = 3.0f;
 	float turnSpeed = DirectX::XMConvertToRadians(180);
 	float lifeTimer = 20.0f;
 };

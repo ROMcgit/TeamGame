@@ -8,6 +8,7 @@
 #include "Collision.h"
 #include "ProjectileStraight.h"
 #include "ProjectileHoming.h"
+#include "EnemySlime.h"
 
 static Player* instance = nullptr;
 
@@ -202,7 +203,7 @@ void Player::InputProjectile()
 		//ProjectileStraight * projectile = new ProjectileStraight(&projectileManager);
 		//projectile->Launch(dir, pos);
 		ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
-		projectile->Launch(dir, pos, target);
+		projectile->Launch(dir, pos);
 		
 		//projectileManager.Register(projectile);
 	}
@@ -433,11 +434,11 @@ void Player::CollisionNodeVsEnemies(const char* nodeName, float nodeRadius)
 	// 敵マネージャーのインスタンスを取得
 	EnemyManager& enemyManager = EnemyManager::Instance();
 
-	int projectileCount = projectileManager.GetProjectileCount();
+	int pm = projectileManager.GetProjectileCount();
 
 	// 指定のノードと全ての敵を総当たりで衝突処理
 	//int enemyCount = enemyManager.GetEnemyCount();
-	for (int i = 0; i < projectileCount; ++i)
+	for (int i = 0; i < pm; ++i)
 	{
 		Projectile* projectile = projectileManager.GetProjectile(i);
 
@@ -479,7 +480,7 @@ void Player::CollisionNodeVsEnemies(const char* nodeName, float nodeRadius)
 				DirectX::XMFLOAT3 target = { 0,0,0 };
 
 				ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
-				projectile->Launch(dir, pos ,target);
+				projectile->Launch(dir, pos);
 			}
 		
 		}

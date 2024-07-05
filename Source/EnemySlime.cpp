@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Collision.h"
 #include <ProjectileStraight.h>
+#include <ProjectileHoming.h>
 
 // コンストラクタ
 EnemySlime::EnemySlime()
@@ -160,6 +161,29 @@ void EnemySlime::CollisionProjectilesVsPlayer()
 				{
 					// 弾丸破棄
 					projectile->Destroy();
+
+					const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
+
+					// 前方向
+					DirectX::XMFLOAT3 dir;
+
+					dir.x = position.x - playerPosition.x;
+					dir.y = position.y - playerPosition.y;
+					dir.z = position.z - playerPosition.z;
+
+					DirectX::XMVECTOR DIR;
+					DIR = DirectX::XMLoadFloat3(&dir);
+					DIR = DirectX::XMVector3Normalize(DIR);
+					DirectX::XMStoreFloat3(&dir, DIR);
+
+					// 発射位置(プレイヤーの腰あたり)
+					DirectX::XMFLOAT3 pos;
+					pos.x = playerPosition.x;
+					pos.y = playerPosition.y;
+					pos.z = playerPosition.z;
+
+					ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
+					projectile->Launch(dir, pos);
 				}
 			}
 		

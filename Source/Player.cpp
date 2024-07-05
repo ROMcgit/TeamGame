@@ -270,7 +270,7 @@ void Player::UpdateIdleState(float elapsedTime)
 	playerMove = 0;
 
 	// 攻撃入力処理
-	if (gamePad.GetButtonDown() & GamePad::BTN_START)
+	if (gamePad.GetButtonDown() & GamePad::BTN_START || gamePad.GetButtonDown() & GamePad::BTN_SPACE)
 	{
 		// 攻撃ステートへ遷移
 		playerAnimeCount = 0;

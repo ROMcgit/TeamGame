@@ -58,7 +58,7 @@ private:
 	//bool InputJump();
 
 	// ’eŠÛ“ü—Íˆ—
-	void InputProjectile();
+	/*void InputProjectile();*/
 
 	// UŒ‚“ü—Íˆ—
 	bool InputAttack();

@@ -6,6 +6,9 @@
 #include "Collision.h"
 #include <ProjectileStraight.h>
 #include <ProjectileHoming.h>
+#include <Input/GamePad.h>
+#include <Input/Input.h>
+#include <EnemyManager.h>
 
 // コンストラクタ
 EnemySlime::EnemySlime()
@@ -16,11 +19,13 @@ EnemySlime::EnemySlime()
 	scale.x = scale.y = scale.z = 0.01f;
 
 	// 幅、高さ設定
-	radius = 0.5f;
-	height = 1.0f;
+	radius = 0.3f;
+	height = 0.5f;
 
 	// 徘徊ステートへ遷移
 	TransitionWanderState();
+
+	health = 1;
 }
 
 // デストラクタ
@@ -73,8 +78,11 @@ void EnemySlime::Update(float elapsedTime)
 	// モデル行列更新
 	model->UpdateTransform(transform);
 
-	// 弾の当たり判定
+	// 弾とプレイヤーの当たり判定
 	CollisionProjectilesVsPlayer();
+
+	// 弾と敵の当たり判定
+	CollisionProjectilesVsEnemy();
 
 	// 位置調整
 	PositionControll();
@@ -84,6 +92,12 @@ void EnemySlime::Update(float elapsedTime)
 
 	// 弾丸更新処理
 	projectileManager.Update(elapsedTime);
+
+	if(damageWaitTime > 0)
+	damageWaitTime -= 1;
+
+	if (attackWait > 0)
+		attackWait -= 1;
 }
 
 // 描画処理
@@ -140,12 +154,16 @@ void EnemySlime::CollisionProjectilesVsPlayer()
 {
 	Player& player = Player::Instance();
 
+	GamePad& gamePad = Input::Instance().GetGamePad();
+
 	// 全ての弾丸と全ての敵を総当たりで衝突処理
 	int projectileCount = projectileManager.GetProjectileCount();
 	for (int i = 0; i < projectileCount; ++i)
 	{
 		Projectile* projectile = projectileManager.GetProjectile(i);
 
+		if (gamePad.GetButtonDown() & GamePad::BTN_B) damageWaitTime = 60;
+		
 			// 衝突処理
 			DirectX::XMFLOAT3 outPosition;
 			if (Collision::IntersectSphereVsCylinder(
@@ -156,9 +174,9 @@ void EnemySlime::CollisionProjectilesVsPlayer()
 				player.GetHeight(),
 				outPosition))
 			{
-				// ダメージを与える
-				if (player.ApplyDamage(10, 6.0f))
+				if (gamePad.GetButtonDown() & GamePad::BTN_B)
 				{
+					damageWaitTime = 60;
 					// 弾丸破棄
 					projectile->Destroy();
 
@@ -179,14 +197,76 @@ void EnemySlime::CollisionProjectilesVsPlayer()
 					// 発射位置(プレイヤーの腰あたり)
 					DirectX::XMFLOAT3 pos;
 					pos.x = playerPosition.x;
-					pos.y = playerPosition.y;
+					pos.y = playerPosition.y + player.GetHeight();
 					pos.z = playerPosition.z;
 
 					ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
 					projectile->Launch(dir, pos);
 				}
+
+				// ダメージを与える
+				else if (damageWaitTime <= 0)
+				{
+					if (player.ApplyDamage(10, 6.0f))
+					{
+						// 弾丸破棄
+						projectile->Destroy();
+
+						const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
+
+						// 前方向
+						DirectX::XMFLOAT3 dir;
+
+						dir.x = position.x - playerPosition.x;
+						dir.y = position.y - playerPosition.y;
+						dir.z = position.z - playerPosition.z;
+
+						DirectX::XMVECTOR DIR;
+						DIR = DirectX::XMLoadFloat3(&dir);
+						DIR = DirectX::XMVector3Normalize(DIR);
+						DirectX::XMStoreFloat3(&dir, DIR);
+
+						// 発射位置(プレイヤーの腰あたり)
+						DirectX::XMFLOAT3 pos;
+						pos.x = playerPosition.x;
+						pos.y = playerPosition.y + player.GetHeight();
+						pos.z = playerPosition.z;
+
+						ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
+						projectile->Launch(dir, pos);
+					}
+				}
 			}
 		
+	}
+}
+
+// 弾と敵の当たり判定
+void EnemySlime::CollisionProjectilesVsEnemy()
+{
+	EnemyManager& enemyManager = EnemyManager::Instance();
+
+	int projectileCount = projectileManager.GetProjectileCount();
+	int enemyCount = enemyManager.GetEnemyCount();
+	for (int i = 0; i < projectileCount; ++i)
+	{
+		Projectile* projectile = projectileManager.GetProjectile(i);
+		for (int j = 0; j < enemyCount; ++j)
+		{
+			Enemy* enemy = enemyManager.GetEnemy(j);
+			// 衝突処理
+			DirectX::XMFLOAT3 outPosition;
+			if (Collision::IntersectSphereVsSphere(
+				projectile->GetPosition(),
+				projectile->GetRadius(),
+				position,
+				radius,
+				outPosition))
+			{
+				if(attackWait <= 0)
+				this->ApplyDamage(1, 2);
+			}
+		}
 	}
 }
 
@@ -268,6 +348,7 @@ void EnemySlime::UpdateWanderState(float elapsedTime)
 	// 弾の発射(敵)
 	if (waitCount > 300)
 	{
+		attackWait = 30;
 		const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
 
 		// 前方向
@@ -285,7 +366,7 @@ void EnemySlime::UpdateWanderState(float elapsedTime)
 		// 発射位置(プレイヤーの腰あたり)
 		DirectX::XMFLOAT3 pos;
 		pos.x = position.x;
-		pos.y = position.y;
+		pos.y = position.y - 0.2;
 		pos.z = position.z;
 
 		ProjectileStraight* projectile = new ProjectileStraight(&projectileManager);

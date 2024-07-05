@@ -37,7 +37,11 @@ private:
 	// 位置調整
 	void PositionControll();
 
+	// 弾とプレイヤーの当たり判定
 	void CollisionProjectilesVsPlayer();
+
+	// 弾と敵の当たり判定
+	void CollisionProjectilesVsEnemy();
 
 	// ターゲット位置をランダム設定
 	void SetRandomTargetPosition();
@@ -149,4 +153,7 @@ private:
 	bool moveR = false;
 
 	ProjectileManager projectileManager;
+
+	int damageWaitTime = 0;
+	int attackWait = 0;
 };

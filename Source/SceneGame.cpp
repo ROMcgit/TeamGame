@@ -3,7 +3,8 @@
 #include "Camera.h"
 #include "EnemyManager.h"
 #include "EnemySphere.h"
-#include "EnemyWall.h"
+#include "WallManager.h"
+#include "WallEnemy.h"
 #include "EffectManager.h"
 #include "Input/Input.h"
 #include "StageManager.h"
@@ -69,18 +70,19 @@ void SceneGame::Initialize()
 
 	for (int i = 0; i < 2; ++i)
 	{
-		EnemySlime* slime = new EnemySlime();
-		slime->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 5));
-		slime->SetTerritory(slime->GetPosition(), 10.0f);
-		enemyManager.Register(slime);
+		EnemySphere* sphere = new EnemySphere();
+		sphere->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 0));
+		sphere->SetTerritory(sphere->GetPosition(), 10.0f);
+		enemyManager.Register(sphere);
 	}
+
+	WallManager& wallManager = WallManager::Instance();
 
 	for (int i = 0; i < 2; ++i)
 	{
-		EnemyWall* wall = new EnemyWall();
-		wall->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 5));
-		wall->SetTerritory(wall->GetPosition(), 10.0f);
-		enemyManager.Register(wall);
+		WallEnemy* wall = new WallEnemy();
+		wall->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 0));
+		wallManager.Register(wall);
 	}
 
 	// ゲージスプライト
@@ -122,6 +124,9 @@ void SceneGame::Finalize()
 
 	// エネミー終了化
 	EnemyManager::Instance().Clear();
+
+	// 壁終了化
+	WallManager::Instance().Clear();
 }
 
 // 更新処理
@@ -143,11 +148,15 @@ void SceneGame::Update(float elapsedTime)
 	// エネミー更新処理
 	EnemyManager::Instance().Update(elapsedTime);
 
+	// 壁の更新処理
+	WallManager::Instance().Update(elapsedTime);
+
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
 
 	EnemyManager& enemyManager = EnemyManager::Instance();
-	if (enemyManager.GetEnemyCount() <= 0)
+	int enemyCount = enemyManager.GetEnemyCount();
+	if ( enemyCount <= 0)
 	{
 		SceneLoading* loadingScene = new SceneLoading(new SceneClear);
 
@@ -187,7 +196,7 @@ void SceneGame::Render()
 	rc.view = camera.GetView();
 	rc.projection = camera.GetProjection();
 
-	// 3Dモデル描画
+	//! 3Dモデル描画
 	{
 		Shader* shader = graphics.GetShader();
 		shader->Begin(dc, rc);
@@ -198,8 +207,12 @@ void SceneGame::Render()
 		// プレイヤー描画
 		player->Render(dc, shader);
 
-		//エネミー描画
+		// エネミー描画
 		EnemyManager::Instance().Render(dc,shader);
+
+		// 壁描画
+		WallManager::Instance().Render(dc, shader);
+
 		shader->End(dc);
 
 	}
@@ -216,6 +229,9 @@ void SceneGame::Render()
 
 		// エネミーデバッグプリミティブ描画
 		EnemyManager::Instance().DrawDebugPrimitive();
+
+		// 壁デバッグプリミティブ描画
+		WallManager::Instance().DrawDebugPrimitive();
 
 		// ラインレンダラ描画実行
 		graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);

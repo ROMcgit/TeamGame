@@ -49,6 +49,5 @@ private:
 	std::unique_ptr<Player> player;
 	std::unique_ptr<Sprite> uiSprite[4];
 	CameraController* cameraController = nullptr;
-	EnemySlime* enemySlime = nullptr;
 	Sprite* gauge = nullptr;
 };

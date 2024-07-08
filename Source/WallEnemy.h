@@ -1,17 +1,17 @@
 #pragma once
 
 #include "Graphics//Model.h"
-#include "Enemy.h"
+#include "Wall.h"
 #include "Graphics/Graphics.h"
 #include "Mathf.h"
 #include "ProjectileManager.h"
 
 // スライム
-class EnemyWall : public Enemy
+class WallEnemy : public Wall
 {
 public:
-	EnemyWall();
-	~EnemyWall() override;
+	WallEnemy();
+	~WallEnemy() override;
 
 	// 更新処理
 	void Update(float elapsedTime) override;

@@ -52,6 +52,9 @@
     <Filter Include="Source\Stage">
       <UniqueIdentifier>{05cc1565-350f-4a31-ae5e-1124782536be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Character\Wall">
+      <UniqueIdentifier>{999ebe7e-2a2f-43b2-87a3-a671c7d355c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -216,8 +219,14 @@
     <ClInclude Include="Source\SceneClear.h">
       <Filter>Source\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Source\EnemyWall.h">
-      <Filter>Source\Character\Enemy</Filter>
+    <ClInclude Include="Source\Wall.h">
+      <Filter>Source\Character\Wall</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\WallManager.h">
+      <Filter>Source\Character\Wall</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\WallEnemy.h">
+      <Filter>Source\Character\Wall</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -362,8 +371,14 @@
     <ClCompile Include="Source\SceneClear.cpp">
       <Filter>Source\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Source\EnemyWall.cpp">
-      <Filter>Source\Character\Enemy</Filter>
+    <ClCompile Include="Source\Wall.cpp">
+      <Filter>Source\Character\Wall</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\WallManager.cpp">
+      <Filter>Source\Character\Wall</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\WallEnemy.cpp">
+      <Filter>Source\Character\Wall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

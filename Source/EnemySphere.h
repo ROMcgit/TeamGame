@@ -43,6 +43,9 @@ private:
 	// 弾と敵の当たり判定
 	void CollisionProjectilesVsEnemy();
 
+	// 弾と壁の当たり判定
+	void CollisionProjectilesVsWall();
+
 	// ターゲット位置をランダム設定
 	void SetRandomTargetPosition();
 

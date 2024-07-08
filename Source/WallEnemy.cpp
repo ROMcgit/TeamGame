@@ -1,4 +1,4 @@
-#include "EnemyWall.h"
+#include "WallEnemy.h"
 #include <imgui.h>
 #include "Graphics/Graphics.h"
 #include "Mathf.h"
@@ -11,15 +11,16 @@
 #include <EnemyManager.h>
 
 // コンストラクタ
-EnemyWall::EnemyWall()
+WallEnemy::WallEnemy()
 {
 	model = new Model("Data/Model/壁.mdl");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.01f;
+	scale.x = 0.05f;
+	scale.y = scale.z = 0.01f;
 
 	// 幅、高さ設定
-	radius = 0.3f;
+	radius = 0.8f;
 	height = 0.5f;
 
 	// 徘徊ステートへ遷移
@@ -29,13 +30,13 @@ EnemyWall::EnemyWall()
 }
 
 // デストラクタ
-EnemyWall::~EnemyWall()
+WallEnemy::~WallEnemy()
 {
 	delete model;
 }
 
 // 更新処理
-void EnemyWall::Update(float elapsedTime)
+void WallEnemy::Update(float elapsedTime)
 {
 	// ステート毎の更新処理
 	switch (state)
@@ -82,7 +83,7 @@ void EnemyWall::Update(float elapsedTime)
 	CollisionProjectilesVsPlayer();
 
 	// 弾と敵の当たり判定
-	CollisionProjectilesVsEnemy();
+	//CollisionProjectilesVsEnemy();
 
 	// 位置調整
 	PositionControll();
@@ -101,7 +102,7 @@ void EnemyWall::Update(float elapsedTime)
 }
 
 // 描画処理
-void EnemyWall::Render(ID3D11DeviceContext* dc, Shader* shader)
+void WallEnemy::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	shader->Draw(dc, model);
 	// 弾丸描画処理
@@ -109,10 +110,10 @@ void EnemyWall::Render(ID3D11DeviceContext* dc, Shader* shader)
 }
 
 // デバッグプリミティブ描画
-void EnemyWall::DrawDebugPrimitive()
+void WallEnemy::DrawDebugPrimitive()
 {
 	// 基底クラスのデバッグプリミティブ描画
-	Enemy::DrawDebugPrimitive();
+	Wall::DrawDebugPrimitive();
 
 	DebugRenderer* debugRender = Graphics::Instance().GetDebugRenderer();
 
@@ -134,23 +135,23 @@ void EnemyWall::DrawDebugPrimitive()
 }
 
 // 縄張り設定
-void EnemyWall::SetTerritory(const DirectX::XMFLOAT3& origin, float range)
+void WallEnemy::SetTerritory(const DirectX::XMFLOAT3& origin, float range)
 {
 	territoryOrigin = origin;
 	territoryRange = range;
 }
 
 // 位置調整
-void EnemyWall::PositionControll()
+void WallEnemy::PositionControll()
 {
 	position.z = 0;
-	position.y = 5;
+	position.y = 3.5;
 	if (position.x < -6.66) position.x = -6.66;
 	if (position.x > 6.6) position.x = 6.6;
 }
 
 // 弾丸とプレイヤーの衝突処理
-void EnemyWall::CollisionProjectilesVsPlayer()
+void WallEnemy::CollisionProjectilesVsPlayer()
 {
 	Player& player = Player::Instance();
 
@@ -241,8 +242,8 @@ void EnemyWall::CollisionProjectilesVsPlayer()
 	}
 }
 
-// 弾と敵の当たり判定
-void EnemyWall::CollisionProjectilesVsEnemy()
+ //弾と敵の当たり判定
+void WallEnemy::CollisionProjectilesVsEnemy()
 {
 	EnemyManager& enemyManager = EnemyManager::Instance();
 
@@ -264,14 +265,14 @@ void EnemyWall::CollisionProjectilesVsEnemy()
 				outPosition))
 			{
 				if (attackWait <= 0)
-					this->ApplyDamage(1, 2);
+					enemy->ApplyDamage(1, 2);
 			}
 		}
 	}
 }
 
 // ターゲット位置をランダム設定
-void EnemyWall::SetRandomTargetPosition()
+void WallEnemy::SetRandomTargetPosition()
 {
 	// 縄張り範囲内でランダムな位置を生成
 	float randomX = Mathf::RandomRange(territoryOrigin.x - territoryRange, territoryOrigin.x + territoryRange);
@@ -287,7 +288,7 @@ void EnemyWall::SetRandomTargetPosition()
 }
 
 // 目標地点へ移動
-void EnemyWall::MoveToTarget(float elapsedTime, float speedRate)
+void WallEnemy::MoveToTarget(float elapsedTime, float speedRate)
 {
 	// ターゲット方向への進行ベクトルを算出
 	float vx = targetPosition.x - position.x;
@@ -302,7 +303,7 @@ void EnemyWall::MoveToTarget(float elapsedTime, float speedRate)
 }
 
 // 徘徊ステートへ遷移
-void EnemyWall::TransitionWanderState()
+void WallEnemy::TransitionWanderState()
 {
 	state = State::Wander;
 
@@ -317,13 +318,13 @@ void EnemyWall::TransitionWanderState()
 }
 
 // TODO:行動処理(敵)
-void EnemyWall::UpdateWanderState(float elapsedTime)
+void WallEnemy::UpdateWanderState(float elapsedTime)
 {
 	TransitionWanderState();
 }
 
 // 待機ステートへ遷移
-void EnemyWall::TransitionIdleState()
+void WallEnemy::TransitionIdleState()
 {
 	state = State::Idle;
 
@@ -335,7 +336,7 @@ void EnemyWall::TransitionIdleState()
 }
 
 // 待機ステート更新処理
-void EnemyWall::UpdateIdleState(float elapsedTime)
+void WallEnemy::UpdateIdleState(float elapsedTime)
 {
 	// タイマー処理
 	stateTimer -= elapsedTime;
@@ -347,7 +348,7 @@ void EnemyWall::UpdateIdleState(float elapsedTime)
 }
 
 //// プレイヤー索敵
-//bool EnemyWall::SearchPlayer()
+//bool WallEnemy::SearchPlayer()
 //{
 //	// プレイヤーとの高低差を考慮して3Dでの距離判定をする
 //	const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
@@ -377,7 +378,7 @@ void EnemyWall::UpdateIdleState(float elapsedTime)
 //}
 
 // 追跡ステートへ遷移
-void EnemyWall::TransitionPursuitState()
+void WallEnemy::TransitionPursuitState()
 {
 	state = State::Pursuit;
 
@@ -389,7 +390,7 @@ void EnemyWall::TransitionPursuitState()
 }
 
 // 追跡ステート更新処理
-void EnemyWall::UpdatePursuitState(float elapsedTime)
+void WallEnemy::UpdatePursuitState(float elapsedTime)
 {
 	// 目標地点をプレイヤー位置に設定
 	targetPosition = Player::Instance().GetPosition();
@@ -418,7 +419,7 @@ void EnemyWall::UpdatePursuitState(float elapsedTime)
 }
 
 // ノードとプレイヤーの衝突処理
-void EnemyWall::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
+void WallEnemy::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
 {
 	// ノードの位置と当たり判定を行う
 	Model::Node* node = model->FindNode(nodeName);
@@ -473,7 +474,7 @@ void EnemyWall::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
 }
 
 // 攻撃ステートへ遷移
-void EnemyWall::TransitionAttackState()
+void WallEnemy::TransitionAttackState()
 {
 	state = State::Attack;
 
@@ -482,7 +483,7 @@ void EnemyWall::TransitionAttackState()
 }
 
 // 攻撃ステート更新処理
-void EnemyWall::UpdateAttackState(float elapsedTime)
+void WallEnemy::UpdateAttackState(float elapsedTime)
 {
 	// 任意のアニメーション再生区間でのみ衝突判定処理をする
 	float animationTime = model->GetCurrentAnimationSeconds();
@@ -500,7 +501,7 @@ void EnemyWall::UpdateAttackState(float elapsedTime)
 }
 
 // 戦闘待機ステートへ遷移
-void EnemyWall::TransitionIdleBattleState()
+void WallEnemy::TransitionIdleBattleState()
 {
 	state = State::IdleBattle;
 
@@ -512,7 +513,7 @@ void EnemyWall::TransitionIdleBattleState()
 }
 
 // 戦闘待機ステート更新処理
-void EnemyWall::UpdateIdleBattleState(float elapsedTime)
+void WallEnemy::UpdateIdleBattleState(float elapsedTime)
 {
 	// 目標地点をプレイヤー位置に設定
 	targetPosition = Player::Instance().GetPosition();
@@ -542,7 +543,7 @@ void EnemyWall::UpdateIdleBattleState(float elapsedTime)
 }
 
 // ダメージステートへ遷移
-void EnemyWall::TransitionDamageState()
+void WallEnemy::TransitionDamageState()
 {
 	state = State::Damage;
 
@@ -551,7 +552,7 @@ void EnemyWall::TransitionDamageState()
 }
 
 // ダメージステート更新処理
-void EnemyWall::UpdateDamageState(float elapsedTime)
+void WallEnemy::UpdateDamageState(float elapsedTime)
 {
 	// ダメージアニメーションが終わったら戦闘待機ステートへ遷移
 	if (!model->IsPlayAnimation())
@@ -561,7 +562,7 @@ void EnemyWall::UpdateDamageState(float elapsedTime)
 }
 
 // 死亡ステートへ遷移
-void EnemyWall::TransitionDeathState()
+void WallEnemy::TransitionDeathState()
 {
 	state = State::Death;
 
@@ -570,7 +571,7 @@ void EnemyWall::TransitionDeathState()
 }
 
 // 死亡ステート更新処理
-void EnemyWall::UpdateDeathState(float elapsedTime)
+void WallEnemy::UpdateDeathState(float elapsedTime)
 {
 	// ダメージアニメーションが終わったら自分を破棄
 	if (!model->IsPlayAnimation())
@@ -580,14 +581,14 @@ void EnemyWall::UpdateDeathState(float elapsedTime)
 }
 
 // ダメージ受けた時に呼ばれる
-void EnemyWall::OnDamaged()
+void WallEnemy::OnDamaged()
 {
 	// ダメージステートへ遷移
 	TransitionDamageState();
 }
 
 // 死亡しと時に呼ばれる
-void EnemyWall::OnDead()
+void WallEnemy::OnDead()
 {
 	//Destroy();
 

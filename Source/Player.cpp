@@ -8,7 +8,7 @@
 #include "Collision.h"
 #include "ProjectileStraight.h"
 #include "ProjectileHoming.h"
-#include "EnemySlime.h"
+#include "EnemySphere.h"
 
 static Player* instance = nullptr;
 
@@ -782,8 +782,6 @@ void Player::CollisionProjectilesVsEnemies()
 // “–‚½‚è”»’è•`‰æ
 void Player::DrawDebugGUI()
 {
-	EnemySlime slime;
-
 	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
 

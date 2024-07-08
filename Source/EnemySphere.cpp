@@ -9,6 +9,7 @@
 #include <Input/GamePad.h>
 #include <Input/Input.h>
 #include <EnemyManager.h>
+#include "WallManager.h"
 
 // コンストラクタ
 EnemySphere::EnemySphere()
@@ -83,6 +84,9 @@ void EnemySphere::Update(float elapsedTime)
 
 	// 弾と敵の当たり判定
 	CollisionProjectilesVsEnemy();
+
+	// 弾と壁の当たり判定
+	CollisionProjectilesVsWall();
 
 	// 位置調整
 	PositionControll();
@@ -237,7 +241,6 @@ void EnemySphere::CollisionProjectilesVsPlayer()
 					}
 				}
 			}
-		
 	}
 }
 
@@ -265,6 +268,35 @@ void EnemySphere::CollisionProjectilesVsEnemy()
 			{
 				if(attackWait <= 0)
 				this->ApplyDamage(1, 2);
+			}
+		}
+	}
+}
+
+// 弾と壁の当たり判定
+void EnemySphere::CollisionProjectilesVsWall()
+{
+	WallManager& wallManager = WallManager::Instance();
+
+	int projectileCount = projectileManager.GetProjectileCount();
+	int wallCount = wallManager.GetWallCount();
+	for (int i = 0; i < projectileCount; ++i)
+	{
+		Projectile* projectile = projectileManager.GetProjectile(i);
+		for (int j = 0; j < wallCount; ++j)
+		{
+			Wall* wall = wallManager.GetWall(j);
+			// 衝突処理
+			DirectX::XMFLOAT3 outPosition;
+			if (Collision::IntersectSphereVsCylinder(
+				projectile->GetPosition(),
+				projectile->GetRadius(),
+				wall->GetPosition(),
+				wall->GetRadius(),
+				wall->GetHeight(),
+				outPosition))
+			{
+				wall->ApplyDamage(1, 1);
 			}
 		}
 	}

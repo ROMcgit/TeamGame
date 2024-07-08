@@ -320,61 +320,6 @@ void EnemyWall::TransitionWanderState()
 void EnemyWall::UpdateWanderState(float elapsedTime)
 {
 	TransitionWanderState();
-
-	if (moveR == false)
-	{
-		velocity.x = -1;
-		waitL++;
-	}
-	if (waitL > positionRandamuL)
-	{
-		positionRandamuL = 0;
-		moveR = true;
-		waitL = 0;
-	}
-
-	if (moveR == true)
-	{
-		velocity.x = 1;
-		waitR++;
-	}
-	if (waitR > positionRandamuR)
-	{
-		positionRandamuR = 0;
-		moveR = false;
-		waitR = 0;
-	}
-
-	// 弾の発射(敵)
-	if (waitCount > 300)
-	{
-		attackWait = 30;
-		const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
-
-		// 前方向
-		DirectX::XMFLOAT3 dir;
-
-		dir.x = playerPosition.x - position.x;
-		dir.y = playerPosition.y - position.y;
-		dir.z = playerPosition.z - position.z;
-
-		DirectX::XMVECTOR DIR;
-		DIR = DirectX::XMLoadFloat3(&dir);
-		DIR = DirectX::XMVector3Normalize(DIR);
-		DirectX::XMStoreFloat3(&dir, DIR);
-
-		// 発射位置(プレイヤーの腰あたり)
-		DirectX::XMFLOAT3 pos;
-		pos.x = position.x;
-		pos.y = position.y - 0.2;
-		pos.z = position.z;
-
-		ProjectileStraight* projectile = new ProjectileStraight(&projectileManager);
-		projectile->Launch(dir, pos);
-		waitCount = 0;
-	}
-
-	waitCount++;
 }
 
 // 待機ステートへ遷移

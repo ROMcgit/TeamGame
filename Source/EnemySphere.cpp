@@ -297,6 +297,7 @@ void EnemySphere::CollisionProjectilesVsWall()
 				outPosition))
 			{
 				wall->ApplyDamage(1, 1);
+				projectile->Destroy();
 			}
 		}
 	}

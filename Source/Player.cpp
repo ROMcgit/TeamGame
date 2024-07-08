@@ -462,7 +462,7 @@ void Player::CollisionNodeVsEnemies(const char* nodeName, float nodeRadius)
 				const DirectX::XMFLOAT3& enemyPosition = enemy->GetPosition();
 
 				// 前方向
-				DirectX::XMFLOAT3 dir;
+				DirectX::XMFLOAT3 dir = { 0,0,0 };
 
 				dir.x = enemyPosition.x - position.x;
 				dir.y = enemyPosition.y - position.y;
@@ -474,7 +474,7 @@ void Player::CollisionNodeVsEnemies(const char* nodeName, float nodeRadius)
 				DirectX::XMStoreFloat3(&dir, DIR);
 
 				// 発射位置(プレイヤーの腰あたり)
-				DirectX::XMFLOAT3 pos;
+				DirectX::XMFLOAT3 pos = {0,0,0};
 				pos.x = position.x;
 				pos.y = position.y + 1;
 				pos.z = position.z;
@@ -799,7 +799,7 @@ void Player::DrawDebugGUI()
 			// 位置
 			ImGui::InputFloat3("Position", &position.x);
 			// 回転
-			DirectX::XMFLOAT3 a;
+			DirectX::XMFLOAT3 a ={ 0,0,0 };
 			a.x = DirectX::XMConvertToDegrees(angle.x);
 			a.y = DirectX::XMConvertToDegrees(angle.y);
 			a.z = DirectX::XMConvertToDegrees(angle.z);

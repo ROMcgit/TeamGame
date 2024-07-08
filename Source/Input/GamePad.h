@@ -63,7 +63,6 @@ public:
 
 	// ‰EƒgƒŠƒK[“ü—Íó‘Ô‚Ìæ“¾
 	float GetTriggerR() const { return triggerR; }
-
 private:
 	GamePadButton		buttonState[2] = { 0 };
 	GamePadButton		buttonDown = 0;

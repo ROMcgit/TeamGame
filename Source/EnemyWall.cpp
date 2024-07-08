@@ -1,4 +1,4 @@
-#include "EnemySphere.h"
+#include "EnemyWall.h"
 #include <imgui.h>
 #include "Graphics/Graphics.h"
 #include "Mathf.h"
@@ -11,9 +11,9 @@
 #include <EnemyManager.h>
 
 // コンストラクタ
-EnemySlime::EnemySlime()
+EnemyWall::EnemyWall()
 {
-	model = new Model("Data/Model/敵.mdl");
+	model = new Model("Data/Model/壁.mdl");
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.01f;
@@ -29,13 +29,13 @@ EnemySlime::EnemySlime()
 }
 
 // デストラクタ
-EnemySlime::~EnemySlime()
+EnemyWall::~EnemyWall()
 {
 	delete model;
 }
 
 // 更新処理
-void EnemySlime::Update(float elapsedTime)
+void EnemyWall::Update(float elapsedTime)
 {
 	// ステート毎の更新処理
 	switch (state)
@@ -93,15 +93,15 @@ void EnemySlime::Update(float elapsedTime)
 	// 弾丸更新処理
 	projectileManager.Update(elapsedTime);
 
-	if(damageWaitTime > 0)
-	damageWaitTime -= 1;
+	if (damageWaitTime > 0)
+		damageWaitTime -= 1;
 
 	if (attackWait > 0)
 		attackWait -= 1;
 }
 
 // 描画処理
-void EnemySlime::Render(ID3D11DeviceContext* dc, Shader* shader)
+void EnemyWall::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	shader->Draw(dc, model);
 	// 弾丸描画処理
@@ -109,7 +109,7 @@ void EnemySlime::Render(ID3D11DeviceContext* dc, Shader* shader)
 }
 
 // デバッグプリミティブ描画
-void EnemySlime::DrawDebugPrimitive()
+void EnemyWall::DrawDebugPrimitive()
 {
 	// 基底クラスのデバッグプリミティブ描画
 	Enemy::DrawDebugPrimitive();
@@ -134,14 +134,14 @@ void EnemySlime::DrawDebugPrimitive()
 }
 
 // 縄張り設定
-void EnemySlime::SetTerritory(const DirectX::XMFLOAT3& origin, float range)
+void EnemyWall::SetTerritory(const DirectX::XMFLOAT3& origin, float range)
 {
 	territoryOrigin = origin;
 	territoryRange = range;
 }
 
 // 位置調整
-void EnemySlime::PositionControll()
+void EnemyWall::PositionControll()
 {
 	position.z = 0;
 	position.y = 5;
@@ -150,7 +150,7 @@ void EnemySlime::PositionControll()
 }
 
 // 弾丸とプレイヤーの衝突処理
-void EnemySlime::CollisionProjectilesVsPlayer()
+void EnemyWall::CollisionProjectilesVsPlayer()
 {
 	Player& player = Player::Instance();
 
@@ -162,20 +162,52 @@ void EnemySlime::CollisionProjectilesVsPlayer()
 	{
 		Projectile* projectile = projectileManager.GetProjectile(i);
 
-		if (gamePad.GetButtonDown() & GamePad::BTN_START || gamePad.GetButtonDown() & GamePad::BTN_SPACE && damageWaitTime <= 0) 
+		if (gamePad.GetButtonDown() & GamePad::BTN_START || gamePad.GetButtonDown() & GamePad::BTN_SPACE && damageWaitTime <= 0)
 			damageWaitTime = 60;
-		
-			// 衝突処理
-			DirectX::XMFLOAT3 outPosition;
-			if (Collision::IntersectSphereVsCylinder(
-				projectile->GetPosition(),
-				projectile->GetRadius(),
-				player.GetPosition(),
-				player.GetRadius(),
-				player.GetHeight(),
-				outPosition))
+
+		// 衝突処理
+		DirectX::XMFLOAT3 outPosition;
+		if (Collision::IntersectSphereVsCylinder(
+			projectile->GetPosition(),
+			projectile->GetRadius(),
+			player.GetPosition(),
+			player.GetRadius(),
+			player.GetHeight(),
+			outPosition))
+		{
+			if (damageWaitTime > 0)
 			{
-				if (damageWaitTime > 0)
+				// 弾丸破棄
+				projectile->Destroy();
+
+				const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
+
+				// 前方向
+				DirectX::XMFLOAT3 dir;
+
+				dir.x = position.x - playerPosition.x;
+				dir.y = position.y - playerPosition.y;
+				dir.z = position.z - playerPosition.z;
+
+				DirectX::XMVECTOR DIR;
+				DIR = DirectX::XMLoadFloat3(&dir);
+				DIR = DirectX::XMVector3Normalize(DIR);
+				DirectX::XMStoreFloat3(&dir, DIR);
+
+				// 発射位置(プレイヤーの腰あたり)
+				DirectX::XMFLOAT3 pos;
+				pos.x = playerPosition.x;
+				pos.y = playerPosition.y + player.GetHeight() + 0.2;
+				pos.z = playerPosition.z;
+
+				ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
+				projectile->Launch(dir, pos);
+			}
+
+			// ダメージを与える
+			else if (damageWaitTime <= 0)
+			{
+				if (player.ApplyDamage(10, 6.0f))
 				{
 					// 弾丸破棄
 					projectile->Destroy();
@@ -197,52 +229,20 @@ void EnemySlime::CollisionProjectilesVsPlayer()
 					// 発射位置(プレイヤーの腰あたり)
 					DirectX::XMFLOAT3 pos;
 					pos.x = playerPosition.x;
-					pos.y = playerPosition.y + player.GetHeight() + 0.2;
+					pos.y = playerPosition.y + player.GetHeight();
 					pos.z = playerPosition.z;
 
 					ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
 					projectile->Launch(dir, pos);
 				}
-
-				// ダメージを与える
-				else if(damageWaitTime <= 0)
-				{
-					if (player.ApplyDamage(10, 6.0f))
-					{
-						// 弾丸破棄
-						projectile->Destroy();
-
-						const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
-
-						// 前方向
-						DirectX::XMFLOAT3 dir;
-
-						dir.x = position.x - playerPosition.x;
-						dir.y = position.y - playerPosition.y;
-						dir.z = position.z - playerPosition.z;
-
-						DirectX::XMVECTOR DIR;
-						DIR = DirectX::XMLoadFloat3(&dir);
-						DIR = DirectX::XMVector3Normalize(DIR);
-						DirectX::XMStoreFloat3(&dir, DIR);
-
-						// 発射位置(プレイヤーの腰あたり)
-						DirectX::XMFLOAT3 pos;
-						pos.x = playerPosition.x;
-						pos.y = playerPosition.y + player.GetHeight();
-						pos.z = playerPosition.z;
-
-						ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
-						projectile->Launch(dir, pos);
-					}
-				}
 			}
-		
+		}
+
 	}
 }
 
 // 弾と敵の当たり判定
-void EnemySlime::CollisionProjectilesVsEnemy()
+void EnemyWall::CollisionProjectilesVsEnemy()
 {
 	EnemyManager& enemyManager = EnemyManager::Instance();
 
@@ -263,15 +263,15 @@ void EnemySlime::CollisionProjectilesVsEnemy()
 				radius,
 				outPosition))
 			{
-				if(attackWait <= 0)
-				this->ApplyDamage(1, 2);
+				if (attackWait <= 0)
+					this->ApplyDamage(1, 2);
 			}
 		}
 	}
 }
 
 // ターゲット位置をランダム設定
-void EnemySlime::SetRandomTargetPosition()
+void EnemyWall::SetRandomTargetPosition()
 {
 	// 縄張り範囲内でランダムな位置を生成
 	float randomX = Mathf::RandomRange(territoryOrigin.x - territoryRange, territoryOrigin.x + territoryRange);
@@ -287,7 +287,7 @@ void EnemySlime::SetRandomTargetPosition()
 }
 
 // 目標地点へ移動
-void EnemySlime::MoveToTarget(float elapsedTime, float speedRate)
+void EnemyWall::MoveToTarget(float elapsedTime, float speedRate)
 {
 	// ターゲット方向への進行ベクトルを算出
 	float vx = targetPosition.x - position.x;
@@ -302,7 +302,7 @@ void EnemySlime::MoveToTarget(float elapsedTime, float speedRate)
 }
 
 // 徘徊ステートへ遷移
-void EnemySlime::TransitionWanderState()
+void EnemyWall::TransitionWanderState()
 {
 	state = State::Wander;
 
@@ -317,7 +317,7 @@ void EnemySlime::TransitionWanderState()
 }
 
 // TODO:行動処理(敵)
-void EnemySlime::UpdateWanderState(float elapsedTime)
+void EnemyWall::UpdateWanderState(float elapsedTime)
 {
 	TransitionWanderState();
 
@@ -378,7 +378,7 @@ void EnemySlime::UpdateWanderState(float elapsedTime)
 }
 
 // 待機ステートへ遷移
-void EnemySlime::TransitionIdleState()
+void EnemyWall::TransitionIdleState()
 {
 	state = State::Idle;
 
@@ -390,7 +390,7 @@ void EnemySlime::TransitionIdleState()
 }
 
 // 待機ステート更新処理
-void EnemySlime::UpdateIdleState(float elapsedTime)
+void EnemyWall::UpdateIdleState(float elapsedTime)
 {
 	// タイマー処理
 	stateTimer -= elapsedTime;
@@ -402,7 +402,7 @@ void EnemySlime::UpdateIdleState(float elapsedTime)
 }
 
 //// プレイヤー索敵
-//bool EnemySlime::SearchPlayer()
+//bool EnemyWall::SearchPlayer()
 //{
 //	// プレイヤーとの高低差を考慮して3Dでの距離判定をする
 //	const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
@@ -432,7 +432,7 @@ void EnemySlime::UpdateIdleState(float elapsedTime)
 //}
 
 // 追跡ステートへ遷移
-void EnemySlime::TransitionPursuitState()
+void EnemyWall::TransitionPursuitState()
 {
 	state = State::Pursuit;
 
@@ -444,7 +444,7 @@ void EnemySlime::TransitionPursuitState()
 }
 
 // 追跡ステート更新処理
-void EnemySlime::UpdatePursuitState(float elapsedTime)
+void EnemyWall::UpdatePursuitState(float elapsedTime)
 {
 	// 目標地点をプレイヤー位置に設定
 	targetPosition = Player::Instance().GetPosition();
@@ -473,7 +473,7 @@ void EnemySlime::UpdatePursuitState(float elapsedTime)
 }
 
 // ノードとプレイヤーの衝突処理
-void EnemySlime::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
+void EnemyWall::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
 {
 	// ノードの位置と当たり判定を行う
 	Model::Node* node = model->FindNode(nodeName);
@@ -528,7 +528,7 @@ void EnemySlime::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
 }
 
 // 攻撃ステートへ遷移
-void EnemySlime::TransitionAttackState()
+void EnemyWall::TransitionAttackState()
 {
 	state = State::Attack;
 
@@ -537,7 +537,7 @@ void EnemySlime::TransitionAttackState()
 }
 
 // 攻撃ステート更新処理
-void EnemySlime::UpdateAttackState(float elapsedTime)
+void EnemyWall::UpdateAttackState(float elapsedTime)
 {
 	// 任意のアニメーション再生区間でのみ衝突判定処理をする
 	float animationTime = model->GetCurrentAnimationSeconds();
@@ -555,7 +555,7 @@ void EnemySlime::UpdateAttackState(float elapsedTime)
 }
 
 // 戦闘待機ステートへ遷移
-void EnemySlime::TransitionIdleBattleState()
+void EnemyWall::TransitionIdleBattleState()
 {
 	state = State::IdleBattle;
 
@@ -567,7 +567,7 @@ void EnemySlime::TransitionIdleBattleState()
 }
 
 // 戦闘待機ステート更新処理
-void EnemySlime::UpdateIdleBattleState(float elapsedTime)
+void EnemyWall::UpdateIdleBattleState(float elapsedTime)
 {
 	// 目標地点をプレイヤー位置に設定
 	targetPosition = Player::Instance().GetPosition();
@@ -597,7 +597,7 @@ void EnemySlime::UpdateIdleBattleState(float elapsedTime)
 }
 
 // ダメージステートへ遷移
-void EnemySlime::TransitionDamageState()
+void EnemyWall::TransitionDamageState()
 {
 	state = State::Damage;
 
@@ -606,7 +606,7 @@ void EnemySlime::TransitionDamageState()
 }
 
 // ダメージステート更新処理
-void EnemySlime::UpdateDamageState(float elapsedTime)
+void EnemyWall::UpdateDamageState(float elapsedTime)
 {
 	// ダメージアニメーションが終わったら戦闘待機ステートへ遷移
 	if (!model->IsPlayAnimation())
@@ -616,7 +616,7 @@ void EnemySlime::UpdateDamageState(float elapsedTime)
 }
 
 // 死亡ステートへ遷移
-void EnemySlime::TransitionDeathState()
+void EnemyWall::TransitionDeathState()
 {
 	state = State::Death;
 
@@ -625,7 +625,7 @@ void EnemySlime::TransitionDeathState()
 }
 
 // 死亡ステート更新処理
-void EnemySlime::UpdateDeathState(float elapsedTime)
+void EnemyWall::UpdateDeathState(float elapsedTime)
 {
 	// ダメージアニメーションが終わったら自分を破棄
 	if (!model->IsPlayAnimation())
@@ -635,14 +635,14 @@ void EnemySlime::UpdateDeathState(float elapsedTime)
 }
 
 // ダメージ受けた時に呼ばれる
-void EnemySlime::OnDamaged()
+void EnemyWall::OnDamaged()
 {
 	// ダメージステートへ遷移
 	TransitionDamageState();
 }
 
 // 死亡しと時に呼ばれる
-void EnemySlime::OnDead()
+void EnemyWall::OnDead()
 {
 	//Destroy();
 

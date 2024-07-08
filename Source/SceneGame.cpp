@@ -2,7 +2,7 @@
 #include "SceneGame.h"
 #include "Camera.h"
 #include "EnemyManager.h"
-#include "EnemySlime.h"
+#include "EnemySphere.h"
 #include "EffectManager.h"
 #include "Input/Input.h"
 #include "StageManager.h"

@@ -2,7 +2,7 @@
 
 #include "Player.h"
 #include "CameraController.h"
-#include "EnemySlime.h"
+#include "EnemySphere.h"
 #include "Scene.h"
 #include "Graphics/Sprite.h"
 #include <memory>

@@ -74,7 +74,7 @@ void Mouse::Update()
 	}
 }
 
-// マウスカーソルのワールド座標を取得
+//マウスカーソルのワールド座標を取得
 POINT Mouse::GetMousePosition(HWND hWnd)
 {
 	POINT cursorPos;

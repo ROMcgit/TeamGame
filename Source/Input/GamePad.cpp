@@ -16,8 +16,8 @@ void GamePad::Update()
 	XINPUT_STATE xinputState;
 	if (XInputGetState(slot, &xinputState) == ERROR_SUCCESS)
 	{
-		//XINPUT_CAPABILITIES caps;
-		//XInputGetCapabilities(m_slot, XINPUT_FLAG_GAMEPAD, &caps);
+		/// XINPUT_CAPABILITIES caps;
+		/// XInputGetCapabilities(m_slot, XINPUT_FLAG_GAMEPAD, &caps);
 		XINPUT_GAMEPAD& pad = xinputState.Gamepad;
 
 		if (pad.wButtons & XINPUT_GAMEPAD_DPAD_UP)					newButtonState |= BTN_UP;
@@ -129,7 +129,7 @@ void GamePad::Update()
 #endif
 	}
 
-	// キーボードでエミュレーション
+	//キーボードでエミュレーション
 	{
 		float lx = 0.0f;
 		float ly = 0.0f;

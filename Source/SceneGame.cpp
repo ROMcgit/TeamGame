@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "EnemyManager.h"
 #include "EnemySphere.h"
+#include "EnemyWall.h"
 #include "EffectManager.h"
 #include "Input/Input.h"
 #include "StageManager.h"
@@ -72,6 +73,14 @@ void SceneGame::Initialize()
 		slime->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 5));
 		slime->SetTerritory(slime->GetPosition(), 10.0f);
 		enemyManager.Register(slime);
+	}
+
+	for (int i = 0; i < 2; ++i)
+	{
+		EnemyWall* wall = new EnemyWall();
+		wall->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 5));
+		wall->SetTerritory(wall->GetPosition(), 10.0f);
+		enemyManager.Register(wall);
 	}
 
 	// ゲージスプライト

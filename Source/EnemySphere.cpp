@@ -11,7 +11,7 @@
 #include <EnemyManager.h>
 
 // コンストラクタ
-EnemySlime::EnemySlime()
+EnemySphere::EnemySphere()
 {
 	model = new Model("Data/Model/敵.mdl");
 
@@ -29,13 +29,13 @@ EnemySlime::EnemySlime()
 }
 
 // デストラクタ
-EnemySlime::~EnemySlime()
+EnemySphere::~EnemySphere()
 {
 	delete model;
 }
 
 // 更新処理
-void EnemySlime::Update(float elapsedTime)
+void EnemySphere::Update(float elapsedTime)
 {
 	// ステート毎の更新処理
 	switch (state)
@@ -101,7 +101,7 @@ void EnemySlime::Update(float elapsedTime)
 }
 
 // 描画処理
-void EnemySlime::Render(ID3D11DeviceContext* dc, Shader* shader)
+void EnemySphere::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	shader->Draw(dc, model);
 	// 弾丸描画処理
@@ -109,7 +109,7 @@ void EnemySlime::Render(ID3D11DeviceContext* dc, Shader* shader)
 }
 
 // デバッグプリミティブ描画
-void EnemySlime::DrawDebugPrimitive()
+void EnemySphere::DrawDebugPrimitive()
 {
 	// 基底クラスのデバッグプリミティブ描画
 	Enemy::DrawDebugPrimitive();
@@ -134,14 +134,14 @@ void EnemySlime::DrawDebugPrimitive()
 }
 
 // 縄張り設定
-void EnemySlime::SetTerritory(const DirectX::XMFLOAT3& origin, float range)
+void EnemySphere::SetTerritory(const DirectX::XMFLOAT3& origin, float range)
 {
 	territoryOrigin = origin;
 	territoryRange = range;
 }
 
 // 位置調整
-void EnemySlime::PositionControll()
+void EnemySphere::PositionControll()
 {
 	position.z = 0;
 	position.y = 5;
@@ -150,7 +150,7 @@ void EnemySlime::PositionControll()
 }
 
 // 弾丸とプレイヤーの衝突処理
-void EnemySlime::CollisionProjectilesVsPlayer()
+void EnemySphere::CollisionProjectilesVsPlayer()
 {
 	Player& player = Player::Instance();
 
@@ -242,7 +242,7 @@ void EnemySlime::CollisionProjectilesVsPlayer()
 }
 
 // 弾と敵の当たり判定
-void EnemySlime::CollisionProjectilesVsEnemy()
+void EnemySphere::CollisionProjectilesVsEnemy()
 {
 	EnemyManager& enemyManager = EnemyManager::Instance();
 
@@ -271,7 +271,7 @@ void EnemySlime::CollisionProjectilesVsEnemy()
 }
 
 // ターゲット位置をランダム設定
-void EnemySlime::SetRandomTargetPosition()
+void EnemySphere::SetRandomTargetPosition()
 {
 	// 縄張り範囲内でランダムな位置を生成
 	float randomX = Mathf::RandomRange(territoryOrigin.x - territoryRange, territoryOrigin.x + territoryRange);
@@ -287,7 +287,7 @@ void EnemySlime::SetRandomTargetPosition()
 }
 
 // 目標地点へ移動
-void EnemySlime::MoveToTarget(float elapsedTime, float speedRate)
+void EnemySphere::MoveToTarget(float elapsedTime, float speedRate)
 {
 	// ターゲット方向への進行ベクトルを算出
 	float vx = targetPosition.x - position.x;
@@ -302,7 +302,7 @@ void EnemySlime::MoveToTarget(float elapsedTime, float speedRate)
 }
 
 // 徘徊ステートへ遷移
-void EnemySlime::TransitionWanderState()
+void EnemySphere::TransitionWanderState()
 {
 	state = State::Wander;
 
@@ -317,7 +317,7 @@ void EnemySlime::TransitionWanderState()
 }
 
 // TODO:行動処理(敵)
-void EnemySlime::UpdateWanderState(float elapsedTime)
+void EnemySphere::UpdateWanderState(float elapsedTime)
 {
 	TransitionWanderState();
 
@@ -378,7 +378,7 @@ void EnemySlime::UpdateWanderState(float elapsedTime)
 }
 
 // 待機ステートへ遷移
-void EnemySlime::TransitionIdleState()
+void EnemySphere::TransitionIdleState()
 {
 	state = State::Idle;
 
@@ -390,7 +390,7 @@ void EnemySlime::TransitionIdleState()
 }
 
 // 待機ステート更新処理
-void EnemySlime::UpdateIdleState(float elapsedTime)
+void EnemySphere::UpdateIdleState(float elapsedTime)
 {
 	// タイマー処理
 	stateTimer -= elapsedTime;
@@ -402,7 +402,7 @@ void EnemySlime::UpdateIdleState(float elapsedTime)
 }
 
 //// プレイヤー索敵
-//bool EnemySlime::SearchPlayer()
+//bool EnemySphere::SearchPlayer()
 //{
 //	// プレイヤーとの高低差を考慮して3Dでの距離判定をする
 //	const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
@@ -432,7 +432,7 @@ void EnemySlime::UpdateIdleState(float elapsedTime)
 //}
 
 // 追跡ステートへ遷移
-void EnemySlime::TransitionPursuitState()
+void EnemySphere::TransitionPursuitState()
 {
 	state = State::Pursuit;
 
@@ -444,7 +444,7 @@ void EnemySlime::TransitionPursuitState()
 }
 
 // 追跡ステート更新処理
-void EnemySlime::UpdatePursuitState(float elapsedTime)
+void EnemySphere::UpdatePursuitState(float elapsedTime)
 {
 	// 目標地点をプレイヤー位置に設定
 	targetPosition = Player::Instance().GetPosition();
@@ -473,7 +473,7 @@ void EnemySlime::UpdatePursuitState(float elapsedTime)
 }
 
 // ノードとプレイヤーの衝突処理
-void EnemySlime::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
+void EnemySphere::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
 {
 	// ノードの位置と当たり判定を行う
 	Model::Node* node = model->FindNode(nodeName);
@@ -528,7 +528,7 @@ void EnemySlime::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
 }
 
 // 攻撃ステートへ遷移
-void EnemySlime::TransitionAttackState()
+void EnemySphere::TransitionAttackState()
 {
 	state = State::Attack;
 
@@ -537,7 +537,7 @@ void EnemySlime::TransitionAttackState()
 }
 
 // 攻撃ステート更新処理
-void EnemySlime::UpdateAttackState(float elapsedTime)
+void EnemySphere::UpdateAttackState(float elapsedTime)
 {
 	// 任意のアニメーション再生区間でのみ衝突判定処理をする
 	float animationTime = model->GetCurrentAnimationSeconds();
@@ -555,7 +555,7 @@ void EnemySlime::UpdateAttackState(float elapsedTime)
 }
 
 // 戦闘待機ステートへ遷移
-void EnemySlime::TransitionIdleBattleState()
+void EnemySphere::TransitionIdleBattleState()
 {
 	state = State::IdleBattle;
 
@@ -567,7 +567,7 @@ void EnemySlime::TransitionIdleBattleState()
 }
 
 // 戦闘待機ステート更新処理
-void EnemySlime::UpdateIdleBattleState(float elapsedTime)
+void EnemySphere::UpdateIdleBattleState(float elapsedTime)
 {
 	// 目標地点をプレイヤー位置に設定
 	targetPosition = Player::Instance().GetPosition();
@@ -597,7 +597,7 @@ void EnemySlime::UpdateIdleBattleState(float elapsedTime)
 }
 
 // ダメージステートへ遷移
-void EnemySlime::TransitionDamageState()
+void EnemySphere::TransitionDamageState()
 {
 	state = State::Damage;
 
@@ -606,7 +606,7 @@ void EnemySlime::TransitionDamageState()
 }
 
 // ダメージステート更新処理
-void EnemySlime::UpdateDamageState(float elapsedTime)
+void EnemySphere::UpdateDamageState(float elapsedTime)
 {
 	// ダメージアニメーションが終わったら戦闘待機ステートへ遷移
 	if (!model->IsPlayAnimation())
@@ -616,7 +616,7 @@ void EnemySlime::UpdateDamageState(float elapsedTime)
 }
 
 // 死亡ステートへ遷移
-void EnemySlime::TransitionDeathState()
+void EnemySphere::TransitionDeathState()
 {
 	state = State::Death;
 
@@ -625,7 +625,7 @@ void EnemySlime::TransitionDeathState()
 }
 
 // 死亡ステート更新処理
-void EnemySlime::UpdateDeathState(float elapsedTime)
+void EnemySphere::UpdateDeathState(float elapsedTime)
 {
 	// ダメージアニメーションが終わったら自分を破棄
 	if (!model->IsPlayAnimation())
@@ -635,14 +635,14 @@ void EnemySlime::UpdateDeathState(float elapsedTime)
 }
 
 // ダメージ受けた時に呼ばれる
-void EnemySlime::OnDamaged()
+void EnemySphere::OnDamaged()
 {
 	// ダメージステートへ遷移
 	TransitionDamageState();
 }
 
 // 死亡しと時に呼ばれる
-void EnemySlime::OnDead()
+void EnemySphere::OnDead()
 {
 	//Destroy();
 

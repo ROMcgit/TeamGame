@@ -7,11 +7,11 @@
 #include "ProjectileManager.h"
 
 // スライム
-class EnemySlime : public Enemy
+class EnemySphere : public Enemy
 {
 public:
-	EnemySlime();
-	~EnemySlime() override;
+	EnemySphere();
+	~EnemySphere() override;
 
 	// 更新処理
 	void Update(float elapsedTime) override;

@@ -269,6 +269,7 @@ void EnemySphere::CollisionProjectilesVsEnemy()
 			{
 				if(attackWait <= 0)
 				this->ApplyDamage(1, 2);
+				projectile->Destroy();
 			}
 		}
 	}

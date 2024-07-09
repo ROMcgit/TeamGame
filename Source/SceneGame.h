@@ -52,4 +52,7 @@ private:
 	CameraController* cameraController = nullptr;
 	Sprite* gauge = nullptr;
 	std::unique_ptr<Text> text[2];
+	float newEnemyCount = 0;
+	float newEnemyMaxCount = 30;
+	int newWallCount = 0;
 };

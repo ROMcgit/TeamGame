@@ -2,6 +2,7 @@
 
 #include "Graphics/Sprite.h"
 #include "Scene.h"
+#include "Graphics/Text.h"
 
 
 // タイトルシーン
@@ -25,4 +26,6 @@ public:
 
 private:
 	Sprite* sprite = nullptr;
+
+	std::unique_ptr<Text> text[2];
 };

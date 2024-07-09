@@ -69,7 +69,7 @@ void SceneGame::Initialize()
 	// slime->SetPosition(DirectX::XMFLOAT3(0,0,5))
 	//enemyManager.Register(enemy);
 
-	for (int i = 0; i < 2; ++i)
+	for (int i = 0; i < 3; ++i)
 	{
 		EnemySphere* sphere = new EnemySphere();
 		sphere->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 4, 0));
@@ -172,39 +172,49 @@ void SceneGame::Update(float elapsedTime)
 
 	WallManager& wallManager = WallManager::Instance();
 
-	if (enemyCount < 5)
+	if (newWallCount > 600)
 	{
-		int enemyWhich = rand() % 6 + 1;
-
 		/// X座標のランダムな位置を生成 (-6から6の範囲)
 		int posX = (rand() % 5 + 1) * (rand() % 2 == 1 ? -1 : 1);
 
-		// Y座標のランダムな位置を生成 (-3から3の範囲)
-		int posY = rand() % 3 + 4;
+		WallEnemy* wall = new WallEnemy();
+		wall->SetPosition(DirectX::XMFLOAT3(posX, 2.5, 0));
+		wallManager.Register(wall);
+		newWallCount = 0;
+	}
 
-		// 弱い敵
-		if (enemyWhich <= 4)
+	if (enemyCount < 5)
+	{
+		if (newEnemyCount > newEnemyMaxCount)
 		{
-			EnemySphere* sphere = new EnemySphere();
-			sphere->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
-			sphere->SetTerritory(sphere->GetPosition(), 10.0f);
-			enemyManager.Register(sphere);
+			int enemyWhich = rand() % 5 + 1;
+
+			/// X座標のランダムな位置を生成 (-6から6の範囲)
+			int posX = (rand() % 5 + 1) * (rand() % 2 == 1 ? -1 : 1);
+
+			// Y座標のランダムな位置を生成 (-3から3の範囲)
+			int posY = rand() % 3 + 4;
+
+			// 弱い敵
+			if (enemyWhich <= 4)
+			{
+				EnemySphere* sphere = new EnemySphere();
+				sphere->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
+				sphere->SetTerritory(sphere->GetPosition(), 10.0f);
+				enemyManager.Register(sphere);
+			}
+			// 強い敵
+			else if (enemyWhich == 5)
+			{
+				EnemyStrong* strong = new EnemyStrong();
+				strong->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
+				strong->SetTerritory(strong->GetPosition(), 10.0f);
+				enemyManager.Register(strong);
+			}
+			newEnemyCount = 0;
+			newEnemyMaxCount += 0.2f;
 		}
-		// 壁
-		else if (enemyWhich == 5)
-		{
-			WallEnemy* wall = new WallEnemy();
-			wall->SetPosition(DirectX::XMFLOAT3(posX, 2.5 , 0));
-			wallManager.Register(wall);
-		}
-		// 強い敵
-		else if (enemyWhich == 6)
-		{
-			EnemyStrong* strong = new EnemyStrong();
-			strong->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
-			strong->SetTerritory(strong->GetPosition(), 10.0f);
-			enemyManager.Register(strong);
-		}
+		newEnemyCount += 0.5f;
 	}
 
 	if ( enemyCount <= 0)

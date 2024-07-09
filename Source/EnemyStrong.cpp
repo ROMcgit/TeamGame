@@ -274,6 +274,7 @@ void EnemyStrong::CollisionProjectilesVsEnemy()
 				{
 					this->ApplyDamage(3, 1);
 					enemy->ApplyDamage(1, 1);
+					projectile->Destroy();
 				}
 			}
 		}

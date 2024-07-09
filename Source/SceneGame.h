@@ -53,6 +53,10 @@ private:
 	Sprite* gauge = nullptr;
 	std::unique_ptr<Text> text[2];
 	float newEnemyCount = 0;
-	float newEnemyMaxCount = 30;
+	float newEnemyMaxCount = 10;
 	int newWallCount = 0;
+	int battleWave = 1;
+	int nextWaveWait = 0;
+	bool newEnemy = false;
+	bool battleStart = false;
 };

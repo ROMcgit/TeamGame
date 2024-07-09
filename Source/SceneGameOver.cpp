@@ -54,13 +54,13 @@ void SceneGameOver::Render()
 	SceneTitle& title = SceneTitle::Instance();
 
 	text[0]->Render(dc,
-		true, true,
+		true, false,
 		true,
 		0, 0, 0, 0, 0,
 		0, 0, 0, title.score,
-		640, 360,
-		5, 5,
+		800, 360,
+		12, 12,
 		0,
-		30,
-		1, 0, 0, 1);
+		40,
+		1, 1, 1, 1);
 }

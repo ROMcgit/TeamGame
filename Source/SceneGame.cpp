@@ -244,7 +244,11 @@ void SceneGame::Update(float elapsedTime)
 		{
 			if (newEnemyCount > newEnemyMaxCount)
 			{
-				int enemyWhich = rand() % 2;
+				int enemyWhich = 0;
+
+				if(newEnemyMaxCount < 70)
+				enemyWhich = rand() % 2;
+				else enemyWhich = rand() % 4;
 
 				/// XÀ•W‚Ìƒ‰ƒ“ƒ_ƒ€‚ÈˆÊ’u‚ð¶¬ (-6‚©‚ç6‚Ì”ÍˆÍ)
 				int posX = (rand() % 5 + 1) * (rand() % 2 == 1 ? -1 : 1);
@@ -252,22 +256,45 @@ void SceneGame::Update(float elapsedTime)
 				// YÀ•W‚Ìƒ‰ƒ“ƒ_ƒ€‚ÈˆÊ’u‚ð¶¬ (-3‚©‚ç3‚Ì”ÍˆÍ)
 				int posY = rand() % 3 + 4;
 
-				// Žã‚¢“G
-				if (enemyWhich == 0)
+				if (newEnemyMaxCount < 70)
 				{
-					EnemySphere* sphere = new EnemySphere();
-					sphere->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
-					sphere->SetTerritory(sphere->GetPosition(), 10.0f);
-					enemyManager.Register(sphere);
+					// Žã‚¢“G
+					if (enemyWhich == 0)
+					{
+						EnemySphere* sphere = new EnemySphere();
+						sphere->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
+						sphere->SetTerritory(sphere->GetPosition(), 10.0f);
+						enemyManager.Register(sphere);
+					}
+					// ‹­‚¢“G
+					else if (enemyWhich == 1)
+					{
+						EnemyStrong* strong = new EnemyStrong();
+						strong->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
+						strong->SetTerritory(strong->GetPosition(), 10.0f);
+						enemyManager.Register(strong);
+					}
 				}
-				// ‹­‚¢“G
-				else if (enemyWhich == 1)
+				else
 				{
-					EnemyStrong* strong = new EnemyStrong();
-					strong->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
-					strong->SetTerritory(strong->GetPosition(), 10.0f);
-					enemyManager.Register(strong);
+					// Žã‚¢“G
+					if (enemyWhich <= 2)
+					{
+						EnemySphere* sphere = new EnemySphere();
+						sphere->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
+						sphere->SetTerritory(sphere->GetPosition(), 10.0f);
+						enemyManager.Register(sphere);
+					}
+					// ‹­‚¢“G
+					else if (enemyWhich == 3)
+					{
+						EnemyStrong* strong = new EnemyStrong();
+						strong->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
+						strong->SetTerritory(strong->GetPosition(), 10.0f);
+						enemyManager.Register(strong);
+					}
 				}
+
 				newEnemyCount = 0;
 				newEnemyMaxCount += 0.2f;
 				if (enemyCount >= 2) battleStart = true;

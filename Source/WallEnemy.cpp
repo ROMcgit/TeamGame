@@ -9,6 +9,7 @@
 #include <Input/GamePad.h>
 #include <Input/Input.h>
 #include <EnemyManager.h>
+#include <SceneTitle.h>
 
 // コンストラクタ
 WallEnemy::WallEnemy()
@@ -576,6 +577,9 @@ void WallEnemy::UpdateDeathState(float elapsedTime)
 	// ダメージアニメーションが終わったら自分を破棄
 	if (!model->IsPlayAnimation())
 	{
+		SceneTitle& title = SceneTitle::Instance();
+		title.score += 100;
+
 		Destroy();
 	}
 }

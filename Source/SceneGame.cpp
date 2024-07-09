@@ -14,7 +14,7 @@
 #include "SceneGameOver.h"
 #include "SceneManager.h"
 #include "SceneClear.h"
-
+#include "SceneTitle.h"
 Sprite* EnemyHp;
 
 // 初期化
@@ -87,6 +87,10 @@ void SceneGame::Initialize()
 
 	// ゲージスプライト
 	gauge = new Sprite();
+
+	// スコア
+	text[0] = std::make_unique<Text>();
+	text[1] = std::make_unique<Text>();
 	
 }
 
@@ -242,6 +246,18 @@ void SceneGame::Render()
 
 	// 2Dスプライト描画
 	{
+		SceneTitle& title = SceneTitle::Instance();
+
+		text[0]->Render(dc,
+			true, false,
+			0, 0, 0, 0, 0,
+			0, 0, 0, title.score,
+			30, 80,
+			5, 5,
+			0,
+			30,
+			1, 1, 1, 1);
+
 		PlayerUI();
 
 		RenderEnemyGauge(dc, rc.view, rc.projection);

@@ -10,6 +10,13 @@ public:
 	SceneTitle() {};
 	~SceneTitle() override {};
 
+	// 唯一のインスタンス取得
+	static SceneTitle& Instance()
+	{
+		static SceneTitle instace;
+		return instace;
+	}
+
 	// 初期化
 	void Initialize() override;
 
@@ -21,7 +28,10 @@ public:
 
 	// 描画処理
 	void Render() override;
+public:
+	int score = 0;
 
 private:
 	Sprite* sprite = nullptr;
+	
 };

@@ -34,6 +34,7 @@ Text::~Text()
 // 描画処理(百の位まで対応(タイム用))
 void Text::Render(ID3D11DeviceContext* dc,
 	bool measure,                       // 関数を測定に使うか
+	bool AlignLeft,                     // 左揃えにするか
 	bool zeroViewTho,				    // 0でも表示するか(千の位)
 	bool zeroViewHun, bool zeroViewTen, // 0でも表示するか(百の位、十の位)
 	int thousand,					    // 数値(千)
@@ -104,21 +105,77 @@ void Text::Render(ID3D11DeviceContext* dc,
 	
 	// 数値の表示 //
 
-	// 千の位
-	if (zeroViewTho == true) //0でも表示する
+	// 左揃え //
+	if (AlignLeft == true)
 	{
-		textH[thousand]->Render(dc,
-			dx - space * 3, dy,
-			dw * 5, dh * 5,
-			0, 0,
-			82, 82,
-			angle,
-			r, g, b, a);
-	}
-	else if (viewTho == true) //0の時表示しない
-	{
-		textH[thousand]->Render(dc,
-			dx - space * 3, dy,
+		// 千の位
+		if (zeroViewTho == true) //0でも表示する
+		{
+			textH[thousand]->Render(dc,
+				dx, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
+		}
+		else if (viewTho == true) //0の時表示しない
+		{
+			textH[thousand]->Render(dc,
+				dx, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
+		}
+
+		// 百の位
+		if (zeroViewHun == true) //0でも表示する
+		{
+			textH[hundred]->Render(dc,
+				dx + space, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
+		}
+		else if (viewHun == true) //0の時表示しない
+		{
+			textH[hundred]->Render(dc,
+				dx + space, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
+		}
+
+		// 十の位
+		if (zeroViewTen == true) //0でも表示する
+		{
+			textT[ten]->Render(dc,
+				dx + space * 2, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
+		}
+		else if (viewTen == true) //0の時表示しない
+		{
+			textT[ten]->Render(dc,
+				dx + space * 2, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
+		}
+
+		textO[oneNum]->Render(dc,
+			dx + space * 3, dy,
 			dw * 5, dh * 5,
 			0, 0,
 			82, 82,
@@ -126,62 +183,89 @@ void Text::Render(ID3D11DeviceContext* dc,
 			r, g, b, a);
 	}
 
-	// 百の位
-	if (zeroViewHun == true) //0でも表示する
+	// 右揃え //
+	if (AlignLeft == false)
 	{
-		textH[hundred]->Render(dc,
-			dx - space * 2, dy,
-			dw * 5, dh * 5,
-			0, 0,
-			82, 82,
-			angle,
-			r, g, b, a);
-	}
-	else if (viewHun == true) //0の時表示しない
-	{
-		textH[hundred]->Render(dc,
-			dx - space * 2, dy,
-			dw * 5, dh * 5,
-			0, 0,
-			82, 82,
-			angle,
-			r, g, b, a);
-	}
+		// 千の位
+		if (zeroViewTho == true) //0でも表示する
+		{
+			textH[thousand]->Render(dc,
+				dx - space * 3, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
+		}
+		else if (viewTho == true) //0の時表示しない
+		{
+			textH[thousand]->Render(dc,
+				dx - space * 3, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
+		}
 
-	// 十の位
-	if (zeroViewTen == true) //0でも表示する
-	{
-		textT[ten]->Render(dc,
-			dx - space, dy,
+		// 百の位
+		if (zeroViewHun == true) //0でも表示する
+		{
+			textH[hundred]->Render(dc,
+				dx - space * 2, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
+		}
+		else if (viewHun == true) //0の時表示しない
+		{
+			textH[hundred]->Render(dc,
+				dx - space * 2, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
+		}
+
+		// 十の位
+		if (zeroViewTen == true) //0でも表示する
+		{
+			textT[ten]->Render(dc,
+				dx - space, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
+		}
+		else if (viewTen == true) //0の時表示しない
+		{
+			textT[ten]->Render(dc,
+				dx - space, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
+		}
+
+		textO[oneNum]->Render(dc,
+			dx, dy,
 			dw * 5, dh * 5,
 			0, 0,
 			82, 82,
 			angle,
 			r, g, b, a);
 	}
-	else if (viewTen == true) //0の時表示しない
-	{
-		textT[ten]->Render(dc,
-			dx - space, dy,
-			dw * 5, dh * 5,
-			0, 0,
-			82, 82,
-			angle,
-			r, g, b, a);
-	}
-	
-	textO[oneNum]->Render(dc,
-		dx, dy,
-		dw * 5, dh * 5,
-		0, 0,
-		82, 82,
-		angle,
-		r, g, b, a);
 }
 
 // 描画処理(億の位まで対応(スコア用))
 void Text::Render(ID3D11DeviceContext* dc, 
 	bool measure,                                   // 関数を測定に使うか
+	bool AlignLeft,                                 // 左揃えにするか
 	bool zeroView,                                  // 0の時表示するか
 	int oku,										// 数値(億)
 	int thoMan, int hunMan, int tenMan, int man, 	// 数値(万)
@@ -292,75 +376,191 @@ void Text::Render(ID3D11DeviceContext* dc,
 	
 	// 数値の表示 //
 
-	//0でも表示する
-	if (zeroView == true) 
+	// 左揃え //
+	if (AlignLeft == true)
 	{
-		// 億の位
-		textOku[oku]->Render(dc,
-			dx - space * 8, dy,
-			dw * 5, dh * 5,
-			0, 0,
-			82, 82,
-			angle,
-			r, g, b, a);
+		//0でも表示する
+		if (zeroView == true)
+		{
+			// 億の位
+			textOku[oku]->Render(dc,
+				dx, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
 
-		// 千万の位
-		textThoMan[thoMan]->Render(dc,
-			dx - space * 7, dy,
-			dw * 5, dh * 5,
-			0, 0,
-			82, 82,
-			angle,
-			r, g, b, a);
+			// 千万の位
+			textThoMan[thoMan]->Render(dc,
+				dx + space, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
 
-		// 百万の位
-		textThoMan[hunMan]->Render(dc,
-			dx - space * 6, dy,
-			dw * 5, dh * 5,
-			0, 0,
-			82, 82,
-			angle,
-			r, g, b, a);
+			// 百万の位
+			textThoMan[hunMan]->Render(dc,
+				dx + space * 2, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
 
-		// 十万の位
-		textTenMan[tenMan]->Render(dc,
-			dx - space * 5, dy,
-			dw * 5, dh * 5,
-			0, 0,
-			82, 82,
-			angle,
-			r, g, b, a);
+			// 十万の位
+			textTenMan[tenMan]->Render(dc,
+				dx + space * 3, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
 
-		// 万の位
-		textMan[man]->Render(dc,
-			dx - space * 4, dy,
-			dw * 5, dh * 5,
-			0, 0,
-			82, 82,
-			angle,
-			r, g, b, a);
+			// 万の位
+			textMan[man]->Render(dc,
+				dx + space * 4, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
 
-		// 千の位
-		textTho[thousand]->Render(dc,
-			dx - space * 3, dy,
-			dw * 5, dh * 5,
-			0, 0,
-			82, 82,
-			angle,
-			r, g, b, a);
+			// 千の位
+			textTho[thousand]->Render(dc,
+				dx + space * 5, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
 
-		// 百の位
-		textH[hundred]->Render(dc,
-			dx - space * 2, dy,
-			dw * 5, dh * 5,
-			0, 0,
-			82, 82,
-			angle,
-			r, g, b, a);
+			// 百の位
+			textH[hundred]->Render(dc,
+				dx + space * 6, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
 
-		// 十の位
-		textT[ten]->Render(dc,
-			dx - space, dy,
+			// 十の位
+			textT[ten]->Render(dc,
+				dx + space * 7, dy,
+				dw * 5, dh * 5,
+				0, 0,
+				82, 82,
+				angle,
+				r, g, b, a);
+		}
+
+		// 0の時表示しない //
+
+		else
+		{
+			// 億の位
+			if (oku != 0)
+			{
+				textO[oku]->Render(dc,
+					dx, dy,
+					dw * 5, dh * 5,
+					0, 0,
+					82, 82,
+					angle,
+					r, g, b, a);
+			}
+
+			// 千万の位
+			if (viewThoMan == true)
+			{
+				textThoMan[thoMan]->Render(dc,
+					dx + space, dy,
+					dw * 5, dh * 5,
+					0, 0,
+					82, 82,
+					angle,
+					r, g, b, a);
+			}
+
+			if (viewHunMan == true)
+			{
+				// 百万の位
+				textThoMan[hunMan]->Render(dc,
+					dx + space * 2, dy,
+					dw * 5, dh * 5,
+					0, 0,
+					82, 82,
+					angle,
+					r, g, b, a);
+			}
+
+			// 十万の位
+			if (viewTenMan == true)
+			{
+				textTenMan[tenMan]->Render(dc,
+					dx + space * 3, dy,
+					dw * 5, dh * 5,
+					0, 0,
+					82, 82,
+					angle,
+					r, g, b, a);
+			}
+
+			// 万の位
+			if (viewMan == true)
+			{
+				textMan[man]->Render(dc,
+					dx + space * 4, dy,
+					dw * 5, dh * 5,
+					0, 0,
+					82, 82,
+					angle,
+					r, g, b, a);
+			}
+
+
+			// 千の位
+			if (viewTho == true)
+			{
+				textTho[thousand]->Render(dc,
+					dx + space * 5, dy,
+					dw * 5, dh * 5,
+					0, 0,
+					82, 82,
+					angle,
+					r, g, b, a);
+			}
+
+			// 百の位
+			if (viewHun == true)
+			{
+				textH[hundred]->Render(dc,
+					dx + space * 6, dy,
+					dw * 5, dh * 5,
+					0, 0,
+					82, 82,
+					angle,
+					r, g, b, a);
+			}
+
+			// 十の位
+			if (viewTen == true) //0の時表示しない
+			{
+
+				textT[ten]->Render(dc,
+					dx + space * 7, dy,
+					dw * 5, dh * 5,
+					0, 0,
+					82, 82,
+					angle,
+					r, g, b, a);
+			}
+		}
+
+		// 一の位
+		textO[oneNum]->Render(dc,
+			dx + space * 8, dy,
 			dw * 5, dh * 5,
 			0, 0,
 			82, 82,
@@ -368,25 +568,22 @@ void Text::Render(ID3D11DeviceContext* dc,
 			r, g, b, a);
 	}
 
-	// 0の時表示しない //
-
-	else
+	// 右揃え //
+	if (AlignLeft == false)
 	{
-		// 億の位
-		if (oku != 0)
+		//0でも表示する
+		if (zeroView == true)
 		{
-			textO[oku]->Render(dc,
+			// 億の位
+			textOku[oku]->Render(dc,
 				dx - space * 8, dy,
 				dw * 5, dh * 5,
 				0, 0,
 				82, 82,
 				angle,
 				r, g, b, a);
-		}
 
-		// 千万の位
-		if (viewThoMan == true)
-		{
+			// 千万の位
 			textThoMan[thoMan]->Render(dc,
 				dx - space * 7, dy,
 				dw * 5, dh * 5,
@@ -394,10 +591,7 @@ void Text::Render(ID3D11DeviceContext* dc,
 				82, 82,
 				angle,
 				r, g, b, a);
-		}
 
-		if (viewHunMan == true)
-		{
 			// 百万の位
 			textThoMan[hunMan]->Render(dc,
 				dx - space * 6, dy,
@@ -406,11 +600,8 @@ void Text::Render(ID3D11DeviceContext* dc,
 				82, 82,
 				angle,
 				r, g, b, a);
-		}
 
-		// 十万の位
-		if (viewTenMan == true)
-		{
+			// 十万の位
 			textTenMan[tenMan]->Render(dc,
 				dx - space * 5, dy,
 				dw * 5, dh * 5,
@@ -418,11 +609,8 @@ void Text::Render(ID3D11DeviceContext* dc,
 				82, 82,
 				angle,
 				r, g, b, a);
-		}
 
-		// 万の位
-		if (viewMan == true)
-		{
+			// 万の位
 			textMan[man]->Render(dc,
 				dx - space * 4, dy,
 				dw * 5, dh * 5,
@@ -430,12 +618,8 @@ void Text::Render(ID3D11DeviceContext* dc,
 				82, 82,
 				angle,
 				r, g, b, a);
-		}
 
-
-		// 千の位
-		if (viewTho == true)
-		{
+			// 千の位
 			textTho[thousand]->Render(dc,
 				dx - space * 3, dy,
 				dw * 5, dh * 5,
@@ -443,11 +627,8 @@ void Text::Render(ID3D11DeviceContext* dc,
 				82, 82,
 				angle,
 				r, g, b, a);
-		}
 
-		// 百の位
-		if (viewHun == true)
-		{
+			// 百の位
 			textH[hundred]->Render(dc,
 				dx - space * 2, dy,
 				dw * 5, dh * 5,
@@ -455,12 +636,8 @@ void Text::Render(ID3D11DeviceContext* dc,
 				82, 82,
 				angle,
 				r, g, b, a);
-		}
 
-		// 十の位
-		if (viewTen == true) //0の時表示しない
-		{
-
+			// 十の位
 			textT[ten]->Render(dc,
 				dx - space, dy,
 				dw * 5, dh * 5,
@@ -469,14 +646,118 @@ void Text::Render(ID3D11DeviceContext* dc,
 				angle,
 				r, g, b, a);
 		}
+
+		// 0の時表示しない //
+
+		else
+		{
+			// 億の位
+			if (oku != 0)
+			{
+				textO[oku]->Render(dc,
+					dx - space * 8, dy,
+					dw * 5, dh * 5,
+					0, 0,
+					82, 82,
+					angle,
+					r, g, b, a);
+			}
+
+			// 千万の位
+			if (viewThoMan == true)
+			{
+				textThoMan[thoMan]->Render(dc,
+					dx - space * 7, dy,
+					dw * 5, dh * 5,
+					0, 0,
+					82, 82,
+					angle,
+					r, g, b, a);
+			}
+
+			if (viewHunMan == true)
+			{
+				// 百万の位
+				textThoMan[hunMan]->Render(dc,
+					dx - space * 6, dy,
+					dw * 5, dh * 5,
+					0, 0,
+					82, 82,
+					angle,
+					r, g, b, a);
+			}
+
+			// 十万の位
+			if (viewTenMan == true)
+			{
+				textTenMan[tenMan]->Render(dc,
+					dx - space * 5, dy,
+					dw * 5, dh * 5,
+					0, 0,
+					82, 82,
+					angle,
+					r, g, b, a);
+			}
+
+			// 万の位
+			if (viewMan == true)
+			{
+				textMan[man]->Render(dc,
+					dx - space * 4, dy,
+					dw * 5, dh * 5,
+					0, 0,
+					82, 82,
+					angle,
+					r, g, b, a);
+			}
+
+
+			// 千の位
+			if (viewTho == true)
+			{
+				textTho[thousand]->Render(dc,
+					dx - space * 3, dy,
+					dw * 5, dh * 5,
+					0, 0,
+					82, 82,
+					angle,
+					r, g, b, a);
+			}
+
+			// 百の位
+			if (viewHun == true)
+			{
+				textH[hundred]->Render(dc,
+					dx - space * 2, dy,
+					dw * 5, dh * 5,
+					0, 0,
+					82, 82,
+					angle,
+					r, g, b, a);
+			}
+
+			// 十の位
+			if (viewTen == true) //0の時表示しない
+			{
+
+				textT[ten]->Render(dc,
+					dx - space, dy,
+					dw * 5, dh * 5,
+					0, 0,
+					82, 82,
+					angle,
+					r, g, b, a);
+			}
+		}
+
+		// 一の位
+		textO[oneNum]->Render(dc,
+			dx, dy,
+			dw * 5, dh * 5,
+			0, 0,
+			82, 82,
+			angle,
+			r, g, b, a);
 	}
 
-	// 一の位
-	textO[oneNum]->Render(dc,
-		dx, dy,
-		dw * 5, dh * 5,
-		0, 0,
-		82, 82,
-		angle,
-		r, g, b, a);
 }

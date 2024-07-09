@@ -10,6 +10,7 @@
 #include <Input/Input.h>
 #include <EnemyManager.h>
 #include "WallManager.h"
+#include "SceneTitle.h"
 
 // コンストラクタ
 EnemySphere::EnemySphere()
@@ -663,6 +664,9 @@ void EnemySphere::UpdateDeathState(float elapsedTime)
 	// ダメージアニメーションが終わったら自分を破棄
 	if (!model->IsPlayAnimation())
 	{
+		SceneTitle& title = SceneTitle::Instance();
+		title.score += 100;
+
 		Destroy();
 	}
 }

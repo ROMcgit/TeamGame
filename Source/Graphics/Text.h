@@ -18,6 +18,7 @@ public:
 	// 「0～9」まで対応。「0未満」または「10以上」だとエラーが出ます。
 	void Render(ID3D11DeviceContext* dc,
 		bool measure,					    // 関数を測定に使うか
+		bool AlignLeft,                     // 左揃えにするか
 		bool zeroViewTho,				    // 0でも表示するか(千の位)
 		bool zeroViewHun, bool zeroViewTen, // 0でも表示するか(百の位、十の位)
 		int thousand,					    // 数値(千)
@@ -39,6 +40,7 @@ public:
 	// 「0～9」まで対応。「0未満」または「10以上」だとエラーが出ます。
 	void Render(ID3D11DeviceContext* dc,
 		bool measure,									// 関数を測定に使うか
+		bool AlignLeft,                                 // 左揃えにするか
 		bool zeroView,									// 0の時表示するか
 		int oku,										// 数値(億)
 		int thoMan, int hunMan, int tenMan, int man,	// 数値(万)

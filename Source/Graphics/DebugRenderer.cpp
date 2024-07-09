@@ -79,7 +79,7 @@ DebugRenderer::DebugRenderer(ID3D11Device* device)
 		::memset(&desc, 0, sizeof(desc));
 		desc.AlphaToCoverageEnable = false;
 		desc.IndependentBlendEnable = false;
-		desc.RenderTarget[0].BlendEnable = false;
+		desc.RenderTarget[0].BlendEnable = true;
 		desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 		desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
 		desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;

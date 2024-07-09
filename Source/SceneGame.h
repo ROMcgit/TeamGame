@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "Graphics/Sprite.h"
 #include <memory>
+#include "Graphics/Text.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 //class SceneGame
@@ -50,4 +51,5 @@ private:
 	std::unique_ptr<Sprite> uiSprite[4];
 	CameraController* cameraController = nullptr;
 	Sprite* gauge = nullptr;
+	std::unique_ptr<Text> text[2];
 };

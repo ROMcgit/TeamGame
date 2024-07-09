@@ -10,6 +10,9 @@ void SceneTitle::Initialize()
 {
 	// スプライト初期化
 	sprite = new Sprite("Data/Sprite/Title.png");
+
+	SceneTitle& title = SceneTitle::Instance();
+	title.score = 0;
 }
 
 // 終了化

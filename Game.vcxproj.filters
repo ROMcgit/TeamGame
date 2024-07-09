@@ -231,6 +231,9 @@
     <ClInclude Include="Source\Graphics\Text.h">
       <Filter>Source\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Source\EnemyStrong.h">
+      <Filter>Source\Character\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -385,6 +388,9 @@
     </ClCompile>
     <ClCompile Include="Source\Graphics\Text.cpp">
       <Filter>Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EnemyStrong.cpp">
+      <Filter>Source\Character\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

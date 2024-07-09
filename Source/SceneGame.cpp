@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "EnemyManager.h"
 #include "EnemySphere.h"
+#include "EnemyStrong.h"
 #include "WallManager.h"
 #include "WallEnemy.h"
 #include "EffectManager.h"
@@ -71,9 +72,17 @@ void SceneGame::Initialize()
 	for (int i = 0; i < 2; ++i)
 	{
 		EnemySphere* sphere = new EnemySphere();
-		sphere->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 0));
+		sphere->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 4, 0));
 		sphere->SetTerritory(sphere->GetPosition(), 10.0f);
 		enemyManager.Register(sphere);
+	}
+
+	for (int i = 0; i < 2; ++i)
+	{
+		EnemyStrong* strong = new EnemyStrong();
+		strong->SetPosition(DirectX::XMFLOAT3(i * 1.5f, 5, 0));
+		strong->SetTerritory(strong->GetPosition(), 10.0f);
+		enemyManager.Register(strong);
 	}
 
 	WallManager& wallManager = WallManager::Instance();
@@ -249,10 +258,11 @@ void SceneGame::Render()
 		SceneTitle& title = SceneTitle::Instance();
 
 		text[0]->Render(dc,
-			true, false,
+			true, true,
+			true,
 			0, 0, 0, 0, 0,
 			0, 0, 0, title.score,
-			30, 80,
+			10, 30,
 			5, 5,
 			0,
 			30,
@@ -287,7 +297,7 @@ void SceneGame::PlayerUI()
 
 	// ダメージゲージ
 	uiSprite[2]->Render(dc,
-		20, 20, 
+		20, 60, 
 		player->GetDamageHealth() * 0.9f, 25,
 		0, 0, textureWidth, textureHeight,
 		0,
@@ -298,7 +308,7 @@ void SceneGame::PlayerUI()
 
 	// HPゲージ
 	uiSprite[1]->Render(dc,
-		20, 20,
+		20, 60,
 		player->GetHealth() * 0.9f, 25,
 		0, 0, textureWidth, textureHeight,
 		0,

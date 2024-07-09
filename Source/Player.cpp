@@ -240,10 +240,8 @@ void Player::UpdateIdleState(float elapsedTime)
 	// 移動入力されたら移動ステートへ遷移
 	
 	const GamePadButton ArrowButton =
-		GamePad::BTN_UP |
 		GamePad::BTN_LEFT |
-		GamePad::BTN_RIGHT |
-		GamePad::BTN_DOWN;
+		GamePad::BTN_RIGHT;
 
 	GamePad& gamePad = Input::Instance().GetGamePad();
 	if (gamePad.GetButtonHeld() & ArrowButton)

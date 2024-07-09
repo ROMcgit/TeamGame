@@ -55,7 +55,7 @@ void SceneGameOver::Render()
 
 	text[0]->Render(dc,
 		true, false,
-		true,
+		false,
 		0, 0, 0, 0, 0,
 		0, 0, 0, title.score,
 		800, 360,

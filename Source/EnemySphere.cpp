@@ -669,8 +669,6 @@ void EnemySphere::UpdateDeathState(float elapsedTime)
 	{
 		Player& player = Player::Instance();
 		SceneTitle& title = SceneTitle::Instance();
-		player.health += 2;
-		player.damageHealth += 2;
 		title.score += 100;
 
 		Destroy();

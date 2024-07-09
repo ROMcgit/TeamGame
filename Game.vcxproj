@@ -140,6 +140,7 @@
     <ClInclude Include="Source\Enemy.h" />
     <ClInclude Include="Source\EnemyManager.h" />
     <ClInclude Include="Source\EnemySphere.h" />
+    <ClInclude Include="Source\Graphics\Text.h" />
     <ClInclude Include="Source\WallEnemy.h" />
     <ClInclude Include="Source\Framework.h" />
     <ClInclude Include="Source\Graphics\DebugRenderer.h" />
@@ -197,6 +198,7 @@
     <ClCompile Include="Source\Enemy.cpp" />
     <ClCompile Include="Source\EnemyManager.cpp" />
     <ClCompile Include="Source\EnemySphere.cpp" />
+    <ClCompile Include="Source\Graphics\Text.cpp" />
     <ClCompile Include="Source\WallEnemy.cpp" />
     <ClCompile Include="Source\Framework.cpp" />
     <ClCompile Include="Source\Graphics\DebugRenderer.cpp" />

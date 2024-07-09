@@ -59,4 +59,5 @@ private:
 	int nextWaveWait = 0;
 	bool newEnemy = false;
 	bool battleStart = false;
+	int nextSceneCount = 0;
 };

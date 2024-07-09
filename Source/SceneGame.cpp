@@ -244,7 +244,7 @@ void SceneGame::Update(float elapsedTime)
 		{
 			if (newEnemyCount > newEnemyMaxCount)
 			{
-				int enemyWhich = rand() % 5 + 1;
+				int enemyWhich = rand() % 2;
 
 				/// X座標のランダムな位置を生成 (-6から6の範囲)
 				int posX = (rand() % 5 + 1) * (rand() % 2 == 1 ? -1 : 1);
@@ -253,7 +253,7 @@ void SceneGame::Update(float elapsedTime)
 				int posY = rand() % 3 + 4;
 
 				// 弱い敵
-				if (enemyWhich <= 4)
+				if (enemyWhich == 0)
 				{
 					EnemySphere* sphere = new EnemySphere();
 					sphere->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
@@ -261,7 +261,7 @@ void SceneGame::Update(float elapsedTime)
 					enemyManager.Register(sphere);
 				}
 				// 強い敵
-				else if (enemyWhich == 5)
+				else if (enemyWhich == 1)
 				{
 					EnemyStrong* strong = new EnemyStrong();
 					strong->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
@@ -305,6 +305,12 @@ void SceneGame::Update(float elapsedTime)
 	// Wave3
 	if (enemyCount <= 0 && battleWave == 3 && battleStart == true)
 	{
+		nextSceneCount++;
+		newEnemy = false;
+	}
+
+	if (battleWave == 3 && nextSceneCount > 300)
+	{
 		SceneLoading* loadingScene = new SceneLoading(new SceneClear);
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示
@@ -312,6 +318,12 @@ void SceneGame::Update(float elapsedTime)
 	}
 
 	if (player->GetHealth() <= 0)
+	{
+		nextSceneCount++;
+		newEnemy = false;
+	}
+
+	if (player->GetHealth() <= 0 && nextSceneCount > 300)
 	{
 		SceneLoading* loadingScene = new SceneLoading(new SceneGameOver);
 
@@ -432,24 +444,27 @@ void SceneGame::PlayerUI()
 	float textureWidth = static_cast<float>(uiSprite[2]->GetTextureWidth());
 	float textureHeight = static_cast<float>(uiSprite[2]->GetTextureHeight());
 
-	// ダメージゲージ
-	uiSprite[2]->Render(dc,
-		20, 60, 
-		player->GetDamageHealth() * 0.9f, 25,
-		0, 0, textureWidth, textureHeight,
-		0,
-		1, 0, 0, 1);
+	if (player->GetHealth() > 0)
+	{
+		// ダメージゲージ
+		uiSprite[2]->Render(dc,
+			20, 60,
+			player->GetDamageHealth() * 0.9f, 25,
+			0, 0, textureWidth, textureHeight,
+			0,
+			1, 0, 0, 1);
 
-	textureWidth = static_cast<float>(uiSprite[1]->GetTextureWidth());
-	textureHeight = static_cast<float>(uiSprite[1]->GetTextureHeight());
+		textureWidth = static_cast<float>(uiSprite[1]->GetTextureWidth());
+		textureHeight = static_cast<float>(uiSprite[1]->GetTextureHeight());
 
-	// HPゲージ
-	uiSprite[1]->Render(dc,
-		20, 60,
-		player->GetHealth() * 0.9f, 25,
-		0, 0, textureWidth, textureHeight,
-		0,
-		0, 1, 0, 1);
+		// HPゲージ
+		uiSprite[1]->Render(dc,
+			20, 60,
+			player->GetHealth() * 0.9f, 25,
+			0, 0, textureWidth, textureHeight,
+			0,
+			0, 1, 0, 1);
+	}
 }
 
 // エネミーHPゲージ描画

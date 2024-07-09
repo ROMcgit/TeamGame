@@ -127,7 +127,7 @@ void EnemySphere::DrawDebugPrimitive()
 	//	DirectX::XMFLOAT4(0, 1, 0, 1));
 
 	// ターゲット位置をデバッグ球描画
-	debugRender->DrawSphere(targetPosition, radius, DirectX::XMFLOAT4(1, 1, 0, 1));
+	//debugRender->DrawSphere(targetPosition, radius, DirectX::XMFLOAT4(1, 1, 0, 1));
 
 	// 弾丸デバッグプリミティブ描画
 	projectileManager.DrawDebugPrimitive();

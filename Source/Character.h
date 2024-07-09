@@ -50,10 +50,14 @@ public:
 	int GetHealth() const { return health; }
 
 	// HPƒ_ƒ[ƒWæ“¾
-	int GetDamageHealth() { return damageHelth; }
+	int GetDamageHealth() { return damageHealth; }
 
 	// Å‘åŒ’Nó‘Ô‚ğæ“¾
 	int GetMaxHealth() const { return maxHealth; }
+
+	int health = 10;
+	int maxHealth = 5;
+	int damageHealth = 5;
 
 protected:
 
@@ -117,9 +121,7 @@ protected:
 
 	bool isGround = false;
 	float height = 2.0f;
-	int health = 10;
-	int maxHealth = 5;
-	int damageHelth = 5;
+
 
 	float invincibleTimer = 1.0f;
 

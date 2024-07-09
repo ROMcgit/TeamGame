@@ -168,4 +168,5 @@ private:
 	int damageWaitTime = 0;
 	int attackWait = 0;
 	bool hansya = false;
+	int deathTime = 0;
 };

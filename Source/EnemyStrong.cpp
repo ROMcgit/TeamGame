@@ -103,6 +103,10 @@ void EnemyStrong::Update(float elapsedTime)
 
 	if (attackWait > 0)
 		attackWait -= 1;
+
+	if (deathTime > 60 * 60) Destroy();
+
+	deathTime++;
 }
 
 // 描画処理
@@ -211,7 +215,7 @@ void EnemyStrong::CollisionProjectilesVsPlayer()
 			// ダメージを与える
 			else if (damageWaitTime <= 0)
 			{
-				if (player.ApplyDamage(10, 6.0f))
+				if (player.ApplyDamage(15, 6.0f))
 				{
 					// 弾丸破棄
 					projectile->Destroy();
@@ -267,7 +271,10 @@ void EnemyStrong::CollisionProjectilesVsEnemy()
 				outPosition))
 			{
 				if (attackWait <= 0)
-					this->ApplyDamage(1, 2);
+				{
+					this->ApplyDamage(3, 1);
+					enemy->ApplyDamage(1, 1);
+				}
 			}
 		}
 	}
@@ -382,42 +389,33 @@ void EnemyStrong::UpdateWanderState(float elapsedTime)
 	if (waitCount > 300)
 	{
 		int waitTime = 0;
-		for (int i = 0; i < 91; i++)
-		{
-			if (i == 30 || i == 60 || i == 90)
-			{
-				attackWait = 60;
-				const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
 
-				// 前方向
-				DirectX::XMFLOAT3 dir;
+		attackWait = 40;
+		const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
 
-				dir.x = playerPosition.x - position.x;
-				dir.y = playerPosition.y - position.y;
-				dir.z = playerPosition.z - position.z;
+		// 前方向
+		DirectX::XMFLOAT3 dir;
 
-				DirectX::XMVECTOR DIR;
-				DIR = DirectX::XMLoadFloat3(&dir);
-				DIR = DirectX::XMVector3Normalize(DIR);
-				DirectX::XMStoreFloat3(&dir, DIR);
+		dir.x = playerPosition.x - position.x;
+		dir.y = playerPosition.y - position.y;
+		dir.z = playerPosition.z - position.z;
 
-				// 発射位置(プレイヤーの腰あたり)
-				DirectX::XMFLOAT3 pos;
-				pos.x = position.x;
-				pos.y = position.y - 0.2;
-				pos.z = position.z;
+		DirectX::XMVECTOR DIR;
+		DIR = DirectX::XMLoadFloat3(&dir);
+		DIR = DirectX::XMVector3Normalize(DIR);
+		DirectX::XMStoreFloat3(&dir, DIR);
 
-				ProjectileStraight* projectile = new ProjectileStraight(&projectileManager);
-				projectile->Launch(dir, pos);
+		// 発射位置(プレイヤーの腰あたり)
+		DirectX::XMFLOAT3 pos;
+		pos.x = position.x;
+		pos.y = position.y - 0.2;
+		pos.z = position.z;
 
+		ProjectileStraight* projectile = new ProjectileStraight(&projectileManager);
+		projectile->Launch(dir, pos);
 
-				
-			}
-			waitCount = 0;
-		}
-		
+		waitCount = 0;	
 	}
-
 	waitCount++;
 }
 
@@ -674,7 +672,10 @@ void EnemyStrong::UpdateDeathState(float elapsedTime)
 	// ダメージアニメーションが終わったら自分を破棄
 	if (!model->IsPlayAnimation())
 	{
+		Player& player = Player::Instance();
 		SceneTitle& title = SceneTitle::Instance();
+		player.health += 5;
+		player.damageHealth += 5;
 		title.score += 500;
 
 		Destroy();

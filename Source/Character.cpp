@@ -432,9 +432,10 @@ void Character::HpControll()
 {
 	// HP‚ªãŒÀ‚ð’´‚¦‚È‚¢‚æ‚¤‚É
 	if (health > maxHealth) health = maxHealth;
+	if (damageHealth > maxHealth) damageHealth = maxHealth;
 
 	// ƒ_ƒ[ƒWˆ—
-	if (damageHelth > health)
+	if (damageHealth > health)
 	{
 
 		damageCount++;
@@ -443,15 +444,15 @@ void Character::HpControll()
 			waitCount++;
 			if (waitCount >= maxWaitCount)
 			{
-				damageHelth--;
+				damageHealth--;
 				waitCount = 0;
 			}
 		}
 	}
 	// ‰ñ•œ‚µ‚½Žž
-	else if (damageHelth < health) damageHelth = health;
+	else if (damageHealth < health) damageHealth = health;
 
-	if (damageHelth == health) damageCount = 0;
+	if (damageHealth == health) damageCount = 0;
 }
 
 DirectX::XMFLOAT3 Character::GetMoveVec() const

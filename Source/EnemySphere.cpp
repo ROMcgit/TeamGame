@@ -270,18 +270,6 @@ void EnemySphere::CollisionProjectilesVsEnemy()
 				if(attackWait <= 0)
 				this->ApplyDamage(1, 2);
 			}
-
-			EnemyStrong& strong = EnemyStrong::Instance();
-			if (Collision::IntersectSphereVsSphere(
-				projectile->GetPosition(),
-				projectile->GetRadius(),
-				strong.GetPosition(),
-				strong.GetRadius(),
-				outPosition))
-			{
-				strong.ApplyDamage(1, 2);
-			}
-			
 		}
 	}
 }
@@ -559,7 +547,7 @@ void EnemySphere::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
 				vec.x /= length;
 				vec.z /= length;
 
-				// XZ平面に吹っ飛ばす力をかける
+				/// XZ平面に吹っ飛ばす力をかける
 				float power = 10.0f;
 				vec.x *= power;
 				vec.z *= power;
@@ -676,7 +664,10 @@ void EnemySphere::UpdateDeathState(float elapsedTime)
 	// ダメージアニメーションが終わったら自分を破棄
 	if (!model->IsPlayAnimation())
 	{
+		Player& player = Player::Instance();
 		SceneTitle& title = SceneTitle::Instance();
+		player.health += 2;
+		player.damageHealth += 2;
 		title.score += 100;
 
 		Destroy();

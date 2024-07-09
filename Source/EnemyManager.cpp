@@ -35,7 +35,7 @@ void EnemyManager::Update(float elapsedTime)
 	removes.clear();
 
 	// “G“¯m‚ÌÕ“Ëˆ—
-	CollisionEnemyVsEnemies();
+	//CollisionEnemyVsEnemies();
 }
 
 // •`‰æˆ—

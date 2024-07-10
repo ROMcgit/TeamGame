@@ -5,6 +5,7 @@
 #include "Graphics/Graphics.h"
 #include "Mathf.h"
 #include "ProjectileManager.h"
+#include "Effect.h"
 
 // ƒXƒ‰ƒCƒ€
 class EnemySphere : public Enemy
@@ -160,4 +161,6 @@ private:
 	int damageWaitTime = 0;
 	int attackWait = 0;
 	bool hansya = false;
+
+	Effect* hitEffect = nullptr;
 };

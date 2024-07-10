@@ -18,6 +18,9 @@ EnemySphere::EnemySphere()
 {
 	model = new Model("Data/Model/敵.mdl");
 
+	// ヒットエフェクト読み込み
+	hitEffect = new Effect("Data/Effect/Blast.efk");
+
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.01f;
 
@@ -270,6 +273,8 @@ void EnemySphere::CollisionProjectilesVsEnemy()
 				if (attackWait <= 0)
 				{
 					this->ApplyDamage(1, 2);
+					position.y + 0.5f;
+					hitEffect->Play(position, 0.01f);
 					projectile->Destroy();
 				}
 			}

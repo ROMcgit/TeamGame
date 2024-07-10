@@ -6,6 +6,7 @@
 #include "Graphics/Graphics.h"
 #include "Mathf.h"
 #include "ProjectileManager.h"
+#include "Effect.h"
 
 // ƒXƒ‰ƒCƒ€
 class EnemyStrong : public Enemy
@@ -169,4 +170,6 @@ private:
 	int attackWait = 0;
 	bool hansya = false;
 	int deathTime = 0;
+
+	Effect* hitEffect = nullptr;
 };

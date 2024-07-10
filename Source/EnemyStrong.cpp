@@ -17,6 +17,9 @@ EnemyStrong::EnemyStrong()
 {
 	model = new Model("Data/Model/敵.mdl");
 
+	// ヒットエフェクト読み込み
+	hitEffect = new Effect("Data/Effect/Blast.efk");
+
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.02f;
 
@@ -274,6 +277,12 @@ void EnemyStrong::CollisionProjectilesVsEnemy()
 				{
 					this->ApplyDamage(3, 1);
 					enemy->ApplyDamage(1, 1);
+					// ヒットエフェクト再生
+					{
+						position.y + 0.5f;
+						hitEffect->Play(position);
+					}
+
 					projectile->Destroy();
 				}
 			}

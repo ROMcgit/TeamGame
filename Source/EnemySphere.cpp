@@ -242,6 +242,12 @@ void EnemySphere::CollisionProjectilesVsPlayer()
 
 						ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
 						projectile->Launch(dir, pos);
+
+						Player& player = Player::Instance();
+
+						DirectX::XMFLOAT3 e = playerPosition;
+						e.y += player.GetHeight();
+						hitEffect->Play(e, 0.01f);
 					}
 				}
 			}

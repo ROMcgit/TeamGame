@@ -107,7 +107,12 @@ void EnemyStrong::Update(float elapsedTime)
 	if (attackWait > 0)
 		attackWait -= 1;
 
-	if (deathTime > 60 * 60) Destroy();
+	if (deathTime > 60 * 60)
+	{
+		position.y + 0.5f;
+		hitEffect->Play(position, 0.02f);
+		Destroy();
+	}
 
 	deathTime++;
 }
@@ -245,6 +250,12 @@ void EnemyStrong::CollisionProjectilesVsPlayer()
 
 					ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
 					projectile->Launch(dir, pos);
+
+					Player& player = Player::Instance();
+
+					DirectX::XMFLOAT3 e = playerPosition;
+					e.y += player.GetHeight();
+					hitEffect->Play(e, 0.01f);
 				}
 			}
 		}

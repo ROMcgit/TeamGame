@@ -22,7 +22,7 @@ EnemySphere::EnemySphere()
 	hitEffect = new Effect("Data/Effect/Blast.efk");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.01f;
+	scale.x = scale.y = scale.z = 0;
 
 	// 幅、高さ設定
 	radius = 0.3f;
@@ -107,6 +107,13 @@ void EnemySphere::Update(float elapsedTime)
 
 	if (attackWait > 0)
 		attackWait -= 1;
+
+	if (scale.x <= 0.01f && scale.y <= 0.01f && scale.z <= 0.01f)
+	{
+		scale.x += 0.0002f;
+		scale.y += 0.0002f;
+		scale.z += 0.0002f;
+	}
 }
 
 // 描画処理

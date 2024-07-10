@@ -21,7 +21,7 @@ EnemyStrong::EnemyStrong()
 	hitEffect = new Effect("Data/Effect/Blast.efk");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.02f;
+	scale.x = scale.y = scale.z = 0; //サイズは0.02f
 
 	// 幅、高さ設定
 	radius = 0.5f;
@@ -115,6 +115,13 @@ void EnemyStrong::Update(float elapsedTime)
 	}
 
 	deathTime++;
+
+	if (scale.x <= 0.02f && scale.y <= 0.02f && scale.z <= 0.02f)
+	{
+		scale.x += 0.0005f;
+		scale.y += 0.0005f;
+		scale.z += 0.0005f;
+	}
 }
 
 // 描画処理

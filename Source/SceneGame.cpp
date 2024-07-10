@@ -240,7 +240,7 @@ void SceneGame::Update(float elapsedTime)
 
 	case 3:
 	{
-		if (enemyCount < 10 && newEnemy == true)
+		if (enemyCount < 8 && newEnemy == true)
 		{
 			if (newEnemyCount > newEnemyMaxCount)
 			{

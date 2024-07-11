@@ -24,8 +24,8 @@ Player::Player()
 	instance = this;
 
 	//model = new Model("Data/Model/Mr.Incredible/Mr.Incredible.mdl");
-	model = new Model("Data/Model/Jammo/Jammo.mdl");
-	//model->PlayAnimation(0);
+	//model = new Model("Data/Model/Jammo/Jammo.mdl");
+	model = new Model("Data/Model/test_anim.mdl");
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.01f;
@@ -230,7 +230,7 @@ void Player::TransitionIdleState()
 	state = State::Idle;
 
 	// 待機アニメーション再生
-	model->PlayAnimation(Anim_Idle, true);
+	model->PlayAnimation(0, true);
 }
 
 // 待機ステート更新処理

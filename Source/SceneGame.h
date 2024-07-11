@@ -36,7 +36,10 @@ public:
 private:
 
 	// プレイヤーUI
-	void PlayerUI();
+	void PlayerUI(ID3D11DeviceContext* dc);
+
+	// 文字表示
+	void DrawFont(ID3D11DeviceContext* dc);
 
 	// エネミーHPゲージ描画
 	void RenderEnemyGauge(
@@ -49,13 +52,14 @@ private:
 	//Stage* stage = nullptr;
 	std::unique_ptr<Player> player;
 	std::unique_ptr<Sprite> uiSprite[4];
+	std::unique_ptr<Sprite> wave[3];
 	CameraController* cameraController = nullptr;
-	Sprite* gauge = nullptr;
+	Sprite* EnemyHp = nullptr;
 	std::unique_ptr<Text> text[2];
 	float newEnemyCount = 0;
 	float newEnemyMaxCount = 10;
 	int newWallCount = 0;
-	int battleWave = 1;
+	int battleWave = 0;
 	int nextWaveWait = 0;
 	bool newEnemy = false;
 	bool battleStart = false;

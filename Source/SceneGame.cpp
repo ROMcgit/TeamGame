@@ -16,7 +16,6 @@
 #include "SceneManager.h"
 #include "SceneClear.h"
 #include "SceneTitle.h"
-Sprite* EnemyHp;
 
 // 初期化
 void SceneGame::Initialize()
@@ -40,6 +39,13 @@ void SceneGame::Initialize()
 	// HP
 	uiSprite[1] = std::make_unique<Sprite>();
 	uiSprite[2] = std::make_unique<Sprite>();
+
+	// WAVW文字読み込み
+	for (int i = 0; i < 3; i++)
+	{
+		std::string filePath = "Data/Sprite/WAVE" + std::to_string(i + 1) + ".png";
+		wave[i] = std::make_unique<Sprite>(filePath.c_str());
+	}
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
@@ -69,9 +75,6 @@ void SceneGame::Initialize()
 	// slime->SetPosition(DirectX::XMFLOAT3(0,0,5))
 	//enemyManager.Register(enemy);
 
-	// ゲージスプライト
-	gauge = new Sprite();
-
 	// スコア
 	text[0] = std::make_unique<Text>();
 	text[1] = std::make_unique<Text>();
@@ -82,10 +85,10 @@ void SceneGame::Initialize()
 void SceneGame::Finalize()
 {
 	// ゲージスプライト終了化
-	if (gauge != nullptr)
+	if (EnemyHp != nullptr)
 	{
-		delete gauge;
-		gauge = nullptr;
+		delete EnemyHp;
+		EnemyHp = nullptr;
 	}
 
 	// カメラコントローラー終了化
@@ -161,6 +164,9 @@ void SceneGame::Update(float elapsedTime)
 #if 1
 	switch (battleWave)
 	{
+	case 0:
+		if(newEnemy == true)
+		battleWave = 1;
 	case 1:
 	{
 		if (enemyCount < 5 && newEnemy == true)
@@ -431,22 +437,11 @@ void SceneGame::Render()
 
 	// 2Dスプライト描画
 	{
-		SceneTitle& title = SceneTitle::Instance();
-
-		text[0]->Render(dc,
-			true, true,
-			false,
-			0, 0, 0, 0, 0,
-			0, 0, 0, title.score,
-			10, 30,
-			5, 5,
-			0,
-			30,
-			1, 1, 1, 1);
-
-		PlayerUI();
+		PlayerUI(dc);
 
 		RenderEnemyGauge(dc, rc.view, rc.projection);
+
+		DrawFont(dc);
 	}
 
 	// 2DデバッグGUI描画
@@ -459,12 +454,9 @@ void SceneGame::Render()
 }
 
 // プレイヤーUI
-void SceneGame::PlayerUI()
+void SceneGame::PlayerUI(ID3D11DeviceContext* dc)
 {
 	Graphics& graphics = Graphics::Instance();
-	ID3D11DeviceContext* dc = graphics.GetDeviceContext();
-	ID3D11RenderTargetView* rtv = graphics.GetRenderTargetView();
-	ID3D11DepthStencilView* dsv = graphics.GetDepthStencilView();
 
 	float screenWidth = static_cast<float>(graphics.GetScreenWidth());
 	float screenHeight = static_cast<float>(graphics.GetScreenHeight());
@@ -491,6 +483,63 @@ void SceneGame::PlayerUI()
 			0, 0, textureWidth, textureHeight,
 			0,
 			0, 1, 0, 1);
+	}
+}
+
+// 文字表示
+void SceneGame::DrawFont(ID3D11DeviceContext* dc)
+{
+	//! スコアの表示
+	SceneTitle& title = SceneTitle::Instance();
+
+	text[0]->Render(dc,
+		true, true,
+		false,
+		0, 0, 0, 0, 0,
+		0, 0, 0, title.score,
+		10, 30,
+		5, 5,
+		0,
+		30,
+		1, 1, 1, 1);
+
+	float textureWidth = static_cast<float>(wave[0]->GetTextureWidth());
+	float textureHeight = static_cast<float>(wave[0]->GetTextureHeight());
+
+	switch (battleWave)
+	{
+	case 1:
+		wave[0]->Render(dc,
+			410, 10,
+			396, 50,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1
+		);
+		break;
+	case 2:
+		wave[1]->Render(dc,
+			410, 10,
+			396, 50,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1
+		);
+		break;
+	case 3:
+		wave[2]->Render(dc,
+			410, 10,
+			396, 50,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1
+		);
+		break;
+	default:
+		break;
 	}
 }
 

@@ -37,8 +37,9 @@ void SceneGame::Initialize()
 	player = std::make_unique<Player>();
 
 	// HP
-	uiSprite[1] = std::make_unique<Sprite>();
-	uiSprite[2] = std::make_unique<Sprite>();
+	uiSprite[0] = std::make_unique<Sprite>(); //HPの裏(灰色)
+	uiSprite[1] = std::make_unique<Sprite>(); //HPダメージ(赤色)
+	uiSprite[2] = std::make_unique<Sprite>(); //HPゲージ(緑色)
 
 	// WAVW文字読み込み
 	for (int i = 0; i < 3; i++)
@@ -150,16 +151,17 @@ void SceneGame::Update(float elapsedTime)
 
 	WallManager& wallManager = WallManager::Instance();
 
-	if (newWallCount > 600)
+	if (newWallCount > 1200)
 	{
 		/// X座標のランダムな位置を生成 (-6から6の範囲)
 		int posX = (rand() % 5 + 1) * (rand() % 2 == 1 ? -1 : 1);
 
 		WallEnemy* wall = new WallEnemy();
-		wall->SetPosition(DirectX::XMFLOAT3(posX, 2.5, 0));
+		wall->SetPosition(DirectX::XMFLOAT3(posX, 3, 0));
 		wallManager.Register(wall);
 		newWallCount = 0;
 	}
+	newWallCount++;
 	
 #if 1
 	switch (battleWave)
@@ -460,24 +462,35 @@ void SceneGame::PlayerUI(ID3D11DeviceContext* dc)
 
 	float screenWidth = static_cast<float>(graphics.GetScreenWidth());
 	float screenHeight = static_cast<float>(graphics.GetScreenHeight());
-	float textureWidth = static_cast<float>(uiSprite[2]->GetTextureWidth());
-	float textureHeight = static_cast<float>(uiSprite[2]->GetTextureHeight());
+	float textureWidth = static_cast<float>(uiSprite[0]->GetTextureWidth());
+	float textureHeight = static_cast<float>(uiSprite[0]->GetTextureHeight());
 
 	if (player->GetHealth() > 0)
 	{
+		// HP基盤
+		uiSprite[0]->Render(dc,
+			20, 60,
+			200 * 0.9f, 25,
+			0, 0, textureWidth, textureHeight,
+			0,
+			0.7, 0.7, 0.7, 1);
+
+		textureWidth = static_cast<float>(uiSprite[1]->GetTextureWidth());
+		textureHeight = static_cast<float>(uiSprite[1]->GetTextureHeight());
+
 		// ダメージゲージ
-		uiSprite[2]->Render(dc,
+		uiSprite[1]->Render(dc,
 			20, 60,
 			player->GetDamageHealth() * 0.9f, 25,
 			0, 0, textureWidth, textureHeight,
 			0,
 			1, 0, 0, 1);
 
-		textureWidth = static_cast<float>(uiSprite[1]->GetTextureWidth());
-		textureHeight = static_cast<float>(uiSprite[1]->GetTextureHeight());
+		textureWidth = static_cast<float>(uiSprite[2]->GetTextureWidth());
+		textureHeight = static_cast<float>(uiSprite[2]->GetTextureHeight());
 
 		// HPゲージ
-		uiSprite[1]->Render(dc,
+		uiSprite[2]->Render(dc,
 			20, 60,
 			player->GetHealth() * 0.9f, 25,
 			0, 0, textureWidth, textureHeight,

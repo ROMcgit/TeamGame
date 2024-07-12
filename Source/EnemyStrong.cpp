@@ -15,10 +15,16 @@
 // コンストラクタ
 EnemyStrong::EnemyStrong()
 {
-	model = new Model("Data/Model/敵.mdl");
+	model = std::make_unique<Model>("Data/Model/敵.mdl");
 
 	// ヒットエフェクト読み込み
-	hitEffect = new Effect("Data/Effect/Blast.efk");
+	hitEffect = std::make_unique<Effect>("Data/Effect/Blast.efk");
+
+	// Audio クラスのインスタンス化と初期化
+	Audio& audioManager = Audio::Instance();
+
+	sound[0] = audioManager.LoadAudioSource("Data/Audio/bat.wav");
+	sound[1] = audioManager.LoadAudioSource("Data/Audio/crash.wav");
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0; //サイズは0.02f
@@ -36,7 +42,7 @@ EnemyStrong::EnemyStrong()
 // デストラクタ
 EnemyStrong::~EnemyStrong()
 {
-	delete model;
+	//delete model;
 }
 
 // 更新処理
@@ -127,7 +133,7 @@ void EnemyStrong::Update(float elapsedTime)
 // 描画処理
 void EnemyStrong::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	shader->Draw(dc, model);
+	shader->Draw(dc, model.get());
 	// 弾丸描画処理
 	projectileManager.Render(dc, shader);
 }
@@ -202,6 +208,8 @@ void EnemyStrong::CollisionProjectilesVsPlayer()
 			{
 				// 弾丸破棄
 				projectile->Destroy();
+
+				sound[0]->Play(false);
 
 				const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
 
@@ -294,12 +302,6 @@ void EnemyStrong::CollisionProjectilesVsEnemy()
 				if (attackWait <= 0)
 				{
 					this->ApplyDamage(3, 1);
-					enemy->ApplyDamage(1, 1);
-					// ヒットエフェクト再生
-					{
-						position.y + 0.5f;
-						hitEffect->Play(position);
-					}
 
 					projectile->Destroy();
 				}
@@ -705,6 +707,35 @@ void EnemyStrong::UpdateDeathState(float elapsedTime)
 		player.health += 5;
 		player.damageHealth += 5;
 		title.score += 500;
+
+		sound[1]->Play(false);
+
+		// 敵のダメージ処理
+		EnemyManager& enemyManager = EnemyManager::Instance();
+
+		int enemyCount = enemyManager.GetEnemyCount();
+		for (int i = 0; i < enemyCount; ++i)
+		{
+			Enemy* enemy = enemyManager.GetEnemy(i);
+			enemy->ApplyDamage(1, 1);
+		}
+
+		// 壁破壊処理
+		WallManager& wallManager = WallManager::Instance();
+
+		int wallCount = wallManager.GetWallCount();
+		for (int i = 0; i < wallCount; ++i)
+		{
+			Wall* wall = wallManager.GetWall(i);
+
+			wall->ApplyDamage(1, 1);
+		}
+
+		// ヒットエフェクト再生
+		{
+			position.y + 0.5f;
+			hitEffect->Play(position);
+		}
 
 		Destroy();
 	}

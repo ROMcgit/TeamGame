@@ -16,6 +16,14 @@ WallEnemy::WallEnemy()
 {
 	model = new Model("Data/Model/壁.mdl");
 
+	// ヒットエフェクト読み込み
+	hitEffect = new Effect("Data/Effect/Blast.efk");
+
+	// Audio クラスのインスタンス化と初期化
+	Audio& audioManager = Audio::Instance();
+
+	sound = audioManager.LoadAudioSource("Data/Audio/crash.wav");
+
 	// モデルが大きいのでスケーリング
 	scale.x = 0.05f;
 	scale.y = scale.z = 0.01f;
@@ -146,7 +154,6 @@ void WallEnemy::SetTerritory(const DirectX::XMFLOAT3& origin, float range)
 void WallEnemy::PositionControll()
 {
 	position.z = 0;
-	position.y = 3.5;
 	if (position.x < -6.66) position.x = -6.66;
 	if (position.x > 6.6) position.x = 6.6;
 }
@@ -577,8 +584,13 @@ void WallEnemy::UpdateDeathState(float elapsedTime)
 	// ダメージアニメーションが終わったら自分を破棄
 	if (!model->IsPlayAnimation())
 	{
+		sound->Play(false);
+
 		SceneTitle& title = SceneTitle::Instance();
 		title.score += 100;
+
+		hitEffect->Play(position, 0.02f);
+
 
 		Destroy();
 	}

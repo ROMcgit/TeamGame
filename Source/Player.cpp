@@ -645,17 +645,17 @@ void Player::DrawDebugPrimitive()
 	//);
 
 	// 攻撃衝突用の左手ノードのデバッグ球を描画
-	if (attackCollisionFlag)
-	{
-		Model::Node* leftHandBone = model->FindNode("mixamorig:LeftHand");
-		debugRenderer->DrawSphere(DirectX::XMFLOAT3(
-		leftHandBone->worldTransform._41,
-		leftHandBone->worldTransform._42,
-		leftHandBone->worldTransform._43),
-		leftHandRadius,
-		DirectX::XMFLOAT4(1, 0, 0, 1)
-		);
-	}
+	//if (attackCollisionFlag)
+	//{
+	//	Model::Node* leftHandBone = model->FindNode("mixamorig:LeftHand");
+	//	debugRenderer->DrawSphere(DirectX::XMFLOAT3(
+	//	leftHandBone->worldTransform._41,
+	//	leftHandBone->worldTransform._42,
+	//	leftHandBone->worldTransform._43),
+	//	leftHandRadius,
+	//	DirectX::XMFLOAT4(1, 0, 0, 1)
+	//	);
+	//}
 }
 
 // 着地した時に呼ばれる

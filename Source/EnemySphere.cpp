@@ -16,10 +16,16 @@
 // コンストラクタ
 EnemySphere::EnemySphere()
 {
-	model = new Model("Data/Model/敵.mdl");
+	model = std::make_unique<Model>("Data/Model/敵.mdl");
 
 	// ヒットエフェクト読み込み
-	hitEffect = new Effect("Data/Effect/Blast.efk");
+	hitEffect = std::make_unique<Effect>("Data/Effect/Blast.efk");
+
+	// Audio クラスのインスタンス化と初期化
+	Audio& audioManager = Audio::Instance();
+
+	sound[0] = audioManager.LoadAudioSource("Data/Audio/bat.wav");
+	sound[1] = audioManager.LoadAudioSource("Data/Audio/crash.wav");
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0;
@@ -37,7 +43,7 @@ EnemySphere::EnemySphere()
 // デストラクタ
 EnemySphere::~EnemySphere()
 {
-	delete model;
+	//delete model;
 }
 
 // 更新処理
@@ -119,7 +125,7 @@ void EnemySphere::Update(float elapsedTime)
 // 描画処理
 void EnemySphere::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	shader->Draw(dc, model);
+	shader->Draw(dc, model.get());
 	// 弾丸描画処理
 	projectileManager.Render(dc, shader);
 }
@@ -194,6 +200,8 @@ void EnemySphere::CollisionProjectilesVsPlayer()
 				{
 					// 弾丸破棄
 					projectile->Destroy();
+
+					sound[0]->Play(false);
 
 					const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
 
@@ -688,6 +696,8 @@ void EnemySphere::UpdateDeathState(float elapsedTime)
 		Player& player = Player::Instance();
 		SceneTitle& title = SceneTitle::Instance();
 		title.score += 100;
+
+		sound[1]->Play(false);
 
 		Destroy();
 	}

@@ -6,6 +6,7 @@
 #include "Mathf.h"
 #include "ProjectileManager.h"
 #include "Effect.h"
+#include "Audio/Audio.h"
 
 // ƒXƒ‰ƒCƒ€
 class EnemySphere : public Enemy
@@ -136,7 +137,7 @@ private:
 	};
 
 private:
-	Model* model = nullptr;
+	std::unique_ptr<Model> model;
 
 	State state = State::Wander;
 	DirectX::XMFLOAT3 targetPosition = { 0,0,0 };
@@ -162,5 +163,7 @@ private:
 	int attackWait = 0;
 	bool hansya = false;
 
-	Effect* hitEffect = nullptr;
+	std::unique_ptr<Effect> hitEffect;
+
+	std::unique_ptr<AudioSource> sound[2];
 };

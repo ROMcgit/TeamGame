@@ -5,6 +5,8 @@
 #include "Graphics/Graphics.h"
 #include "Mathf.h"
 #include "ProjectileManager.h"
+#include "Effect.h"
+#include "Audio/Audio.h"
 
 // ƒXƒ‰ƒCƒ€
 class WallEnemy : public Wall
@@ -133,6 +135,9 @@ private:
 
 private:
 	Model* model = nullptr;
+	Effect* hitEffect = nullptr;
+
+	std::unique_ptr<AudioSource> sound;
 
 	State state = State::Wander;
 	DirectX::XMFLOAT3 targetPosition = { 0,0,0 };

@@ -478,24 +478,52 @@ void SceneGame::PlayerUI(ID3D11DeviceContext* dc)
 		textureWidth = static_cast<float>(uiSprite[1]->GetTextureWidth());
 		textureHeight = static_cast<float>(uiSprite[1]->GetTextureHeight());
 
-		// ダメージゲージ
-		uiSprite[1]->Render(dc,
-			20, 60,
-			player->GetDamageHealth() * 0.9f, 25,
-			0, 0, textureWidth, textureHeight,
-			0,
-			1, 0, 0, 1);
+		if (player->GetDamageHealth() > 50)
+		{
+			// ダメージゲージ
+			uiSprite[1]->Render(dc,
+				20, 60,
+				player->GetDamageHealth() * 0.9f, 25,
+				0, 0, textureWidth, textureHeight,
+				0,
+				1, 0, 0, 1);
+		}
+		else
+		{
+			// ダメージゲージ
+			uiSprite[1]->Render(dc,
+				20, 60,
+				player->GetDamageHealth() * 0.9f, 25,
+				0, 0, textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+		}
+
 
 		textureWidth = static_cast<float>(uiSprite[2]->GetTextureWidth());
 		textureHeight = static_cast<float>(uiSprite[2]->GetTextureHeight());
 
-		// HPゲージ
-		uiSprite[2]->Render(dc,
-			20, 60,
-			player->GetHealth() * 0.9f, 25,
-			0, 0, textureWidth, textureHeight,
-			0,
-			0, 1, 0, 1);
+		if (player->GetHealth() > 50)
+		{
+			// HPゲージ
+			uiSprite[2]->Render(dc,
+				20, 60,
+				player->GetHealth() * 0.9f, 25,
+				0, 0, textureWidth, textureHeight,
+				0,
+				0, 1, 0, 1);
+		}
+		else
+		{
+			// HPゲージ
+			uiSprite[2]->Render(dc,
+				20, 60,
+				player->GetHealth() * 0.9f, 25,
+				0, 0, textureWidth, textureHeight,
+				0,
+				1, 0, 0, 1);
+		}
+
 	}
 }
 

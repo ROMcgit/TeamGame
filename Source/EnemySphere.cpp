@@ -220,7 +220,7 @@ void EnemySphere::CollisionProjectilesVsPlayer()
 				// ƒ_ƒ[ƒW‚ğ—^‚¦‚é
 				else if(damageWaitTime <= 0)
 				{
-					if (player.ApplyDamage(10, 6.0f))
+					if (player.ApplyDamage(15, 6.0f))
 					{
 						// ’eŠÛ”jŠü
 						projectile->Destroy();
@@ -565,6 +565,7 @@ void EnemySphere::UpdateDeathState(float elapsedTime)
 		Player& player = Player::Instance();
 		SceneTitle& title = SceneTitle::Instance();
 		title.score += 100;
+		player.health += 1;
 		position.y + 0.5f;
 		hitEffect->Play(position, 0.02f);
 		Destroy();

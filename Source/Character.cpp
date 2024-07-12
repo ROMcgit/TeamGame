@@ -13,8 +13,8 @@ void Character::UpdateTransform()
 	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
 	
 	// âÒì]çsóÒÇçÏê¨
-	//DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
-#if 1
+	DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
+#if 0
 	DirectX::XMMATRIX X = DirectX::XMMatrixRotationX(angle.x);
 	DirectX::XMMATRIX Y = DirectX::XMMatrixRotationY(angle.y);
 	DirectX::XMMATRIX Z = DirectX::XMMatrixRotationZ(angle.z);
@@ -451,6 +451,8 @@ void Character::HpControll()
 	}
 	// âÒïúÇµÇΩéû
 	else if (damageHealth < health) damageHealth = health;
+
+	if (health < 0) health = 0;
 
 	if (damageHealth == health) damageCount = 0;
 }

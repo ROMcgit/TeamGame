@@ -54,12 +54,6 @@ private:
 	// 目標地点へ移動
 	void MoveToTarget(float elapsedTime, float speedRate);
 
-	// 徘徊ステートへ遷移
-	void TransitionWanderState();
-
-	// 徘徊ステート更新処理
-	void UpdateWanderState(float elapsedTime);
-
 	// 待機ステートへ遷移
 	void TransitionIdleState();
 
@@ -68,12 +62,6 @@ private:
 
 	// プレイヤー索敵
 	//bool SearchPlayer();
-
-	// 追跡ステートへ遷移
-	void TransitionPursuitState();
-
-	// 追跡ステート更新処理
-	void UpdatePursuitState(float elapsedTime);
 
 	// ノードとプレイヤーの衝突処理
 	void CollisionNodeVsPlayer(const char* nodeName, float nodeRadius);
@@ -84,17 +72,8 @@ private:
 	// 攻撃ステート更新処理
 	void UpdateAttackState(float elapsedTime);
 
-	// 戦闘待機ステートへ遷移
-	void TransitionIdleBattleState();
-
-	// 戦闘待機ステート更新処理
-	void UpdateIdleBattleState(float elapsedTime);
-
 	// ダメージステートへ遷移
 	void TransitionDamageState();
-
-	// ダメージステート更新処理
-	void UpdateDamageState(float elapsedTime);
 
 	// 死亡ステートへ遷移
 	void TransitionDeathState();
@@ -106,40 +85,25 @@ private:
 	// ステート
 	enum class State
 	{
-		Wander,
 		Idle,
-		Pursuit,
 		Attack,
-		IdleBattle,
 		Damage,
-		Death
+		Death,
 	};
 
 	// アニメーション
 	enum Animation
 	{
-		Anim_IdleNormal,
-		Anim_IdleBattle,
-		Anim_Attack1,
-		Anim_Attack2,
-		Anim_WalkFWD,
-		Anim_WalkBWD,
-		Anim_WalkLeft,
-		Anim_WalkRight,
-		Anim_RunFWD,
-		Anim_SenseSomthingST,
-		Anim_SenseSomthingPRT,
-		Anim_Taunt,
-		Anim_Victory,
-		Anim_GetHit,
-		Anim_Dizzy,
-		Anim_Die
+		Anim_Idle,
+		Anim_Attack,
+		Anim_Damage,
+		Anim_Death,
 	};
 
 private:
 	std::unique_ptr<Model> model;
 
-	State state = State::Wander;
+	State state = State::Idle;
 	DirectX::XMFLOAT3 targetPosition = { 0,0,0 };
 	DirectX::XMFLOAT3 territoryOrigin = { 0,0,0 };
 	float territoryRange = 10.0f;

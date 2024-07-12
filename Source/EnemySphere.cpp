@@ -16,7 +16,7 @@
 // コンストラクタ
 EnemySphere::EnemySphere()
 {
-	model = std::make_unique<Model>("Data/Model/敵.mdl");
+	model = std::make_unique<Model>("Data/Model/Enemy/enemy01.mdl");
 
 	// ヒットエフェクト読み込み
 	hitEffect = std::make_unique<Effect>("Data/Effect/Blast.efk");
@@ -25,7 +25,6 @@ EnemySphere::EnemySphere()
 	Audio& audioManager = Audio::Instance();
 
 	sound[0] = audioManager.LoadAudioSource("Data/Audio/bat.wav");
-	sound[1] = audioManager.LoadAudioSource("Data/Audio/crash.wav");
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0;
@@ -35,7 +34,7 @@ EnemySphere::EnemySphere()
 	height = 0.5f;
 
 	// 徘徊ステートへ遷移
-	TransitionWanderState();
+	TransitionIdleState();
 
 	health = 1;
 }
@@ -52,24 +51,15 @@ void EnemySphere::Update(float elapsedTime)
 	// ステート毎の更新処理
 	switch (state)
 	{
-	case State::Wander:
-		UpdateWanderState(elapsedTime);
-		break;
 	case State::Idle:
 		UpdateIdleState(elapsedTime);
-		break;
-	case State::Pursuit:
-		UpdatePursuitState(elapsedTime);
 		break;
 	case State::Attack:
 		UpdateAttackState(elapsedTime);
 		break;
-	case State::IdleBattle:
-		UpdateIdleBattleState(elapsedTime);
-		break;
-	case State::Damage:
-		UpdateDamageState(elapsedTime);
-		break;
+	//case State::Damage:
+	//	UpdateDamageState(elapsedTime);
+	//	break;
 	case State::Death:
 		UpdateDeathState(elapsedTime);
 		break;
@@ -114,11 +104,11 @@ void EnemySphere::Update(float elapsedTime)
 	if (attackWait > 0)
 		attackWait -= 1;
 
-	if (scale.x <= 0.01f && scale.y <= 0.01f && scale.z <= 0.01f)
+	if (scale.x <= 0.001f && scale.y <= 0.001f && scale.z <= 0.001f)
 	{
-		scale.x += 0.0002f;
-		scale.y += 0.0002f;
-		scale.z += 0.0002f;
+		scale.x += 0.0001f;
+		scale.y += 0.0001f;
+		scale.z += 0.0001f;
 	}
 }
 
@@ -201,7 +191,7 @@ void EnemySphere::CollisionProjectilesVsPlayer()
 					// 弾丸破棄
 					projectile->Destroy();
 
-					sound[0]->Play(false);
+					sound[0]->Play(false, 0.4f);
 
 					const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
 
@@ -294,8 +284,6 @@ void EnemySphere::CollisionProjectilesVsEnemy()
 				if (attackWait <= 0)
 				{
 					this->ApplyDamage(1, 2);
-					position.y + 0.5f;
-					hitEffect->Play(position, 0.01f);
 					projectile->Destroy();
 				}
 			}
@@ -365,9 +353,9 @@ void EnemySphere::MoveToTarget(float elapsedTime, float speedRate)
 }
 
 // 徘徊ステートへ遷移
-void EnemySphere::TransitionWanderState()
+void EnemySphere::TransitionIdleState()
 {
-	state = State::Wander;
+	state = State::Idle;
 
 	// 目標地点設定
 	//SetRandomTargetPosition();
@@ -376,13 +364,13 @@ void EnemySphere::TransitionWanderState()
 	positionRandamuR = 240;
 
 	// 歩きアニメーション再生
-	model->PlayAnimation(Anim_WalkFWD, true);
+	model->PlayAnimation(Anim_Idle, true);
 }
 
 // TODO:行動処理(敵)
-void EnemySphere::UpdateWanderState(float elapsedTime)
+void EnemySphere::UpdateIdleState(float elapsedTime)
 {
-	TransitionWanderState();
+	TransitionIdleState();
 
 	if (moveR == false)
 	{
@@ -411,57 +399,14 @@ void EnemySphere::UpdateWanderState(float elapsedTime)
 	// 弾の発射(敵)
 	if (waitCount > 300)
 	{
-		attackWait = 30;
-		const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
-
-		// 前方向
-		DirectX::XMFLOAT3 dir;
-
-		dir.x = playerPosition.x - position.x;
-		dir.y = playerPosition.y - position.y;
-		dir.z = playerPosition.z - position.z;
-
-		DirectX::XMVECTOR DIR;
-		DIR = DirectX::XMLoadFloat3(&dir);
-		DIR = DirectX::XMVector3Normalize(DIR);
-		DirectX::XMStoreFloat3(&dir, DIR);
-
-		// 発射位置(プレイヤーの腰あたり)
-		DirectX::XMFLOAT3 pos;
-		pos.x = position.x;
-		pos.y = position.y - 0.2;
-		pos.z = position.z;
-
-		ProjectileStraight* projectile = new ProjectileStraight(&projectileManager);
-		projectile->Launch(dir, pos);
 		waitCount = 0;
+		TransitionAttackState();
 	}
-
-	waitCount++;
-}
-
-// 待機ステートへ遷移
-void EnemySphere::TransitionIdleState()
-{
-	state = State::Idle;
-
-	// タイマーをランダム設定
-	stateTimer = Mathf::RandomRange(3.0f, 5.0f);
-
-	// 待機アニメーション再生
-	model->PlayAnimation(Anim_IdleNormal, true);
-}
-
-// 待機ステート更新処理
-void EnemySphere::UpdateIdleState(float elapsedTime)
-{
-	// タイマー処理
-	stateTimer -= elapsedTime;
-	if (stateTimer < 0.0f)
+	else
 	{
-		// 徘徊ステートへ遷移
-		TransitionIdleState();
+		waitCount++;
 	}
+	
 }
 
 //// プレイヤー索敵
@@ -493,47 +438,6 @@ void EnemySphere::UpdateIdleState(float elapsedTime)
 //
 //	return false;
 //}
-
-// 追跡ステートへ遷移
-void EnemySphere::TransitionPursuitState()
-{
-	state = State::Pursuit;
-
-	// 数秒間追跡するタイマーをランダム設定
-	stateTimer = Mathf::RandomRange(3.0f, 5.0f);
-
-	// 歩きアニメーション再生
-	model->PlayAnimation(Anim_RunFWD, true);
-}
-
-// 追跡ステート更新処理
-void EnemySphere::UpdatePursuitState(float elapsedTime)
-{
-	// 目標地点をプレイヤー位置に設定
-	targetPosition = Player::Instance().GetPosition();
-
-	// 目標地点へ移動
-	MoveToTarget(elapsedTime, 1.0f);
-
-	// タイマー処理
-	stateTimer -= elapsedTime;
-	if (stateTimer < 0.0f)
-	{
-		// 待機ステートへ遷移
-		TransitionIdleState();
-	}
-
-	// プレイヤーが近づくと攻撃ステートへ遷移
-	float vx = targetPosition.x - position.x;
-	float vy = targetPosition.y - position.y;
-	float vz = targetPosition.z - position.z;
-	float dist = sqrtf(vx * vx + vy * vy + vz * vz);
-	if (dist < attackRange)
-	{
-		// 攻撃ステートへ遷移
-		TransitionAttackState();
-	}
-}
 
 // ノードとプレイヤーの衝突処理
 void EnemySphere::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
@@ -596,67 +500,42 @@ void EnemySphere::TransitionAttackState()
 	state = State::Attack;
 
 	// 攻撃アニメーション再生
-	model->PlayAnimation(Anim_Attack1, false);
+	model->PlayAnimation(Anim_Attack, false);
 }
 
-// 攻撃ステート更新処理
 void EnemySphere::UpdateAttackState(float elapsedTime)
 {
-	// 任意のアニメーション再生区間でのみ衝突判定処理をする
-	float animationTime = model->GetCurrentAnimationSeconds();
-	if (animationTime >= 0.1f && animationTime <= 0.35f)
+	if (waitCount == 0)
 	{
-		// 目玉ノードとプレイヤーの衝突処理
-		CollisionNodeVsPlayer("EyeBall", 0.2f);
+		attackWait = 30;
+		const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
+
+		// 前方向
+		DirectX::XMFLOAT3 dir;
+
+		dir.x = playerPosition.x - position.x;
+		dir.y = playerPosition.y - position.y;
+		dir.z = playerPosition.z - position.z;
+
+		DirectX::XMVECTOR DIR;
+		DIR = DirectX::XMLoadFloat3(&dir);
+		DIR = DirectX::XMVector3Normalize(DIR);
+		DirectX::XMStoreFloat3(&dir, DIR);
+
+		// 発射位置(プレイヤーの腰あたり)
+		DirectX::XMFLOAT3 pos;
+		pos.x = position.x;
+		pos.y = position.y - 0.2;
+		pos.z = position.z;
+
+		ProjectileStraight* projectile = new ProjectileStraight(&projectileManager);
+		projectile->Launch(dir, pos);
 	}
 
-	// 攻撃アニメーションが終わったら戦闘待機ステートへ遷移
-	if (!model->IsPlayAnimation())
-	{
-		TransitionIdleBattleState();
-	}
-}
+	if(waitCount > 60)
+	TransitionIdleState();
 
-// 戦闘待機ステートへ遷移
-void EnemySphere::TransitionIdleBattleState()
-{
-	state = State::IdleBattle;
-
-	// 数秒間待機するタイマーをランダム設定
-	stateTimer = Mathf::RandomRange(2.0f, 3.0f);
-
-	// 戦闘待機アニメーション再生
-	model->PlayAnimation(Anim_IdleBattle, true);
-}
-
-// 戦闘待機ステート更新処理
-void EnemySphere::UpdateIdleBattleState(float elapsedTime)
-{
-	// 目標地点をプレイヤー位置に設定
-	targetPosition = Player::Instance().GetPosition();
-
-	// タイマー処理
-	stateTimer -= elapsedTime;
-	if (stateTimer < 0.0f)
-	{
-		// プレイヤー攻撃範囲にいた場合は攻撃ステートへ遷移
-		float vx = targetPosition.x - position.x;
-		float vy = targetPosition.y - position.y;
-		float vz = targetPosition.z - position.z;
-		float dist = sqrtf(vx * vx + vy * vy + vz * vz);
-		if (dist < attackRange)
-		{
-			// 攻撃ステートへ遷移
-			TransitionAttackState();
-		}
-		else
-		{
-			// 徘徊ステートへ遷移
-			TransitionWanderState();
-		}
-
-		MoveToTarget(elapsedTime, 0.0f);
-	}
+	waitCount++;
 }
 
 // ダメージステートへ遷移
@@ -665,17 +544,7 @@ void EnemySphere::TransitionDamageState()
 	state = State::Damage;
 
 	// ダメージアニメーション再生
-	model->PlayAnimation(Anim_GetHit, false);
-}
-
-// ダメージステート更新処理
-void EnemySphere::UpdateDamageState(float elapsedTime)
-{
-	// ダメージアニメーションが終わったら戦闘待機ステートへ遷移
-	if (!model->IsPlayAnimation())
-	{
-		TransitionIdleBattleState();
-	}
+	model->PlayAnimation(Anim_Damage, false);
 }
 
 // 死亡ステートへ遷移
@@ -684,7 +553,7 @@ void EnemySphere::TransitionDeathState()
 	state = State::Death;
 
 	// ダメージアニメーション再生
-	model->PlayAnimation(Anim_Die, false);
+	model->PlayAnimation(Anim_Death, false);
 }
 
 // 死亡ステート更新処理
@@ -696,9 +565,8 @@ void EnemySphere::UpdateDeathState(float elapsedTime)
 		Player& player = Player::Instance();
 		SceneTitle& title = SceneTitle::Instance();
 		title.score += 100;
-
-		sound[1]->Play(false);
-
+		position.y + 0.5f;
+		hitEffect->Play(position, 0.02f);
 		Destroy();
 	}
 }

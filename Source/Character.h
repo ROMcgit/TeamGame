@@ -144,4 +144,6 @@ protected:
 
 	int deathWaitTimer = 0;
 	int maxDeathWaitTimer = 0;
+
+	int deathCount = 0;
 };

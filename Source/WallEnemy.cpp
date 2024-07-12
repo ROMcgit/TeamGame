@@ -576,24 +576,25 @@ void WallEnemy::TransitionDeathState()
 
 	// ダメージアニメーション再生
 	model->PlayAnimation(Anim_Die, false);
+
+	sound->Play(false, 1);
 }
 
 // 死亡ステート更新処理
 void WallEnemy::UpdateDeathState(float elapsedTime)
 {
 	// ダメージアニメーションが終わったら自分を破棄
-	if (!model->IsPlayAnimation())
+	if (!model->IsPlayAnimation() && deathCount > 120)
 	{
-		sound->Play(false);
 
 		SceneTitle& title = SceneTitle::Instance();
 		title.score += 100;
 
 		hitEffect->Play(position, 0.02f);
 
-
 		Destroy();
 	}
+	deathCount++;
 }
 
 // ダメージ受けた時に呼ばれる

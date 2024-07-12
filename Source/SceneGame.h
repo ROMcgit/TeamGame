@@ -7,6 +7,7 @@
 #include "Graphics/Sprite.h"
 #include <memory>
 #include "Graphics/Text.h"
+#include "Audio/Audio.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 //class SceneGame
@@ -56,6 +57,7 @@ private:
 	CameraController* cameraController = nullptr;
 	Sprite* EnemyHp = nullptr;
 	std::unique_ptr<Text> text[2];
+	std::unique_ptr<AudioSource> sound;
 	float newEnemyCount = 0;
 	float newEnemyMaxCount = 10;
 	int newWallCount = 0;

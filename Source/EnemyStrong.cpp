@@ -209,7 +209,7 @@ void EnemyStrong::CollisionProjectilesVsPlayer()
 				// 弾丸破棄
 				projectile->Destroy();
 
-				sound[0]->Play(false);
+				sound[0]->Play(false, 0.4f);
 
 				const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
 
@@ -694,21 +694,21 @@ void EnemyStrong::TransitionDeathState()
 
 	// ダメージアニメーション再生
 	model->PlayAnimation(Anim_Die, false);
+
+	sound[1]->Play(false, 1);
 }
 
 // 死亡ステート更新処理
 void EnemyStrong::UpdateDeathState(float elapsedTime)
 {
 	// ダメージアニメーションが終わったら自分を破棄
-	if (!model->IsPlayAnimation())
+	if (!model->IsPlayAnimation() && deathCount > 120)
 	{
 		Player& player = Player::Instance();
 		SceneTitle& title = SceneTitle::Instance();
 		player.health += 5;
 		player.damageHealth += 5;
 		title.score += 500;
-
-		sound[1]->Play(false);
 
 		// 敵のダメージ処理
 		EnemyManager& enemyManager = EnemyManager::Instance();
@@ -739,6 +739,7 @@ void EnemyStrong::UpdateDeathState(float elapsedTime)
 
 		Destroy();
 	}
+	deathCount++;
 }
 
 // ダメージ受けた時に呼ばれる

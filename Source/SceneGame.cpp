@@ -102,20 +102,8 @@ void SceneGame::Finalize()
 		cameraController = nullptr;
 	}
 
-	// //ステージ終了化
-	//if (stage != nullptr)
-	//{
-	//	delete stage;
-	//	stage = nullptr;
-	//}
+	// ステージ終了化
 	StageManager::Instance().Clear();
-
-	//// プレイヤー終了化
-	//if (player != nullptr)
-	//{
-	//	delete player;
-	//	player = nullptr;
-	//}
 
 	// エネミー終了化
 	EnemyManager::Instance().Clear();

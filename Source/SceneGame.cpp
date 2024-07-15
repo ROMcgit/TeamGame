@@ -151,7 +151,7 @@ void SceneGame::Update(float elapsedTime)
 
 	WallManager& wallManager = WallManager::Instance();
 
-	if (newWallCount > 1200)
+	if (newWallCount > 800)
 	{
 		/// XÀ•W‚Ìƒ‰ƒ“ƒ_ƒ€‚ÈˆÊ’u‚ğ¶¬ (-6‚©‚ç6‚Ì”ÍˆÍ)
 		int posX = (rand() % 5 + 1) * (rand() % 2 == 1 ? -1 : 1);

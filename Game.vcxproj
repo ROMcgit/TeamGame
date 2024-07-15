@@ -348,6 +348,13 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="Data\Audio\bat.wav" />
+    <Media Include="Data\Audio\crash.wav" />
+    <Media Include="Data\Audio\GameMusic\GameClear.wav" />
+    <Media Include="Data\Audio\GameMusic\GameOver.wav" />
+    <Media Include="Data\Audio\GameMusic\stage.wav" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

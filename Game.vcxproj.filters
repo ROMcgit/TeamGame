@@ -442,4 +442,21 @@
       <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="Data\Audio\bat.wav">
+      <Filter>External</Filter>
+    </Media>
+    <Media Include="Data\Audio\crash.wav">
+      <Filter>External</Filter>
+    </Media>
+    <Media Include="Data\Audio\GameMusic\GameClear.wav">
+      <Filter>External</Filter>
+    </Media>
+    <Media Include="Data\Audio\GameMusic\GameOver.wav">
+      <Filter>External</Filter>
+    </Media>
+    <Media Include="Data\Audio\GameMusic\stage.wav">
+      <Filter>External</Filter>
+    </Media>
+  </ItemGroup>
 </Project>

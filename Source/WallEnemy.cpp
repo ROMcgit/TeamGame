@@ -586,9 +586,10 @@ void WallEnemy::UpdateDeathState(float elapsedTime)
 	// ダメージアニメーションが終わったら自分を破棄
 	if (!model->IsPlayAnimation() && deathCount > 120)
 	{
-
+		Player& player = Player::Instance();
 		SceneTitle& title = SceneTitle::Instance();
 		title.score += 100;
+		player.health += 2;
 
 		hitEffect->Play(position, 0.02f);
 

@@ -1,23 +1,23 @@
-#include "ProjectileHoming.h"
+#include "ProjectilePlayer.h"
 
 // コンストラクタ
-ProjectileHoming::ProjectileHoming(ProjectileManager* manager)
+ProjectilePlayer::ProjectilePlayer(ProjectileManager* manager)
 	: Projectile(manager)
 {
-	model = new Model("Data/Model/弾反射.mdl");
+	model = std::make_unique<Model>("Data/Model/弾反射.mdl");
 
 	// モデルが小さいのでスケーリング
 	scale.x = scale.y = scale.z = 0.01f;
 }
 
 // デストラクタ
-ProjectileHoming::~ProjectileHoming()
+ProjectilePlayer::~ProjectilePlayer()
 {
-	delete model;
+	//delete model;
 }
 
 // 更新処理
-void ProjectileHoming::Update(float elapsedTime)
+void ProjectilePlayer::Update(float elapsedTime)
 {
 	// 寿命処理
 	lifeTimer -= elapsedTime;
@@ -106,13 +106,13 @@ void ProjectileHoming::Update(float elapsedTime)
 }
 
 // 描画処理
-void ProjectileHoming::Render(ID3D11DeviceContext* dc, Shader* shader)
+void ProjectilePlayer::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	shader->Draw(dc, model);
+	shader->Draw(dc, model.get());
 }
 
 // 発射
-void ProjectileHoming::Launch(
+void ProjectilePlayer::Launch(
 	const DirectX::XMFLOAT3& direction,
 	const DirectX::XMFLOAT3& position)
 {

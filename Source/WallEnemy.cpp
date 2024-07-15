@@ -5,7 +5,7 @@
 #include "Player.h"
 #include "Collision.h"
 #include <ProjectileStraight.h>
-#include <ProjectileHoming.h>
+#include <ProjectilePlayer.h>
 #include <Input/GamePad.h>
 #include <Input/Input.h>
 #include <EnemyManager.h>
@@ -14,10 +14,10 @@
 // コンストラクタ
 WallEnemy::WallEnemy()
 {
-	model = new Model("Data/Model/壁.mdl");
+	model = std::make_unique<Model>("Data/Model/壁.mdl");
 
 	// ヒットエフェクト読み込み
-	hitEffect = new Effect("Data/Effect/Blast.efk");
+	hitEffect = std::make_unique<Effect>("Data/Effect/Blast.efk");
 
 	// Audio クラスのインスタンス化と初期化
 	Audio& audioManager = Audio::Instance();
@@ -41,7 +41,7 @@ WallEnemy::WallEnemy()
 // デストラクタ
 WallEnemy::~WallEnemy()
 {
-	delete model;
+	//delete model;
 }
 
 // 更新処理
@@ -113,7 +113,7 @@ void WallEnemy::Update(float elapsedTime)
 // 描画処理
 void WallEnemy::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	shader->Draw(dc, model);
+	shader->Draw(dc, model.get());
 	// 弾丸描画処理
 	projectileManager.Render(dc, shader);
 }
@@ -209,7 +209,7 @@ void WallEnemy::CollisionProjectilesVsPlayer()
 				pos.y = playerPosition.y + player.GetHeight() + 0.2;
 				pos.z = playerPosition.z;
 
-				ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
+				ProjectilePlayer* projectile = new ProjectilePlayer(&projectileManager);
 				projectile->Launch(dir, pos);
 			}
 
@@ -241,7 +241,7 @@ void WallEnemy::CollisionProjectilesVsPlayer()
 					pos.y = playerPosition.y + player.GetHeight();
 					pos.z = playerPosition.z;
 
-					ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
+					ProjectilePlayer* projectile = new ProjectilePlayer(&projectileManager);
 					projectile->Launch(dir, pos);
 				}
 			}

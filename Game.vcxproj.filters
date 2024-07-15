@@ -147,7 +147,7 @@
     <ClInclude Include="Source\Projectile.h">
       <Filter>Source\Projectile</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ProjectileHoming.h">
+    <ClInclude Include="Source\ProjectilePlayer.h">
       <Filter>Source\Projectile</Filter>
     </ClInclude>
     <ClInclude Include="Source\ProjectileManager.h">
@@ -314,7 +314,7 @@
     <ClCompile Include="Source\Projectile.cpp">
       <Filter>Source\Projectile</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ProjectileHoming.cpp">
+    <ClCompile Include="Source\ProjectilePlayer.cpp">
       <Filter>Source\Projectile</Filter>
     </ClCompile>
     <ClCompile Include="Source\ProjectileManager.cpp">

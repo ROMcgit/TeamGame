@@ -12,7 +12,7 @@
 ProjectileStraight::ProjectileStraight(ProjectileManager* manager) : Projectile(manager)
 {
 	//model = new Model("./Data/Model/SpikeBall/SpikeBall.mdl");
-	model = new Model("./Data/Model/敵.mdl");
+	model = std::make_unique<Model>("./Data/Model/敵.mdl");
 
 	// 表示サイズを調整
 	//scale.x = scale.y = scale.z = 0.5f;
@@ -26,7 +26,7 @@ ProjectileStraight::ProjectileStraight(ProjectileManager* manager) : Projectile(
 // デストラクタ
 ProjectileStraight::~ProjectileStraight()
 {
-	delete model;
+	//delete model;
 }
 
 // 更新処理
@@ -58,7 +58,7 @@ void ProjectileStraight::Update(float elapsedTime)
 // 描画処理
 void ProjectileStraight::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	shader->Draw(dc, model);
+	shader->Draw(dc, model.get());
 }
 
 // 発射

@@ -7,7 +7,7 @@
 #include "EnemyManager.h"
 #include "Collision.h"
 #include "ProjectileStraight.h"
-#include "ProjectileHoming.h"
+#include "ProjectilePlayer.h"
 #include "EnemySphere.h"
 
 static Player* instance = nullptr;
@@ -479,7 +479,7 @@ void Player::CollisionNodeVsEnemies(const char* nodeName, float nodeRadius)
 
 				DirectX::XMFLOAT3 target = { 0,0,0 };
 
-				ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
+				ProjectilePlayer* projectile = new ProjectilePlayer(&projectileManager);
 				projectile->Launch(dir, pos);
 			}
 		

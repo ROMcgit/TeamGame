@@ -4,11 +4,11 @@
 #include "Projectile.h"
 
 // í«îˆíeä€
-class ProjectileHoming : public Projectile
+class ProjectilePlayer : public Projectile
 {
 public:
-	ProjectileHoming(ProjectileManager* manager);
-	~ProjectileHoming() override;
+	ProjectilePlayer(ProjectileManager* manager);
+	~ProjectilePlayer() override;
 
 	// çXêVèàóù
 	void Update(float elapsedTime) override;
@@ -20,7 +20,7 @@ public:
 	void Launch(const DirectX::XMFLOAT3& direction,
 				const DirectX::XMFLOAT3& position);
 private:
-	Model* model = nullptr;
+	std::unique_ptr<Model> model;
 	DirectX::XMFLOAT3 target = { 0, 0, 0, };
 	float moveSpeed = 3.0f;
 	float turnSpeed = DirectX::XMConvertToRadians(180);

@@ -134,8 +134,8 @@ private:
 	};
 
 private:
-	Model* model = nullptr;
-	Effect* hitEffect = nullptr;
+	std::unique_ptr<Model> model;
+	std::unique_ptr<Effect> hitEffect;
 
 	std::unique_ptr<AudioSource> sound;
 

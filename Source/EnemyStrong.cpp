@@ -5,7 +5,7 @@
 #include "Player.h"
 #include "Collision.h"
 #include <ProjectileStraight.h>
-#include <ProjectileHoming.h>
+#include <ProjectilePlayer.h>
 #include <Input/GamePad.h>
 #include <Input/Input.h>
 #include <EnemyManager.h>
@@ -232,7 +232,7 @@ void EnemyStrong::CollisionProjectilesVsPlayer()
 				pos.y = playerPosition.y + player.GetHeight() + 0.2;
 				pos.z = playerPosition.z;
 
-				ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
+				ProjectilePlayer* projectile = new ProjectilePlayer(&projectileManager);
 				projectile->Launch(dir, pos);
 			}
 
@@ -264,7 +264,7 @@ void EnemyStrong::CollisionProjectilesVsPlayer()
 					pos.y = playerPosition.y + player.GetHeight();
 					pos.z = playerPosition.z;
 
-					ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
+					ProjectilePlayer* projectile = new ProjectilePlayer(&projectileManager);
 					projectile->Launch(dir, pos);
 
 					Player& player = Player::Instance();

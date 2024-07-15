@@ -21,7 +21,7 @@ public:
 	void Launch(const DirectX::XMFLOAT3& direction, const DirectX::XMFLOAT3& position);
 
 private:
-	Model* model = nullptr;
+	std::unique_ptr<Model> model;
 	float  speed = 1.0f;
 	float  lifeTimer = 20.0f;
 

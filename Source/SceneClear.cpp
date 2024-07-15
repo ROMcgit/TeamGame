@@ -12,6 +12,11 @@ void SceneClear::Initialize()
 {
 	// スコア
 	text[0] = std::make_unique<Text>();
+
+	// 音楽
+	Audio& audioManager = Audio::Instance();
+
+	bgm = audioManager.LoadAudioSource("Data/Audio/GameMusic/GameClear.wav");
 }
 
 // 終了化
@@ -22,6 +27,11 @@ void SceneClear::Finalize()
 // 更新処理
 void SceneClear::Update(float elapsedTime)
 {
+	if (bgm)
+	{
+		bgm->Play(true, 1.0f);
+	}
+
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
 	// なにかボタンを押したらローディングシーンを挟んでゲームシーンへ切り替え
@@ -31,6 +41,8 @@ void SceneClear::Update(float elapsedTime)
 		GamePad::BTN_START;
 	if (gamePad.GetButtonDown() & anyButton)
 	{
+		bgm->Stop();
+
 		SceneLoading* loadingScene = new SceneLoading(new SceneTitle);
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示

@@ -184,7 +184,8 @@ void EnemySphere::CollisionProjectilesVsPlayer()
 				player.GetPosition(),
 				player.GetRadius(),
 				player.GetHeight(),
-				outPosition))
+				outPosition)
+				&& player.health > 0)
 			{
 				if (damageWaitTime > 0)
 				{
@@ -565,7 +566,10 @@ void EnemySphere::UpdateDeathState(float elapsedTime)
 		Player& player = Player::Instance();
 		SceneTitle& title = SceneTitle::Instance();
 		title.score += 100;
-		player.health += 1;
+
+		if(player.health > 0)
+		player.health += 2;
+
 		position.y + 0.5f;
 		hitEffect->Play(position, 0.02f);
 		Destroy();

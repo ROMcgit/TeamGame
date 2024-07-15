@@ -202,7 +202,8 @@ void EnemyStrong::CollisionProjectilesVsPlayer()
 			player.GetPosition(),
 			player.GetRadius(),
 			player.GetHeight(),
-			outPosition))
+			outPosition)
+			&& player.health > 0)
 		{
 			if (damageWaitTime > 0)
 			{
@@ -706,8 +707,10 @@ void EnemyStrong::UpdateDeathState(float elapsedTime)
 	{
 		Player& player = Player::Instance();
 		SceneTitle& title = SceneTitle::Instance();
+
+		if (player.health > 0)
 		player.health += 5;
-		player.damageHealth += 5;
+
 		title.score += 500;
 
 		// “G‚Ìƒ_ƒ[ƒWˆ—

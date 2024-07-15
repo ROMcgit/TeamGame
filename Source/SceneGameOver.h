@@ -3,7 +3,7 @@
 #include "Graphics/Sprite.h"
 #include "Scene.h"
 #include "Graphics/Text.h"
-
+#include "Audio/Audio.h"
 
 // タイトルシーン
 class SceneGameOver : public Scene
@@ -28,4 +28,5 @@ private:
 	Sprite* sprite = nullptr;
 
 	std::unique_ptr<Text> text[2];
+	std::unique_ptr<AudioSource> bgm;
 };

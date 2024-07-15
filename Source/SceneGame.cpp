@@ -80,6 +80,9 @@ void SceneGame::Initialize()
 	text[0] = std::make_unique<Text>();
 	text[1] = std::make_unique<Text>();
 	
+	Audio& audioManager = Audio::Instance();
+
+	bgm = audioManager.LoadAudioSource("Data/Audio/GameMusic/stage.wav");
 }
 
 // 終了化
@@ -124,6 +127,11 @@ void SceneGame::Finalize()
 // 更新処理
 void SceneGame::Update(float elapsedTime)
 {
+	if (bgm)
+	{
+		bgm->Play(true, 1.0f);
+	}
+
 	// カメラコントローラー更新処理
 	DirectX::XMFLOAT3 target;
 	target = { 0 ,3.1f, 0 };
@@ -344,7 +352,13 @@ void SceneGame::Update(float elapsedTime)
 		newEnemy = false;
 	}
 
-	if (battleWave == 3 && nextSceneCount > 300)
+	if (player->GetHealth() <= 0)
+	{
+		nextSceneCount++;
+		newEnemy = false;
+	}
+
+	if (battleWave == 3 && nextSceneCount > 300 || player->GetHealth() <= 0 && nextSceneCount > 300)
 	{
 		SceneLoading* loadingScene = new SceneLoading(new SceneClear);
 
@@ -352,21 +366,7 @@ void SceneGame::Update(float elapsedTime)
 		SceneManager::Instance().ChangeScene(loadingScene);
 	}
 
-	if (player->GetHealth() <= 0)
-	{
-		nextSceneCount++;
-		newEnemy = false;
-	}
-
-	if (player->GetHealth() <= 0 && nextSceneCount > 300)
-	{
-		SceneLoading* loadingScene = new SceneLoading(new SceneGameOver);
-
-		// シーンマネージャーにローディングシーンへの切り替えを指示
-		SceneManager::Instance().ChangeScene(loadingScene);
-	}
-
-	if (newEnemy == false) nextWaveWait++;
+	if (newEnemy == false)  nextWaveWait++;
 	if (nextWaveWait > 360) newEnemy = true;
 }
 

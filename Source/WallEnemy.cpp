@@ -589,6 +589,8 @@ void WallEnemy::UpdateDeathState(float elapsedTime)
 		Player& player = Player::Instance();
 		SceneTitle& title = SceneTitle::Instance();
 		title.score += 100;
+
+		if (player.health > 0)
 		player.health += 2;
 
 		hitEffect->Play(position, 0.02f);

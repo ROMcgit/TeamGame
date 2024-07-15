@@ -57,7 +57,7 @@ private:
 	CameraController* cameraController = nullptr;
 	Sprite* EnemyHp = nullptr;
 	std::unique_ptr<Text> text[2];
-	std::unique_ptr<AudioSource> sound;
+	std::unique_ptr<AudioSource> bgm;
 	float newEnemyCount = 0;
 	float newEnemyMaxCount = 10;
 	int newWallCount = 0;

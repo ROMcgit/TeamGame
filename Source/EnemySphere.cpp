@@ -124,9 +124,9 @@ void EnemySphere::Render(ID3D11DeviceContext* dc, Shader* shader)
 void EnemySphere::DrawDebugPrimitive()
 {
 	// 基底クラスのデバッグプリミティブ描画
-	Enemy::DrawDebugPrimitive();
+	//Enemy::DrawDebugPrimitive();
 
-	DebugRenderer* debugRender = Graphics::Instance().GetDebugRenderer();
+	//DebugRenderer* debugRender = Graphics::Instance().GetDebugRenderer();
 
 	//// 縄張り範囲をデバッグ円柱描画
 	//debugRender->DrawCylinder(territoryOrigin, territoryRange, 1.0f,
@@ -136,7 +136,7 @@ void EnemySphere::DrawDebugPrimitive()
 	//debugRender->DrawSphere(targetPosition, radius, DirectX::XMFLOAT4(1, 1, 0, 1));
 
 	// 弾丸デバッグプリミティブ描画
-	projectileManager.DrawDebugPrimitive();
+	//projectileManager.DrawDebugPrimitive();
 
 	//// 索敵範囲をデバッグ円柱描画
 	//debugRender->DrawCylinder(position, searchRange, 1.0f, DirectX::XMFLOAT4(0, 0, 1, 1));
@@ -216,12 +216,18 @@ void EnemySphere::CollisionProjectilesVsPlayer()
 
 					ProjectilePlayer* projectile = new ProjectilePlayer(&projectileManager);
 					projectile->Launch(dir, pos);
+
+					Player& player = Player::Instance();
+
+					DirectX::XMFLOAT3 e = playerPosition;
+					e.y += player.GetHeight();
+					hitEffect->Play(e, 0.01f);
 				}
 
 				// ダメージを与える
 				else if(damageWaitTime <= 0)
 				{
-					if (player.ApplyDamage(8, 6.0f))
+					if (player.ApplyDamage(8, 3.0f))
 					{
 						// 弾丸破棄
 						projectile->Destroy();

@@ -153,7 +153,7 @@ void SceneGame::Update(float elapsedTime)
 		int posX = (rand() % 5 + 1) * (rand() % 2 == 1 ? -1 : 1);
 
 		WallEnemy* wall = new WallEnemy();
-		wall->SetPosition(DirectX::XMFLOAT3(posX, 3, 0));
+		wall->SetPosition(DirectX::XMFLOAT3(posX, 2, 0));
 		wallManager.Register(wall);
 		newWallCount = 0;
 	}
@@ -234,7 +234,7 @@ void SceneGame::Update(float elapsedTime)
 					enemyManager.Register(strong);
 				}
 				newEnemyCount = 0;
-				newEnemyMaxCount += 0.2f;
+				newEnemyMaxCount += 0.4f;
 				if(enemyCount >= 2) battleStart = true;
 			}
 			newEnemyCount += 0.5f;
@@ -300,7 +300,7 @@ void SceneGame::Update(float elapsedTime)
 				}
 
 				newEnemyCount = 0;
-				newEnemyMaxCount += 0.2f;
+				newEnemyMaxCount += 0.4f;
 				if (enemyCount >= 2) battleStart = true;
 			}
 			newEnemyCount += 0.5f;
@@ -413,10 +413,10 @@ void SceneGame::Render()
 		player->DrawDebugPrimitive();
 
 		// エネミーデバッグプリミティブ描画
-		EnemyManager::Instance().DrawDebugPrimitive();
+		//EnemyManager::Instance().DrawDebugPrimitive();
 
 		// 壁デバッグプリミティブ描画
-		WallManager::Instance().DrawDebugPrimitive();
+		//WallManager::Instance().DrawDebugPrimitive();
 
 		// ラインレンダラ描画実行
 		graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);

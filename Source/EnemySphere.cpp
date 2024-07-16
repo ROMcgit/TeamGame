@@ -221,7 +221,7 @@ void EnemySphere::CollisionProjectilesVsPlayer()
 				// ダメージを与える
 				else if(damageWaitTime <= 0)
 				{
-					if (player.ApplyDamage(15, 6.0f))
+					if (player.ApplyDamage(8, 6.0f))
 					{
 						// 弾丸破棄
 						projectile->Destroy();
@@ -315,8 +315,38 @@ void EnemySphere::CollisionProjectilesVsWall()
 				wall->GetHeight(),
 				outPosition))
 			{
-				wall->ApplyDamage(1, 1);
-				projectile->Destroy();
+				if (wall->ApplyDamage(1, 1))
+				{
+					// 弾丸破棄
+					projectile->Destroy();
+
+					// 前方向
+					DirectX::XMFLOAT3 dir;
+
+					dir.x = position.x - wall->GetPosition().x;
+					dir.y = position.y - wall->GetPosition().y;
+					dir.z = position.z - wall->GetPosition().z;
+
+					DirectX::XMVECTOR DIR;
+					DIR = DirectX::XMLoadFloat3(&dir);
+					DIR = DirectX::XMVector3Normalize(DIR);
+					DirectX::XMStoreFloat3(&dir, DIR);
+
+					// 発射位置(プレイヤーの腰あたり)
+					DirectX::XMFLOAT3 pos;
+					pos.x = wall->GetPosition().x;
+					pos.y = wall->GetPosition().y + wall->GetHeight();
+					pos.z = wall->GetPosition().z;
+
+					ProjectilePlayer* projectile = new ProjectilePlayer(&projectileManager);
+					projectile->Launch(dir, pos);
+
+					Player& player = Player::Instance();
+
+					DirectX::XMFLOAT3 e = wall->GetPosition();
+					wall->GetPosition().y + wall->GetHeight();
+					hitEffect->Play(e, 0.02f);
+				}
 			}
 		}
 	}

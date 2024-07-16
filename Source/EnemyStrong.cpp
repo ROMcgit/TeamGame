@@ -15,7 +15,7 @@
 // コンストラクタ
 EnemyStrong::EnemyStrong()
 {
-	model = std::make_unique<Model>("Data/Model/敵.mdl");
+	model = std::make_unique<Model>("Data/Model/Enemy/enemy02.mdl");
 
 	// ヒットエフェクト読み込み
 	hitEffect = std::make_unique<Effect>("Data/Effect/Blast.efk");
@@ -31,7 +31,9 @@ EnemyStrong::EnemyStrong()
 
 	// 幅、高さ設定
 	radius = 0.5f;
-	height = 0.8f;
+	height = 1.4f;
+
+	offset.y = -0.7;
 
 	// 徘徊ステートへ遷移
 	TransitionWanderState();
@@ -122,11 +124,11 @@ void EnemyStrong::Update(float elapsedTime)
 
 	deathTime++;
 
-	if (scale.x <= 0.02f && scale.y <= 0.02f && scale.z <= 0.02f)
+	if (scale.x <= 0.001f && scale.y <= 0.001f && scale.z <= 0.001f)
 	{
-		scale.x += 0.0005f;
-		scale.y += 0.0005f;
-		scale.z += 0.0005f;
+		scale.x += 0.0001f;
+		scale.y += 0.0001f;
+		scale.z += 0.0001f;
 	}
 }
 
@@ -239,7 +241,7 @@ void EnemyStrong::CollisionProjectilesVsPlayer()
 			// ダメージを与える
 			else if (damageWaitTime <= 0)
 			{
-				if (player.ApplyDamage(30, 6.0f))
+				if (player.ApplyDamage(20, 6.0f))
 				{
 					// 弾丸破棄
 					projectile->Destroy();
@@ -334,8 +336,38 @@ void EnemyStrong::CollisionProjectilesVsWall()
 				wall->GetHeight(),
 				outPosition))
 			{
-				wall->ApplyDamage(1, 1);
-				projectile->Destroy();
+				if (wall->ApplyDamage(1, 1))
+				{
+					// 弾丸破棄
+					projectile->Destroy();
+
+					// 前方向
+					DirectX::XMFLOAT3 dir;
+
+					dir.x = position.x - wall->GetPosition().x;
+					dir.y = position.y - wall->GetPosition().y;
+					dir.z = position.z - wall->GetPosition().z;
+
+					DirectX::XMVECTOR DIR;
+					DIR = DirectX::XMLoadFloat3(&dir);
+					DIR = DirectX::XMVector3Normalize(DIR);
+					DirectX::XMStoreFloat3(&dir, DIR);
+
+					// 発射位置(プレイヤーの腰あたり)
+					DirectX::XMFLOAT3 pos;
+					pos.x = wall->GetPosition().x;
+					pos.y = wall->GetPosition().y + wall->GetHeight();
+					pos.z = wall->GetPosition().z;
+
+					ProjectilePlayer* projectile = new ProjectilePlayer(&projectileManager);
+					projectile->Launch(dir, pos);
+
+					Player& player = Player::Instance();
+
+					DirectX::XMFLOAT3 e = wall->GetPosition();
+					wall->GetPosition().y + wall->GetHeight();
+					hitEffect->Play(e, 0.02f);
+				}
 			}
 		}
 	}
@@ -384,7 +416,7 @@ void EnemyStrong::TransitionWanderState()
 	positionRandamuR = 240;
 
 	// 歩きアニメーション再生
-	model->PlayAnimation(Anim_WalkFWD, true);
+	model->PlayAnimation(5, true);
 }
 
 // TODO:行動処理(敵)
@@ -419,35 +451,13 @@ void EnemyStrong::UpdateWanderState(float elapsedTime)
 	// 弾の発射(敵)
 	if (waitCount > 300)
 	{
-		int waitTime = 0;
-
-		attackWait = 40;
-		const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
-
-		// 前方向
-		DirectX::XMFLOAT3 dir;
-
-		dir.x = playerPosition.x - position.x;
-		dir.y = playerPosition.y - position.y;
-		dir.z = playerPosition.z - position.z;
-
-		DirectX::XMVECTOR DIR;
-		DIR = DirectX::XMLoadFloat3(&dir);
-		DIR = DirectX::XMVector3Normalize(DIR);
-		DirectX::XMStoreFloat3(&dir, DIR);
-
-		// 発射位置(プレイヤーの腰あたり)
-		DirectX::XMFLOAT3 pos;
-		pos.x = position.x;
-		pos.y = position.y - 0.2;
-		pos.z = position.z;
-
-		ProjectileStraight* projectile = new ProjectileStraight(&projectileManager);
-		projectile->Launch(dir, pos);
-
-		waitCount = 0;	
+		waitCount = 0;
+		TransitionAttackState();
 	}
-	waitCount++;
+	else
+	{
+		waitCount++;
+	}
 }
 
 // 待機ステートへ遷移
@@ -605,26 +615,54 @@ void EnemyStrong::TransitionAttackState()
 {
 	state = State::Attack;
 
-	// 攻撃アニメーション再生
-	model->PlayAnimation(Anim_Attack1, false);
+	int ransu = rand() % 2;
+
+	if (ransu == 0)
+	{
+		// 攻撃アニメーション再生
+		model->PlayAnimation(0, false);
+	}
+	else
+	{
+		// 攻撃アニメーション再生
+		model->PlayAnimation(1, false);
+	}
 }
 
 // 攻撃ステート更新処理
 void EnemyStrong::UpdateAttackState(float elapsedTime)
 {
-	// 任意のアニメーション再生区間でのみ衝突判定処理をする
-	float animationTime = model->GetCurrentAnimationSeconds();
-	if (animationTime >= 0.1f && animationTime <= 0.35f)
+	if (waitCount == 0)
 	{
-		// 目玉ノードとプレイヤーの衝突処理
-		CollisionNodeVsPlayer("EyeBall", 0.2f);
+		attackWait = 60;
+		const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
+
+		// 前方向
+		DirectX::XMFLOAT3 dir;
+
+		dir.x = playerPosition.x - position.x;
+		dir.y = playerPosition.y - position.y;
+		dir.z = playerPosition.z - position.z;
+
+		DirectX::XMVECTOR DIR;
+		DIR = DirectX::XMLoadFloat3(&dir);
+		DIR = DirectX::XMVector3Normalize(DIR);
+		DirectX::XMStoreFloat3(&dir, DIR);
+
+		// 発射位置(プレイヤーの腰あたり)
+		DirectX::XMFLOAT3 pos;
+		pos.x = position.x;
+		pos.y = position.y - 0.2;
+		pos.z = position.z;
+
+		ProjectileStraight* projectile = new ProjectileStraight(&projectileManager);
+		projectile->Launch(dir, pos);
 	}
 
-	// 攻撃アニメーションが終わったら戦闘待機ステートへ遷移
-	if (!model->IsPlayAnimation())
-	{
-		TransitionIdleBattleState();
-	}
+	if (waitCount > 60)
+		TransitionWanderState();
+
+	waitCount++;
 }
 
 // 戦闘待機ステートへ遷移
@@ -675,7 +713,7 @@ void EnemyStrong::TransitionDamageState()
 	state = State::Damage;
 
 	// ダメージアニメーション再生
-	model->PlayAnimation(Anim_GetHit, false);
+	model->PlayAnimation(6, false);
 }
 
 // ダメージステート更新処理

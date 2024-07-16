@@ -20,4 +20,7 @@ public:
 	virtual void DrawDebugPrimitive();
 
 	void Destroy();
+
+protected:
+	DirectX::XMFLOAT3 offset = { 0,0,0 };
 };

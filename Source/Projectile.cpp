@@ -19,7 +19,7 @@ void Projectile::DrawDebugPrimitive()
 	position.z + offset.z
 	};
 
-	debugRenderer->DrawSphere(offsetPosition, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
+	//debugRenderer->DrawSphere(offsetPosition, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
 }
 
 // ”jŠü

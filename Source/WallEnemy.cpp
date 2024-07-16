@@ -14,7 +14,7 @@
 // コンストラクタ
 WallEnemy::WallEnemy()
 {
-	model = std::make_unique<Model>("Data/Model/壁.mdl");
+	model = std::make_unique<Model>("Data/Model/Wall/wall.mdl");
 
 	// ヒットエフェクト読み込み
 	hitEffect = std::make_unique<Effect>("Data/Effect/Blast.efk");
@@ -25,8 +25,8 @@ WallEnemy::WallEnemy()
 	sound = audioManager.LoadAudioSource("Data/Audio/crash.wav");
 
 	// モデルが大きいのでスケーリング
-	scale.x = 0.05f;
-	scale.y = scale.z = 0.01f;
+	scale.x = 0.03f;
+	scale.y = scale.z = 0.04f;
 
 	// 幅、高さ設定
 	radius = 0.8f;
@@ -35,7 +35,8 @@ WallEnemy::WallEnemy()
 	// 徘徊ステートへ遷移
 	TransitionWanderState();
 
-	health = 1;
+	int ransu = rand() % 6 + 1;
+	health = ransu;
 }
 
 // デストラクタ

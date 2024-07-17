@@ -9,7 +9,16 @@
 void SceneTitle::Initialize()
 {
 	// スプライト初期化
-	sprite = new Sprite("Data/Sprite/Title.png");
+	sprite = new Sprite("Data/Sprite/タイトル.png");
+
+	mozi[0] = std::make_unique<Sprite>("Data/Sprite/置いてきた.png");
+	mozi[1] = std::make_unique<Sprite>("Data/Sprite/帰る.png");
+	
+	Audio& audioManager = Audio::Instance();
+	sound[0] = audioManager.LoadAudioSource("Data/Audio/年寄り.wav");
+	sound[1] = audioManager.LoadAudioSource("Data/Audio/キャァァァァァ(鈍足).wav");
+
+	yazirusi = std::make_unique<Sprite>("Data/Sprite/矢印.png");
 
 	SceneTitle& title = SceneTitle::Instance();
 	title.score = 0;
@@ -31,12 +40,8 @@ void SceneTitle::Update(float elapsedTime)
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
-	// なにかボタンを押したらローディングシーンを挟んでゲームシーンへ切り替え
-	const GamePadButton anyButton =
-		GamePad::BTN_A |
-		GamePad::BTN_B |
-		GamePad::BTN_START;
-	if (gamePad.GetButtonDown() & anyButton)
+	if ((gamePad.GetButtonDown() & GamePad::BTN_START ||
+		gamePad.GetButtonDown() & GamePad::BTN_A) && select == 0)
 	{
 		SceneLoading* loadingScene = new SceneLoading(new SceneGame);
 
@@ -44,6 +49,52 @@ void SceneTitle::Update(float elapsedTime)
 		SceneManager::Instance().ChangeScene(loadingScene);
 		
 	}
+
+	// チュートリアル
+	if ((gamePad.GetButtonDown() & GamePad::BTN_START ||
+		gamePad.GetButtonDown() & GamePad::BTN_A)
+		&& select == 1)
+	{
+		sound[0]->Play(false, 1.0f);
+		moziView = true;
+	}
+
+	// 帰さない
+	if ((gamePad.GetButtonDown() & GamePad::BTN_START || 
+		gamePad.GetButtonDown() & GamePad::BTN_A) && select == 2)
+	{
+		sound[1]->Play(false, 1.0f);
+		moziView = true;
+	}
+
+	if (moziView == true)
+	{
+		waitTime++;
+	}
+
+	if (waitTime > 300 && select == 1)
+	{
+		waitTime = 0;
+		moziView = false;
+	}
+	else if (waitTime > 300 && select == 2)
+	{
+		SceneLoading* loadingScene = new SceneLoading(new SceneGame);
+
+		// シーンマネージャーにローディングシーンへの切り替えを指示
+		SceneManager::Instance().ChangeScene(loadingScene);
+	}
+
+	// 選択処理
+	if (moziView == false &&
+		gamePad.GetButtonDown() & GamePad::BTN_UP) select--;
+	else if 
+		(moziView == false &&
+		gamePad.GetButtonDown() & GamePad::BTN_DOWN) select++;
+
+	// 数値を超えないように
+	if (select < 0) select = 0;
+	if (select > 2) select = 2;
 }
 
 // 描画処理
@@ -72,5 +123,60 @@ void SceneTitle::Render()
 			0, 0, textureWidth, textureHeight,
 			0,
 			1, 1, 1, 1);
+
+		if (select == 1 && moziView == true)
+		{
+			mozi[0]->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				1280, 720,
+				0,
+				1, 1, 1, 1);
+		}
+
+		if (select == 2 && moziView == true)
+		{
+			mozi[1]->Render(dc,
+				40, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				1280, 720,
+				0,
+				1, 1, 1, 1);
+		}
+
+		switch (select)
+		{
+		case 0:
+			yazirusi->Render(dc,
+				10, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				1280, 720,
+				0,
+				1, 1, 1, 1);
+			break;
+		case 1:
+			yazirusi->Render(dc,
+				-30, 67,
+				screenWidth, screenHeight,
+				0, 0,
+				1280, 720,
+				0,
+				1, 1, 1, 1);
+			break;
+		case 2:
+			yazirusi->Render(dc,
+				10, 140,
+				screenWidth, screenHeight,
+				0, 0,
+				1280, 720,
+				0,
+				1, 1, 1, 1);
+			break;
+		default:
+			break;
+		}
 	}
 }

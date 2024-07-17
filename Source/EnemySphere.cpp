@@ -113,6 +113,10 @@ void EnemySphere::Update(float elapsedTime)
 		scale.y += 0.0001f;
 		scale.z += 0.0001f;
 	}
+
+	//! スコアのインスタンス
+	SceneTitle& title = SceneTitle::Instance();
+	if (title.score > 100000) this->ApplyDamage(100, 0);
 }
 
 // 描画処理
@@ -230,7 +234,7 @@ void EnemySphere::CollisionProjectilesVsPlayer()
 				// ダメージを与える
 				else if(damageWaitTime <= 0)
 				{
-					if (player.ApplyDamage(8, 3.0f))
+					if (player.ApplyDamage(10, 3.0f))
 					{
 						// 弾丸破棄
 						projectile->Destroy();
@@ -610,9 +614,6 @@ void EnemySphere::UpdateDeathState(float elapsedTime)
 		title.score += 100;
 
 		sound[1]->Play(false, 1.0f);
-
-		if(player.health > 0)
-		player.health += 2;
 
 		position.y + 0.5f;
 		hitEffect->Play(position, 0.02f);

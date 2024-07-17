@@ -132,6 +132,10 @@ void EnemyStrong::Update(float elapsedTime)
 		scale.y += 0.0001f;
 		scale.z += 0.0001f;
 	}
+
+	//! スコアのインスタンス
+	SceneTitle& title = SceneTitle::Instance();
+	if (title.score > 100000) this->ApplyDamage(100, 0);
 }
 
 // 描画処理

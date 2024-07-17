@@ -28,6 +28,11 @@ Player::Player()
 	model[0] = new Model("Data/Model/Character/charactor01.mdl");
 	model[1] = new Model("Data/Model/Character/charactor02.mdl");
 
+	Audio& audioManager = Audio::Instance();
+	sound[0] = audioManager.LoadAudioSource("Data/Audio/剣の素振り1.wav");
+	sound[1] = audioManager.LoadAudioSource("Data/Audio/ぐお.wav");;
+	sound[2] = audioManager.LoadAudioSource("Data/Audio/死亡.wav");;
+
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.01f;
 
@@ -392,6 +397,7 @@ void Player::TransitionAttackState()
 {
 	state = State::Attack;
 
+	sound[0]->Play(false, 0.65f);
 	// 着地アニメーション再生
 	model[0]->PlayAnimation(1, false);
 	model[1]->PlayAnimation(1, false);
@@ -494,23 +500,24 @@ void Player::UpdateAttackState(float elapsedTime)
 void Player::TransitionDamageState()
 {
 	state = State::Damage;
-
+	waitCount = 0;
+	sound[1]->Play(false, 1.0f);
 	// ダメージアニメーション再生
-	model[0]->PlayAnimation(Anim_GetHit1, false);
-	model[1]->PlayAnimation(Anim_GetHit1, false);
+	model[0]->PlayAnimation(3, false);
+	model[1]->PlayAnimation(3, false);
 }
 
 // ダメージステート更新処理
 void Player::UpdateDamageState(float elapsedTime)
 {
 	// ダメージアニメーションが終わったら待機ステートへ遷移
-	if (!model[0]->IsPlayAnimation())
+	if (waitCount > 20)
 	{
 		TransitionIdleState();
-	}	
-	if (!model[1]->IsPlayAnimation())
+	}
+	else
 	{
-		TransitionIdleState();
+		waitCount++;
 	}
 }
 
@@ -519,9 +526,11 @@ void Player::TransitionDeathState()
 {
 	state = State::Death;
 
+	sound[2]->Play(false, 1.0f);
+
 	// 死亡アニメーション再生
-	model[0]->PlayAnimation(Anim_Death, false);
-	model[1]->PlayAnimation(Anim_Death, false);
+	model[0]->PlayAnimation(4, false);
+	model[1]->PlayAnimation(4, false);
 }
 
 // 死亡ステート更新処理
@@ -695,7 +704,6 @@ void Player::OnDamaged()
 // 死亡した時に呼ばれる
 void Player::OnDead()
 {
-	angle.x = 90;
 	// 死亡ステートへ遷移
 	TransitionDeathState();
 }

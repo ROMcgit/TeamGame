@@ -2,6 +2,7 @@
 
 #include "Graphics/Sprite.h"
 #include "Scene.h"
+#include "Audio/Audio.h"
 
 // タイトルシーン
 class SceneTitle : public Scene
@@ -33,5 +34,10 @@ public:
 
 private:
 	Sprite* sprite = nullptr;
-	
+	int select = 0;
+	bool moziView = false;
+	std::unique_ptr<Sprite> mozi[2];
+	std::unique_ptr<Sprite> yazirusi;
+	std::unique_ptr<AudioSource> sound[2];
+	int waitTime = 0;
 };

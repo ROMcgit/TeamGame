@@ -5,6 +5,7 @@
 #include "Character.h"
 #include "ProjectileManager.h"
 #include "Effect.h"
+#include "Audio/Audio.h"
 
 // ƒvƒŒƒCƒ„[
 class Player : public Character
@@ -158,6 +159,8 @@ private:
 	Effect* hitEffect = nullptr;
 
 	State state = State::Idle;
+
+	std::unique_ptr<AudioSource> sound[3];
 
 	int playerMove;
 	int playerAnimeCount;

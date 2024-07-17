@@ -24,9 +24,9 @@ WallEnemy::WallEnemy()
 
 	sound = audioManager.LoadAudioSource("Data/Audio/crash.wav");
 
-	// モデルが大きいのでスケーリング(scale.x(0.16f) 他(0.055f))
-	scale.x = 0.16f;
-	scale.y = scale.z = 0.055f;
+	// モデルが大きいのでスケーリング(scale.x(0.16f))
+	scale.x = 0.0f;
+	scale.y = scale.z = 0.0f;
 
 	// 幅、高さ設定
 	radius = 0.0f;
@@ -35,7 +35,7 @@ WallEnemy::WallEnemy()
 	// 徘徊ステートへ遷移
 	TransitionWanderState();
 
-	int ransu = rand() % 4 + 3;
+	int ransu = rand() % 2 + 1;
 	health = ransu;
 }
 
@@ -113,14 +113,18 @@ void WallEnemy::Update(float elapsedTime)
 	if (scale.x < 0.16f && scale.y < 0.055f && scale.z < 0.055f)
 	{
 		scale.x += 0.01f;
-		scale.y += 0.001f;
-		scale.z += 0.001f;
+		scale.y += 0.003f;
+		scale.z += 0.003f;
 	}
 	else
 	{
 		radius = 0.8f;
 		height = 0.5f;
 	}
+
+	//! スコアのインスタンス
+	SceneTitle& title = SceneTitle::Instance();
+	if (title.score > 100000) this->ApplyDamage(100, 0);
 }
 
 // 描画処理

@@ -44,6 +44,9 @@ void SceneGame::Initialize()
 	uiSprite[1] = std::make_unique<Sprite>(); //HPダメージ(赤色)
 	uiSprite[2] = std::make_unique<Sprite>(); //HPゲージ(緑色)
 
+	setumei[0] = std::make_unique<Sprite>("Data/Sprite/操作説明.png");
+	setumei[1] = std::make_unique<Sprite>("Data/Sprite/困ったら連打!!.png");
+
 	// WAVW文字読み込み
 	for (int i = 0; i < 3; i++)
 	{
@@ -114,7 +117,7 @@ void SceneGame::Update(float elapsedTime)
 {
 	if (bgm)
 	{
-		bgm->Play(true, 1.0f);
+		bgm->Play(true, 0.0f);
 	}
 
 	// カメラコントローラー更新処理
@@ -146,7 +149,7 @@ void SceneGame::Update(float elapsedTime)
 	int wallCount = wallManager.GetWallCount();
 
 	 newWallCount++;
-	if (newWallCount > 60)
+	if (newWallCount > 360)
 	{
 		/// X座標のランダムな位置を生成 (-5から5の範囲)
 		int posX = (rand() % 5 + 1) * (rand() % 2 == 1 ? -1 : 1);
@@ -301,7 +304,7 @@ void SceneGame::Update(float elapsedTime)
 				}
 
 				newEnemyCount = 0;
-				newEnemyMaxCount += 0.4f;
+				if (newEnemyMaxCount < 60) newEnemyMaxCount += 0.4f;
 				newEnemyLimit++;
 				if (enemyCount >= 2) battleStart = true;
 			}
@@ -315,6 +318,7 @@ void SceneGame::Update(float elapsedTime)
 
 #endif
 
+#if 1
 	// Wave1
 	if (enemyCount <= 0 && battleWave == 1 && battleStart == true)
 	{
@@ -350,7 +354,8 @@ void SceneGame::Update(float elapsedTime)
 		newEnemy = false;
 	}
 
-	if (battleWave == 3 && nextSceneCount > 300 || player->GetHealth() <= 0 && nextSceneCount > 300)
+	// シーン遷移
+	if (battleWave == 3 && nextSceneCount > 300 && player->GetHealth() > 0)
 	{
 		SceneLoading* loadingScene = new SceneLoading(new SceneClear);
 
@@ -358,8 +363,46 @@ void SceneGame::Update(float elapsedTime)
 		SceneManager::Instance().ChangeScene(loadingScene);
 	}
 
+	if (player->GetHealth() <= 0)
+	{
+		nextSceneCount++;
+	}
+	if (player->GetHealth() <= 0 && nextSceneCount > 300)
+	{
+		SceneLoading* loadingScene = new SceneLoading(new SceneGameOver);
+
+		// シーンマネージャーにローディングシーンへの切り替えを指示
+		SceneManager::Instance().ChangeScene(loadingScene);
+	}
+	//! スコアの表示
+	SceneTitle& title = SceneTitle::Instance();
+	if (title.score > 100000)
+	{
+		newEnemy = false;
+	}
+
+#endif
+
 	if (newEnemy == false)  nextWaveWait++;
 	if (nextWaveWait > 360) newEnemy = true;
+
+	// 数値の足す引く
+	if(setumeiColorMinus[0] == false) setumeiColor.x += 0.005f;
+	else                              setumeiColor.x -= 0.005f;
+	if(setumeiColorMinus[1] == false) setumeiColor.y += 0.009f;
+	else                              setumeiColor.y -= 0.009f;
+	if(setumeiColorMinus[2] == false) setumeiColor.z += 0.007f;
+	else                              setumeiColor.z -= 0.007f;
+	
+	// 数値を足すか
+	if (setumeiColor.x > 1)      setumeiColorMinus[0] = true;
+	else if (setumeiColor.x < 0) setumeiColorMinus[0] = false;
+
+	if (setumeiColor.y > 1)      setumeiColorMinus[1] = true;
+	else if (setumeiColor.y < 0) setumeiColorMinus[1] = false;
+
+	if (setumeiColor.z > 1)      setumeiColorMinus[2] = true;
+	else if (setumeiColor.z < 0) setumeiColorMinus[2] = false;
 }
 
 // 描画処理
@@ -532,6 +575,24 @@ void SceneGame::PlayerUI(ID3D11DeviceContext* dc)
 				1.0f, 0.3f, 0.3f, 1);
 		}
 
+		setumei[0]->Render(dc,
+			0, 0,
+			screenWidth, screenHeight,
+			0, 0,
+			1280, 720,
+			0,
+			1, 1, 1, 1);
+
+		setumei[1]->Render(dc,
+			0, 0,
+			screenWidth, screenHeight,
+			0, 0,
+			1280, 720,
+			0,
+			setumeiColor.x, 
+			setumeiColor.y,
+			setumeiColor.z,
+			1);
 	}
 }
 

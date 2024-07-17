@@ -31,6 +31,9 @@ void SceneGame::Initialize()
 	//stageMoveFloor->SetTorque(DirectX::XMFLOAT3(0, 1.0f, 0));
 	//stageManager.Register(stageMoveFloor);
 
+
+	bg = std::make_unique<Sprite>("Data/Sprite/sky.png");
+
 	EnemyHp = new Sprite;
 
 	// ƒvƒŒƒCƒ„[‰Šú‰»
@@ -380,6 +383,22 @@ void SceneGame::Render()
 	Camera& camera = Camera::Instance();
 	rc.view = camera.GetView();
 	rc.projection = camera.GetProjection();
+
+	// ”wŒi
+	{
+		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
+		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
+		float textureWidth = static_cast<float>(bg->GetTextureWidth());
+		float textureHeight = static_cast<float>(bg->GetTextureHeight());
+
+		bg->Render(dc,
+			0, 0,
+			screenWidth, screenHeight,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1);
+	}
 
 	//! 3Dƒ‚ƒfƒ‹•`‰æ
 	{

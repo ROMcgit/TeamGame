@@ -54,6 +54,7 @@ private:
 	std::unique_ptr<Player> player;
 	std::unique_ptr<Sprite> uiSprite[4];
 	std::unique_ptr<Sprite> wave[3];
+	std::unique_ptr<Sprite> bg;
 	CameraController* cameraController = nullptr;
 	Sprite* EnemyHp = nullptr;
 	std::unique_ptr<Text> text[2];

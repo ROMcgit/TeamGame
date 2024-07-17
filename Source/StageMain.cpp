@@ -17,7 +17,7 @@ StageMain::StageMain()
 	scale.x = scale.y = scale.z = 0.01f;
 
 	// ステージモデルを読み込み
-	model = new Model("Data/Model/Stage/Field_tmp01.mdl");
+	model = new Model("Data/Model/Stage/Field.mdl");
 }
 
 //Stage::~Stage()

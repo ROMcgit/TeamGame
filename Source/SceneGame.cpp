@@ -413,10 +413,10 @@ void SceneGame::Render()
 		player->DrawDebugPrimitive();
 
 		// エネミーデバッグプリミティブ描画
-		//EnemyManager::Instance().DrawDebugPrimitive();
+		EnemyManager::Instance().DrawDebugPrimitive();
 
 		// 壁デバッグプリミティブ描画
-		//WallManager::Instance().DrawDebugPrimitive();
+		WallManager::Instance().DrawDebugPrimitive();
 
 		// ラインレンダラ描画実行
 		graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);

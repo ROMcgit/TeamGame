@@ -25,8 +25,8 @@ WallEnemy::WallEnemy()
 	sound = audioManager.LoadAudioSource("Data/Audio/crash.wav");
 
 	// モデルが大きいのでスケーリング
-	scale.x = 0.03f;
-	scale.y = scale.z = 0.04f;
+	scale.x = 0.16f;
+	scale.y = scale.z = 0.055f;
 
 	// 幅、高さ設定
 	radius = 0.8f;

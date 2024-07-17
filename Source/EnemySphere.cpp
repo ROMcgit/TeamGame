@@ -350,7 +350,7 @@ void EnemySphere::CollisionProjectilesVsWall()
 					Player& player = Player::Instance();
 
 					DirectX::XMFLOAT3 e = wall->GetPosition();
-					wall->GetPosition().y + wall->GetHeight();
+					wall->GetPosition().y + wall->GetHeight() + 0.4f;
 					hitEffect->Play(e, 0.02f);
 				}
 			}

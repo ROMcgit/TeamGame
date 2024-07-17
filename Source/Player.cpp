@@ -25,7 +25,8 @@ Player::Player()
 
 	//model = new Model("Data/Model/Mr.Incredible/Mr.Incredible.mdl");
 	//model = new Model("Data/Model/Jammo/Jammo.mdl");
-	model = new Model("Data/Model/test_anim.mdl");
+	model[0] = new Model("Data/Model/Character/charactor01.mdl");
+	model[1] = new Model("Data/Model/Character/charactor02.mdl");
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.01f;
@@ -48,7 +49,10 @@ Player::~Player()
 {
 	delete hitEffect;
 
-	delete model;
+	for (int i = 0; i < 2; i++)
+	{
+		delete model[i];
+	}
 }
 
 // 更新処理
@@ -102,10 +106,12 @@ void Player::Update(float elapsedTime)
 	UpdateTransform();
 
 	// モデルアニメーション更新処理
-	model->UpdateAnimation(elapsedTime);
+	model[0]->UpdateAnimation(elapsedTime);
+	model[1]->UpdateAnimation(elapsedTime);
 
 	// モデル更新処理
-	model->UpdateTransform(transform);
+	model[0]->UpdateTransform(transform);
+	model[1]->UpdateTransform(transform);
 
 	// 位置制御
 	PositionControll();
@@ -117,7 +123,8 @@ void Player::Update(float elapsedTime)
 // 描画処理
 void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	shader->Draw(dc, model);
+	shader->Draw(dc, model[0]);
+	shader->Draw(dc, model[1]);
 
 	// 弾丸描画処理
 	projectileManager.Render(dc, shader);
@@ -230,7 +237,8 @@ void Player::TransitionIdleState()
 	state = State::Idle;
 
 	// 待機アニメーション再生
-	model->PlayAnimation(0, true);
+	model[0]->PlayAnimation(2, true);
+	model[1]->PlayAnimation(2, true);
 }
 
 // 待機ステート更新処理
@@ -282,7 +290,8 @@ void Player::TransitionMoveState()
 	state = State::Move;
 
 	// 走りアニメーション再生
-	model->PlayAnimation(Anim_Running, true);
+	model[0]->PlayAnimation(0, true);
+	model[1]->PlayAnimation(0, true);
 }
 
 // 移動ステート更新処理
@@ -324,7 +333,7 @@ void Player::UpdateMoveState(float elapsedTime)
 	if (playerMove > 8) playerMove = 8;
 
 	// 攻撃入力処理
-	if (gamePad.GetButtonDown() & GamePad::BTN_B)
+	if (gamePad.GetButtonDown() & GamePad::BTN_START || gamePad.GetButtonDown() & GamePad::BTN_SPACE)
 	{
 		// 攻撃ステートへ遷移
 		playerAnimeCount = 0;
@@ -384,7 +393,8 @@ void Player::TransitionAttackState()
 	state = State::Attack;
 
 	// 着地アニメーション再生
-	model->PlayAnimation(Anim_Attack, false);
+	model[0]->PlayAnimation(1, false);
+	model[1]->PlayAnimation(1, false);
 }
 
 // 攻撃ステート更新処理
@@ -407,85 +417,78 @@ void Player::UpdateAttackState(float elapsedTime)
 		attackCollisionFlag = true;
 	else 
 		attackCollisionFlag = false;
-
-	// 衝突判定フラグが立っている場合、左手ノードとエネミーの衝突処理を行う
-	if (attackCollisionFlag)
-	{
-		// 左手ノードとエネミーの衝突処理
-		CollisionNodeVsEnemies("mixamorig:LeftHand", leftHandRadius);
-	}
 }
 
 // TODO:ノードと敵の衝突処理
-void Player::CollisionNodeVsEnemies(const char* nodeName, float nodeRadius)
-{
-	// ノード取得
-	Model::Node* node = model->FindNode(nodeName);
-
-	// ノードが存在しない場合は処理を終了
-	if (!node) return;
-
-	// ノード位置取得
-	DirectX::XMMATRIX nodeTransform = DirectX::XMLoadFloat4x4(&node->worldTransform);
-	DirectX::XMVECTOR nodePosVector = nodeTransform.r[3];
-	DirectX::XMFLOAT3 nodePosition;
-	DirectX::XMStoreFloat3(&nodePosition, nodePosVector);
-
-	// 敵マネージャーのインスタンスを取得
-	EnemyManager& enemyManager = EnemyManager::Instance();
-
-	int pm = projectileManager.GetProjectileCount();
-
-	// 指定のノードと全ての敵を総当たりで衝突処理
-	//int enemyCount = enemyManager.GetEnemyCount();
-	for (int i = 0; i < pm; ++i)
-	{
-		Projectile* projectile = projectileManager.GetProjectile(i);
-
-		// 衝突処理
-		DirectX::XMFLOAT3 outPosition;
-		if (Collision::IntersectSphereVsSphere(
-			nodePosition,
-			nodeRadius,
-			projectile->GetPosition(),
-			projectile->GetRadius(),
-			outPosition
-		))
-		{
-			EnemyManager& enemyManager = EnemyManager::Instance();
-			int enemyCount = enemyManager.GetEnemyCount();
-			for (int i = 0; i < enemyCount; ++i)
-			{
-				Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
-				const DirectX::XMFLOAT3& enemyPosition = enemy->GetPosition();
-
-				// 前方向
-				DirectX::XMFLOAT3 dir = { 0,0,0 };
-
-				dir.x = enemyPosition.x - position.x;
-				dir.y = enemyPosition.y - position.y;
-				dir.z = enemyPosition.z - position.z;
-
-				DirectX::XMVECTOR DIR;
-				DIR = DirectX::XMLoadFloat3(&dir);
-				DIR = DirectX::XMVector3Normalize(DIR);
-				DirectX::XMStoreFloat3(&dir, DIR);
-
-				// 発射位置(プレイヤーの腰あたり)
-				DirectX::XMFLOAT3 pos = {0,0,0};
-				pos.x = position.x;
-				pos.y = position.y + 1;
-				pos.z = position.z;
-
-				DirectX::XMFLOAT3 target = { 0,0,0 };
-
-				ProjectilePlayer* projectile = new ProjectilePlayer(&projectileManager);
-				projectile->Launch(dir, pos);
-			}
-		
-		}
-	}
-}
+//void Player::CollisionNodeVsEnemies(const char* nodeName, float nodeRadius)
+//{
+//	// ノード取得
+//	Model::Node* node = model[]->FindNode(nodeName);
+//
+//	// ノードが存在しない場合は処理を終了
+//	if (!node) return;
+//
+//	// ノード位置取得
+//	DirectX::XMMATRIX nodeTransform = DirectX::XMLoadFloat4x4(&node->worldTransform);
+//	DirectX::XMVECTOR nodePosVector = nodeTransform.r[3];
+//	DirectX::XMFLOAT3 nodePosition;
+//	DirectX::XMStoreFloat3(&nodePosition, nodePosVector);
+//
+//	// 敵マネージャーのインスタンスを取得
+//	EnemyManager& enemyManager = EnemyManager::Instance();
+//
+//	int pm = projectileManager.GetProjectileCount();
+//
+//	// 指定のノードと全ての敵を総当たりで衝突処理
+//	//int enemyCount = enemyManager.GetEnemyCount();
+//	for (int i = 0; i < pm; ++i)
+//	{
+//		Projectile* projectile = projectileManager.GetProjectile(i);
+//
+//		// 衝突処理
+//		DirectX::XMFLOAT3 outPosition;
+//		if (Collision::IntersectSphereVsSphere(
+//			nodePosition,
+//			nodeRadius,
+//			projectile->GetPosition(),
+//			projectile->GetRadius(),
+//			outPosition
+//		))
+//		{
+//			EnemyManager& enemyManager = EnemyManager::Instance();
+//			int enemyCount = enemyManager.GetEnemyCount();
+//			for (int i = 0; i < enemyCount; ++i)
+//			{
+//				Enemy* enemy = EnemyManager::Instance().GetEnemy(i);
+//				const DirectX::XMFLOAT3& enemyPosition = enemy->GetPosition();
+//
+//				// 前方向
+//				DirectX::XMFLOAT3 dir = { 0,0,0 };
+//
+//				dir.x = enemyPosition.x - position.x;
+//				dir.y = enemyPosition.y - position.y;
+//				dir.z = enemyPosition.z - position.z;
+//
+//				DirectX::XMVECTOR DIR;
+//				DIR = DirectX::XMLoadFloat3(&dir);
+//				DIR = DirectX::XMVector3Normalize(DIR);
+//				DirectX::XMStoreFloat3(&dir, DIR);
+//
+//				// 発射位置(プレイヤーの腰あたり)
+//				DirectX::XMFLOAT3 pos = {0,0,0};
+//				pos.x = position.x;
+//				pos.y = position.y + 1;
+//				pos.z = position.z;
+//
+//				DirectX::XMFLOAT3 target = { 0,0,0 };
+//
+//				ProjectilePlayer* projectile = new ProjectilePlayer(&projectileManager);
+//				projectile->Launch(dir, pos);
+//			}
+//		
+//		}
+//	}
+//}
 
 // ダメージステートへ遷移
 void Player::TransitionDamageState()
@@ -493,14 +496,19 @@ void Player::TransitionDamageState()
 	state = State::Damage;
 
 	// ダメージアニメーション再生
-	model->PlayAnimation(Anim_GetHit1, false);
+	model[0]->PlayAnimation(Anim_GetHit1, false);
+	model[1]->PlayAnimation(Anim_GetHit1, false);
 }
 
 // ダメージステート更新処理
 void Player::UpdateDamageState(float elapsedTime)
 {
 	// ダメージアニメーションが終わったら待機ステートへ遷移
-	if (!model->IsPlayAnimation())
+	if (!model[0]->IsPlayAnimation())
+	{
+		TransitionIdleState();
+	}	
+	if (!model[1]->IsPlayAnimation())
 	{
 		TransitionIdleState();
 	}
@@ -512,13 +520,14 @@ void Player::TransitionDeathState()
 	state = State::Death;
 
 	// 死亡アニメーション再生
-	model->PlayAnimation(Anim_Death, false);
+	model[0]->PlayAnimation(Anim_Death, false);
+	model[1]->PlayAnimation(Anim_Death, false);
 }
 
 // 死亡ステート更新処理
 void Player::UpdateDeathState(float elapsedTimae)
 {
-	if (!model->IsPlayAnimation())
+	if (!model[0]->IsPlayAnimation())
 	{
 		//// ボタンを押したら復活ステートへ遷移
 		//GamePad& gamePad = Input::Instance().GetGamePad();
@@ -686,6 +695,7 @@ void Player::OnDamaged()
 // 死亡した時に呼ばれる
 void Player::OnDead()
 {
+	angle.x = 90;
 	// 死亡ステートへ遷移
 	TransitionDeathState();
 }

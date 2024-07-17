@@ -93,9 +93,6 @@ private:
 	// 攻撃ステート更新処理
 	void UpdateAttackState(float elapsedTime);
 
-	// ノードとエネミーの衝突処理
-	void CollisionNodeVsEnemies(const char* nodeName, float nodeRadius);
-
 	// ダメージステートへ遷移
 	void TransitionDamageState();
 
@@ -146,7 +143,7 @@ private:
 	};
 
 private:
-	Model* model = nullptr;
+	Model* model[2];
 	
 	float moveSpeed = 15.0f;
 	float turnSpeed = DirectX::XMConvertToRadians(720);

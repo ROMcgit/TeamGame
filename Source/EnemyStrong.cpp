@@ -371,7 +371,7 @@ void EnemyStrong::CollisionProjectilesVsWall()
 					Player& player = Player::Instance();
 
 					DirectX::XMFLOAT3 e = wall->GetPosition();
-					wall->GetPosition().y + wall->GetHeight();
+					e.y += wall->GetHeight() + 0.2f;
 					hitEffect->Play(e, 0.02f);
 				}
 			}

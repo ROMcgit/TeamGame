@@ -25,7 +25,7 @@ public:
 	void Render() override;
 
 private:
-	Sprite* sprite = nullptr;
+	std::unique_ptr<Sprite> sprite;
 
 	std::unique_ptr<Text> text[2];
 	std::unique_ptr<AudioSource> bgm;

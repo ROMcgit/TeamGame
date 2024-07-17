@@ -46,6 +46,7 @@ Player::Player()
 
 	maxWaitCount = 5;
 
+	radius = 0.35f;
 	height = 1.5;
 }
 

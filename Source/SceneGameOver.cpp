@@ -12,6 +12,8 @@ void SceneGameOver::Initialize()
 	// スコア
 	text[0] = std::make_unique<Text>();
 
+	sprite = std::make_unique<Sprite>("Data/Sprite/ゲームオーバー.png");
+
 	// 音楽
 	Audio& audioManager = Audio::Instance();
 
@@ -64,6 +66,17 @@ void SceneGameOver::Render()
 	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	dc->OMSetRenderTargets(1, &rtv, dsv);
 
+	float screenWidth = static_cast<float>(graphics.GetScreenWidth());
+	float screenHeight = static_cast<float>(graphics.GetScreenHeight());
+
+	sprite->Render(dc,
+		0, 0,
+		screenWidth, screenHeight,
+		0, 0,
+		1280, 720,
+		0,
+		1, 1, 1, 1);
+
 	SceneTitle& title = SceneTitle::Instance();
 
 	text[0]->Render(dc,
@@ -71,9 +84,9 @@ void SceneGameOver::Render()
 		false,
 		0, 0, 0, 0, 0,
 		0, 0, 0, title.score,
-		800, 360,
-		12, 12,
+		970, 360,
+		16, 16,
 		0,
-		40,
-		1, 1, 1, 1);
+		60,
+		1, 0, 0, 1);
 }

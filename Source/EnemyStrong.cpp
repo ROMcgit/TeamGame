@@ -29,6 +29,8 @@ EnemyStrong::EnemyStrong()
 	sound[2] = audioManager.LoadAudioSource("Data/Audio/金属の衝突.wav");
 	sound[3] = audioManager.LoadAudioSource("Data/Audio/中パンチ.wav");
 
+	attackSound = audioManager.LoadAudioSource("Data/Audio/弾発射.wav");
+
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0; //サイズは0.02f
 
@@ -678,6 +680,8 @@ void EnemyStrong::UpdateAttackState(float elapsedTime)
 		DirectX::XMFLOAT3 e = position;
 
 		bariaEffect->Play(e, 0.22f);
+
+		attackSound->Play(false, 0.6f);
 	}
 
 	if (waitCount > 60)
@@ -768,7 +772,7 @@ void EnemyStrong::UpdateDeathState(float elapsedTime)
 		SceneTitle& title = SceneTitle::Instance();
 
 		if (player.health > 0)
-		player.health += 5;
+		player.health += 4;
 
 		title.score += 500;
 

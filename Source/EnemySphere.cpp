@@ -30,6 +30,8 @@ EnemySphere::EnemySphere()
 	sound[2] = audioManager.LoadAudioSource("Data/Audio/金属の衝突.wav");
 	sound[3] = audioManager.LoadAudioSource("Data/Audio/中パンチ.wav");
 
+	attackSound = audioManager.LoadAudioSource("Data/Audio/弾発射.wav");
+
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0;
 
@@ -583,6 +585,8 @@ void EnemySphere::UpdateAttackState(float elapsedTime)
 		e.y += 0.4f;
 
 		bariaEffect->Play(e, 0.22f);
+
+		attackSound->Play(false, 0.6f);
 	}
 
 	if(waitCount > 60)

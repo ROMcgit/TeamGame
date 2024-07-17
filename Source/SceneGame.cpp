@@ -117,7 +117,7 @@ void SceneGame::Update(float elapsedTime)
 {
 	if (bgm)
 	{
-		bgm->Play(true, 0.0f);
+		bgm->Play(true, 0.3f);
 	}
 
 	// カメラコントローラー更新処理
@@ -304,7 +304,7 @@ void SceneGame::Update(float elapsedTime)
 				}
 
 				newEnemyCount = 0;
-				if (newEnemyMaxCount < 60) newEnemyMaxCount += 0.4f;
+				if (newEnemyMaxCount < 40) newEnemyMaxCount += 0.4f;
 				newEnemyLimit++;
 				if (enemyCount >= 2) battleStart = true;
 			}
@@ -357,6 +357,7 @@ void SceneGame::Update(float elapsedTime)
 	// シーン遷移
 	if (battleWave == 3 && nextSceneCount > 300 && player->GetHealth() > 0)
 	{
+		bgm->Stop();
 		SceneLoading* loadingScene = new SceneLoading(new SceneClear);
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示
@@ -369,6 +370,7 @@ void SceneGame::Update(float elapsedTime)
 	}
 	if (player->GetHealth() <= 0 && nextSceneCount > 300)
 	{
+		bgm->Stop();
 		SceneLoading* loadingScene = new SceneLoading(new SceneGameOver);
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示
@@ -378,13 +380,16 @@ void SceneGame::Update(float elapsedTime)
 	SceneTitle& title = SceneTitle::Instance();
 	if (title.score > 100000)
 	{
+		nextSceneCount++;
 		newEnemy = false;
 	}
 
 #endif
-
-	if (newEnemy == false)  nextWaveWait++;
-	if (nextWaveWait > 360) newEnemy = true;
+	if (title.score < 100000)
+	{
+		if (newEnemy == false)  nextWaveWait++;
+		if (nextWaveWait > 360) newEnemy = true;
+	}
 
 	// 数値の足す引く
 	if(setumeiColorMinus[0] == false) setumeiColor.x += 0.005f;
@@ -602,16 +607,33 @@ void SceneGame::DrawFont(ID3D11DeviceContext* dc)
 	//! スコアの表示
 	SceneTitle& title = SceneTitle::Instance();
 
-	text[0]->Render(dc,
-		true, true,
-		false,
-		0, 0, 0, 0, 0,
-		0, 0, 0, title.score,
-		10, 30,
-		5, 5,
-		0,
-		30,
-		1, 1, 1, 1);
+	if (title.score < 100000)
+	{
+		text[0]->Render(dc,
+			true, true,
+			false,
+			0, 0, 0, 0, 0,
+			0, 0, 0, title.score,
+			-62, 30,
+			5, 5,
+			0,
+			30,
+			1, 1, 1, 1);
+	}
+	else
+	{
+		text[0]->Render(dc,
+			true, true,
+			false,
+			0, 0, 0, 0, 0,
+			0, 0, 0, title.score,
+			-62, 30,
+			5, 5,
+			0,
+			30,
+			1, 1, 0, 1);
+	}
+
 
 	float textureWidth = static_cast<float>(wave[0]->GetTextureWidth());
 	float textureHeight = static_cast<float>(wave[0]->GetTextureHeight());

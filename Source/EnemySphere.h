@@ -131,4 +131,5 @@ private:
 	std::unique_ptr<Effect> bariaEffect;
 
 	std::unique_ptr<AudioSource> sound[4];
+	std::unique_ptr<AudioSource> attackSound;
 };

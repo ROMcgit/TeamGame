@@ -150,7 +150,7 @@ void SceneTitle::Render()
 		{
 		case 0:
 			yazirusi->Render(dc,
-				10, 0,
+				6, 48,
 				screenWidth, screenHeight,
 				0, 0,
 				1280, 720,
@@ -159,7 +159,7 @@ void SceneTitle::Render()
 			break;
 		case 1:
 			yazirusi->Render(dc,
-				-30, 67,
+				-36, 130,
 				screenWidth, screenHeight,
 				0, 0,
 				1280, 720,
@@ -168,7 +168,7 @@ void SceneTitle::Render()
 			break;
 		case 2:
 			yazirusi->Render(dc,
-				10, 140,
+				15, 225,
 				screenWidth, screenHeight,
 				0, 0,
 				1280, 720,

@@ -40,9 +40,9 @@ void SceneGame::Initialize()
 	player = std::make_unique<Player>();
 
 	// HP
-	uiSprite[0] = std::make_unique<Sprite>(); //HPの裏(灰色)
-	uiSprite[1] = std::make_unique<Sprite>(); //HPダメージ(赤色)
-	uiSprite[2] = std::make_unique<Sprite>(); //HPゲージ(緑色)
+	uiSprite[0] = std::make_unique<Sprite>("Data/Sprite/HP.png"); //HPの裏(灰色)
+	uiSprite[1] = std::make_unique<Sprite>("Data/Sprite/HPbar_red.png"); //HPダメージ(赤色)
+	uiSprite[2] = std::make_unique<Sprite>("Data/Sprite/HPbar.png"); //HPゲージ(緑色)
 
 	setumei[0] = std::make_unique<Sprite>("Data/Sprite/操作説明.png");
 	setumei[1] = std::make_unique<Sprite>("Data/Sprite/困ったら連打!!.png");
@@ -176,7 +176,7 @@ void SceneGame::Update(float elapsedTime)
 				int enemyWhich = rand() % 5 + 1;
 
 				/// X座標のランダムな位置を生成 (-5から5の範囲)
-				int posX = (rand() % 5 + 1) * (rand() % 2 == 1 ? -1 : 1);
+				int posX = (rand() % 4 + 2) * (rand() % 2 == 1 ? -1 : 1);
 
 				// Y座標のランダムな位置を生成 (-3から3の範囲)
 				int posY = rand() % 3 + 4;
@@ -215,7 +215,7 @@ void SceneGame::Update(float elapsedTime)
 				int enemyWhich = rand() % 5 + 1;
 
 				/// X座標のランダムな位置を生成 (-6から6の範囲)
-				int posX = (rand() % 5 + 1) * (rand() % 2 == 1 ? -1 : 1);
+				int posX = (rand() % 4 + 2) * (rand() % 2 == 1 ? -1 : 1);
 
 				// Y座標のランダムな位置を生成 (-3から3の範囲)
 				int posY = rand() % 3 + 4;
@@ -259,7 +259,7 @@ void SceneGame::Update(float elapsedTime)
 				else enemyWhich = rand() % 4;
 
 				/// X座標のランダムな位置を生成 (-6から6の範囲)
-				int posX = (rand() % 5 + 1) * (rand() % 2 == 1 ? -1 : 1);
+				int posX = (rand() % 4 + 2) * (rand() % 2 == 1 ? -1 : 1);
 
 				// Y座標のランダムな位置を生成 (-3から3の範囲)
 				int posY = rand() % 3 + 4;
@@ -447,6 +447,9 @@ void SceneGame::Render()
 			textureWidth, textureHeight,
 			0,
 			1, 1, 1, 1);
+
+		DrawFont(dc);
+
 	}
 
 	//! 3Dモデル描画
@@ -498,8 +501,6 @@ void SceneGame::Render()
 		PlayerUI(dc);
 
 		RenderEnemyGauge(dc, rc.view, rc.projection);
-
-		DrawFont(dc);
 	}
 
 	// 2DデバッグGUI描画
@@ -521,89 +522,6 @@ void SceneGame::PlayerUI(ID3D11DeviceContext* dc)
 	float textureWidth = static_cast<float>(uiSprite[0]->GetTextureWidth());
 	float textureHeight = static_cast<float>(uiSprite[0]->GetTextureHeight());
 
-	if (player->GetHealth() > 0)
-	{
-		// HP基盤
-		uiSprite[0]->Render(dc,
-			20, 60,
-			200 * 0.9f, 25,
-			0, 0, textureWidth, textureHeight,
-			0,
-			0.7, 0.7, 0.7, 1);
-
-		textureWidth = static_cast<float>(uiSprite[1]->GetTextureWidth());
-		textureHeight = static_cast<float>(uiSprite[1]->GetTextureHeight());
-
-		if (player->GetHealth() > 62)
-		{
-			// ダメージゲージ
-			uiSprite[1]->Render(dc,
-				20, 60,
-				player->GetDamageHealth() * 0.9f, 25,
-				0, 0, textureWidth, textureHeight,
-				0,
-				1, 0, 0, 1);
-		}
-		else
-		{
-			// ダメージゲージ
-			uiSprite[1]->Render(dc,
-				20, 60,
-				player->GetDamageHealth() * 0.9f, 25,
-				0, 0, textureWidth, textureHeight,
-				0,
-				1, 1, 1, 1);
-		}
-
-
-		textureWidth = static_cast<float>(uiSprite[2]->GetTextureWidth());
-		textureHeight = static_cast<float>(uiSprite[2]->GetTextureHeight());
-
-		if (player->GetHealth() > 62)
-		{
-			// HPゲージ
-			uiSprite[2]->Render(dc,
-				20, 60,
-				player->GetHealth() * 0.9f, 25,
-				0, 0, textureWidth, textureHeight,
-				0,
-				0, 1, 0, 1);
-		}
-		else
-		{
-			// HPゲージ
-			uiSprite[2]->Render(dc,
-				20, 60,
-				player->GetHealth() * 0.9f, 25,
-				0, 0, textureWidth, textureHeight,
-				0,
-				1.0f, 0.3f, 0.3f, 1);
-		}
-
-		setumei[0]->Render(dc,
-			0, 0,
-			screenWidth, screenHeight,
-			0, 0,
-			1280, 720,
-			0,
-			1, 1, 1, 1);
-
-		setumei[1]->Render(dc,
-			0, 0,
-			screenWidth, screenHeight,
-			0, 0,
-			1280, 720,
-			0,
-			setumeiColor.x, 
-			setumeiColor.y,
-			setumeiColor.z,
-			1);
-	}
-}
-
-// 文字表示
-void SceneGame::DrawFont(ID3D11DeviceContext* dc)
-{
 	//! スコアの表示
 	SceneTitle& title = SceneTitle::Instance();
 
@@ -634,7 +552,102 @@ void SceneGame::DrawFont(ID3D11DeviceContext* dc)
 			1, 1, 0, 1);
 	}
 
+	if (player->GetHealth() > 0)
+	{
+		if (player->GetHealth() > 62)
+		{
+			// HP基盤
+			uiSprite[0]->Render(dc,
+				20, 60,
+				200 * 0.9f, 35,
+				0, 0, textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+		}
+		else
+		{
+			// HP基盤
+			uiSprite[0]->Render(dc,
+				20, 60,
+				200 * 0.9f, 35,
+				0, 0, textureWidth, textureHeight,
+				0,
+				1.0f, 0, 0, 1);
+		}
 
+		textureWidth = static_cast<float>(uiSprite[1]->GetTextureWidth());
+		textureHeight = static_cast<float>(uiSprite[1]->GetTextureHeight());
+
+		if (player->GetHealth() > 62)
+		{
+			// ダメージゲージ
+			uiSprite[1]->Render(dc,
+				30, 60,
+				player->GetDamageHealth() * 0.8f, 35,
+				2, 0, textureWidth, textureHeight,
+				0,
+				1, 0, 0, 1);
+		}
+		else
+		{
+			// ダメージゲージ
+			uiSprite[1]->Render(dc,
+				30, 60,
+				player->GetDamageHealth() * 0.8f, 35,
+				2, 0, textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+		}
+
+
+		textureWidth = static_cast<float>(uiSprite[2]->GetTextureWidth());
+		textureHeight = static_cast<float>(uiSprite[2]->GetTextureHeight());
+
+		if (player->GetHealth() > 62)
+		{
+			// HPゲージ
+			uiSprite[2]->Render(dc,
+				30, 60,
+				player->GetHealth() * 0.8f, 35,
+				2, 0, textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+		}
+		else
+		{
+			// HPゲージ
+			uiSprite[2]->Render(dc,
+				30, 60,
+				player->GetHealth() * 0.8f, 35,
+				2, 0, textureWidth, textureHeight,
+				0,
+				0.5f, 0.5f, 0.5f, 1);
+		}
+
+		setumei[0]->Render(dc,
+			0, 0,
+			screenWidth, screenHeight,
+			0, 0,
+			1280, 720,
+			0,
+			1, 1, 1, 1);
+
+		setumei[1]->Render(dc,
+			0, 0,
+			screenWidth, screenHeight,
+			0, 0,
+			1280, 720,
+			0,
+			setumeiColor.x, 
+			setumeiColor.y,
+			setumeiColor.z,
+			1);
+	}
+}
+
+// 文字表示
+void SceneGame::DrawFont(ID3D11DeviceContext* dc)
+{
 	float textureWidth = static_cast<float>(wave[0]->GetTextureWidth());
 	float textureHeight = static_cast<float>(wave[0]->GetTextureHeight());
 

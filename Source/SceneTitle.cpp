@@ -18,6 +18,8 @@ void SceneTitle::Initialize()
 	sound[0] = audioManager.LoadAudioSource("Data/Audio/年寄り.wav");
 	sound[1] = audioManager.LoadAudioSource("Data/Audio/キャァァァァァ(鈍足).wav");
 
+	bgm = audioManager.LoadAudioSource("Data/Audio/opening.wav");
+
 	yazirusi = std::make_unique<Sprite>("Data/Sprite/矢印.png");
 
 	SceneTitle& title = SceneTitle::Instance();
@@ -38,11 +40,18 @@ void SceneTitle::Finalize()
 // 更新処理
 void SceneTitle::Update(float elapsedTime)
 {
+	if (bgm)
+	{
+		bgm->Play(true, 1.0f);
+	}
+
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
+	// シーン遷移
 	if ((gamePad.GetButtonDown() & GamePad::BTN_START ||
 		gamePad.GetButtonDown() & GamePad::BTN_A) && select == 0)
 	{
+		bgm->Stop();
 		SceneLoading* loadingScene = new SceneLoading(new SceneGame);
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示
@@ -77,8 +86,10 @@ void SceneTitle::Update(float elapsedTime)
 		waitTime = 0;
 		moziView = false;
 	}
+	// シーン遷移
 	else if (waitTime > 300 && select == 2)
 	{
+		bgm->Stop();
 		SceneLoading* loadingScene = new SceneLoading(new SceneGame);
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示

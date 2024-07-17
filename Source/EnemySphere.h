@@ -128,6 +128,7 @@ private:
 	bool hansya = false;
 
 	std::unique_ptr<Effect> hitEffect;
+	std::unique_ptr<Effect> bariaEffect;
 
 	std::unique_ptr<AudioSource> sound[4];
 };

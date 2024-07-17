@@ -20,6 +20,7 @@ EnemySphere::EnemySphere()
 
 	// ヒットエフェクト読み込み
 	hitEffect = std::make_unique<Effect>("Data/Effect/Blast.efk");
+	bariaEffect = std::make_unique<Effect>("Data/Effect/Baria.efk");
 
 	// Audio クラスのインスタンス化と初期化
 	Audio& audioManager = Audio::Instance();
@@ -577,6 +578,11 @@ void EnemySphere::UpdateAttackState(float elapsedTime)
 
 		ProjectileStraight* projectile = new ProjectileStraight(&projectileManager);
 		projectile->Launch(dir, pos);
+
+		DirectX::XMFLOAT3 e = position;
+		e.y += 0.4f;
+
+		bariaEffect->Play(e, 0.22f);
 	}
 
 	if(waitCount > 60)

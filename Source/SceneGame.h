@@ -60,6 +60,7 @@ private:
 	std::unique_ptr<Text> text[2];
 	std::unique_ptr<AudioSource> bgm;
 	float newEnemyCount = 0;
+	int newEnemyLimit = 0;
 	float newEnemyMaxCount = 10;
 	int newWallCount = 0;
 	int battleWave = 0;

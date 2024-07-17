@@ -25,6 +25,9 @@ EnemySphere::EnemySphere()
 	Audio& audioManager = Audio::Instance();
 
 	sound[0] = audioManager.LoadAudioSource("Data/Audio/bat.wav");
+	sound[1] = audioManager.LoadAudioSource("Data/Audio/crash.wav");
+	sound[2] = audioManager.LoadAudioSource("Data/Audio/金属の衝突.wav");
+	sound[3] = audioManager.LoadAudioSource("Data/Audio/中パンチ.wav");
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0;
@@ -290,6 +293,7 @@ void EnemySphere::CollisionProjectilesVsEnemy()
 			{
 				if (attackWait <= 0)
 				{
+					sound[3]->Play(false, 1.0f);
 					this->ApplyDamage(1, 2);
 					projectile->Destroy();
 				}
@@ -325,6 +329,8 @@ void EnemySphere::CollisionProjectilesVsWall()
 				{
 					// 弾丸破棄
 					projectile->Destroy();
+
+					sound[2]->Play(false, 1.0f);
 
 					// 前方向
 					DirectX::XMFLOAT3 dir;
@@ -602,6 +608,8 @@ void EnemySphere::UpdateDeathState(float elapsedTime)
 		Player& player = Player::Instance();
 		SceneTitle& title = SceneTitle::Instance();
 		title.score += 100;
+
+		sound[1]->Play(false, 1.0f);
 
 		if(player.health > 0)
 		player.health += 2;

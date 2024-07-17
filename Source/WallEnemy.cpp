@@ -24,18 +24,18 @@ WallEnemy::WallEnemy()
 
 	sound = audioManager.LoadAudioSource("Data/Audio/crash.wav");
 
-	// モデルが大きいのでスケーリング
+	// モデルが大きいのでスケーリング(scale.x(0.16f) 他(0.055f))
 	scale.x = 0.16f;
 	scale.y = scale.z = 0.055f;
 
 	// 幅、高さ設定
-	radius = 0.8f;
-	height = 0.5f;
+	radius = 0.0f;
+	height = 0.0f;
 
 	// 徘徊ステートへ遷移
 	TransitionWanderState();
 
-	int ransu = rand() % 6 + 1;
+	int ransu = rand() % 4 + 3;
 	health = ransu;
 }
 
@@ -90,7 +90,7 @@ void WallEnemy::Update(float elapsedTime)
 	model->UpdateTransform(transform);
 
 	// 弾とプレイヤーの当たり判定
-	CollisionProjectilesVsPlayer();
+	//CollisionProjectilesVsPlayer();
 
 	// 弾と敵の当たり判定
 	//CollisionProjectilesVsEnemy();
@@ -109,6 +109,18 @@ void WallEnemy::Update(float elapsedTime)
 
 	if (attackWait > 0)
 		attackWait -= 1;
+
+	if (scale.x < 0.16f && scale.y < 0.055f && scale.z < 0.055f)
+	{
+		scale.x += 0.01f;
+		scale.y += 0.001f;
+		scale.z += 0.001f;
+	}
+	else
+	{
+		radius = 0.8f;
+		height = 0.5f;
+	}
 }
 
 // 描画処理
@@ -160,125 +172,125 @@ void WallEnemy::PositionControll()
 }
 
 // 弾丸とプレイヤーの衝突処理
-void WallEnemy::CollisionProjectilesVsPlayer()
-{
-	Player& player = Player::Instance();
-
-	GamePad& gamePad = Input::Instance().GetGamePad();
-
-	// 全ての弾丸と全ての敵を総当たりで衝突処理
-	int projectileCount = projectileManager.GetProjectileCount();
-	for (int i = 0; i < projectileCount; ++i)
-	{
-		Projectile* projectile = projectileManager.GetProjectile(i);
-
-		if (gamePad.GetButtonDown() & GamePad::BTN_START || gamePad.GetButtonDown() & GamePad::BTN_SPACE && damageWaitTime <= 0)
-			damageWaitTime = 60;
-
-		// 衝突処理
-		DirectX::XMFLOAT3 outPosition;
-		if (Collision::IntersectSphereVsCylinder(
-			projectile->GetPosition(),
-			projectile->GetRadius(),
-			player.GetPosition(),
-			player.GetRadius(),
-			player.GetHeight(),
-			outPosition))
-		{
-			if (damageWaitTime > 0)
-			{
-				// 弾丸破棄
-				projectile->Destroy();
-
-				const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
-
-				// 前方向
-				DirectX::XMFLOAT3 dir;
-
-				dir.x = position.x - playerPosition.x;
-				dir.y = position.y - playerPosition.y;
-				dir.z = position.z - playerPosition.z;
-
-				DirectX::XMVECTOR DIR;
-				DIR = DirectX::XMLoadFloat3(&dir);
-				DIR = DirectX::XMVector3Normalize(DIR);
-				DirectX::XMStoreFloat3(&dir, DIR);
-
-				// 発射位置(プレイヤーの腰あたり)
-				DirectX::XMFLOAT3 pos;
-				pos.x = playerPosition.x;
-				pos.y = playerPosition.y + player.GetHeight() + 0.2;
-				pos.z = playerPosition.z;
-
-				ProjectilePlayer* projectile = new ProjectilePlayer(&projectileManager);
-				projectile->Launch(dir, pos);
-			}
-
-			// ダメージを与える
-			else if (damageWaitTime <= 0)
-			{
-				if (player.ApplyDamage(10, 6.0f))
-				{
-					// 弾丸破棄
-					projectile->Destroy();
-
-					const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
-
-					// 前方向
-					DirectX::XMFLOAT3 dir;
-
-					dir.x = position.x - playerPosition.x;
-					dir.y = position.y - playerPosition.y;
-					dir.z = position.z - playerPosition.z;
-
-					DirectX::XMVECTOR DIR;
-					DIR = DirectX::XMLoadFloat3(&dir);
-					DIR = DirectX::XMVector3Normalize(DIR);
-					DirectX::XMStoreFloat3(&dir, DIR);
-
-					// 発射位置(プレイヤーの腰あたり)
-					DirectX::XMFLOAT3 pos;
-					pos.x = playerPosition.x;
-					pos.y = playerPosition.y + player.GetHeight();
-					pos.z = playerPosition.z;
-
-					ProjectilePlayer* projectile = new ProjectilePlayer(&projectileManager);
-					projectile->Launch(dir, pos);
-				}
-			}
-		}
-
-	}
-}
+//void WallEnemy::CollisionProjectilesVsPlayer()
+//{
+//	Player& player = Player::Instance();
+//
+//	GamePad& gamePad = Input::Instance().GetGamePad();
+//
+//	 全ての弾丸と全ての敵を総当たりで衝突処理
+//	int projectileCount = projectileManager.GetProjectileCount();
+//	for (int i = 0; i < projectileCount; ++i)
+//	{
+//		Projectile* projectile = projectileManager.GetProjectile(i);
+//
+//		if (gamePad.GetButtonDown() & GamePad::BTN_START || gamePad.GetButtonDown() & GamePad::BTN_SPACE && damageWaitTime <= 0)
+//			damageWaitTime = 60;
+//
+//		 衝突処理
+//		DirectX::XMFLOAT3 outPosition;
+//		if (Collision::IntersectSphereVsCylinder(
+//			projectile->GetPosition(),
+//			projectile->GetRadius(),
+//			player.GetPosition(),
+//			player.GetRadius(),
+//			player.GetHeight(),
+//			outPosition))
+//		{
+//			if (damageWaitTime > 0)
+//			{
+//				 弾丸破棄
+//				projectile->Destroy();
+//
+//				const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
+//
+//				 前方向
+//				DirectX::XMFLOAT3 dir;
+//
+//				dir.x = position.x - playerPosition.x;
+//				dir.y = position.y - playerPosition.y;
+//				dir.z = position.z - playerPosition.z;
+//
+//				DirectX::XMVECTOR DIR;
+//				DIR = DirectX::XMLoadFloat3(&dir);
+//				DIR = DirectX::XMVector3Normalize(DIR);
+//				DirectX::XMStoreFloat3(&dir, DIR);
+//
+//				 発射位置(プレイヤーの腰あたり)
+//				DirectX::XMFLOAT3 pos;
+//				pos.x = playerPosition.x;
+//				pos.y = playerPosition.y + player.GetHeight() + 0.2;
+//				pos.z = playerPosition.z;
+//
+//				ProjectilePlayer* projectile = new ProjectilePlayer(&projectileManager);
+//				projectile->Launch(dir, pos);
+//			}
+//
+//			 ダメージを与える
+//			else if (damageWaitTime <= 0)
+//			{
+//				if (player.ApplyDamage(10, 6.0f))
+//				{
+//					 弾丸破棄
+//					projectile->Destroy();
+//
+//					const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
+//
+//					 前方向
+//					DirectX::XMFLOAT3 dir;
+//
+//					dir.x = position.x - playerPosition.x;
+//					dir.y = position.y - playerPosition.y;
+//					dir.z = position.z - playerPosition.z;
+//
+//					DirectX::XMVECTOR DIR;
+//					DIR = DirectX::XMLoadFloat3(&dir);
+//					DIR = DirectX::XMVector3Normalize(DIR);
+//					DirectX::XMStoreFloat3(&dir, DIR);
+//
+//					 発射位置(プレイヤーの腰あたり)
+//					DirectX::XMFLOAT3 pos;
+//					pos.x = playerPosition.x;
+//					pos.y = playerPosition.y + player.GetHeight();
+//					pos.z = playerPosition.z;
+//
+//					ProjectilePlayer* projectile = new ProjectilePlayer(&projectileManager);
+//					projectile->Launch(dir, pos);
+//				}
+//			}
+//		}
+//
+//	}
+//}
 
  //弾と敵の当たり判定
-void WallEnemy::CollisionProjectilesVsEnemy()
-{
-	EnemyManager& enemyManager = EnemyManager::Instance();
-
-	int projectileCount = projectileManager.GetProjectileCount();
-	int enemyCount = enemyManager.GetEnemyCount();
-	for (int i = 0; i < projectileCount; ++i)
-	{
-		Projectile* projectile = projectileManager.GetProjectile(i);
-		for (int j = 0; j < enemyCount; ++j)
-		{
-			Enemy* enemy = enemyManager.GetEnemy(j);
-			// 衝突処理
-			DirectX::XMFLOAT3 outPosition;
-			if (Collision::IntersectSphereVsSphere(
-				projectile->GetPosition(),
-				projectile->GetRadius(),
-				position,
-				radius,
-				outPosition))
-			{
-				if (attackWait <= 0)
-					enemy->ApplyDamage(1, 2);
-			}
-		}
-	}
-}
+//void WallEnemy::CollisionProjectilesVsEnemy()
+//{
+//	EnemyManager& enemyManager = EnemyManager::Instance();
+//
+//	int projectileCount = projectileManager.GetProjectileCount();
+//	int enemyCount = enemyManager.GetEnemyCount();
+//	for (int i = 0; i < projectileCount; ++i)
+//	{
+//		Projectile* projectile = projectileManager.GetProjectile(i);
+//		for (int j = 0; j < enemyCount; ++j)
+//		{
+//			Enemy* enemy = enemyManager.GetEnemy(j);
+//			// 衝突処理
+//			DirectX::XMFLOAT3 outPosition;
+//			if (Collision::IntersectSphereVsSphere(
+//				projectile->GetPosition(),
+//				projectile->GetRadius(),
+//				position,
+//				radius,
+//				outPosition))
+//			{
+//				if (attackWait <= 0)
+//					enemy->ApplyDamage(1, 2);
+//			}
+//		}
+//	}
+//}
 
 // ターゲット位置をランダム設定
 void WallEnemy::SetRandomTargetPosition()
@@ -329,7 +341,7 @@ void WallEnemy::TransitionWanderState()
 // TODO:行動処理(敵)
 void WallEnemy::UpdateWanderState(float elapsedTime)
 {
-	TransitionWanderState();
+	//TransitionWanderState();
 }
 
 // 待機ステートへ遷移

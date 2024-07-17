@@ -129,5 +129,5 @@ private:
 
 	std::unique_ptr<Effect> hitEffect;
 
-	std::unique_ptr<AudioSource> sound[2];
+	std::unique_ptr<AudioSource> sound[4];
 };

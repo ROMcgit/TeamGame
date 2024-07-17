@@ -40,10 +40,10 @@ private:
 	void PositionControll();
 
 	// 弾とプレイヤーの当たり判定
-	void CollisionProjectilesVsPlayer();
+	//void CollisionProjectilesVsPlayer();
 
 	// 弾と敵の当たり判定
-	void CollisionProjectilesVsEnemy();
+	//void CollisionProjectilesVsEnemy();
 
 	// ターゲット位置をランダム設定
 	void SetRandomTargetPosition();

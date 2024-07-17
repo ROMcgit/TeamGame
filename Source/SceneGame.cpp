@@ -73,12 +73,6 @@ void SceneGame::Initialize()
 		0,
 		0));
 
-	// エネミー初期化
-	EnemyManager& enemyManager = EnemyManager::Instance();
-	//Enemy* enemy = new EnemySlime;
-	// slime->SetPosition(DirectX::XMFLOAT3(0,0,5))
-	//enemyManager.Register(enemy);
-
 	// スコア
 	text[0] = std::make_unique<Text>();
 	text[1] = std::make_unique<Text>();
@@ -149,10 +143,12 @@ void SceneGame::Update(float elapsedTime)
 	int enemyCount = enemyManager.GetEnemyCount();
 
 	WallManager& wallManager = WallManager::Instance();
+	int wallCount = wallManager.GetWallCount();
 
-	if (newWallCount > 800)
+	 newWallCount++;
+	if (newWallCount > 60)
 	{
-		/// X座標のランダムな位置を生成 (-6から6の範囲)
+		/// X座標のランダムな位置を生成 (-5から5の範囲)
 		int posX = (rand() % 5 + 1) * (rand() % 2 == 1 ? -1 : 1);
 
 		WallEnemy* wall = new WallEnemy();
@@ -160,8 +156,8 @@ void SceneGame::Update(float elapsedTime)
 		wallManager.Register(wall);
 		newWallCount = 0;
 	}
-	newWallCount++;
 	
+
 #if 1
 	switch (battleWave)
 	{
@@ -170,13 +166,13 @@ void SceneGame::Update(float elapsedTime)
 		battleWave = 1;
 	case 1:
 	{
-		if (enemyCount < 5 && newEnemy == true)
+		if (enemyCount < 5 && newEnemy == true && newEnemyLimit < 30)
 		{
 			if (newEnemyCount > newEnemyMaxCount)
 			{
 				int enemyWhich = rand() % 5 + 1;
 
-				/// X座標のランダムな位置を生成 (-6から6の範囲)
+				/// X座標のランダムな位置を生成 (-5から5の範囲)
 				int posX = (rand() % 5 + 1) * (rand() % 2 == 1 ? -1 : 1);
 
 				// Y座標のランダムな位置を生成 (-3から3の範囲)
@@ -200,6 +196,7 @@ void SceneGame::Update(float elapsedTime)
 				}
 				newEnemyCount = 0;
 				newEnemyMaxCount += 0.2f;
+				newEnemyLimit++;
 				if (enemyCount >= 2) battleStart = true;
 			}
 			newEnemyCount += 0.5f;
@@ -208,7 +205,7 @@ void SceneGame::Update(float elapsedTime)
 		break;
 	case 2:
 	{
-		if (enemyCount < 7 && newEnemy == true)
+		if (enemyCount < 7 && newEnemy == true && newEnemyLimit < 50)
 		{
 			if (newEnemyCount > newEnemyMaxCount)
 			{
@@ -238,6 +235,7 @@ void SceneGame::Update(float elapsedTime)
 				}
 				newEnemyCount = 0;
 				newEnemyMaxCount += 0.4f;
+				newEnemyLimit++;
 				if(enemyCount >= 2) battleStart = true;
 			}
 			newEnemyCount += 0.5f;
@@ -247,7 +245,7 @@ void SceneGame::Update(float elapsedTime)
 
 	case 3:
 	{
-		if (enemyCount < 8 && newEnemy == true)
+		if (enemyCount < 8 && newEnemy == true && newEnemyLimit < 1000)
 		{
 			if (newEnemyCount > newEnemyMaxCount)
 			{
@@ -304,6 +302,7 @@ void SceneGame::Update(float elapsedTime)
 
 				newEnemyCount = 0;
 				newEnemyMaxCount += 0.4f;
+				newEnemyLimit++;
 				if (enemyCount >= 2) battleStart = true;
 			}
 			newEnemyCount += 0.5f;
@@ -322,6 +321,7 @@ void SceneGame::Update(float elapsedTime)
 		battleWave = 2;
 		newEnemyMaxCount = 0;
 		nextWaveWait = 0;
+		newEnemyLimit = 0;
 		newEnemy = false;
 		battleStart = false;
 	}
@@ -332,6 +332,7 @@ void SceneGame::Update(float elapsedTime)
 		battleWave = 3;
 		newEnemyMaxCount = 0;
 		nextWaveWait = 0;
+		newEnemyLimit = 0;
 		newEnemy = false;
 		battleStart = false;
 	}
@@ -583,7 +584,7 @@ void SceneGame::DrawFont(ID3D11DeviceContext* dc)
 			0, 0,
 			textureWidth, textureHeight,
 			0,
-			1, 1, 1, 1
+			1, 0, 1, 1
 		);
 		break;
 	default:

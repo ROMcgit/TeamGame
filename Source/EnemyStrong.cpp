@@ -25,6 +25,8 @@ EnemyStrong::EnemyStrong()
 
 	sound[0] = audioManager.LoadAudioSource("Data/Audio/bat.wav");
 	sound[1] = audioManager.LoadAudioSource("Data/Audio/crash.wav");
+	sound[2] = audioManager.LoadAudioSource("Data/Audio/金属の衝突.wav");
+	sound[3] = audioManager.LoadAudioSource("Data/Audio/中パンチ.wav");
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0; //サイズは0.02f
@@ -310,6 +312,8 @@ void EnemyStrong::CollisionProjectilesVsEnemy()
 			{
 				if (attackWait <= 0)
 				{
+					sound[3]->Play(false, 1.0f);
+
 					this->ApplyDamage(3, 1);
 
 					projectile->Destroy();
@@ -346,6 +350,8 @@ void EnemyStrong::CollisionProjectilesVsWall()
 				{
 					// 弾丸破棄
 					projectile->Destroy();
+
+					sound[2]->Play(false, 1.0f);
 
 					// 前方向
 					DirectX::XMFLOAT3 dir;

@@ -138,7 +138,7 @@ void EnemyStrong::Update(float elapsedTime)
 
 	//! スコアのインスタンス
 	SceneTitle& title = SceneTitle::Instance();
-	if (title.score > 100000) this->ApplyDamage(100, 0);
+	if (title.score > 500000) this->ApplyDamage(100, 0);
 
 	int projectileCount = projectileManager.GetProjectileCount();
 	for (int i = 0; i < projectileCount; ++i)
@@ -791,9 +791,10 @@ void EnemyStrong::UpdateDeathState(float elapsedTime)
 		if (player.health > 0)
 		player.health += 4;
 
-		title.score += 500;
 		title.combo += 1;
+		title.score += 500 * title.combo;
 		title.comboResetTime = 0;
+		title.scorePlus += 500 * title.combo;
 
 		// 敵のダメージ処理
 		EnemyManager& enemyManager = EnemyManager::Instance();

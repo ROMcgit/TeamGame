@@ -52,16 +52,18 @@ private:
 private:
 	//Stage* stage = nullptr;
 	std::unique_ptr<Player> player;
-	std::unique_ptr<Sprite> uiSprite[4];
+	std::unique_ptr<Sprite> uiSprite[5];
 	std::unique_ptr<Sprite> wave[3];
 	std::unique_ptr<Sprite> setumei[2];
 	std::unique_ptr<Sprite> bg;
 	CameraController* cameraController = nullptr;
 	Sprite* EnemyHp = nullptr;
-	std::unique_ptr<Text> text[2];
+	std::unique_ptr<Text> text[4];
 	std::unique_ptr<AudioSource> bgm;
 	DirectX::XMFLOAT3 setumeiColor = { 0,0,0 };
 	bool setumeiColorMinus[3];
+	DirectX::XMFLOAT4 comboColor = { 0,0,0,0 };
+	bool comboColorMinus[4];
 
 	float newEnemyCount = 0;
 	int newEnemyLimit = 0;

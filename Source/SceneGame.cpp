@@ -44,6 +44,7 @@ void SceneGame::Initialize()
 	uiSprite[1] = std::make_unique<Sprite>("Data/Sprite/HPbar_red.png"); //HPダメージ(赤色)
 	uiSprite[2] = std::make_unique<Sprite>("Data/Sprite/HPbar.png"); //HPゲージ(緑色)
 	uiSprite[3] = std::make_unique<Sprite>("Data/Sprite/コンボ.png"); // コンボ数
+	uiSprite[4] = std::make_unique<Sprite>("Data/Sprite/+.png"); // スコア足す数
 
 	setumei[0] = std::make_unique<Sprite>("Data/Sprite/操作説明.png");
 	setumei[1] = std::make_unique<Sprite>("Data/Sprite/困ったら連打!!.png");
@@ -80,6 +81,8 @@ void SceneGame::Initialize()
 	// スコア
 	text[0] = std::make_unique<Text>();
 	text[1] = std::make_unique<Text>();
+	text[2] = std::make_unique<Text>();
+	text[3] = std::make_unique<Text>();
 	
 	Audio& audioManager = Audio::Instance();
 
@@ -379,14 +382,14 @@ void SceneGame::Update(float elapsedTime)
 	}
 	//! スコアの表示
 	SceneTitle& title = SceneTitle::Instance();
-	if (title.score > 100000)
+	if (title.score > 500000)
 	{
 		nextSceneCount++;
 		newEnemy = false;
 	}
 
 #endif
-	if (title.score < 100000)
+	if (title.score < 500000)
 	{
 		if (newEnemy == false)  nextWaveWait++;
 		if (nextWaveWait > 360) newEnemy = true;
@@ -409,6 +412,54 @@ void SceneGame::Update(float elapsedTime)
 
 	if (setumeiColor.z > 1)      setumeiColorMinus[2] = true;
 	else if (setumeiColor.z < 0) setumeiColorMinus[2] = false;
+
+/*********************************************************************/
+
+	// 数値の足す引く
+	if (comboColorMinus[0] == false) comboColor.x += 0.006f;
+	else                             comboColor.x -= 0.006f;
+	if (comboColorMinus[1] == false) comboColor.y += 0.008f;
+	else                             comboColor.y -= 0.008f;
+	if (comboColorMinus[2] == false) comboColor.z += 0.010f;
+	else                             comboColor.z -= 0.010f;
+
+	// 数値を足すか
+	if (comboColor.x > 1)      comboColorMinus[0] = true;
+	else if (comboColor.x < 0) comboColorMinus[0] = false;
+
+	if (comboColor.y > 1)      comboColorMinus[1] = true;
+	else if (comboColor.y < 0) comboColorMinus[1] = false;
+
+	if (comboColor.z > 1)      comboColorMinus[2] = true;
+	else if (comboColor.z < 0) comboColorMinus[2] = false;
+
+	// スコア表示時間
+	if (title.combo > 0 && comboColorMinus[2] == false)
+	{
+		comboColor.w += 0.05f;
+ 		title.comboResetTime++;
+	}
+
+	// 初期化する
+	if (comboColorMinus[3] == true)
+	{
+		title.comboResetTime = 0;
+		title.combo = 0;
+	}
+
+	if(title.combo <= 0) comboColor.w = 0.0f;
+
+	if (title.comboResetTime > 400)
+	{
+		comboColor.w -= 0.003f;
+	}
+
+	if (title.comboResetTime > 550)
+	{
+		comboColorMinus[3] == true;
+	}
+	else
+		comboColorMinus[3] == false;
 }
 
 // 描画処理
@@ -526,7 +577,7 @@ void SceneGame::PlayerUI(ID3D11DeviceContext* dc)
 	//! スコアの表示
 	SceneTitle& title = SceneTitle::Instance();
 
-	if (title.score < 100000)
+	if (title.score < 500000)
 	{
 		text[0]->Render(dc,
 			true, true,
@@ -553,15 +604,54 @@ void SceneGame::PlayerUI(ID3D11DeviceContext* dc)
 			1, 1, 0, 1);
 	}
 
-	if (title.combo > 0)
+	text[2]->Render(dc,
+		true, false,
+		false,
+		0, 0, 0, 0, 0,
+		0, 0, 0, title.combo,
+		980, 25,
+		11, 11,
+		0,
+		40,
+		comboColor.x,
+		comboColor.y, 
+		comboColor.z, 
+		comboColor.w);
+
+	uiSprite[3]->Render(dc,
+		0, 0,
+		screenWidth, screenHeight,
+		0, 0,
+		1280, 720,
+		0,
+		comboColor.x,
+		comboColor.y,
+		comboColor.z, 
+		comboColor.w);
+
+	if (title.scorePlus > 0)
 	{
-		uiSprite[3]->Render(dc,
+		uiSprite[4]->Render(dc,
+			210, 30,
+			23, 23,
 			0, 0,
-			screenWidth, screenHeight,
-			0, 0,
-			1280, 720,
+			82, 82,
 			0,
 			1, 1, 1, 1);
+
+		text[3]->Render(dc,
+			true, false,
+			false,
+			0, 0, 0, 0, 0,
+			0, 0, 0, title.scorePlus,
+			340, 30,
+			5, 5,
+			0,
+			30,
+			1,
+			1,
+			1,
+			1);
 	}
 
 	if (player->GetHealth() > 0)

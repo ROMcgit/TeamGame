@@ -269,7 +269,7 @@ void EnemyStrong::CollisionProjectilesVsPlayer()
 			// ƒ_ƒ[ƒW‚ğ—^‚¦‚é
 			else if (damageWaitTime <= 0)
 			{
-				if (player.ApplyDamage(20, 3.0f))
+				if (player.ApplyDamage(25, 3.0f))
 				{
 					// ’eŠÛ”jŠü
 					projectile->Destroy();

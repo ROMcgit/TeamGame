@@ -250,7 +250,7 @@ void EnemySphere::CollisionProjectilesVsPlayer()
 				// ƒ_ƒ[ƒW‚ğ—^‚¦‚é
 				else if(damageWaitTime <= 0)
 				{
-					if (player.ApplyDamage(10, 3.0f))
+					if (player.ApplyDamage(13, 3.0f))
 					{
 						// ’eŠÛ”jŠü
 						projectile->Destroy();

@@ -472,6 +472,12 @@ void SceneGame::Update(float elapsedTime)
 	// 開始のフェードイン
 	if(fadeInViewStart >= 0)
 	fadeInViewStart -= 0.005f;
+
+	if (battleWave == 1)
+	{
+		if(waveFadeIn < 1)
+		waveFadeIn += 0.005f;
+	}
 }
 
 // 描画処理
@@ -875,7 +881,7 @@ void SceneGame::DrawFont(ID3D11DeviceContext* dc)
 			0, 0,
 			textureWidth, textureHeight,
 			0,
-			1, 1, 1, 1
+			1, 1, 1, waveFadeIn
 		);
 		break;
 	case 2:

@@ -74,6 +74,7 @@ private:
 	int newWallCount = 0;
 	int battleWave = 0;
 	int nextWaveWait = 0;
+	float waveFadeIn = 0;
 	bool newEnemy = false;
 	bool battleStart = false;
 	int nextSceneCount = 0;

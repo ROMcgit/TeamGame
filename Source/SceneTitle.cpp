@@ -23,8 +23,11 @@ void SceneTitle::Initialize()
 	yazirusi = std::make_unique<Sprite>("Data/Sprite/–îˆó.png");
 
 	SceneTitle& title = SceneTitle::Instance();
-	title.score = 0;
-	title.gameLoading = false;
+	int score = 0;
+	int scorePlus = 0;
+	int scorePlusResetTime = 0;
+	int combo = 0;
+	int comboResetTime = 0;
 }
 
 // I—¹‰»

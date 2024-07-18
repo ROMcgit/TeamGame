@@ -5,6 +5,8 @@
 #include <EnemyStrong.h>
 #include <EnemyManager.h>
 #include <Camera.h>
+#include <SceneTitle.h>
+#include <EnemyStrongLoading.h>
 
 // 初期化
 void SceneLoading::Initialize()
@@ -21,12 +23,33 @@ void SceneLoading::Initialize()
 		mozi[i] = std::make_unique<Sprite>(filePath.c_str());
 	}
 
+	// カメラ初期設定
+	Graphics& graphics = Graphics::Instance();
+	Camera& camera = Camera::Instance();
+	camera.SetLookAt(
+		DirectX::XMFLOAT3(0, 10, -10),
+		DirectX::XMFLOAT3(0, 0, 0),
+		DirectX::XMFLOAT3(0, 1, 0)
+	);
+	camera.SetPerspectiveFov(
+		DirectX::XMConvertToRadians(45),
+		graphics.GetScreenWidth() / graphics.GetScreenHeight(),
+		0.1f,
+		1000.0f
+	);
+
+	//カメラコントローラー初期化
+	cameraController = new CameraController;
+	cameraController->SetAngle(DirectX::XMFLOAT3(
+		DirectX::XMConvertToRadians(12),
+		0,
+		0));
+
 	EnemyManager& enemyManager = EnemyManager::Instance();
 	int enemyCount = enemyManager.GetEnemyCount();
 
-	EnemyStrong* strong = new EnemyStrong();
-	strong->SetPosition(DirectX::XMFLOAT3(pos.x, pos.y, 0));
-	strong->SetTerritory(strong->GetPosition(), 10.0f);
+	EnemyStrongLoading* strong = new EnemyStrongLoading();
+	strong->SetPosition(DirectX::XMFLOAT3(8.5f, 5.5f, 0));
 	enemyManager.Register(strong);
 }
 
@@ -58,6 +81,15 @@ void SceneLoading::Finalize()
 // 更新処理
 void SceneLoading::Update(float elapsedTime)
 {
+	SceneTitle& title = SceneTitle::Instance();
+	title.gameLoading = true;
+
+	// カメラコントローラー更新処理
+	DirectX::XMFLOAT3 target;
+	target = { 0 ,3.1f, 0 };
+	cameraController->SetTarget(target);
+	cameraController->Update(elapsedTime);
+
 	constexpr float speed = 180;
 	angle += speed * elapsedTime;
 
@@ -168,14 +200,6 @@ void SceneLoading::Render()
 		shader->End(dc);
 
 	}
-
-	//{
-	//	if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
-	//	{
-	//		ImGui::DragFloat2("Pos", &pos.x);
-	//	}
-	//	ImGui::End;
-	//}
 }
 
 //ローディングスレッド

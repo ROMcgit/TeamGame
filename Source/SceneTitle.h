@@ -35,7 +35,6 @@ public:
 	int scorePlusResetTime = 0;
 	int combo              = 0;
 	int comboResetTime     = 0;
-	bool gameLoading = false;
 
 private:
 	Sprite* sprite = nullptr;

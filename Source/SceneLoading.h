@@ -3,6 +3,7 @@
 #include "Graphics/Sprite.h"
 #include "Scene.h"
 #include <thread>
+#include "CameraController.h"
 
 // ローディングシーン
 class SceneLoading : public Scene
@@ -39,5 +40,5 @@ private:
 	bool nextMozi = false;
 	int moziNum = 1;
 
-	DirectX::XMFLOAT2 pos = { 1300, 50 };
+	CameraController* cameraController = nullptr;
 };

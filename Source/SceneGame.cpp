@@ -21,7 +21,6 @@
 void SceneGame::Initialize()
 {
 	SceneTitle& title = SceneTitle::Instance();
-	title.gameLoading = false;
 
 	// ステージ初期化
 	//stage = new Stage();
@@ -631,7 +630,7 @@ void SceneGame::PlayerUI(ID3D11DeviceContext* dc)
 	//! スコアの表示
 	SceneTitle& title = SceneTitle::Instance();
 
-	if (title.score < 500000)
+	if (title.score < 1000000)
 	{
 		text[0]->Render(dc,
 			true, true,

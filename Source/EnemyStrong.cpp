@@ -40,12 +40,8 @@ EnemyStrong::EnemyStrong()
 
 	offset.y = -0.7;
 
-	SceneTitle& title = SceneTitle::Instance();
 	// 徘徊ステートへ遷移
-	if (title.gameLoading == false)
-		TransitionWanderState();
-	else
-		TransitionLoadingState();
+	TransitionWanderState();
 
 	health = 5;
 }
@@ -154,15 +150,6 @@ void EnemyStrong::Update(float elapsedTime)
 			hitEffect->Play(projectile->GetPosition(), 0.015f);
 
 			projectile->Destroy();
-		}
-	}
-
-	if (title.gameLoading == true)
-	{
-		position.x -= posWave;
-		if (position.x < -20)
-		{
-			position.x = 1350;
 		}
 	}
 }
@@ -718,14 +705,6 @@ void EnemyStrong::UpdateAttackState(float elapsedTime)
 		TransitionWanderState();
 
 	waitCount++;
-}
-
-// ローディング画面
-void EnemyStrong::TransitionLoadingState()
-{
-	state = State::Loading;
-
-	model->PlayAnimation(1, true);
 }
 
 // 戦闘待機ステートへ遷移

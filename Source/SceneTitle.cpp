@@ -174,7 +174,7 @@ void SceneTitle::Render()
 		if (select == 1 && moziView == true)
 		{
 			mozi[0]->Render(dc,
-				0, 0,
+				0, 10,
 				screenWidth, screenHeight,
 				0, 0,
 				1280, 720,

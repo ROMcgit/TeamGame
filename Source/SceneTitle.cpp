@@ -133,11 +133,21 @@ void SceneTitle::Render()
 		float textureWidth = static_cast<float>(sprite->GetTextureWidth());
 		float textureHeight = static_cast<float>(sprite->GetTextureHeight());
 		// タイトルスプライト描画
-		sprite->Render(dc,
-			0, 0, screenWidth, screenHeight,
-			0, 0, textureWidth, textureHeight,
-			0,
-			1, 1, 1, 1);
+		if (moziView == true && select == 2)
+		{
+			sprite->Render(dc,
+				0, 0, screenWidth, screenHeight,
+				0, 0, textureWidth, textureHeight,
+				0,
+				1, 0, 0, 1);
+		}
+		else
+			sprite->Render(dc,
+				0, 0, screenWidth, screenHeight,
+				0, 0, textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+
 
 		if (select == 1 && moziView == true)
 		{

@@ -82,7 +82,6 @@ void SceneLoading::Finalize()
 void SceneLoading::Update(float elapsedTime)
 {
 	SceneTitle& title = SceneTitle::Instance();
-	title.gameLoading = true;
 
 	// カメラコントローラー更新処理
 	DirectX::XMFLOAT3 target;

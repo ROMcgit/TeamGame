@@ -45,4 +45,7 @@ private:
 	std::unique_ptr<AudioSource> sound[2];
 	int waitTime = 0;
 	std::unique_ptr<AudioSource> bgm;
+	std::unique_ptr<Sprite> fadeIn;
+	float fadeInView = 1.0f;
+	bool sceneOK = false;
 };

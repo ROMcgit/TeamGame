@@ -119,7 +119,7 @@ void EnemySphere::Update(float elapsedTime)
 
 	//! スコアのインスタンス
 	SceneTitle& title = SceneTitle::Instance();
-	if (title.score > 1000000) this->ApplyDamage(100, 0);
+	if (title.score > 1000000) this->Destroy();
 
 	int projectileCount = projectileManager.GetProjectileCount();
 	for (int i = 0; i < projectileCount; ++i)
@@ -633,8 +633,12 @@ void EnemySphere::TransitionDeathState()
 // 死亡ステート更新処理
 void EnemySphere::UpdateDeathState(float elapsedTime)
 {
+	scale.x -= 0.00011f;
+	scale.y -= 0.00011f;
+	scale.z -= 0.00011f;
+
 	// ダメージアニメーションが終わったら自分を破棄
-	if (!model->IsPlayAnimation())
+	if (!model->IsPlayAnimation() && deathCount > 90)
 	{
 		Player& player = Player::Instance();
 		SceneTitle& title = SceneTitle::Instance();
@@ -650,6 +654,7 @@ void EnemySphere::UpdateDeathState(float elapsedTime)
 		hitEffect->Play(position, 0.02f);
 		Destroy();
 	}
+	deathCount++;
 }
 
 // ダメージ受けた時に呼ばれる

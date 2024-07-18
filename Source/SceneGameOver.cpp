@@ -53,6 +53,16 @@ void SceneGameOver::Update(float elapsedTime)
 		GamePad::BTN_START;
 	if (gamePad.GetButtonDown() & anyButton && sceneOK == true)
 	{
+		fadeOut = true;
+	}
+
+	if (fadeOut == true)
+	{
+		fadeOutView += 0.005f;
+	}
+
+	if (fadeOutView > 1)
+	{
 		bgm->Stop();
 
 		SceneLoading* loadingScene = new SceneLoading(new SceneTitle);
@@ -108,4 +118,13 @@ void SceneGameOver::Render()
 		2230, 1750,
 		0,
 		1, 0, 0, fadeInView);
+
+	// フェードアウト
+	fadeIn->Render(dc,
+		0, 0,
+		2230, 1750,
+		0, 0,
+		2230, 1750,
+		0,
+		1, 1, 1, fadeOutView);
 }

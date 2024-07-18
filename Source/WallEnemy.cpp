@@ -600,6 +600,10 @@ void WallEnemy::TransitionDeathState()
 // 死亡ステート更新処理
 void WallEnemy::UpdateDeathState(float elapsedTime)
 {
+	scale.x -= 0.0005f;
+	scale.y -= 0.0005f;
+	scale.z -= 0.0005f;
+
 	// ダメージアニメーションが終わったら自分を破棄
 	if (!model->IsPlayAnimation() && deathCount > 120)
 	{

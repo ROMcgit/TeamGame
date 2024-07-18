@@ -168,161 +168,165 @@ void SceneGame::Update(float elapsedTime)
 		newWallCount = 0;
 	}
 	
-
+	SceneTitle& title = SceneTitle::Instance();
 #if 1
-	switch (battleWave)
+	if (title.score < 1000000)
 	{
-	case 0:
-		if(newEnemy == true)
-		battleWave = 1;
-	case 1:
-	{
-		if (enemyCount < 5 && newEnemy == true && newEnemyLimit < 30)
+		switch (battleWave)
 		{
-			if (newEnemyCount > newEnemyMaxCount)
+			case 0:
+				if (newEnemy == true)
+					battleWave = 1;
+			case 1:
 			{
-				int enemyWhich = rand() % 5 + 1;
-
-				/// X座標のランダムな位置を生成 (-5から5の範囲)
-				int posX = (rand() % 4 + 2) * (rand() % 2 == 1 ? -1 : 1);
-
-				// Y座標のランダムな位置を生成 (-3から3の範囲)
-				int posY = rand() % 3 + 4;
-
-				// 弱い敵
-				if (enemyWhich <= 4)
+				if (enemyCount < 5 && newEnemy == true && newEnemyLimit < 30)
 				{
-					EnemySphere* sphere = new EnemySphere();
-					sphere->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
-					sphere->SetTerritory(sphere->GetPosition(), 10.0f);
-					enemyManager.Register(sphere);
+					if (newEnemyCount > newEnemyMaxCount)
+					{
+						int enemyWhich = rand() % 5 + 1;
+
+						/// X座標のランダムな位置を生成 (-5から5の範囲)
+						int posX = (rand() % 4 + 2) * (rand() % 2 == 1 ? -1 : 1);
+
+						// Y座標のランダムな位置を生成 (-3から3の範囲)
+						int posY = rand() % 3 + 4;
+
+						// 弱い敵
+						if (enemyWhich <= 4)
+						{
+							EnemySphere* sphere = new EnemySphere();
+							sphere->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
+							sphere->SetTerritory(sphere->GetPosition(), 10.0f);
+							enemyManager.Register(sphere);
+						}
+						// 強い敵
+						else if (enemyWhich == 5)
+						{
+							EnemyStrong* strong = new EnemyStrong();
+							strong->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
+							strong->SetTerritory(strong->GetPosition(), 10.0f);
+							enemyManager.Register(strong);
+						}
+						newEnemyCount = 0;
+						newEnemyMaxCount += 0.2f;
+						newEnemyLimit++;
+						if (enemyCount >= 2) battleStart = true;
+					}
+					newEnemyCount += 0.5f;
 				}
-				// 強い敵
-				else if (enemyWhich == 5)
-				{
-					EnemyStrong* strong = new EnemyStrong();
-					strong->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
-					strong->SetTerritory(strong->GetPosition(), 10.0f);
-					enemyManager.Register(strong);
-				}
-				newEnemyCount = 0;
-				newEnemyMaxCount += 0.2f;
-				newEnemyLimit++;
-				if (enemyCount >= 2) battleStart = true;
 			}
-			newEnemyCount += 0.5f;
+			break;
+			case 2:
+			{
+				if (enemyCount < 7 && newEnemy == true && newEnemyLimit < 50)
+				{
+					if (newEnemyCount > newEnemyMaxCount)
+					{
+						int enemyWhich = rand() % 5 + 1;
+
+						/// X座標のランダムな位置を生成 (-6から6の範囲)
+						int posX = (rand() % 4 + 2) * (rand() % 2 == 1 ? -1 : 1);
+
+						// Y座標のランダムな位置を生成 (-3から3の範囲)
+						int posY = rand() % 3 + 4;
+
+						// 弱い敵
+						if (enemyWhich <= 4)
+						{
+							EnemySphere* sphere = new EnemySphere();
+							sphere->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
+							sphere->SetTerritory(sphere->GetPosition(), 10.0f);
+							enemyManager.Register(sphere);
+						}
+						// 強い敵
+						else if (enemyWhich == 5)
+						{
+							EnemyStrong* strong = new EnemyStrong();
+							strong->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
+							strong->SetTerritory(strong->GetPosition(), 10.0f);
+							enemyManager.Register(strong);
+						}
+						newEnemyCount = 0;
+						newEnemyMaxCount += 0.4f;
+						newEnemyLimit++;
+						if (enemyCount >= 2) battleStart = true;
+					}
+					newEnemyCount += 0.5f;
+				}
+			}
+			break;
+
+			case 3:
+			{
+				if (enemyCount < 10 && newEnemy == true && newEnemyLimit < 1000)
+				{
+					if (newEnemyCount > newEnemyMaxCount)
+					{
+						int enemyWhich = 0;
+
+						if (newEnemyMaxCount < 25)
+							enemyWhich = rand() % 2;
+						else enemyWhich = rand() % 5;
+
+						/// X座標のランダムな位置を生成 (-6から6の範囲)
+						int posX = (rand() % 4 + 2) * (rand() % 2 == 1 ? -1 : 1);
+
+						// Y座標のランダムな位置を生成 (-3から3の範囲)
+						int posY = rand() % 3 + 4;
+
+						if (newEnemyMaxCount < 25)
+						{
+							// 弱い敵
+							if (enemyWhich == 0)
+							{
+								EnemySphere* sphere = new EnemySphere();
+								sphere->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
+								sphere->SetTerritory(sphere->GetPosition(), 10.0f);
+								enemyManager.Register(sphere);
+							}
+							// 強い敵
+							else if (enemyWhich == 1)
+							{
+								EnemyStrong* strong = new EnemyStrong();
+								strong->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
+								strong->SetTerritory(strong->GetPosition(), 10.0f);
+								enemyManager.Register(strong);
+							}
+						}
+						else
+						{
+							// 弱い敵
+							if (enemyWhich <= 2)
+							{
+								EnemySphere* sphere = new EnemySphere();
+								sphere->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
+								sphere->SetTerritory(sphere->GetPosition(), 10.0f);
+								enemyManager.Register(sphere);
+							}
+							// 強い敵
+							else if (enemyWhich == 3 || enemyWhich == 4)
+							{
+								EnemyStrong* strong = new EnemyStrong();
+								strong->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
+								strong->SetTerritory(strong->GetPosition(), 10.0f);
+								enemyManager.Register(strong);
+							}
+						}
+
+						newEnemyCount = 0;
+						if (newEnemyMaxCount < 40) newEnemyMaxCount += 0.4f;
+						newEnemyLimit++;
+						if (enemyCount >= 2) battleStart = true;
+					}
+					newEnemyCount += 0.5f;
+				}
+			}
+			break;
+			default:
+				break;
 		}
 	}
-		break;
-	case 2:
-	{
-		if (enemyCount < 7 && newEnemy == true && newEnemyLimit < 50)
-		{
-			if (newEnemyCount > newEnemyMaxCount)
-			{
-				int enemyWhich = rand() % 5 + 1;
 
-				/// X座標のランダムな位置を生成 (-6から6の範囲)
-				int posX = (rand() % 4 + 2) * (rand() % 2 == 1 ? -1 : 1);
-
-				// Y座標のランダムな位置を生成 (-3から3の範囲)
-				int posY = rand() % 3 + 4;
-
-				// 弱い敵
-				if (enemyWhich <= 4)
-				{
-					EnemySphere* sphere = new EnemySphere();
-					sphere->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
-					sphere->SetTerritory(sphere->GetPosition(), 10.0f);
-					enemyManager.Register(sphere);
-				}
-				// 強い敵
-				else if (enemyWhich == 5)
-				{
-					EnemyStrong* strong = new EnemyStrong();
-					strong->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
-					strong->SetTerritory(strong->GetPosition(), 10.0f);
-					enemyManager.Register(strong);
-				}
-				newEnemyCount = 0;
-				newEnemyMaxCount += 0.4f;
-				newEnemyLimit++;
-				if(enemyCount >= 2) battleStart = true;
-			}
-			newEnemyCount += 0.5f;
-		}
-	}
-		break;
-
-	case 3:
-	{
-		if (enemyCount < 10 && newEnemy == true && newEnemyLimit < 1000)
-		{
-			if (newEnemyCount > newEnemyMaxCount)
-			{
-				int enemyWhich = 0;
-
-				if(newEnemyMaxCount < 25)
-				enemyWhich = rand() % 2;
-				else enemyWhich = rand() % 5;
-
-				/// X座標のランダムな位置を生成 (-6から6の範囲)
-				int posX = (rand() % 4 + 2) * (rand() % 2 == 1 ? -1 : 1);
-
-				// Y座標のランダムな位置を生成 (-3から3の範囲)
-				int posY = rand() % 3 + 4;
-
-				if (newEnemyMaxCount < 25)
-				{
-					// 弱い敵
-					if (enemyWhich == 0)
-					{
-						EnemySphere* sphere = new EnemySphere();
-						sphere->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
-						sphere->SetTerritory(sphere->GetPosition(), 10.0f);
-						enemyManager.Register(sphere);
-					}
-					// 強い敵
-					else if (enemyWhich == 1)
-					{
-						EnemyStrong* strong = new EnemyStrong();
-						strong->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
-						strong->SetTerritory(strong->GetPosition(), 10.0f);
-						enemyManager.Register(strong);
-					}
-				}
-				else
-				{
-					// 弱い敵
-					if (enemyWhich <= 2)
-					{
-						EnemySphere* sphere = new EnemySphere();
-						sphere->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
-						sphere->SetTerritory(sphere->GetPosition(), 10.0f);
-						enemyManager.Register(sphere);
-					}
-					// 強い敵
-					else if (enemyWhich == 3 || enemyWhich == 4)
-					{
-						EnemyStrong* strong = new EnemyStrong();
-						strong->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
-						strong->SetTerritory(strong->GetPosition(), 10.0f);
-						enemyManager.Register(strong);
-					}
-				}
-
-				newEnemyCount = 0;
-				if (newEnemyMaxCount < 40) newEnemyMaxCount += 0.4f;
-				newEnemyLimit++;
-				if (enemyCount >= 2) battleStart = true;
-			}
-			newEnemyCount += 0.5f;
-		}
-	}
-		break;
-	default:
-		break;
-	}
 
 #endif
 
@@ -387,7 +391,6 @@ void SceneGame::Update(float elapsedTime)
 		SceneManager::Instance().ChangeScene(loadingScene);
 	}
 	//! スコアの表示
-	SceneTitle& title = SceneTitle::Instance();
 	if (title.score > 1000000)
 	{
 		nextSceneCount++;
@@ -568,9 +571,9 @@ void SceneGame::Render()
 
 	// 2Dスプライト描画
 	{
-		PlayerUI(dc);
-
 		RenderEnemyGauge(dc, rc.view, rc.projection);
+
+		PlayerUI(dc);
 	}
 
 	// 2DデバッグGUI描画

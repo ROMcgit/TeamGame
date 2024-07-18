@@ -10,6 +10,7 @@ void SceneTitle::Initialize()
 {
 	// スプライト初期化
 	sprite = new Sprite("Data/Sprite/タイトル.png");
+	fadeIn = std::make_unique<Sprite>("Data/Sprite/画面フェードイン.png");
 
 	mozi[0] = std::make_unique<Sprite>("Data/Sprite/置いてきた.png");
 	mozi[1] = std::make_unique<Sprite>("Data/Sprite/帰る.png");
@@ -23,11 +24,11 @@ void SceneTitle::Initialize()
 	yazirusi = std::make_unique<Sprite>("Data/Sprite/矢印.png");
 
 	SceneTitle& title = SceneTitle::Instance();
-	int score = 0;
-	int scorePlus = 0;
-	int scorePlusResetTime = 0;
-	int combo = 0;
-	int comboResetTime = 0;
+	title.score = 0;
+	title.scorePlus = 0;
+	title.scorePlusResetTime = 0;
+	title.combo = 0;
+	title.comboResetTime = 0;
 }
 
 // 終了化
@@ -49,67 +50,77 @@ void SceneTitle::Update(float elapsedTime)
 		bgm->Play(true, 1.0f);
 	}
 
+	fadeInView -= 0.005f;
+
+	if (fadeInView < 0)
+	{
+		fadeInView = 0;
+		sceneOK = true;
+	}
+
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
-	// シーン遷移
-	if ((gamePad.GetButtonDown() & GamePad::BTN_START ||
-		gamePad.GetButtonDown() & GamePad::BTN_A) && select == 0)
+	if (sceneOK == true)
 	{
-		bgm->Stop();
-		SceneLoading* loadingScene = new SceneLoading(new SceneGame);
+		// シーン遷移
+		if ((gamePad.GetButtonDown() & GamePad::BTN_START ||
+			gamePad.GetButtonDown() & GamePad::BTN_A) && select == 0)
+		{
+			bgm->Stop();
+			SceneLoading* loadingScene = new SceneLoading(new SceneGame);
 
-		// シーンマネージャーにローディングシーンへの切り替えを指示
-		SceneManager::Instance().ChangeScene(loadingScene);
-		
+			// シーンマネージャーにローディングシーンへの切り替えを指示
+			SceneManager::Instance().ChangeScene(loadingScene);
+		}
+
+		// チュートリアル
+		if ((gamePad.GetButtonDown() & GamePad::BTN_START ||
+			gamePad.GetButtonDown() & GamePad::BTN_A)
+			&& select == 1)
+		{
+			sound[0]->Play(false, 1.0f);
+			moziView = true;
+		}
+
+		// 帰さない
+		if ((gamePad.GetButtonDown() & GamePad::BTN_START ||
+			gamePad.GetButtonDown() & GamePad::BTN_A) && select == 2)
+		{
+			sound[1]->Play(false, 1.0f);
+			moziView = true;
+		}
+
+		if (moziView == true)
+		{
+			waitTime++;
+		}
+
+		if (waitTime > 300 && select == 1)
+		{
+			waitTime = 0;
+			moziView = false;
+		}
+		// シーン遷移
+		else if (waitTime > 300 && select == 2)
+		{
+			bgm->Stop();
+			SceneLoading* loadingScene = new SceneLoading(new SceneGame);
+
+			// シーンマネージャーにローディングシーンへの切り替えを指示
+			SceneManager::Instance().ChangeScene(loadingScene);
+		}
+
+		// 選択処理
+		if (moziView == false &&
+			gamePad.GetButtonDown() & GamePad::BTN_UP) select--;
+		else if
+			(moziView == false &&
+				gamePad.GetButtonDown() & GamePad::BTN_DOWN) select++;
+
+		// 数値を超えないように
+		if (select < 0) select = 0;
+		if (select > 2) select = 2;
 	}
-
-	// チュートリアル
-	if ((gamePad.GetButtonDown() & GamePad::BTN_START ||
-		gamePad.GetButtonDown() & GamePad::BTN_A)
-		&& select == 1)
-	{
-		sound[0]->Play(false, 1.0f);
-		moziView = true;
-	}
-
-	// 帰さない
-	if ((gamePad.GetButtonDown() & GamePad::BTN_START || 
-		gamePad.GetButtonDown() & GamePad::BTN_A) && select == 2)
-	{
-		sound[1]->Play(false, 1.0f);
-		moziView = true;
-	}
-
-	if (moziView == true)
-	{
-		waitTime++;
-	}
-
-	if (waitTime > 300 && select == 1)
-	{
-		waitTime = 0;
-		moziView = false;
-	}
-	// シーン遷移
-	else if (waitTime > 300 && select == 2)
-	{
-		bgm->Stop();
-		SceneLoading* loadingScene = new SceneLoading(new SceneGame);
-
-		// シーンマネージャーにローディングシーンへの切り替えを指示
-		SceneManager::Instance().ChangeScene(loadingScene);
-	}
-
-	// 選択処理
-	if (moziView == false &&
-		gamePad.GetButtonDown() & GamePad::BTN_UP) select--;
-	else if 
-		(moziView == false &&
-		gamePad.GetButtonDown() & GamePad::BTN_DOWN) select++;
-
-	// 数値を超えないように
-	if (select < 0) select = 0;
-	if (select > 2) select = 2;
 }
 
 // 描画処理
@@ -204,4 +215,13 @@ void SceneTitle::Render()
 			break;
 		}
 	}
+
+	// フェードアウト
+	fadeIn->Render(dc,
+		0, 0,
+		2230, 1750,
+		0, 0,
+		2230, 1750,
+		0,
+		0, 0, 0, fadeInView);
 }

@@ -138,7 +138,7 @@ void EnemyStrong::Update(float elapsedTime)
 
 	//! スコアのインスタンス
 	SceneTitle& title = SceneTitle::Instance();
-	if (title.score > 1000000) this->ApplyDamage(100, 0);
+	if (title.score > 1000000) this->Destroy();
 
 	int projectileCount = projectileManager.GetProjectileCount();
 	for (int i = 0; i < projectileCount; ++i)
@@ -782,6 +782,10 @@ void EnemyStrong::TransitionDeathState()
 // 死亡ステート更新処理
 void EnemyStrong::UpdateDeathState(float elapsedTime)
 {
+	scale.x -= 0.000005f;
+	scale.y -= 0.000005f;
+	scale.z -= 0.000005f;
+
 	// ダメージアニメーションが終わったら自分を破棄
 	if (!model->IsPlayAnimation() && deathCount > 120)
 	{
@@ -793,7 +797,7 @@ void EnemyStrong::UpdateDeathState(float elapsedTime)
 
 		title.scorePlusResetTime = 0;
 		title.combo += 1;
-		title.score += 500 * title.combo;
+		title.score += 50000 * title.combo;
 		title.comboResetTime = 0;
 		title.scorePlus += 500 * title.combo;
 

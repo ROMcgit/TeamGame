@@ -29,6 +29,8 @@ private:
 	std::unique_ptr<Sprite> fadeIn;
 	float fadeInView = 1.0f;
 	bool sceneOK = false;
+	float fadeOutView = 0.0f;
+	bool fadeOut = false;
 
 	std::unique_ptr<Text> text[2];
 	std::unique_ptr<AudioSource> bgm;

@@ -809,15 +809,14 @@ void Player::DrawDebugGUI()
 	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
 
-	if (ImGui::Begin("Player", nullptr, ImGuiWindowFlags_None))
+	if (ImGui::TreeNode("Player"))
 	{
 		ImGui::InputFloat3("Velocity", &velocity.x);
 
 		ImGui::DragInt("HP", &health);
 
 		// トランスフォーム
-		if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
-		{
+		if(ImGui::CollapsingHeader("Transform"))
 			// 位置
 			ImGui::InputFloat3("Position", &position.x);
 			// 回転
@@ -831,7 +830,6 @@ void Player::DrawDebugGUI()
 			angle.z = DirectX::XMConvertToRadians(a.z);
 			// スケール
 			ImGui::InputFloat3("Scale", &scale.x);
-		}
+			ImGui::TreePop();
 	}
-	ImGui::End();
 }

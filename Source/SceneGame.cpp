@@ -440,6 +440,9 @@ void SceneGame::Update(float elapsedTime)
  		title.comboResetTime++;
 	}
 
+	if (comboColor.w > 1) comboColor.w = 1;
+	if (comboColor.w < 0) comboColor.w = 0;
+
 	// 初期化する
 	if (comboColorMinus[3] == true)
 	{
@@ -449,17 +452,24 @@ void SceneGame::Update(float elapsedTime)
 
 	if(title.combo <= 0) comboColor.w = 0.0f;
 
-	if (title.comboResetTime > 400)
+	if (title.comboResetTime > 300)
 	{
 		comboColor.w -= 0.003f;
 	}
 
-	if (title.comboResetTime > 550)
+	if (title.comboResetTime > 450)
 	{
 		comboColorMinus[3] == true;
 	}
 	else
 		comboColorMinus[3] == false;
+
+	if (title.scorePlus > 0) title.scorePlusResetTime++;
+	if (title.scorePlusResetTime > 150)
+	{
+		title.scorePlus = 0;
+		title.scorePlusResetTime = 0;
+	}
 }
 
 // 描画処理
@@ -557,10 +567,18 @@ void SceneGame::Render()
 
 	// 2DデバッグGUI描画
 	{
-		// プレイヤーデバッグ描画
-		player->DrawDebugGUI();
-		camera.DrawDebugGUI();
-		cameraController->DrawDebugGUI();
+		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
+		{
+			// プレイヤーデバッグ描画
+			player->DrawDebugGUI();
+			if (ImGui::TreeNode("Camera"))
+			{
+				camera.DrawDebugGUI();
+				cameraController->DrawDebugGUI();
+				ImGui::TreePop();
+			}
+		}
+		ImGui::End();
 	}
 }
 
@@ -632,26 +650,23 @@ void SceneGame::PlayerUI(ID3D11DeviceContext* dc)
 	if (title.scorePlus > 0)
 	{
 		uiSprite[4]->Render(dc,
-			210, 30,
+			215, 30,
 			23, 23,
 			0, 0,
 			82, 82,
 			0,
-			1, 1, 1, 1);
+			1, 1, 0, 1);
 
 		text[3]->Render(dc,
 			true, false,
 			false,
 			0, 0, 0, 0, 0,
 			0, 0, 0, title.scorePlus,
-			340, 30,
+			310, 30,
 			5, 5,
 			0,
-			30,
-			1,
-			1,
-			1,
-			1);
+			24,
+			1,1,0,1);
 	}
 
 	if (player->GetHealth() > 0)

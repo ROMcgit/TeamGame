@@ -52,9 +52,8 @@ void CameraController::DrawDebugGUI()
 	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
 
-	if (ImGui::Begin("CameraController", nullptr, ImGuiWindowFlags_None))
 	{
-		if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+		if (ImGui::CollapsingHeader("CameraTransform", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			// ‰ñ“]
 			DirectX::XMFLOAT3 a;
@@ -77,6 +76,6 @@ void CameraController::DrawDebugGUI()
 			angle.z = DirectX::XMConvertToRadians(a.z);
 		}
 
+
 	}
-	ImGui::End();
 }

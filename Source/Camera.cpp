@@ -47,11 +47,10 @@ void Camera::DrawDebugGUI()
 	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
 
-	if (ImGui::Begin("Camera", nullptr, ImGuiWindowFlags_None))
+	if(ImGui::CollapsingHeader("Camera"))
 	{
 		ImGui::InputFloat3("Eye",&eye.x);
 		ImGui::InputFloat3("Focus",&focus.x);
 		ImGui::InputFloat3("Up", &up.x);
 	}
-	ImGui::End();
 }

@@ -434,8 +434,9 @@ void SceneGame::Update(float elapsedTime)
 	else if (comboColor.z < 0) comboColorMinus[2] = false;
 
 	// スコア表示時間
-	if (title.combo > 0 && comboColorMinus[2] == false)
+	if (title.combo > 0 && comboColorMinus[3] == false)
 	{
+		if(title.comboResetTime < 300)
 		comboColor.w += 0.05f;
  		title.comboResetTime++;
 	}
@@ -443,26 +444,16 @@ void SceneGame::Update(float elapsedTime)
 	if (comboColor.w > 1) comboColor.w = 1;
 	if (comboColor.w < 0) comboColor.w = 0;
 
-	// 初期化する
-	if (comboColorMinus[3] == true)
+	if (comboColor.w <= 0)
 	{
-		title.comboResetTime = 0;
 		title.combo = 0;
+		title.comboResetTime = 0;
 	}
-
-	if(title.combo <= 0) comboColor.w = 0.0f;
 
 	if (title.comboResetTime > 300)
 	{
 		comboColor.w -= 0.003f;
 	}
-
-	if (title.comboResetTime > 450)
-	{
-		comboColorMinus[3] == true;
-	}
-	else
-		comboColorMinus[3] == false;
 
 	if (title.scorePlus > 0) title.scorePlusResetTime++;
 	if (title.scorePlusResetTime > 150)
@@ -567,6 +558,7 @@ void SceneGame::Render()
 
 	// 2DデバッグGUI描画
 	{
+		SceneTitle& title = SceneTitle::Instance();
 		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
 		{
 			// プレイヤーデバッグ描画
@@ -577,6 +569,7 @@ void SceneGame::Render()
 				cameraController->DrawDebugGUI();
 				ImGui::TreePop();
 			}
+			ImGui::InputInt("scorePlusResetTime", &title.comboResetTime);
 		}
 		ImGui::End();
 	}
@@ -627,7 +620,7 @@ void SceneGame::PlayerUI(ID3D11DeviceContext* dc)
 		false,
 		0, 0, 0, 0, 0,
 		0, 0, 0, title.combo,
-		980, 25,
+		980, 15,
 		11, 11,
 		0,
 		40,
@@ -637,7 +630,7 @@ void SceneGame::PlayerUI(ID3D11DeviceContext* dc)
 		comboColor.w);
 
 	uiSprite[3]->Render(dc,
-		0, 0,
+		0, -10,
 		screenWidth, screenHeight,
 		0, 0,
 		1280, 720,
@@ -647,10 +640,10 @@ void SceneGame::PlayerUI(ID3D11DeviceContext* dc)
 		comboColor.z, 
 		comboColor.w);
 
-	if (title.scorePlus > 0)
+	if (title.scorePlus > 0 && title.scorePlus < 10000)
 	{
 		uiSprite[4]->Render(dc,
-			215, 30,
+			205, 30,
 			23, 23,
 			0, 0,
 			82, 82,
@@ -662,11 +655,53 @@ void SceneGame::PlayerUI(ID3D11DeviceContext* dc)
 			false,
 			0, 0, 0, 0, 0,
 			0, 0, 0, title.scorePlus,
-			310, 30,
+			300, 30,
 			5, 5,
 			0,
 			24,
 			1,1,0,1);
+	}
+	else if (title.scorePlus > 10000)
+	{
+		uiSprite[4]->Render(dc,
+			205, 30,
+			23, 23,
+			0, 0,
+			82, 82,
+			0,
+			1, 1, 0, 1);
+
+		text[3]->Render(dc,
+			true, false,
+			false,
+			0, 0, 0, 0, 0,
+			0, 0, 0, title.scorePlus,
+			325, 30,
+			5, 5,
+			0,
+			24,
+			1, 1, 0, 1);
+	}
+	else if (title.scorePlus > 10000)
+	{
+		uiSprite[4]->Render(dc,
+			205, 30,
+			23, 23,
+			0, 0,
+			82, 82,
+			0,
+			1, 1, 0, 1);
+
+		text[3]->Render(dc,
+			true, false,
+			false,
+			0, 0, 0, 0, 0,
+			0, 0, 0, title.scorePlus,
+			350, 30,
+			5, 5,
+			0,
+			24,
+			1, 1, 0, 1);
 	}
 
 	if (player->GetHealth() > 0)

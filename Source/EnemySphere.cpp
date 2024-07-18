@@ -638,6 +638,7 @@ void EnemySphere::UpdateDeathState(float elapsedTime)
 	{
 		Player& player = Player::Instance();
 		SceneTitle& title = SceneTitle::Instance();
+		title.scorePlusResetTime = 0;
 		title.combo += 1;
 		title.score += 100 * title.combo;
 		title.comboResetTime = 0;

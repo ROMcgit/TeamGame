@@ -26,6 +26,10 @@ public:
 
 private:
 	std::unique_ptr<Sprite> sprite;
+	std::unique_ptr<Sprite> fadeIn;
+	float fadeInView = 1.0f;
+	bool sceneOK = false;
+
 	std::unique_ptr<Text> text[2];
 	std::unique_ptr<AudioSource> bgm;
 };

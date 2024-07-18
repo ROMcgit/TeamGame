@@ -7,30 +7,31 @@
 void SceneLoading::Initialize()
 {
 	// スプライト初期化
-	sprite = new Sprite("Data/Sprite/LoadingIcon.png");
+	sprite = std::make_unique<Sprite>("Data/Sprite/LoadingIcon.png");
 
 	// スレッド開始
-	thread = new std::thread(LoadingThread, this);
+	thread = std::make_unique<std::thread>(LoadingThread, this);
 }
 
 // 終了化
 void SceneLoading::Finalize()
 {
-	if (sprite != nullptr)
-	{
-		delete sprite;
-		sprite = nullptr;
-	}
+	//if (sprite != nullptr)
+	//{
+	//	delete sprite;
+	//	sprite = nullptr;
+	//}
 
-	// スレッド終了化
-	if (thread != nullptr)
+	//// スレッド終了化
+	//if (thread != nullptr)
+	//{
+
+	//	/*delete thread;
+	//	thread = nullptr;*/
+	//}
+	if (thread->joinable())
 	{
-		//if (thread->joinable())
-		//{
-		//	thread->join(); // スレッドの終了を待つ
-		//}
-		delete thread;
-		thread = nullptr;
+		thread->join(); // スレッドの終了を待つ
 	}
 }
 
@@ -39,11 +40,6 @@ void SceneLoading::Update(float elapsedTime)
 {
 	constexpr float speed = 180;
 	angle += speed * elapsedTime;
-
-	if (thread->joinable())
-	{
-		thread->join(); // スレッドの終了を待つ
-	}
 
 	// 次のシーンの準備が完了したらシーンを切り替える
 	if (nextScene->IsReady())

@@ -12,6 +12,8 @@ void SceneGameOver::Initialize()
 	// スコア
 	text[0] = std::make_unique<Text>();
 
+	fadeIn = std::make_unique<Sprite>("Data/Sprite/画面フェードイン.png");
+
 	sprite = std::make_unique<Sprite>("Data/Sprite/ゲームオーバー.png");
 
 	// 音楽
@@ -34,6 +36,14 @@ void SceneGameOver::Update(float elapsedTime)
 		bgm->Play(true, 1.0f);
 	}
 
+	fadeInView -= 0.005f;
+
+	if (fadeInView < 0)
+	{
+		fadeInView = 0;
+		sceneOK = true;
+	}
+
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
 	// なにかボタンを押したらローディングシーンを挟んでゲームシーンへ切り替え
@@ -41,7 +51,7 @@ void SceneGameOver::Update(float elapsedTime)
 		GamePad::BTN_A |
 		GamePad::BTN_B |
 		GamePad::BTN_START;
-	if (gamePad.GetButtonDown() & anyButton)
+	if (gamePad.GetButtonDown() & anyButton && sceneOK == true)
 	{
 		bgm->Stop();
 
@@ -89,4 +99,13 @@ void SceneGameOver::Render()
 		0,
 		60,
 		1, 0, 0, 1);
+
+	// フェードアウト
+	fadeIn->Render(dc,
+		0, 0,
+		2230, 1750,
+		0, 0,
+		2230, 1750,
+		0,
+		1, 0, 0, fadeInView);
 }

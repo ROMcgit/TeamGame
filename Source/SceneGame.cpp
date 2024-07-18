@@ -34,6 +34,8 @@ void SceneGame::Initialize()
 
 	bg = std::make_unique<Sprite>("Data/Sprite/sky.png");
 
+	fadeIn = std::make_unique<Sprite>("Data/Sprite/画面フェードイン.png");
+
 	EnemyHp = new Sprite;
 
 	// プレイヤー初期化
@@ -349,17 +351,19 @@ void SceneGame::Update(float elapsedTime)
 	if (enemyCount <= 0 && battleWave == 3 && battleStart == true)
 	{
 		nextSceneCount++;
+		fadeInView += 0.005f;
 		newEnemy = false;
 	}
 
 	if (player->GetHealth() <= 0)
 	{
 		nextSceneCount++;
+		fadeInView += 0.005f;
 		newEnemy = false;
 	}
 
 	// シーン遷移
-	if (battleWave == 3 && nextSceneCount > 300 && player->GetHealth() > 0)
+	if (battleWave == 3 && nextSceneCount > 400 && player->GetHealth() > 0)
 	{
 		bgm->Stop();
 		SceneLoading* loadingScene = new SceneLoading(new SceneClear);
@@ -372,7 +376,7 @@ void SceneGame::Update(float elapsedTime)
 	{
 		nextSceneCount++;
 	}
-	if (player->GetHealth() <= 0 && nextSceneCount > 300)
+	if (player->GetHealth() <= 0 && nextSceneCount > 400)
 	{
 		bgm->Stop();
 		SceneLoading* loadingScene = new SceneLoading(new SceneGameOver);
@@ -385,6 +389,7 @@ void SceneGame::Update(float elapsedTime)
 	if (title.score > 500000)
 	{
 		nextSceneCount++;
+		fadeInView += 0.005f;
 		newEnemy = false;
 	}
 
@@ -572,6 +577,29 @@ void SceneGame::Render()
 			ImGui::InputInt("scorePlusResetTime", &title.comboResetTime);
 		}
 		ImGui::End();
+	}
+
+	{
+		if (player->GetHealth() <= 0)
+		{
+			fadeIn->Render(dc,
+				0, 0,
+				2230, 1750,
+				0, 0,
+				2230, 1750,
+				0,
+				1, 0, 0, fadeInView);
+		}
+		else
+		{
+			fadeIn->Render(dc,
+				0, 0,
+				2230, 1750,
+				0, 0,
+				2230, 1750,
+				0,
+				0, 0, 0, fadeInView);
+		}
 	}
 }
 

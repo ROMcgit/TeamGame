@@ -18,6 +18,7 @@ void SceneTitle::Initialize()
 	Audio& audioManager = Audio::Instance();
 	sound[0] = audioManager.LoadAudioSource("Data/Audio/年寄り.wav");
 	sound[1] = audioManager.LoadAudioSource("Data/Audio/キャァァァァァ(鈍足).wav");
+	sound[2] = audioManager.LoadAudioSource("Data/Audio/決定音.wav");
 
 	bgm = audioManager.LoadAudioSource("Data/Audio/opening.wav");
 
@@ -47,7 +48,7 @@ void SceneTitle::Update(float elapsedTime)
 {
 	if (bgm)
 	{
-		bgm->Play(true, 1.0f);
+		bgm->Play(true, 0.7f);
 	}
 
 	fadeInView -= 0.005f;
@@ -65,6 +66,16 @@ void SceneTitle::Update(float elapsedTime)
 		// シーン遷移
 		if ((gamePad.GetButtonDown() & GamePad::BTN_START ||
 			gamePad.GetButtonDown() & GamePad::BTN_A) && select == 0)
+		{
+			sound[2]->Play(false, 1.0f);
+			fadeOut = true;
+		}
+		if (fadeOut == true)
+		{
+			fadeOutView += 0.005f;
+		}
+
+		if (fadeOutView > 1)
 		{
 			bgm->Stop();
 			SceneLoading* loadingScene = new SceneLoading(new SceneGame);
@@ -224,4 +235,13 @@ void SceneTitle::Render()
 		2230, 1750,
 		0,
 		0, 0, 0, fadeInView);
+
+	// フェードアウト
+	fadeIn->Render(dc,
+		0, 0,
+		2230, 1750,
+		0, 0,
+		2230, 1750,
+		0,
+		0, 0, 0, fadeOutView);
 }

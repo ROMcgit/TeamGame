@@ -391,7 +391,7 @@ void SceneGame::Update(float elapsedTime)
 		SceneManager::Instance().ChangeScene(loadingScene);
 	}
 	//! スコアの表示
-	if (title.score > 1000000)
+	if (title.score > 1000000 && battleWave == 3)
 	{
 		nextSceneCount++;
 		fadeInView += 0.005f;
@@ -578,20 +578,20 @@ void SceneGame::Render()
 
 	// 2DデバッグGUI描画
 	{
-		SceneTitle& title = SceneTitle::Instance();
-		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
-		{
-			// プレイヤーデバッグ描画
-			player->DrawDebugGUI();
-			if (ImGui::TreeNode("Camera"))
-			{
-				camera.DrawDebugGUI();
-				cameraController->DrawDebugGUI();
-				ImGui::TreePop();
-			}
-			ImGui::InputInt("scorePlusResetTime", &title.comboResetTime);
-		}
-		ImGui::End();
+		//SceneTitle& title = SceneTitle::Instance();
+		//if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
+		//{
+		//	// プレイヤーデバッグ描画
+		//	player->DrawDebugGUI();
+		//	if (ImGui::TreeNode("Camera"))
+		//	{
+		//		camera.DrawDebugGUI();
+		//		cameraController->DrawDebugGUI();
+		//		ImGui::TreePop();
+		//	}
+		//	ImGui::InputInt("scorePlusResetTime", &title.comboResetTime);
+		//}
+		//ImGui::End();
 	}
 
 	{

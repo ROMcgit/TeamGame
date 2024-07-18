@@ -197,7 +197,6 @@ void SceneLoading::Render()
 		EnemyManager::Instance().Render(dc, shader);
 
 		shader->End(dc);
-
 	}
 }
 

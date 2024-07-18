@@ -797,7 +797,7 @@ void EnemyStrong::UpdateDeathState(float elapsedTime)
 
 		title.scorePlusResetTime = 0;
 		title.combo += 1;
-		title.score += 50000 * title.combo;
+		title.score += 500 * title.combo;
 		title.comboResetTime = 0;
 		title.scorePlus += 500 * title.combo;
 

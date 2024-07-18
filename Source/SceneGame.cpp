@@ -43,6 +43,7 @@ void SceneGame::Initialize()
 	uiSprite[0] = std::make_unique<Sprite>("Data/Sprite/HP.png"); //HPの裏(灰色)
 	uiSprite[1] = std::make_unique<Sprite>("Data/Sprite/HPbar_red.png"); //HPダメージ(赤色)
 	uiSprite[2] = std::make_unique<Sprite>("Data/Sprite/HPbar.png"); //HPゲージ(緑色)
+	uiSprite[3] = std::make_unique<Sprite>("Data/Sprite/コンボ.png"); // コンボ数
 
 	setumei[0] = std::make_unique<Sprite>("Data/Sprite/操作説明.png");
 	setumei[1] = std::make_unique<Sprite>("Data/Sprite/困ったら連打!!.png");
@@ -481,19 +482,19 @@ void SceneGame::Render()
 	// 3Dデバッグ描画
 	{
 		// プレイヤーデバッグプリミティブ描画
-		player->DrawDebugPrimitive();
+		//player->DrawDebugPrimitive();
 
 		// エネミーデバッグプリミティブ描画
-		EnemyManager::Instance().DrawDebugPrimitive();
+		//EnemyManager::Instance().DrawDebugPrimitive();
 
 		// 壁デバッグプリミティブ描画
-		WallManager::Instance().DrawDebugPrimitive();
+		//WallManager::Instance().DrawDebugPrimitive();
 
 		// ラインレンダラ描画実行
-		graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
+		//graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
 
 		// デバッグレンダラ描画実行
-		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
+		//graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 	}
 
 	// 2Dスプライト描画
@@ -550,6 +551,17 @@ void SceneGame::PlayerUI(ID3D11DeviceContext* dc)
 			0,
 			30,
 			1, 1, 0, 1);
+	}
+
+	if (title.combo > 0)
+	{
+		uiSprite[3]->Render(dc,
+			0, 0,
+			screenWidth, screenHeight,
+			0, 0,
+			1280, 720,
+			0,
+			1, 1, 1, 1);
 	}
 
 	if (player->GetHealth() > 0)

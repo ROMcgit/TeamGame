@@ -31,6 +31,8 @@ public:
 	void Render() override;
 public:
 	int score = 0;
+	int combo = 0;
+	int comboResetTime = 0;
 
 private:
 	Sprite* sprite = nullptr;

@@ -157,6 +157,7 @@ private:
 	ProjectileManager projectileManager;
 
 	Effect* hitEffect = nullptr;
+	std::unique_ptr<Effect> attackEffect;
 
 	State state = State::Idle;
 

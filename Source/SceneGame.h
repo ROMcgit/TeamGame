@@ -67,7 +67,7 @@ private:
 	int newEnemyLimit = 0;
 	float newEnemyMaxCount = 10;
 	int newWallCount = 0;
-	int battleWave = 3;
+	int battleWave = 0;
 	int nextWaveWait = 0;
 	bool newEnemy = false;
 	bool battleStart = false;

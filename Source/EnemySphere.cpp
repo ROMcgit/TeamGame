@@ -120,6 +120,19 @@ void EnemySphere::Update(float elapsedTime)
 	//! スコアのインスタンス
 	SceneTitle& title = SceneTitle::Instance();
 	if (title.score > 100000) this->ApplyDamage(100, 0);
+
+	int projectileCount = projectileManager.GetProjectileCount();
+	for (int i = 0; i < projectileCount; ++i)
+	{
+		Projectile* projectile = projectileManager.GetProjectile(i);
+
+		if (projectile->GetPosition().y < 0.2f)
+		{
+			hitEffect->Play(projectile->GetPosition(), 0.015f);
+
+			projectile->Destroy();
+		}
+	}
 }
 
 // 描画処理
@@ -302,7 +315,11 @@ void EnemySphere::CollisionProjectilesVsEnemy()
 				{
 					sound[3]->Play(false, 1.0f);
 					this->ApplyDamage(1, 2);
+					DirectX::XMFLOAT3 e = projectile->GetPosition();
+
 					projectile->Destroy();
+
+					hitEffect->Play(e, 0.01f);
 				}
 			}
 		}
@@ -622,6 +639,8 @@ void EnemySphere::UpdateDeathState(float elapsedTime)
 		Player& player = Player::Instance();
 		SceneTitle& title = SceneTitle::Instance();
 		title.score += 100;
+		title.combo += 1;
+		title.comboResetTime = 0;
 
 		sound[1]->Play(false, 1.0f);
 

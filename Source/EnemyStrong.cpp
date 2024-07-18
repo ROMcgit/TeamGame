@@ -139,6 +139,19 @@ void EnemyStrong::Update(float elapsedTime)
 	//! スコアのインスタンス
 	SceneTitle& title = SceneTitle::Instance();
 	if (title.score > 100000) this->ApplyDamage(100, 0);
+
+	int projectileCount = projectileManager.GetProjectileCount();
+	for (int i = 0; i < projectileCount; ++i)
+	{
+		Projectile* projectile = projectileManager.GetProjectile(i);
+
+		if (projectile->GetPosition().y < 0.2f)
+		{
+			hitEffect->Play(projectile->GetPosition(), 0.015f);
+
+			projectile->Destroy();
+		}
+	}
 }
 
 // 描画処理
@@ -322,6 +335,10 @@ void EnemyStrong::CollisionProjectilesVsEnemy()
 					sound[3]->Play(false, 1.0f);
 
 					this->ApplyDamage(3, 1);
+
+					DirectX::XMFLOAT3 e = projectile->GetPosition();
+
+					hitEffect->Play(e, 0.01f);
 
 					projectile->Destroy();
 				}
@@ -775,6 +792,8 @@ void EnemyStrong::UpdateDeathState(float elapsedTime)
 		player.health += 4;
 
 		title.score += 500;
+		title.combo += 1;
+		title.comboResetTime = 0;
 
 		// 敵のダメージ処理
 		EnemyManager& enemyManager = EnemyManager::Instance();

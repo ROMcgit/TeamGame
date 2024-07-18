@@ -39,6 +39,8 @@ Player::Player()
 	// ヒットエフェクト読み込み
 	hitEffect = new Effect("Data/Effect/Hit.efk");
 
+	attackEffect = std::make_unique<Effect>("Data/Effect/PlayerAttack.efk");
+
 	// 待機ステートへ遷移
 	TransitionIdleState();
 
@@ -402,6 +404,11 @@ void Player::TransitionAttackState()
 	// 着地アニメーション再生
 	model[0]->PlayAnimation(1, false);
 	model[1]->PlayAnimation(1, false);
+
+	DirectX::XMFLOAT3 e = position;
+	e.y += height * 0.5f;
+
+	attackEffect->Play(e, 0.2f);
 }
 
 // 攻撃ステート更新処理

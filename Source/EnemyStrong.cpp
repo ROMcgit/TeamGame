@@ -789,7 +789,7 @@ void EnemyStrong::UpdateDeathState(float elapsedTime)
 		SceneTitle& title = SceneTitle::Instance();
 
 		if (player.health > 0)
-		player.health += 4;
+		player.health += 2;
 
 		title.scorePlusResetTime = 0;
 		title.combo += 1;

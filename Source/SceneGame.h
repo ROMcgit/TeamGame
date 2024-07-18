@@ -57,6 +57,7 @@ private:
 	std::unique_ptr<Sprite> setumei[2];
 	std::unique_ptr<Sprite> bg;
 	std::unique_ptr<Sprite> fadeIn;
+	float fadeInViewStart = 1.0f;
 	float fadeInView = 0.0f;
 	CameraController* cameraController = nullptr;
 	Sprite* EnemyHp = nullptr;

@@ -20,6 +20,9 @@
 // 初期化
 void SceneGame::Initialize()
 {
+	SceneTitle& title = SceneTitle::Instance();
+	title.gameLoading = false;
+
 	// ステージ初期化
 	//stage = new Stage();
 	StageManager& stageManager = StageManager::Instance();
@@ -254,15 +257,15 @@ void SceneGame::Update(float elapsedTime)
 
 	case 3:
 	{
-		if (enemyCount < 8 && newEnemy == true && newEnemyLimit < 1000)
+		if (enemyCount < 10 && newEnemy == true && newEnemyLimit < 1000)
 		{
 			if (newEnemyCount > newEnemyMaxCount)
 			{
 				int enemyWhich = 0;
 
-				if(newEnemyMaxCount < 70)
+				if(newEnemyMaxCount < 25)
 				enemyWhich = rand() % 2;
-				else enemyWhich = rand() % 4;
+				else enemyWhich = rand() % 5;
 
 				/// X座標のランダムな位置を生成 (-6から6の範囲)
 				int posX = (rand() % 4 + 2) * (rand() % 2 == 1 ? -1 : 1);
@@ -270,7 +273,7 @@ void SceneGame::Update(float elapsedTime)
 				// Y座標のランダムな位置を生成 (-3から3の範囲)
 				int posY = rand() % 3 + 4;
 
-				if (newEnemyMaxCount < 70)
+				if (newEnemyMaxCount < 25)
 				{
 					// 弱い敵
 					if (enemyWhich == 0)
@@ -300,7 +303,7 @@ void SceneGame::Update(float elapsedTime)
 						enemyManager.Register(sphere);
 					}
 					// 強い敵
-					else if (enemyWhich == 3)
+					else if (enemyWhich == 3 || enemyWhich == 4)
 					{
 						EnemyStrong* strong = new EnemyStrong();
 						strong->SetPosition(DirectX::XMFLOAT3(posX, posY, 0));
@@ -386,7 +389,7 @@ void SceneGame::Update(float elapsedTime)
 	}
 	//! スコアの表示
 	SceneTitle& title = SceneTitle::Instance();
-	if (title.score > 500000)
+	if (title.score > 1000000)
 	{
 		nextSceneCount++;
 		fadeInView += 0.005f;
@@ -394,7 +397,7 @@ void SceneGame::Update(float elapsedTime)
 	}
 
 #endif
-	if (title.score < 500000)
+	if (title.score < 1000000)
 	{
 		if (newEnemy == false)  nextWaveWait++;
 		if (nextWaveWait > 360) newEnemy = true;
@@ -466,6 +469,10 @@ void SceneGame::Update(float elapsedTime)
 		title.scorePlus = 0;
 		title.scorePlusResetTime = 0;
 	}
+
+	// 開始のフェードイン
+	if(fadeInViewStart >= 0)
+	fadeInViewStart -= 0.005f;
 }
 
 // 描画処理
@@ -600,6 +607,14 @@ void SceneGame::Render()
 				0,
 				0, 0, 0, fadeInView);
 		}
+
+		fadeIn->Render(dc,
+			0, 0,
+			2230, 1750,
+			0, 0,
+			2230, 1750,
+			0,
+			0, 0, 0, fadeInViewStart);
 	}
 }
 
@@ -689,7 +704,7 @@ void SceneGame::PlayerUI(ID3D11DeviceContext* dc)
 			24,
 			1,1,0,1);
 	}
-	else if (title.scorePlus > 10000)
+	else if (title.scorePlus >= 10000 && title.scorePlus < 100000)
 	{
 		uiSprite[4]->Render(dc,
 			205, 30,
@@ -710,7 +725,7 @@ void SceneGame::PlayerUI(ID3D11DeviceContext* dc)
 			24,
 			1, 1, 0, 1);
 	}
-	else if (title.scorePlus > 10000)
+	else if (title.scorePlus >= 100000 && title.scorePlus < 1000000)
 	{
 		uiSprite[4]->Render(dc,
 			205, 30,
@@ -726,6 +741,27 @@ void SceneGame::PlayerUI(ID3D11DeviceContext* dc)
 			0, 0, 0, 0, 0,
 			0, 0, 0, title.scorePlus,
 			350, 30,
+			5, 5,
+			0,
+			24,
+			1, 1, 0, 1);
+	}
+	else if (title.scorePlus >= 1000000)
+	{
+		uiSprite[4]->Render(dc,
+			205, 30,
+			23, 23,
+			0, 0,
+			82, 82,
+			0,
+			1, 1, 0, 1);
+
+		text[3]->Render(dc,
+			true, false,
+			false,
+			0, 0, 0, 0, 0,
+			0, 0, 0, title.scorePlus,
+			375, 30,
 			5, 5,
 			0,
 			24,

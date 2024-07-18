@@ -124,7 +124,7 @@ void WallEnemy::Update(float elapsedTime)
 
 	//! スコアのインスタンス
 	SceneTitle& title = SceneTitle::Instance();
-	if (title.score > 100000) this->ApplyDamage(100, 0);
+	if (title.score > 1000000) this->ApplyDamage(100, 0);
 }
 
 // 描画処理
@@ -605,7 +605,8 @@ void WallEnemy::UpdateDeathState(float elapsedTime)
 	{
 		Player& player = Player::Instance();
 		SceneTitle& title = SceneTitle::Instance();
-		title.score += 100;
+		title.score += 100 * title.combo;
+		title.scorePlus += 100 * title.combo;
 
 		if (player.health > 0)
 		player.health += 2;

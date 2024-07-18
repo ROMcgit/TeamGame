@@ -33,4 +33,11 @@ private:
 	
 	Scene* nextScene = nullptr;
 	std::unique_ptr<std::thread> thread;
+
+	std::unique_ptr<Sprite> mozi[4];
+	float moziView[4];
+	bool nextMozi = false;
+	int moziNum = 1;
+
+	DirectX::XMFLOAT2 pos = { 1300, 50 };
 };

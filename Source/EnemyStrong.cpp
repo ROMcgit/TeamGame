@@ -40,8 +40,12 @@ EnemyStrong::EnemyStrong()
 
 	offset.y = -0.7;
 
+	SceneTitle& title = SceneTitle::Instance();
 	// 徘徊ステートへ遷移
-	TransitionWanderState();
+	if (title.gameLoading == false)
+		TransitionWanderState();
+	else
+		TransitionAttackState();
 
 	health = 5;
 }
@@ -138,7 +142,7 @@ void EnemyStrong::Update(float elapsedTime)
 
 	//! スコアのインスタンス
 	SceneTitle& title = SceneTitle::Instance();
-	if (title.score > 500000) this->ApplyDamage(100, 0);
+	if (title.score > 1000000) this->ApplyDamage(100, 0);
 
 	int projectileCount = projectileManager.GetProjectileCount();
 	for (int i = 0; i < projectileCount; ++i)
@@ -150,6 +154,15 @@ void EnemyStrong::Update(float elapsedTime)
 			hitEffect->Play(projectile->GetPosition(), 0.015f);
 
 			projectile->Destroy();
+		}
+	}
+
+	if (title.gameLoading == true)
+	{
+		position.x -= posWave;
+		if (position.x < -20)
+		{
+			position.x = 1350;
 		}
 	}
 }
@@ -653,15 +666,24 @@ void EnemyStrong::TransitionAttackState()
 
 	int ransu = rand() % 2;
 
-	if (ransu == 0)
+	SceneTitle& title = SceneTitle::Instance();
+	// 徘徊ステートへ遷移
+	if (title.gameLoading == false)
 	{
-		// 攻撃アニメーション再生
-		model->PlayAnimation(0, false);
+		if (ransu == 0)
+		{
+			// 攻撃アニメーション再生
+			model->PlayAnimation(0, false);
+		}
+		else
+		{
+			// 攻撃アニメーション再生
+			model->PlayAnimation(1, false);
+		}
 	}
 	else
 	{
-		// 攻撃アニメーション再生
-		model->PlayAnimation(1, false);
+		model->PlayAnimation(1, true);
 	}
 }
 

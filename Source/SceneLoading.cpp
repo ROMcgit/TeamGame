@@ -2,6 +2,8 @@
 #include "Input/Input.h"
 #include "SceneLoading.h"
 #include "SceneManager.h"
+#include <EnemyStrong.h>
+#include <EnemyManager.h>
 
 // 初期化
 void SceneLoading::Initialize()
@@ -11,6 +13,20 @@ void SceneLoading::Initialize()
 
 	// スレッド開始
 	thread = std::make_unique<std::thread>(LoadingThread, this);
+
+	for (int i = 0; i < 4; i++)
+	{
+		std::string filePath = "Data/Sprite/Tips" + std::to_string(i + 1) + ".png";
+		mozi[i] = std::make_unique<Sprite>(filePath.c_str());
+	}
+
+	EnemyManager& enemyManager = EnemyManager::Instance();
+	int enemyCount = enemyManager.GetEnemyCount();
+
+	EnemyStrong* strong = new EnemyStrong();
+	strong->SetPosition(DirectX::XMFLOAT3(pos.x, pos.y, 0));
+	strong->SetTerritory(strong->GetPosition(), 10.0f);
+	enemyManager.Register(strong);
 }
 
 // 終了化
@@ -46,6 +62,61 @@ void SceneLoading::Update(float elapsedTime)
 	{
 		SceneManager::Instance().ChangeScene(nextScene);
 	}
+
+	GamePad& gamePad = Input::Instance().GetGamePad();
+	if (((gamePad.GetButtonDown() & GamePad::BTN_START) ||
+		(gamePad.GetButtonDown() & GamePad::BTN_A))
+		&& nextMozi == true)
+	{
+		moziNum += 1;
+	}
+		
+
+	if (moziNum > 4) moziNum = 1;
+
+	switch (moziNum)
+	{
+	case 1:
+		moziView[3] -= 0.025f;
+		moziView[0] += 0.005f;
+		if (moziView[0] >= 1) nextMozi = true;
+		else nextMozi = false;
+
+		break;
+	case 2:
+		moziView[0] -= 0.025f;
+		moziView[1] += 0.005f;
+		if (moziView[1] >= 1) nextMozi = true;
+		else nextMozi = false;
+
+		break;
+	case 3:
+		moziView[1] -= 0.025f;
+		moziView[2] += 0.005f;
+		if (moziView[2] >= 1) nextMozi = true;
+		else nextMozi = false;
+
+		break;
+	case 4:
+		moziView[2] -= 0.025f;
+		moziView[3] += 0.005f;
+		if (moziView[3] >= 1) nextMozi = true;
+		else nextMozi = false;
+	default:
+		break;
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		if (moziView[i] < 0)
+			moziView[i] = 0;
+
+		if (moziView[i] > 1)
+			moziView[i] = 1;
+	}
+
+	EnemyManager& enemyManager = EnemyManager::Instance();
+	int enemyCount = enemyManager.GetEnemyCount();
 }
 
 // 描画処理
@@ -57,25 +128,35 @@ void SceneLoading::Render()
 	ID3D11DepthStencilView* dsv = graphics.GetDepthStencilView();
 
 	// 画面クリア&レンダーターゲット設定
-	FLOAT color[] = { 0.0f, 0.0f, 0.5f, 1.0f }; //RGBA(0.0～1.0)
+	FLOAT color[] = { 0.0f, 0.0f, 0.0f, 1.0f }; //RGBA(0.0～1.0)
 	dc->ClearRenderTargetView(rtv, color);
 	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	dc->OMSetRenderTargets(1, &rtv, dsv);
 
-	// 2Dスプライト描画
+	// 描画処理
+	RenderContext rc;
+
+	for (int i = 0; i < 4; i++)
 	{
-		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
-		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
-		float textureWidth = static_cast<float>(sprite->GetTextureWidth());
-		float textureHeight = static_cast<float>(sprite->GetTextureHeight());
-		float positionX = screenWidth - textureWidth;
-		float positionY = screenHeight - textureHeight;
-		// タイトルスプライト描画
-		sprite->Render(dc,
-			positionX, positionY, textureWidth, textureHeight,
-			0, 0, textureWidth, textureHeight,
-			angle,
-			1, 1, 1, 1);
+		mozi[i]->Render(dc,
+			0, 0,
+			1280, 720,
+			0, 0,
+			1280, 720,
+			0,
+			1, 1, 1, moziView[i]);
+	}
+
+	//! 3Dモデル描画
+	{
+		Shader* shader = graphics.GetShader();
+		shader->Begin(dc, rc);
+
+		// エネミー描画
+		EnemyManager::Instance().Render(dc, shader);
+
+		shader->End(dc);
+
 	}
 }
 

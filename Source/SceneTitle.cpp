@@ -8,6 +8,9 @@
 // 初期化
 void SceneTitle::Initialize()
 {
+	SceneTitle& title = SceneTitle::Instance();
+	title.gameLoading = false;
+
 	// スプライト初期化
 	sprite = new Sprite("Data/Sprite/タイトル.png");
 

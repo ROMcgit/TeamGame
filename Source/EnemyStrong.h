@@ -177,4 +177,6 @@ private:
 
 	std::unique_ptr<AudioSource> sound[4];
 	std::unique_ptr<AudioSource> attackSound;
+
+	float posWave = 0.005f;
 };

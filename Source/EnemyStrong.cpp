@@ -45,7 +45,7 @@ EnemyStrong::EnemyStrong()
 	if (title.gameLoading == false)
 		TransitionWanderState();
 	else
-		TransitionAttackState();
+		TransitionLoadingState();
 
 	health = 5;
 }
@@ -666,24 +666,15 @@ void EnemyStrong::TransitionAttackState()
 
 	int ransu = rand() % 2;
 
-	SceneTitle& title = SceneTitle::Instance();
-	// 徘徊ステートへ遷移
-	if (title.gameLoading == false)
+	if (ransu == 0)
 	{
-		if (ransu == 0)
-		{
-			// 攻撃アニメーション再生
-			model->PlayAnimation(0, false);
-		}
-		else
-		{
-			// 攻撃アニメーション再生
-			model->PlayAnimation(1, false);
-		}
+		// 攻撃アニメーション再生
+		model->PlayAnimation(0, false);
 	}
 	else
 	{
-		model->PlayAnimation(1, true);
+		// 攻撃アニメーション再生
+		model->PlayAnimation(1, false);
 	}
 }
 
@@ -727,6 +718,14 @@ void EnemyStrong::UpdateAttackState(float elapsedTime)
 		TransitionWanderState();
 
 	waitCount++;
+}
+
+// ローディング画面
+void EnemyStrong::TransitionLoadingState()
+{
+	state = State::Loading;
+
+	model->PlayAnimation(1, true);
 }
 
 // 戦闘待機ステートへ遷移

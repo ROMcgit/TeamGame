@@ -4,6 +4,7 @@
 #include "SceneManager.h"
 #include <EnemyStrong.h>
 #include <EnemyManager.h>
+#include <Camera.h>
 
 // 初期化
 void SceneLoading::Initialize()
@@ -49,6 +50,9 @@ void SceneLoading::Finalize()
 	{
 		thread->join(); // スレッドの終了を待つ
 	}
+
+	// エネミー終了化
+	EnemyManager::Instance().Clear();
 }
 
 // 更新処理
@@ -115,8 +119,8 @@ void SceneLoading::Update(float elapsedTime)
 			moziView[i] = 1;
 	}
 
-	EnemyManager& enemyManager = EnemyManager::Instance();
-	int enemyCount = enemyManager.GetEnemyCount();
+	// エネミー更新処理
+	EnemyManager::Instance().Update(elapsedTime);
 }
 
 // 描画処理
@@ -135,6 +139,12 @@ void SceneLoading::Render()
 
 	// 描画処理
 	RenderContext rc;
+	rc.lightDirection = { 0.0f, -1.0f, 0.0f, 0.0f };	// ライト方向（下方向）
+
+	// カメラパラメータ設定
+	Camera& camera = Camera::Instance();
+	rc.view = camera.GetView();
+	rc.projection = camera.GetProjection();
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -158,6 +168,14 @@ void SceneLoading::Render()
 		shader->End(dc);
 
 	}
+
+	//{
+	//	if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
+	//	{
+	//		ImGui::DragFloat2("Pos", &pos.x);
+	//	}
+	//	ImGui::End;
+	//}
 }
 
 //ローディングスレッド

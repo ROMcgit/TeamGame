@@ -92,6 +92,9 @@ private:
 	// 攻撃ステート更新処理
 	void UpdateAttackState(float elapsedTime);
 
+	// ローディング画面
+	void TransitionLoadingState();
+
 	// 戦闘待機ステートへ遷移
 	void TransitionIdleBattleState();
 
@@ -120,7 +123,8 @@ private:
 		Attack,
 		IdleBattle,
 		Damage,
-		Death
+		Death,
+		Loading
 	};
 
 	// アニメーション

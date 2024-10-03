@@ -37,5 +37,5 @@ private:
 private:
 	std::unique_ptr <Player> player;
 	std::unique_ptr <CameraController> cameraController;
-	std::unique_ptr<Sprite> enemyHp;
+	
 };

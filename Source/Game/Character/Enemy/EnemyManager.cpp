@@ -53,6 +53,15 @@ void EnemyManager::SpriteRender(ID3D11DeviceContext* dc)
 	}
 }
 
+// HP表示
+void EnemyManager::RenderEnemyGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection)
+{
+	for (auto& enemy : enemies)
+	{
+		enemy->RenderEnemyGauge(dc, view, projection);
+	}
+}
+
 // デバッグプリミティブ描画
 void EnemyManager::DrawDebugPrimitive()
 {

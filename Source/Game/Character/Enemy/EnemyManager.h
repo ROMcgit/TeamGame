@@ -50,6 +50,11 @@ public:
 	// 2Dスプライトの描画処理
 	void SpriteRender(ID3D11DeviceContext* dc);
 
+	// HP表示
+	void RenderEnemyGauge(ID3D11DeviceContext* dc,
+		const DirectX::XMFLOAT4X4& view,
+		const DirectX::XMFLOAT4X4& projection);
+
 	// エネミー全削除
 	void Clear();
 

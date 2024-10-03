@@ -21,6 +21,11 @@ public:
 	// HPなどの描画
 	void SpriteRender(ID3D11DeviceContext* dc) override;
 
+	// HP表示
+	void RenderEnemyGauge(ID3D11DeviceContext* dc,
+		const DirectX::XMFLOAT4X4& view,
+		const DirectX::XMFLOAT4X4& projection);
+
 	// デバッグプリミティブ描画
 	void DrawDebugPrimitive() override;
 
@@ -41,14 +46,20 @@ private:
 	// 目標地点へ移動
 	void MoveToTarget(float elapsedTime, float speedRate);
 
+	// ノードとプレイヤーの衝突処理
+	void CollisionNodeVsPlayer(const char* nodeName, float nodeRadius);
+
+/***********************************************************************************************/
+
+	/*! 行動制御 */
+
 	// 追跡ステートへ遷移
 	void TransitionPursuitState();
 
 	// 追跡ステート更新処理
 	void UpdatePursuitState(float elapsedTime);
 
-	// ノードとプレイヤーの衝突処理
-	void CollisionNodeVsPlayer(const char* nodeName, float nodeRadius);
+//-----------------------------------------------------------------//
 
 	// 攻撃ステートへ遷移
 	void TransitionAttackState();
@@ -56,17 +67,23 @@ private:
 	// 攻撃ステート更新処理
 	void UpdateAttackState(float elapsedTime);
 
+//-----------------------------------------------------------------//
+
 	// 戦闘待機ステートへ遷移
 	void TransitionIdleBattleState();
 
 	// 戦闘待機ステート更新処理
 	void UpdateIdleBattleState(float elapsedTime);
 
+//-----------------------------------------------------------------//
+
 	// ダメージステートへ遷移
 	void TransitionDamageState();
 
 	// ダメージステート更新処理
 	void UpdateDamageState(float elapsedTime);
+
+//-----------------------------------------------------------------//
 
 	// 死亡ステートへ遷移
 	void TransitionDeathState();
@@ -108,6 +125,8 @@ private:
 
 private:
 	std::unique_ptr<Model> model;
+
+	std::unique_ptr<Sprite> enemyHp;
 
 	State state = State::Pursuit;
 	DirectX::XMFLOAT3 targetPosition = { 0,0,0 };

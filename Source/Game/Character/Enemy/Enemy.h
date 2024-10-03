@@ -19,6 +19,11 @@ public:
 	// 2Dスプライトの描画処理
 	virtual void SpriteRender(ID3D11DeviceContext* dc) {};
 
+	// HP表示
+	virtual void RenderEnemyGauge(ID3D11DeviceContext* dc,
+		const DirectX::XMFLOAT4X4& view,
+		const DirectX::XMFLOAT4X4& projection) {};
+
 	// デバッグプリミティブ描画
 	virtual void DrawDebugPrimitive();
 

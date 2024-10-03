@@ -40,6 +40,12 @@ void SceneGame::Initialize()
 		DirectX::XMConvertToRadians(20),
 		0, 0)
 	);
+
+	EnemyManager& enemyManager = EnemyManager::Instance();
+
+	std::unique_ptr<EnemySika> sika = std::make_unique<EnemySika>();
+	sika->SetPosition(player->GetPosition());
+	enemyManager.Register(std::move(sika));
 }
 
 // 終了化
@@ -160,7 +166,8 @@ void SceneGame::Render()
 
 	// 2Dスプライト描画
 	{
-		RenderEnemyGauge(dc, rc.view, rc.projection);
+		EnemyManager::Instance().SpriteRender(dc);
+		EnemyManager::Instance().RenderEnemyGauge(dc, rc.view, rc.projection);
 	}
 
 	// 2DデバッグGUI描画
@@ -169,152 +176,5 @@ void SceneGame::Render()
 		player->DrawDebugGUI();
 		camera.DrawDebugGUI();
 		cameraController->DrawDebugGUI();
-	}
-}
-
-// エネミーHPゲージ描画
-void SceneGame::RenderEnemyGauge(
-	ID3D11DeviceContext* dc,
-	const DirectX::XMFLOAT4X4& view,
-	const DirectX::XMFLOAT4X4& projection)
-{
-	// ビューポート
-	D3D11_VIEWPORT viewport;
-	UINT numViewports = 1;
-	dc->RSGetViewports(&numViewports, &viewport);
-
-	// 変換行列
-	DirectX::XMMATRIX View = DirectX::XMLoadFloat4x4(&view);
-	DirectX::XMMATRIX Projection = DirectX::XMLoadFloat4x4(&projection);
-	DirectX::XMMATRIX World = DirectX::XMMatrixIdentity();
-
-	// 全ての敵の頭上にHPゲージを表示
-	EnemyManager& enemyManager = EnemyManager::Instance();
-	int enemyCount = enemyManager.GetEnemyCount();
-
-	for (int i = 0; i < enemyCount; ++i)
-	{
-		std::unique_ptr<Enemy>& enemy = enemyManager.GetEnemy(i);
-
-		// 敵の位置を取得
-		DirectX::XMFLOAT3 enemyPos = enemy->GetPosition();
-
-		// 位置を変換
-		DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&enemyPos);
-		DirectX::XMVECTOR ScreenPos = DirectX::XMVector3Project(
-			Pos,
-			viewport.TopLeftX,
-			viewport.TopLeftY,
-			viewport.Width,
-			viewport.Height,
-			viewport.MinDepth,
-			viewport.MaxDepth,
-			Projection,
-			View,
-			World);
-
-		// スクリーン座標を取得
-		DirectX::XMFLOAT3 screenPos;
-		DirectX::XMStoreFloat3(&screenPos, ScreenPos);
-
-		// HPゲージの描画位置
-		float gaugeWidth = enemy->GetHealth() * 8;  // HPゲージの幅
-		float gaugeHeight = 5.0f;  // HPゲージの高さ
-		float gaugeX = screenPos.x - gaugeWidth / 2;
-		float gaugeY = screenPos.y - gaugeHeight - 55.0f; // 少し上にオフセット
-
-		DirectX::XMVECTOR WorldPosition = DirectX::XMVector3Unproject(
-			ScreenPos,
-			viewport.TopLeftX,
-			viewport.TopLeftY,
-			viewport.Width,
-			viewport.Height,
-			viewport.MinDepth,
-			viewport.MaxDepth,
-			Projection,
-			View,
-			World
-		);
-
-		DirectX::XMFLOAT3 worldPos;
-		DirectX::XMStoreFloat3(&worldPos, WorldPosition);
-
-		enemyHp->Render(dc,
-			gaugeX, //dx
-			gaugeY, //dy
-			gaugeWidth, //dw
-			gaugeHeight, //dh
-			0,           //sx
-			0,           //sy
-			gaugeWidth,  //sw
-			gaugeHeight, //sh
-			0,			 //angle
-			1, 0, 0, 1   //color
-		);
-
-#if 0
-		// エネミー配置処理
-		Mouse& mouse = Input::Instance().GetMouse();
-		if (mouse.GetButtonDown() & Mouse::BTN_LEFT)
-		{
-			// マウスカーソル座標を取得
-			DirectX::XMFLOAT3 screenPosition;
-			screenPosition.x = static_cast<float>(mouse.GetPositionX());
-			screenPosition.y = static_cast<float>(mouse.GetPositionY());
-			screenPosition.z = 1.0f;
-
-			// スクリーン座標をワールド座標に変換
-			DirectX::XMVECTOR ScreenPos = DirectX::XMLoadFloat3(&screenPosition);
-			DirectX::XMVECTOR WorldPos = DirectX::XMVector3Unproject(
-				ScreenPos,
-				viewport.TopLeftX,
-				viewport.TopLeftY,
-				viewport.Width,
-				viewport.Height,
-				viewport.MinDepth,
-				viewport.MaxDepth,
-				Projection,
-				View,
-				World
-			);
-
-			// 地面との交差点を計算
-			DirectX::XMFLOAT3 worldPos;
-			DirectX::XMStoreFloat3(&worldPos, WorldPos);
-
-			Camera& camera = Camera::Instance();
-
-			// カメラの位置と注視点からレイを計算
-			DirectX::XMFLOAT3 cameraPos = camera.GetEye();
-			DirectX::XMFLOAT3 cameraFocus = camera.GetFocus();
-			DirectX::XMVECTOR rayOrigin = DirectX::XMLoadFloat3(&cameraPos);
-			DirectX::XMVECTOR rayDir = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(WorldPos, DirectX::XMLoadFloat3(&cameraFocus)));
-
-			// 地面はy=0平面と仮定し、交差点を計算
-			float t = -DirectX::XMVectorGetY(rayOrigin) / DirectX::XMVectorGetY(rayDir);
-			DirectX::XMVECTOR groundIntersect = DirectX::XMVectorMultiply(DirectX::XMVectorAdd(rayOrigin, DirectX::XMVectorReplicate(t)), rayDir);
-
-			// 新しいエネミーの位置を設定
-			DirectX::XMStoreFloat3(&worldPos, groundIntersect);
-
-			// カメラのインスタンス取得
-			Camera& camera = camera.Instance();
-
-			DirectX::XMFLOAT3 start = camera.GetEye(); // レイの開始点はカメラの位置
-			DirectX::XMFLOAT3 end = worldPos; // レイの終了点はマウスカーソルのワールド座標
-
-			HitResult hitResult;
-			if (StageManager::Instance().RayCast(start, end, hitResult))
-			{
-				worldPos = hitResult.position; // レイがヒットした位置を新しいエネミーの位置として使用
-			}
-
-			// エネミーを配置
-			std::unique_ptr<Enemy> newEnemy = std::make_unique<EnemySika>(); // 新しいエネミーを生成
-			newEnemy->SetPosition(worldPos); // 位置を設定
-			enemyManager.Register(std::move(newEnemy)); // エネミーをマネージャーに追加
-		}
-	}
-#endif
 	}
 }

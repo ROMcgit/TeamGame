@@ -13,9 +13,13 @@ EnemySika::EnemySika()
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.01f;
 
+	gravity = 0.0f;
+
 	// 幅、高さ設定
 	radius = 0.5f;
 	height = 1.0f;
+
+	enemyHp = std::make_unique<Sprite>();
 
 	// 追跡ステート
 	TransitionPursuitState();
@@ -74,6 +78,77 @@ void EnemySika::Render(ID3D11DeviceContext* dc, Shader* shader)
 // HPなどの描画
 void EnemySika::SpriteRender(ID3D11DeviceContext* dc)
 {
+
+}
+
+// HP表示
+void EnemySika::RenderEnemyGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection)
+{
+	// ビューポート
+	D3D11_VIEWPORT viewport;
+	UINT numViewports = 1;
+	dc->RSGetViewports(&numViewports, &viewport);
+
+	// 変換行列
+	DirectX::XMMATRIX View = DirectX::XMLoadFloat4x4(&view);
+	DirectX::XMMATRIX Projection = DirectX::XMLoadFloat4x4(&projection);
+	DirectX::XMMATRIX World = DirectX::XMMatrixIdentity();
+
+	// 敵の位置を取得
+	DirectX::XMFLOAT3 enemyPos = position;
+
+	// 位置を変換
+	DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&enemyPos);
+	DirectX::XMVECTOR ScreenPos = DirectX::XMVector3Project(
+		Pos,
+		viewport.TopLeftX,
+		viewport.TopLeftY,
+		viewport.Width,
+		viewport.Height,
+		viewport.MinDepth,
+		viewport.MaxDepth,
+		Projection,
+		View,
+		World);
+
+	// スクリーン座標を取得
+	DirectX::XMFLOAT3 screenPos;
+	DirectX::XMStoreFloat3(&screenPos, ScreenPos);
+
+	// HPゲージの描画位置
+	float gaugeWidth = health * 8; // HPゲージの幅
+	float gaugeHeight = 5.0f;      // HPゲージの高さ
+	float gaugeX = screenPos.x - gaugeWidth / 2;
+	float gaugeY = screenPos.y - gaugeHeight - 55.0f; // 少し上にオフセット
+
+	DirectX::XMVECTOR WorldPosition = DirectX::XMVector3Unproject(
+		ScreenPos,
+		viewport.TopLeftX,
+		viewport.TopLeftY,
+		viewport.Width,
+		viewport.Height,
+		viewport.MinDepth,
+		viewport.MaxDepth,
+		Projection,
+		View,
+		World
+	);
+
+	DirectX::XMFLOAT3 worldPos;
+	DirectX::XMStoreFloat3(&worldPos, WorldPosition);
+
+	enemyHp->Render(dc,
+		gaugeX, //dx
+		gaugeY, //dy
+		gaugeWidth, //dw
+		gaugeHeight, //dh
+		0,           //sx
+		0,           //sy
+		gaugeWidth,  //sw
+		gaugeHeight, //sh
+		0,			 //angle
+		1, 0, 0, 1   //color
+	);
 }
 
 // デバッグプリミティブ描画

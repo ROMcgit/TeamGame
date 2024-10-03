@@ -174,6 +174,11 @@ void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
 	projectileManager.Render(dc, shader);
 }
 
+// HP‚È‚Ç‚ÌUI•`‰æ
+void Player::SpriteRender(ID3D11DeviceContext* dc)
+{
+}
+
 // ˆÚ“®“ü—Íˆ—
 bool Player::InputMove(float elapsedTime)
 {

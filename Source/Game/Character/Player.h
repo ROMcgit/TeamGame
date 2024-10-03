@@ -25,6 +25,9 @@ public:
 	// 描画処理
 	void Render(ID3D11DeviceContext* dc, Shader* shader);
 
+	// HPなどのUI描画
+	void SpriteRender(ID3D11DeviceContext* dc);
+
 	// デバッグ用GUI描画
 	void DrawDebugGUI();
 

@@ -16,6 +16,9 @@ public:
 	// 描画処理
 	virtual void Render(ID3D11DeviceContext* dc, Shader* shader) = 0;
 
+	// 2Dスプライトの描画処理
+	virtual void SpriteRender(ID3D11DeviceContext* dc) {};
+
 	// デバッグプリミティブ描画
 	virtual void DrawDebugPrimitive();
 

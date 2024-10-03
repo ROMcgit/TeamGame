@@ -18,20 +18,6 @@ void EnemyManager::Update(float elapsedTime)
 		enemy->Update(elapsedTime);
 	}
 
-	//for (Enemy* enemy : removes)
-	//{
-	//	// std::vectorから要素を削除する場合はイテレーターで削除しなければならない
-	//	std::vector<Enemy*>::iterator it = std::find(enemies.begin(),
-	//		enemies.end(), enemy);
-
-	//	if (it != enemies.end())
-	//	{
-	//		enemies.erase(it);
-	//	}
-
-	//	delete enemy;
-	//}
-
 	for (Enemy* enemy : removes)
 	{
 		auto it = std::remove_if(enemies.begin(), enemies.end(),
@@ -52,13 +38,18 @@ void EnemyManager::Update(float elapsedTime)
 // 描画処理
 void EnemyManager::Render(ID3D11DeviceContext* context, Shader* shader)
 {
-	//for (Enemy* enemy : enemies)
-	//{
-	//	enemy->Render(context, shader);
-	//}
 	for (auto& enemy : enemies)
 	{
 		enemy->Render(context, shader);
+	}
+}
+
+// 2Dスプライトの描画処理
+void EnemyManager::SpriteRender(ID3D11DeviceContext* dc)
+{
+	for (auto& enemy : enemies)
+	{
+		enemy->SpriteRender(dc);
 	}
 }
 

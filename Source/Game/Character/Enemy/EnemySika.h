@@ -6,11 +6,11 @@
 #include "Other/Mathf.h"
 
 // スライム
-class EnemySlime : public Enemy
+class EnemySika : public Enemy
 {
 public:
-	EnemySlime();
-	~EnemySlime() override;
+	EnemySika();
+	~EnemySika() override;
 
 	// 更新処理
 	void Update(float elapsedTime) override;
@@ -37,21 +37,6 @@ private:
 
 	// 目標地点へ移動
 	void MoveToTarget(float elapsedTime, float speedRate);
-
-	// 徘徊ステートへ遷移
-	void TransitionWanderState();
-
-	// 徘徊ステート更新処理
-	void UpdateWanderState(float elapsedTime);
-
-	// 待機ステートへ遷移
-	void TransitionIdleState();
-
-	// 待機ステート更新処理
-	void UpdateIdleState(float elapsedTime);
-
-	// プレイヤー索敵
-	bool SearchPlayer();
 
 	// 追跡ステートへ遷移
 	void TransitionPursuitState();
@@ -90,8 +75,6 @@ private:
 	// ステート
 	enum class State
 	{
-		Wander,
-		Idle,
 		Pursuit,
 		Attack,
 		IdleBattle,
@@ -123,7 +106,7 @@ private:
 private:
 	std::unique_ptr<Model> model;
 
-	State state = State::Wander;
+	State state = State::Pursuit;
 	DirectX::XMFLOAT3 targetPosition = { 0,0,0 };
 	DirectX::XMFLOAT3 territoryOrigin = { 0,0,0 };
 	float territoryRange = 10.0f;

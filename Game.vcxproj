@@ -162,7 +162,7 @@
     <ClInclude Include="Source\Game\Effect\EffectManager.h" />
     <ClInclude Include="Source\Game\Character\Enemy\Enemy.h" />
     <ClInclude Include="Source\Game\Character\Enemy\EnemyManager.h" />
-    <ClInclude Include="Source\Game\Character\Enemy\EnemySlime.h" />
+    <ClInclude Include="Source\Game\Character\Enemy\EnemySika.h" />
     <ClInclude Include="Source\Other\Framework.h" />
     <ClInclude Include="Source\Graphics\DebugRenderer.h" />
     <ClInclude Include="Source\Graphics\Fade.h" />
@@ -221,7 +221,7 @@
     <ClCompile Include="Source\Game\Effect\EffectManager.cpp" />
     <ClCompile Include="Source\Game\Character\Enemy\Enemy.cpp" />
     <ClCompile Include="Source\Game\Character\Enemy\EnemyManager.cpp" />
-    <ClCompile Include="Source\Game\Character\Enemy\EnemySlime.cpp" />
+    <ClCompile Include="Source\Game\Character\Enemy\EnemySika.cpp" />
     <ClCompile Include="Source\Other\Framework.cpp" />
     <ClCompile Include="Source\Graphics\DebugRenderer.cpp" />
     <ClCompile Include="Source\Graphics\Fade.cpp" />

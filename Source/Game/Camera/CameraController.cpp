@@ -8,31 +8,22 @@
 void CameraController::Update(float elapsedTime)
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
-	float ax = gamePad.GetAxisRX();
-	float ay = gamePad.GetAxisRY();
+	float ax = gamePad.GetAxisLX();
 	// カメラの回転速度
 	float speed = rollSpeed * elapsedTime;
 	{
 		//スティックの入力値に合わせてX軸とY軸を回転
 		if (ax == -1)
 		{
-			angle.y += speed;
+			angle.y -= speed;
 		}
 		if (ax == 1)
 		{
-			angle.y -= speed;
-		}
-		if (ay == -1)
-		{
-			angle.x -= speed;
-		}
-		if (ay == 1)
-		{
-			angle.x += speed;
+			angle.y += speed;
 		}
 	}
 
-	// X軸のカメラ回転を制限
+	/// X軸のカメラ回転を制限
 	if (angle.x < minAngleX)
 	{
 		angle.x = minAngleX;
@@ -72,8 +63,6 @@ void CameraController::Update(float elapsedTime)
 
 	// カメラの視点と注視点を設定
 	Camera::Instance().SetLookAt(eye, target, DirectX::XMFLOAT3(0, 1, 0));
-
-
 }
 
 void CameraController::DrawDebugGUI()

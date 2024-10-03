@@ -46,12 +46,13 @@ protected:
 
 private:
 
+	// ノードとエネミーの衝突処理
+	void CollisionNodeVsEnemies(const char* nodeName, float nodeRadius);
+
 	// 移動入力処理
-	//void InputMove(float elapsedTime);
 	bool InputMove(float elapsedTime);
 
 	// ジャンプ入力処理
-	//void InputJump();
 	bool InputJump();
 
 	// 弾丸入力処理
@@ -60,11 +61,7 @@ private:
 	// 攻撃入力処理
 	bool InputAttack();
 
-	// 待機ステートへ遷移
-	void TransitionIdleState();
-
-	// 待機ステート更新処理
-	void UpdateIdleState(float elapsedTime);
+//-------------------------------------------------------------------------------------//
 
 	// 移動ステートへ遷移
 	void TransitionMoveState();
@@ -72,26 +69,17 @@ private:
 	// 移動ステート更新処理
 	void UpdateMoveState(float elapsedTime);
 
-	// ジャンプステートへ遷移
-	void TransitionJumpState();
+	// 突進ステートへ遷移
+	void TransitionLungesState();
 
-	// ジャンプステート更新処理
-	void UpdateJumpState(float elapsedTime);
-
-	// 着地ステートへ遷移
-	void TransitionLandState();
-
-	// 着地ステート更新処理
-	void UpdateLandState(float elapsedTime);
+	// 突進ステート更新
+	void UpdateLungesState(float elapsedTime);
 
 	// 攻撃ステートへ遷移
 	void TransitionAttackState();
 
 	// 攻撃ステート更新処理
 	void UpdateAttackState(float elapsedTime);
-
-	// ノードとエネミーの衝突処理
-	void CollisionNodeVsEnemies(const char* nodeName, float nodeRadius);
 
 	// ダメージステートへ遷移
 	void TransitionDamageState();
@@ -105,24 +93,15 @@ private:
 	// 死亡ステート更新処理
 	void UpdateDeathState(float elapsedTimae);
 
-	// 復活ステートへ遷移
-	void TransitionReviveState();
-
-	// 復活ステート更新処理
-	void UpdateReviveState(float elapsedTime);
-
 private:
 
 	enum class State
 	{
-		Idle,
 		Move,
-		Jump,
-		Land,
+		Lunges,
 		Attack,
 		Damage,
 		Death,
-		Revive
 	};
 
 	// アニメーション
@@ -146,7 +125,13 @@ private:
 	std::unique_ptr<Model> model;
 	
 	float moveSpeed = 5.5f;
-	float turnSpeed = DirectX::XMConvertToRadians(720);
+	float turnSpeed = DirectX::XMConvertToRadians(90);
+
+	float minAngleX = DirectX::XMConvertToRadians(-45); // 角度最小値
+	float maxAngleX = DirectX::XMConvertToRadians(45);  // 角度最大値
+
+	bool lunges = false;     // 突進するか
+	float lungesTime = 0.0f; // 突進時間
 
 	float jumpSpeed = 13.0f;
 
@@ -158,7 +143,7 @@ private:
 
 	std::unique_ptr<Effect> hitEffect;
 
-	State state = State::Idle;
+	State state = State::Move;
 
 	float playerAnimeCount = 0.0f;
 

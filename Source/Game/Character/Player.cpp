@@ -31,8 +31,8 @@ Player::Player()
 	// ヒットエフェクト読み込み
 	hitEffect = std::make_unique <Effect>("Data/Effect/Hit.efk");
 
-	// 待機ステートへ遷移
-	TransitionIdleState();
+	// 移動ステートへ遷移
+	TransitionMoveState();
 }
 
 // デストラクタ
@@ -46,67 +46,14 @@ Player::~Player()
 // 更新処理
 void Player::Update(float elapsedTime)
 {
-#if 0
-	const GamePadButton ArrowButton =
-		GamePad::BTN_UP    |
-		GamePad::BTN_LEFT  |
-		GamePad::BTN_RIGHT |
-		GamePad::BTN_DOWN;
-
-	// Bボタン押下でワンショットアニメーション再生
-	GamePad& gamePad = Input::Instance().GetGamePad();
-	if (gamePad.GetButtonDown() & GamePad::BTN_B)
-	{
-		model->PlayAnimation(Anim_Attack, false, 0.1f);
-	}
-	else if (gamePad.GetButtonDown() & ArrowButton)
-	{
-		model->PlayAnimation(Anim_Running, true, 1.0f);
-		playerAnimeWait++;
-		playerWalk = true;
-	}
-	else if (!(gamePad.GetButtonHeld() & ArrowButton) && playerWalk == true)
-	{
-		model->PlayAnimation(Anim_Idle, false, 0.1f);
-		playerWalk = false;
-	}
-
-	// ワンショットアニメーション再生が終わったらループアニメーション再生
-	if (!model->IsPlayAnimation())
-	{
-		//model->PlayAnimation(1, true); //死亡
-		//model->PlayAnimation(2, true); //空中
-		//model->PlayAnimation(3, true); //荒ぶる
-		//model->PlayAnimation(4, true); //さらに荒ぶる
-		model->PlayAnimation(Anim_Idle, true); //待機
-	}
-
-
-	// 移動入力処理
-	InputMove(elapsedTime);
-
-	// ジャンプ入力処理
-	InputJump();
-
-	// 弾丸入力処理
-	InputProjectile();
-
-#endif
-
 	// ステート毎の処理
 	switch (state)
 	{
-	case State::Idle:
-		UpdateIdleState(elapsedTime);
-	break;
 	case State::Move:
 		UpdateMoveState(elapsedTime);
 		break;
-	case State::Jump:
-		UpdateJumpState(elapsedTime);
-		break;
-	case State::Land:
-		UpdateLandState(elapsedTime);
+	case State::Lunges:
+		UpdateLungesState(elapsedTime);
 		break;
 	case State::Attack:
 		UpdateAttackState(elapsedTime);
@@ -116,9 +63,6 @@ void Player::Update(float elapsedTime)
 		break;
 	case State::Death:
 		UpdateDeathState(elapsedTime);
-		break;
-	case State::Revive:
-		UpdateReviveState(elapsedTime);
 		break;
 	}
 
@@ -224,7 +168,6 @@ bool Player::InputMove(float elapsedTime)
 	DirectX::XMFLOAT3 moveVec = GetMoveVec();
 
 	// 移動処理
-	//Move(elapsedTime, moveVec.x, moveVec.z, moveSpeed);
 	Move(moveVec.x, moveVec.z, moveSpeed);
 
 	// 旋回処理
@@ -311,191 +254,6 @@ bool Player::InputAttack()
 	return false;
 }
 
-// 待機ステートへ遷移
-void Player::TransitionIdleState()
-{
-	state = State::Idle;
-
-	// 待機アニメーション再生
-	model->PlayAnimation(Anim_Idle, true);
-}
-
-// 待機ステート更新処理
-void Player::UpdateIdleState(float elapsedTime)
-{
-	// 移動入力処理
-	// 移動入力されたら移動ステートへ遷移
-	
-	const GamePadButton ArrowButton =
-		GamePad::BTN_UP |
-		GamePad::BTN_LEFT |
-		GamePad::BTN_RIGHT |
-		GamePad::BTN_DOWN;
-
-	GamePad& gamePad = Input::Instance().GetGamePad();
-	if (gamePad.GetButtonHeld() & ArrowButton)
-	{
-		// 移動ステートへ遷移
-		TransitionMoveState();
-	}
-
-	InputMove(elapsedTime);
-
-	// ジャンプ入力処理
-	if (gamePad.GetButtonDown() & GamePad::BTN_A)
-	{
-		// ジャンプステートへ遷移
-		TransitionJumpState();
-	}
-
-	InputJump();
-
-	// 弾丸入力処理
-	InputProjectile();
-
-	// 攻撃入力処理
-	if (gamePad.GetButtonDown() & GamePad::BTN_B)
-	{
-		// 攻撃ステートへ遷移
-		TransitionAttackState();
-	}
-}
-
-// 移動ステートへ遷移
-void Player::TransitionMoveState()
-{
-	state = State::Move;
-
-	// 走りアニメーション再生
-	model->PlayAnimation(Anim_Running, true);
-}
-
-// 移動ステート更新処理
-void Player::UpdateMoveState(float elapsedTime)
-{
-	// 移動入力処理
-	const GamePadButton ArrowButton =
-		GamePad::BTN_UP |
-		GamePad::BTN_LEFT |
-		GamePad::BTN_RIGHT |
-		GamePad::BTN_DOWN;
-
-	GamePad& gamePad = Input::Instance().GetGamePad();
-
-	if(!(gamePad.GetButtonHeld() & ArrowButton) && velocity.x == 0 && velocity.z == 0)
-	{
-		// 待機ステートへ遷移
-		TransitionIdleState();
-	}
-
-	InputMove(elapsedTime);
-
-	// ジャンプ入力処理
-	if (gamePad.GetButtonDown() & GamePad::BTN_A)
-	{
-		// ジャンプステートへ遷移
-		TransitionJumpState();
-	}
-
-	InputJump();
-
-	// 弾丸入力処理
-	InputProjectile();
-
-	// 攻撃入力処理
-	if (gamePad.GetButtonDown() & GamePad::BTN_B)
-	{
-		// 攻撃ステートへ遷移
-		TransitionAttackState();
-	}
-}
-
-// ジャンプステートへ遷移
-void Player::TransitionJumpState()
-{
-	state = State::Jump;
-
-	// ジャンプアニメーション再生
-	model->PlayAnimation(Anim_Jump, false);
-}
-
-// ジャンプステート更新処理
-void Player::UpdateJumpState(float elapsedTime)
-{
-	if (jumpCount == 2 && jumpFlipAnimation == false)
-	{
-		model->PlayAnimation(Anim_Jump_Flip, false);
-		jumpFlipAnimation = true;
-	}
-
-	// ジャンプ入力処理
-	InputMove(elapsedTime);
-
-	// ジャンプ入力処理
-	InputJump();
-
-	// 弾丸入力処理
-	InputProjectile();
-}
-
-// 着地ステートへ遷移
-void Player::TransitionLandState()
-{
-	state = State::Land;
-
-	jumpFlipAnimation = false;
-
-	// 着地アニメーション再生
-	model->PlayAnimation(Anim_Landing, false);
-}
-
-// 着地ステート更新処理
-void Player::UpdateLandState(float elapsedTime)
-{
-	if (!model->IsPlayAnimation())
-	{
-		// 待機ステートへ遷移
-		TransitionIdleState();
-	}
-}
-
-// 攻撃ステートへ遷移
-void Player::TransitionAttackState()
-{
-	state = State::Attack;
-
-	// 着地アニメーション再生
-	model->PlayAnimation(Anim_Attack, false, 0.2f);
-
-	playerAnimeCount = 0.0f;
-}
-
-// 攻撃ステート更新処理
-void Player::UpdateAttackState(float elapsedTime)
-{
-	if (!model->IsPlayAnimation())
-	{
-		// 待機ステートへ遷移
-		TransitionIdleState();
-	}
-
-	playerAnimeCount += elapsedTime;
-
-	// 任意のアニメーション再生区間でのみ衝突処理判定をする
-	float animationTime = static_cast<float>(playerAnimeCount) / 45.0f;
-	if (animationTime >= 0.001f && animationTime <= 0.01f)
-		attackCollisionFlag = true;
-	else 
-		attackCollisionFlag = false;
-
-	// 衝突判定フラグが立っている場合、左手ノードとエネミーの衝突処理を行う
-	if (attackCollisionFlag)
-	{
-		// 左手ノードとエネミーの衝突処理
-		CollisionNodeVsEnemies("mixamorig:LeftHand", leftHandRadius);
-	}
-}
-
 // ノードと敵の衝突処理
 void Player::CollisionNodeVsEnemies(const char* nodeName, float nodeRadius)
 {
@@ -538,6 +296,121 @@ void Player::CollisionNodeVsEnemies(const char* nodeName, float nodeRadius)
 	}
 }
 
+// 移動ステートへ遷移
+void Player::TransitionMoveState()
+{
+	state = State::Move;
+
+	// 走りアニメーション再生
+	model->PlayAnimation(Anim_Running, true);
+}
+
+// 移動ステート更新処理
+void Player::UpdateMoveState(float elapsedTime)
+{
+	// 前方向
+	DirectX::XMFLOAT3 dir;
+
+	dir.x = transform._31;
+	dir.y = transform._32;
+	dir.z = transform._33;
+
+	DirectX::XMVECTOR DIR;
+	DIR = DirectX::XMLoadFloat3(&dir);
+	DIR = DirectX::XMVector3Normalize(DIR);
+	DirectX::XMStoreFloat3(&dir, DIR);
+
+	// 移動処理
+	if(isGround)
+		Move(dir.x, dir.z, 300.0f);
+	else
+		Move(dir.x, dir.z, 30);
+
+	GamePad& gamePad = Input::Instance().GetGamePad();
+
+	float ax = gamePad.GetAxisLX();
+	// カメラの回転速度
+	float speed = turnSpeed * elapsedTime;
+	{
+		//スティックの入力値に合わせてX軸とY軸を回転
+		if (ax == -1)
+		{
+			angle.y -= speed;
+		}
+		if (ax == 1)
+		{
+			angle.y += speed;
+		}
+
+		/// X軸のカメラ回転を制限
+		if (angle.x < minAngleX)
+		{
+			angle.x = minAngleX;
+		}
+		if (angle.x > maxAngleX)
+		{
+			angle.x = maxAngleX;
+		}
+	}
+
+	// 突進入力処理
+	if (gamePad.GetButtonDown() & GamePad::BTN_B)
+	{
+		// 攻撃ステートへ遷移
+		TransitionAttackState();
+	}
+
+	// 弾丸入力処理
+	InputProjectile();
+}
+
+// 突進ステートへ遷移
+void Player::TransitionLungesState()
+{
+}
+
+// 突進ステート更新
+void Player::UpdateLungesState(float elapsedTime)
+{
+}
+
+// 攻撃ステートへ遷移
+void Player::TransitionAttackState()
+{
+	state = State::Attack;
+
+	// 着地アニメーション再生
+	model->PlayAnimation(Anim_Attack, false, 0.2f);
+
+	playerAnimeCount = 0.0f;
+}
+
+// 攻撃ステート更新処理
+void Player::UpdateAttackState(float elapsedTime)
+{
+	if (!model->IsPlayAnimation())
+	{
+		// 待機ステートへ遷移
+		TransitionMoveState();
+	}
+
+	playerAnimeCount += elapsedTime;
+
+	// 任意のアニメーション再生区間でのみ衝突処理判定をする
+	float animationTime = static_cast<float>(playerAnimeCount) / 45.0f;
+	if (animationTime >= 0.001f && animationTime <= 0.01f)
+		attackCollisionFlag = true;
+	else 
+		attackCollisionFlag = false;
+
+	// 衝突判定フラグが立っている場合、左手ノードとエネミーの衝突処理を行う
+	if (attackCollisionFlag)
+	{
+		// 左手ノードとエネミーの衝突処理
+		CollisionNodeVsEnemies("mixamorig:LeftHand", leftHandRadius);
+	}
+}
+
 // ダメージステートへ遷移
 void Player::TransitionDamageState()
 {
@@ -553,7 +426,7 @@ void Player::UpdateDamageState(float elapsedTime)
 	// ダメージアニメーションが終わったら待機ステートへ遷移
 	if (!model->IsPlayAnimation())
 	{
-		TransitionIdleState();
+		TransitionMoveState();
 	}
 }
 
@@ -569,37 +442,6 @@ void Player::TransitionDeathState()
 // 死亡ステート更新処理
 void Player::UpdateDeathState(float elapsedTimae)
 {
-	if (!model->IsPlayAnimation())
-	{
-		// ボタンを押したら復活ステートへ遷移
-		GamePad& gamePad = Input::Instance().GetGamePad();
-		if (gamePad.GetButtonDown() & GamePad::BTN_A)
-		{
-			TransitionReviveState();
-		}
-	}
-}
-
-// 復活ステートへ遷移
-void Player::TransitionReviveState()
-{
-	state = State::Revive;
-
-	// 体力回復
-	health = maxHealth;
-
-	// 復活アニメーション再生
-	model->PlayAnimation(Anim_Reving, false);
-}
-
-// 復活ステート更新処理
-void Player::UpdateReviveState(float elapsedTime)
-{
-	// 復活アニメーション終了後に待機ステートへ遷移
-	if (!model->IsPlayAnimation())
-	{
-		TransitionIdleState();
-	}
 }
 
 // プレイヤーとエネミーとの衝突処理
@@ -712,19 +554,6 @@ void Player::DrawDebugPrimitive()
 // 着地した時に呼ばれる
 void Player::OnLanding()
 {
-	// 下方向の速力が一定以上なら着地ステートへ
-	//if (velocity.y <= -5)
-	//{
-	//	TransitionLandState();
-	//}
-
-	// ダメージ、死亡ステート時は着地した時にステート遷移しないようにする
-	if (velocity.y <= -5 && state != State::Damage && state != State::Death)
-	{
-		TransitionLandState();
-	}
-
-	jumpCount = 0;
 }
 
 // ダメージを受けた時に呼ばれる

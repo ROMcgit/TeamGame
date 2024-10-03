@@ -1,5 +1,9 @@
 #include "SceneOpning.h"
 #include "Graphics/Graphics.h"
+#include "Input/Input.h"
+#include "SceneLoading.h"
+#include "SceneGame.h"
+#include "SceneManager.h"
 
 // 初期化
 void SceneOpning::Initialize()
@@ -14,6 +18,15 @@ void SceneOpning::Finalize()
 // 更新処理
 void SceneOpning::Update(float elapsedTime)
 {
+	GamePad& gamePad = Input::Instance().GetGamePad();
+
+	if (gamePad.GetButtonDown() & GamePad::BTN_A)
+	{
+		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGame>());
+
+		// シーンマネージャーにローディングシーンへの切り替えを指示
+		SceneManager::Instance().ChangeScene(std::move(loadingScene));
+	}
 }
 
 // 描画処理

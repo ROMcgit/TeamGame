@@ -141,7 +141,7 @@
     <ClInclude Include="Source\Game\Character\Enemy\EnemyManager.h">
       <Filter>Source\Character\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Character\Enemy\EnemySlime.h">
+    <ClInclude Include="Source\Game\Character\Enemy\EnemySika.h">
       <Filter>Source\Character\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Character\Projectile\Projectile.h">
@@ -314,7 +314,7 @@
     <ClCompile Include="Source\Game\Character\Enemy\EnemyManager.cpp">
       <Filter>Source\Character\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Character\Enemy\EnemySlime.cpp">
+    <ClCompile Include="Source\Game\Character\Enemy\EnemySika.cpp">
       <Filter>Source\Character\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Projectile\Projectile.cpp">

@@ -1,4 +1,4 @@
-#include "EneMySlime.h"
+#include "EnemySika.h"
 #include <imgui.h>
 #include "Graphics/Graphics.h"
 #include "Other/Mathf.h"
@@ -6,7 +6,7 @@
 #include "Other/Collision.h"
 
 // コンストラクタ
-EnemySlime::EnemySlime()
+EnemySika::EnemySika()
 {
 	model = std::make_unique<Model>("Data/Model/Slime/Slime.mdl");
 
@@ -17,28 +17,21 @@ EnemySlime::EnemySlime()
 	radius = 0.5f;
 	height = 1.0f;
 
-	// 徘徊ステートへ遷移
-	TransitionWanderState();
+	// 追跡ステート
+	TransitionPursuitState();
 }
 
 // デストラクタ
-EnemySlime::~EnemySlime()
+EnemySika::~EnemySika()
 {
-	//delete model;
 }
 
 // 更新処理
-void EnemySlime::Update(float elapsedTime)
+void EnemySika::Update(float elapsedTime)
 {
 	// ステート毎の更新処理
 	switch (state)
 	{
-	case State::Wander:
-		UpdateWanderState(elapsedTime);
-		break;
-	case State::Idle:
-		UpdateIdleState(elapsedTime);
-		break;
 	case State::Pursuit:
 		UpdatePursuitState(elapsedTime);
 		break;
@@ -73,13 +66,13 @@ void EnemySlime::Update(float elapsedTime)
 }
 
 // 描画処理
-void EnemySlime::Render(ID3D11DeviceContext* dc, Shader* shader)
+void EnemySika::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	shader->Draw(dc, model.get());
 }
 
 // デバッグプリミティブ描画
-void EnemySlime::DrawDebugPrimitive()
+void EnemySika::DrawDebugPrimitive()
 {
 	// 基底クラスのデバッグプリミティブ描画
 	Enemy::DrawDebugPrimitive();
@@ -101,14 +94,14 @@ void EnemySlime::DrawDebugPrimitive()
 }
 
 // 縄張り設定
-void EnemySlime::SetTerritory(const DirectX::XMFLOAT3& origin, float range)
+void EnemySika::SetTerritory(const DirectX::XMFLOAT3& origin, float range)
 {
 	territoryOrigin = origin;
 	territoryRange = range;
 }
 
 // ターゲット位置をランダム設定
-void EnemySlime::SetRandomTargetPosition()
+void EnemySika::SetRandomTargetPosition()
 {
 	// 縄張り範囲内でランダムな位置を生成
 	float randomX = Mathf::RandomRange(territoryOrigin.x - territoryRange, territoryOrigin.x + territoryRange);
@@ -124,7 +117,7 @@ void EnemySlime::SetRandomTargetPosition()
 }
 
 // 目標地点へ移動
-void EnemySlime::MoveToTarget(float elapsedTime, float speedRate)
+void EnemySika::MoveToTarget(float elapsedTime, float speedRate)
 {
 	// ターゲット方向への進行ベクトルを算出
 	float vx = targetPosition.x - position.x;
@@ -138,108 +131,8 @@ void EnemySlime::MoveToTarget(float elapsedTime, float speedRate)
 	Turn(elapsedTime, vx, vz, turnSpeed * speedRate);
 }
 
-// 徘徊ステートへ遷移
-void EnemySlime::TransitionWanderState()
-{
-	state = State::Wander;
-
-	// 目標地点設定
-	SetRandomTargetPosition();
-
-	// 歩きアニメーション再生
-	model->PlayAnimation(Anim_WalkFWD, true);
-}
-
-// 徘徊ステート更新処理
-void EnemySlime::UpdateWanderState(float elapsedTime)
-{
-	// 目標地点までXZ平面での距離判定
-	float vx = targetPosition.x - position.x;
-	float vz = targetPosition.z - position.z;
-	float distSq = vx * vx + vz * vz;
-	if (distSq < radius * radius)
-	{
-		// 次の目標地点設定
-		//SetRandomTargetPosition();
-
-		// 待機ステートへ遷移
-		TransitionIdleState();
-	}
-
-	// 目標地点へ移動
-	MoveToTarget(elapsedTime, 0.5f);
-
-	// プレイヤー索敵
-	if (SearchPlayer())
-	{
-		// 見つかったら追跡ステートへ遷移
-		TransitionPursuitState();
-	}
-}
-
-// 待機ステートへ遷移
-void EnemySlime::TransitionIdleState()
-{
-	state = State::Idle;
-
-	// タイマーをランダム設定
-	stateTimer = Mathf::RandomRange(3.0f, 5.0f);
-
-	// 待機アニメーション再生
-	model->PlayAnimation(Anim_IdleNormal, true);
-}
-
-// 待機ステート更新処理
-void EnemySlime::UpdateIdleState(float elapsedTime)
-{
-	// タイマー処理
-	stateTimer -= elapsedTime;
-	if (stateTimer < 0.0f)
-	{
-		// 徘徊ステートへ遷移
-		TransitionWanderState();
-	}
-
-	// プレイヤー索敵
-	if (SearchPlayer())
-	{
-		// 見つかったら追跡ステートへ遷移
-		TransitionPursuitState();
-	}
-}
-
-// プレイヤー索敵
-bool EnemySlime::SearchPlayer()
-{
-	// プレイヤーとの高低差を考慮して3Dでの距離判定をする
-	const DirectX::XMFLOAT3& playerPosition = Player::Instance().GetPosition();
-	float vx = playerPosition.x - position.x;
-	float vy = playerPosition.y - position.y;
-	float vz = playerPosition.z - position.z;
-	float dist = sqrt(vx * vx + vy * vy + vz * vz);
-
-	if (dist < searchRange)
-	{
-		float distXZ = sqrtf(vx * vx + vz * vz);
-		// 単位ベクトル化
-		vx /= distXZ;
-		vz /= distXZ;
-		// 前方ベクトル
-		float frontX = sinf(angle.y);
-		float frontZ = cosf(angle.y);
-		// 2つのベクトルの内積値で前後判定
-		float dot = (frontX * vx) + (frontZ * vz);
-		if (dot > 0.0f)
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
 // 追跡ステートへ遷移
-void EnemySlime::TransitionPursuitState()
+void EnemySika::TransitionPursuitState()
 {
 	state = State::Pursuit;
 
@@ -251,36 +144,17 @@ void EnemySlime::TransitionPursuitState()
 }
 
 // 追跡ステート更新処理
-void EnemySlime::UpdatePursuitState(float elapsedTime)
+void EnemySika::UpdatePursuitState(float elapsedTime)
 {
 	// 目標地点をプレイヤー位置に設定
 	targetPosition = Player::Instance().GetPosition();
 
 	// 目標地点へ移動
-	MoveToTarget(elapsedTime, 1.0f);
-
-	// タイマー処理
-	stateTimer -= elapsedTime;
-	if (stateTimer < 0.0f)
-	{
-		// 待機ステートへ遷移
-		TransitionIdleState();
-	}
-
-	// プレイヤーが近づくと攻撃ステートへ遷移
-	float vx = targetPosition.x - position.x;
-	float vy = targetPosition.y - position.y;
-	float vz = targetPosition.z - position.z;
-	float dist = sqrtf(vx * vx + vy * vy + vz * vz);
-	if (dist < attackRange)
-	{
-		// 攻撃ステートへ遷移
-		TransitionAttackState();
-	}
+	MoveToTarget(elapsedTime, 10.0f);
 }
 
 // ノードとプレイヤーの衝突処理
-void EnemySlime::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
+void EnemySika::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
 {
 	// ノードの位置と当たり判定を行う
 	Model::Node* node = model->FindNode(nodeName);
@@ -335,7 +209,7 @@ void EnemySlime::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
 }
 
 // 攻撃ステートへ遷移
-void EnemySlime::TransitionAttackState()
+void EnemySika::TransitionAttackState()
 {
 	state = State::Attack;
 
@@ -344,7 +218,7 @@ void EnemySlime::TransitionAttackState()
 }
 
 // 攻撃ステート更新処理
-void EnemySlime::UpdateAttackState(float elapsedTime)
+void EnemySika::UpdateAttackState(float elapsedTime)
 {
 	// 任意のアニメーション再生区間でのみ衝突判定処理をする
 	float animationTime = model->GetCurrentAnimationSeconds();
@@ -362,7 +236,7 @@ void EnemySlime::UpdateAttackState(float elapsedTime)
 }
 
 // 戦闘待機ステートへ遷移
-void EnemySlime::TransitionIdleBattleState()
+void EnemySika::TransitionIdleBattleState()
 {
 	state = State::IdleBattle;
 
@@ -374,7 +248,7 @@ void EnemySlime::TransitionIdleBattleState()
 }
 
 // 戦闘待機ステート更新処理
-void EnemySlime::UpdateIdleBattleState(float elapsedTime)
+void EnemySika::UpdateIdleBattleState(float elapsedTime)
 {
 	// 目標地点をプレイヤー位置に設定
 	targetPosition = Player::Instance().GetPosition();
@@ -393,18 +267,13 @@ void EnemySlime::UpdateIdleBattleState(float elapsedTime)
 			// 攻撃ステートへ遷移
 			TransitionAttackState();
 		}
-		else
-		{
-			// 徘徊ステートへ遷移
-			TransitionWanderState();
-		}
 
 		MoveToTarget(elapsedTime, 0.0f);
 	}
 }
 
 // ダメージステートへ遷移
-void EnemySlime::TransitionDamageState()
+void EnemySika::TransitionDamageState()
 {
 	state = State::Damage;
 
@@ -413,7 +282,7 @@ void EnemySlime::TransitionDamageState()
 }
 
 // ダメージステート更新処理
-void EnemySlime::UpdateDamageState(float elapsedTime)
+void EnemySika::UpdateDamageState(float elapsedTime)
 {
 	// ダメージアニメーションが終わったら戦闘待機ステートへ遷移
 	if (!model->IsPlayAnimation())
@@ -423,7 +292,7 @@ void EnemySlime::UpdateDamageState(float elapsedTime)
 }
 
 // 死亡ステートへ遷移
-void EnemySlime::TransitionDeathState()
+void EnemySika::TransitionDeathState()
 {
 	state = State::Death;
 
@@ -432,7 +301,7 @@ void EnemySlime::TransitionDeathState()
 }
 
 // 死亡ステート更新処理
-void EnemySlime::UpdateDeathState(float elapsedTime)
+void EnemySika::UpdateDeathState(float elapsedTime)
 {
 	// ダメージアニメーションが終わったら自分を破棄
 	if (!model->IsPlayAnimation())
@@ -442,14 +311,14 @@ void EnemySlime::UpdateDeathState(float elapsedTime)
 }
 
 // ダメージ受けた時に呼ばれる
-void EnemySlime::OnDamaged()
+void EnemySika::OnDamaged()
 {
 	// ダメージステートへ遷移
 	TransitionDamageState();
 }
 
 // 死亡しと時に呼ばれる
-void EnemySlime::OnDead()
+void EnemySika::OnDead()
 {
 	//Destroy();
 

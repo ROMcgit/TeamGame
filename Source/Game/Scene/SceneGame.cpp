@@ -2,26 +2,19 @@
 #include "SceneGame.h"
 #include "Game/Camera/Camera.h"
 #include "Game/Character/Enemy/EnemyManager.h"
-#include "Game/Character/Enemy/EnemySlime.h"
+#include "Game/Character/Enemy/EnemySika.h"
 #include "Game/Effect/EffectManager.h"
 #include "Input/Input.h"
 #include "Game/Stage/StageManager.h"
 #include "Game/Stage/StageMain.h"
-#include "Game/Stage/StageMoveFloor.h"
 
 // 初期化
 void SceneGame::Initialize()
 {
 	// ステージ初期化
-	//stage = new Stage();
 	StageManager& stageManager = StageManager::Instance();
 	StageMain* stageMain = new StageMain();
 	stageManager.Register(stageMain);
-	StageMoveFloor* stageMoveFloor = new StageMoveFloor();
-	stageMoveFloor->SetStartPoint(DirectX::XMFLOAT3(0, 1, 3));
-	stageMoveFloor->SetGoalPoint(DirectX::XMFLOAT3(10, 2, 3));
-	stageMoveFloor->SetTorque(DirectX::XMFLOAT3(0, 1.0f, 0));
-	stageManager.Register(stageMoveFloor);
 
 	// プレイヤー初期化
 	player = std::make_unique<Player>();
@@ -46,13 +39,13 @@ void SceneGame::Initialize()
 
 	// エネミー初期化
 	EnemyManager& enemyManager = EnemyManager::Instance();
-	//Enemy* enemy = new EnemySlime;
+	//Enemy* enemy = new EnemySika;
 	// slime->SetPosition(DirectX::XMFLOAT3(0,0,5))
 	//enemyManager.Register(enemy);
 
 	for (int i = 0; i < 2; ++i)
 	{
-		std::unique_ptr<EnemySlime> slime = std::make_unique <EnemySlime>();
+		std::unique_ptr<EnemySika> slime = std::make_unique <EnemySika>();
 		slime->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 5));
 		slime->SetTerritory(slime->GetPosition(), 10.0f);
 		enemyManager.Register(std::move(slime));
@@ -356,7 +349,7 @@ void SceneGame::RenderEnemyGauge(
 			}
 
 			// エネミーを配置
-			std::unique_ptr<Enemy> newEnemy = std::make_unique<EnemySlime>(); // 新しいエネミーを生成
+			std::unique_ptr<Enemy> newEnemy = std::make_unique<EnemySika>(); // 新しいエネミーを生成
 			newEnemy->SetPosition(worldPos); // 位置を設定
 			enemyManager.Register(std::move(newEnemy)); // エネミーをマネージャーに追加
 		}

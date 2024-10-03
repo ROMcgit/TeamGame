@@ -3,6 +3,7 @@
 #include "Game/Camera/Camera.h"
 #include "Game/Character/Enemy/EnemyManager.h"
 #include "Game/Character/Enemy/EnemySika.h"
+#include "Game/Character/Item/ItemManager.h"
 #include "Game/Effect/EffectManager.h"
 #include "Input/Input.h"
 #include "Game/Stage/StageManager.h"
@@ -40,12 +41,6 @@ void SceneGame::Initialize()
 		DirectX::XMConvertToRadians(20),
 		0, 0)
 	);
-
-	EnemyManager& enemyManager = EnemyManager::Instance();
-
-	std::unique_ptr<EnemySika> sika = std::make_unique<EnemySika>();
-	sika->SetPosition(player->GetPosition());
-	enemyManager.Register(std::move(sika));
 }
 
 // 終了化
@@ -69,7 +64,6 @@ void SceneGame::Update(float elapsedTime)
 	cameraController->Update(elapsedTime);
 
 	// ステージ更新処理
-	//stage->Update(elapsedTime);
 	StageManager::Instance().Update(elapsedTime);
 
 	// プレイヤー更新処理
@@ -177,4 +171,48 @@ void SceneGame::Render()
 		camera.DrawDebugGUI();
 		cameraController->DrawDebugGUI();
 	}
+}
+
+// 敵とアイテム生成処理
+void SceneGame::NewEnemyOrItem()
+{
+	EnemyManager& enemyManager = EnemyManager::Instance();
+	ItemManager&  itemManager  = ItemManager::Instance();
+
+	int enemyCount         = enemyManager.GetEnemyCount();
+	int itemCount          = itemManager.GetItemCount();
+	int establishmentCount = enemyCount + itemCount;
+
+	if (establishmentCount < 20)
+	{
+		int ransu = rand() % 7 + 1;
+
+		switch (ransu)
+		{
+		//! 敵生成
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		{
+			std::unique_ptr<EnemySika> sika = std::make_unique<EnemySika>();
+			sika->SetPosition(DirectX::XMFLOAT3(20, 0, 20));
+			enemyManager.Register(std::move(sika));
+		}
+			break;
+		//! アイテム生成
+		case 5:
+		case 6:
+			break;
+		//! 設置物生成
+		case 7:
+		{
+
+		}
+		default:
+			break;
+		}
+		
+	}
+
 }

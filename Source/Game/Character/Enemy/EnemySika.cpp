@@ -62,6 +62,9 @@ void EnemySika::Update(float elapsedTime)
 	// オブジェクト行列を更新
 	UpdateTransform();
 
+	// プレイヤーとの当たり判定
+	CollisionEnemyVsPlayer();
+
 	// モデルアニメーション更新
 	model->UpdateAnimation(elapsedTime);
 
@@ -228,8 +231,10 @@ void EnemySika::CollisionEnemyVsPlayer()
 		outPosition
 	))
 	{
-		if(player.)
-		player.ApplyDamage(5, 1.0f);
+		if (player.GetInvincibleTimer() <= 0.0f)
+			player.ApplyDamage(5, 1.0f);
+		else
+			Destroy(); // 破棄する
 	}
 }
 

@@ -1,9 +1,9 @@
-#include "Enemy.h"
+#include "Installation.h"
 #include "Graphics/Graphics.h"
-#include "Game/Character/Enemy/EnemyManager.h"
+#include "Game/Character/Installation/InstallationManager.h"
 
 // デバッグプリミティブ描画
-void Enemy::DrawDebugPrimitive()
+void Installation::DrawDebugPrimitive()
 {
 	DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
 
@@ -11,7 +11,8 @@ void Enemy::DrawDebugPrimitive()
 	debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
 }
 
-void Enemy::Destroy()
+// 破棄
+void Installation::Destroy()
 {
-	EnemyManager::Instance().Remove(this);
+	InstallationManager::Instance().Remove(this);
 }

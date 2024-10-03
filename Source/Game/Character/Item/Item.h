@@ -3,12 +3,12 @@
 #include "Graphics/Shader.h"
 #include "Game/Character/Character.h"
 
-// エネミー
-class Enemy : public Character
+// アイテム
+class Item : public Character
 {
 public:
-	Enemy() {}
-	~Enemy() override {}
+	Item() {}
+	~Item() override {}
 
 	// 更新処理
 	virtual void Update(float elapsedTime) = 0;
@@ -20,7 +20,7 @@ public:
 	virtual void SpriteRender(ID3D11DeviceContext* dc) {};
 
 	// HP表示
-	virtual void RenderEnemyGauge(ID3D11DeviceContext* dc,
+	virtual void RenderItemGauge(ID3D11DeviceContext* dc,
 		const DirectX::XMFLOAT4X4& view,
 		const DirectX::XMFLOAT4X4& projection) {};
 

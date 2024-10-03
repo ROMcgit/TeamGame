@@ -1,23 +1,23 @@
-#include "SceneGameOver.h"
+#include "SceneGameClear.h"
 #include "Graphics/Graphics.h"
 
 // ‰Šú‰»
-void SceneGameOver::Initialize()
+void SceneGameClear::Initialize()
 {
 }
 
 // I—¹‰»
-void SceneGameOver::Finalize()
+void SceneGameClear::Finalize()
 {
 }
 
 // XVˆ—
-void SceneGameOver::Update(float elapsedTime)
+void SceneGameClear::Update(float elapsedTime)
 {
 }
 
 // •`‰æˆ—
-void SceneGameOver::Render()
+void SceneGameClear::Render()
 {
 	Graphics& graphics = Graphics::Instance();
 	ID3D11DeviceContext* dc = graphics.GetDeviceContext();

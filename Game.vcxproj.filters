@@ -252,13 +252,13 @@
     <ClInclude Include="Source\Game\Scene\SceneTitle.h">
       <Filter>Source\Scene\GameScene</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Scene\SceneOpning.h">
-      <Filter>Source\Scene\GameScene</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Scene\SceneClear.h">
-      <Filter>Source\Scene\GameScene</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Game\Scene\SceneGameOver.h">
+      <Filter>Source\Scene\GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\SceneGameClear.h">
+      <Filter>Source\Scene\GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\SceneOpning.h">
       <Filter>Source\Scene\GameScene</Filter>
     </ClInclude>
   </ItemGroup>
@@ -410,13 +410,13 @@
     <ClCompile Include="Source\Game\Scene\SceneTitle.cpp">
       <Filter>Source\Scene\GameScene</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Scene\SceneOpning.cpp">
-      <Filter>Source\Scene\GameScene</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Scene\SceneClear.cpp">
-      <Filter>Source\Scene\GameScene</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Game\Scene\SceneGameOver.cpp">
+      <Filter>Source\Scene\GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\SceneGameClear.cpp">
+      <Filter>Source\Scene\GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\SceneOpning.cpp">
       <Filter>Source\Scene\GameScene</Filter>
     </ClCompile>
   </ItemGroup>

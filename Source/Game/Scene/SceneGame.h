@@ -12,23 +12,18 @@ class SceneGame: public Scene
 {
 public:
 	SceneGame() {}
-	//~SceneGame() {}
 	~SceneGame() override {}
 
 	// ‰Šú‰»
-	//void Initialize();
 	void Initialize() override;
 
 	// I—¹‰»
-	//void Finalize();
 	void Finalize() override;
 
 	// XVˆ—
-	//void Update(float elapsedTime);
 	void Update(float elapsedTime) override;
 
 	// •`‰æˆ—
-	//void Render();
 	void Render() override;
 
 private:
@@ -40,7 +35,6 @@ private:
 	);
 
 private:
-	//Stage* stage = nullptr;
 	std::unique_ptr <Player> player;
 	std::unique_ptr <CameraController> cameraController;
 	std::unique_ptr<Sprite> enemyHp;

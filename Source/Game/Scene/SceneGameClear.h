@@ -1,14 +1,14 @@
 #pragma once
 
-#include "Scene.h"
 #include "Graphics/Sprite.h"
+#include "Scene.h"
 
-// ゲームシーン
-class SceneGameOver : public Scene
+// タイトルシーン
+class SceneGameClear : public Scene
 {
 public:
-	SceneGameOver() {}
-	~SceneGameOver() override {}
+	SceneGameClear() {};
+	~SceneGameClear() override {};
 
 	// 初期化
 	void Initialize() override;

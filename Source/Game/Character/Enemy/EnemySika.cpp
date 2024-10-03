@@ -211,6 +211,28 @@ void EnemySika::MoveToTarget(float elapsedTime, float speedRate)
 	Turn(elapsedTime, vx, vz, turnSpeed * speedRate);
 }
 
+// プレイヤーとの接触処理
+void EnemySika::CollisionEnemyVsPlayer()
+{
+	Player& player = Player::Instance();
+
+	// 衝突処理
+	DirectX::XMFLOAT3 outPosition;
+	if (Collision::IntersectCylinderVsCylinder(
+		player.GetPosition(),
+		player.GetRadius(),
+		player.GetHeight(),
+		position,
+		radius,
+		height,
+		outPosition
+	))
+	{
+		if(player.)
+		player.ApplyDamage(5, 1.0f);
+	}
+}
+
 // 追跡ステートへ遷移
 void EnemySika::TransitionPursuitState()
 {

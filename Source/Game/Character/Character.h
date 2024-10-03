@@ -72,6 +72,9 @@ public:
 	// 最大健康状態を取得
 	int GetMaxHealth() const { return maxHp; }
 
+	// 無敵時間取得
+	float GetInvincibleTimer() const { return invincibleTimer; }
+
 protected:
 	// スティック入力値から移動ベクトルを習得
 	DirectX::XMFLOAT3 GetMoveVec() const;

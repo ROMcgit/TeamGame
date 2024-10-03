@@ -46,6 +46,9 @@ private:
 	// 目標地点へ移動
 	void MoveToTarget(float elapsedTime, float speedRate);
 
+	// プレイヤーとの接触処理
+	void CollisionEnemyVsPlayer();
+
 	// ノードとプレイヤーの衝突処理
 	void CollisionNodeVsPlayer(const char* nodeName, float nodeRadius);
 

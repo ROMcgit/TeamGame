@@ -18,6 +18,9 @@ public:
 	// 描画処理
 	void Render(ID3D11DeviceContext* dc, Shader* shader) override;
 
+	// HPなどの描画
+	void SpriteRender(ID3D11DeviceContext* dc) override;
+
 	// デバッグプリミティブ描画
 	void DrawDebugPrimitive() override;
 

@@ -71,6 +71,11 @@ void EnemySika::Render(ID3D11DeviceContext* dc, Shader* shader)
 	shader->Draw(dc, model.get());
 }
 
+// HPなどの描画
+void EnemySika::SpriteRender(ID3D11DeviceContext* dc)
+{
+}
+
 // デバッグプリミティブ描画
 void EnemySika::DrawDebugPrimitive()
 {

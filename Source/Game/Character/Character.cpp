@@ -45,10 +45,6 @@ void Character::Move(float vx, float vz, float speed)
 	maxMoveSpeed = speed;
 }
 
-void Character::OnDead()
-{
-}
-
 void Character::Turn(float elapsedTime, float vx, float vz, float speed)
 {
 	speed *= elapsedTime;
@@ -91,6 +87,11 @@ void Character::Turn(float elapsedTime, float vx, float vz, float speed)
 	}
 }
 
+
+void Character::OnDead()
+{
+}
+
 // ジャンプ処理
 void Character::Jump(float speed)
 {
@@ -117,32 +118,6 @@ void Character::UpdateVelocity(float elapsedTime)
 	UpdateHorizontalMove(elapsedTime);
 }
 
-//bool Character::ApplyDamage(int damage)
-//{
-//	// ダメージが0の場合は健康状態を変更する必要がない
-//	if (damage == 0) return false;
-//
-//	// 死亡している場合は健康状態を変更しない
-//	if (health <= 0) return false;
-//
-//	// ダメージ処理
-//	health -= damage;
-//
-//	// 死亡通知
-//	if (health == 0)
-//	{
-//		OnDead();
-//	}
-//	// ダメージ通知
-//	else
-//	{
-//		OnDamaged();
-//	}
-//
-//	// 健康状態が変更した場合はtrueを返す
-//	return true;
-//}
-
 // ダメージを与える
 bool Character::ApplyDamage(int damage, float invincibleTime)
 {
@@ -150,19 +125,19 @@ bool Character::ApplyDamage(int damage, float invincibleTime)
 	if (damage == 0) return false;
 
 	// 死亡している場合は健康状態を変更しない
-	if (health <= 0) return false;
+	if (hp <= 0) return false;
 
 	// 無敵時間ならダメージを与えない
 	if (invincibleTimer > 0) return false;
 
 	// ダメージ処理
-	health -= damage;
+	hp -= damage;
 
 	// 無敵時間を代入
 	invincibleTimer = invincibleTime;
 
 	// 死亡通知
-	if (health == 0)
+	if (hp == 0)
 	{
 		OnDead();
 	}
@@ -203,6 +178,107 @@ void Character::UpdateInvincibleTimer(float elapsedTime)
 	}
 	if (invincibleTimer < -1) invincibleTimer = -1;
 }
+
+//! ムービーシーンの待ち時間処理
+bool Character::UpdateMovieTimer(float elapsedTime)
+{
+	// ムービーシーンなら
+	if (movieScene)
+	{
+		// 待ち時間が終わったら
+		if (movieTime <= 0.0f)
+			movieScene = false;
+
+		movieTime -= elapsedTime;
+
+		return true;
+	}
+	else
+		return false;
+}
+
+//! HP管理
+void Character::HpControll(float elapsedTime)
+{
+	// HPが上限を超えないように
+	if (hp > maxHp)       hp = maxHp;
+	if (hpDamage > maxHp) hpDamage = maxHp;
+
+	// ダメージ処理
+	if (hpDamage > hp)
+	{
+		hpDamageCount += elapsedTime;
+		if (hpDamageCount >= 0.8f)
+		{
+			hpDamageDirectorWaitCount -= elapsedTime;
+			if (hpDamageDirectorWaitCount <= 0)
+			{
+				hpDamage--;
+				hpDamageDirectorWaitCount = maxHpDamageDirectorWaitCount;
+			}
+		}
+	}
+	// 回復した時
+	else if (hpDamage < hp) hpDamage = hp;
+
+	// HPなどが0より下にならないようにする
+	if (hp < 0) hp = 0;
+
+	if (hpDamage == hp) hpDamageCount = 0;
+}
+
+//! HP演出
+bool Character::HpDirector(int hpPlusNum, int maxDoNum)
+{
+	if (hpDirectorFinished) return false; // HP演出が終わっているなら処理をしない
+
+	if (hpSpriteHeight < 40)
+	{
+		hpSpriteHeight += 1;
+		if (nameSpriteOpacity < 1.0f)
+			nameSpriteOpacity += 0.04f;
+	}
+	else
+	{
+		if (doHpDirectorCount >= maxDoNum || (hp == maxHp)) // 演出が終わったかまたはHPが最大なら
+			hpDirectorFinished = true;
+
+		hp += hpPlusNum;               // HPを増やす
+		doHpDirectorCount++;           // カウントを増やす
+	}
+
+
+	return true;
+}
+
+// HPシェイク
+bool Character::UpdateHpShake(float elapsedTime)
+{
+	// カメラシェイクタイマーが0.1f以下なら
+	if (hpShakeTimer <= 0.15f && hpShake)
+	{
+		hpSpritePos.y = hpSpriteShakePosY - 4.5f;
+		hpImagePos.y = hpImageShakePosY - 4.5f;
+		hpSpriteColor = { 1, 0, 0 };
+
+		hpShakeTimer += elapsedTime;
+
+		return true;
+	}
+	// 元に戻す
+	else
+	{
+		hpShakeTimer = 0.0f;
+		hpShake = false;
+
+		hpSpritePos.y = hpSpriteShakePosY;
+		hpImagePos.y = hpImageShakePosY;
+		hpSpriteColor = { 1, 1, 1 };
+
+		return false;
+	}
+}
+
 
 // 垂直速力更新処理
 void Character::UpdateVerticalVelocity(float elapsedFrame)

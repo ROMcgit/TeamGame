@@ -156,9 +156,6 @@
     <ClInclude Include="Source\Game\Character\Projectile\ProjectileStraight.h">
       <Filter>Source\Projectile</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Character\Character.h">
-      <Filter>Source\Character</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Game\Character\Player.h">
       <Filter>Source\Character</Filter>
     </ClInclude>
@@ -261,6 +258,9 @@
     <ClInclude Include="Source\Game\Scene\SceneOpning.h">
       <Filter>Source\Scene\GameScene</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Character\Character.h">
+      <Filter>Source\Character</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -328,9 +328,6 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Projectile\ProjectileStraight.cpp">
       <Filter>Source\Projectile</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Character\Character.cpp">
-      <Filter>Source\Character</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Player.cpp">
       <Filter>Source\Character</Filter>
@@ -418,6 +415,9 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Scene\SceneOpning.cpp">
       <Filter>Source\Scene\GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Character.cpp">
+      <Filter>Source\Character</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

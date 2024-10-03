@@ -12,49 +12,72 @@ public:
 	// 行列更新処理
 	void UpdateTransform();
 
-	// 位置情報
-	const DirectX::XMFLOAT3& GetPosition() const { return position; }
-
-	// 位置設定
-	void SetPosition(const DirectX::XMFLOAT3& position) { this->position = position; }
-
-	// 回転取得
-	const DirectX::XMFLOAT3& GetAngle() const { return angle; }
-
-	// 回転設定
-	void SetAngle(const DirectX::XMFLOAT3& angle) { this->angle = angle; }
-
-	// スケール取得
-	const DirectX::XMFLOAT3& GetScale() const { return scale; }
-
-	// スケール取得
-	void SetScale(const DirectX::XMFLOAT3& scale) { this->scale = scale; }
-
-	// 半径取得
-	float GetRadius() const { return radius; }
-
 	// 地面に接地しているか
 	bool IsGround() const { return isGround; }
 
-	// 高さ取得
-	float GetHeight() const { return height; }
-
 	// ダメージを与える
-	//bool ApplyDamage(int damage);
 	bool ApplyDamage(int damage, float invincibleTime);
 
 	// 衝撃を与える
 	void AddImpulse(const DirectX::XMFLOAT3& impulse);
 
+/**************************************************************************************/
+
+	/*! セッター */
+
+	// 位置設定
+	void SetPosition(const DirectX::XMFLOAT3& position) { this->position = position; }
+
+	// 回転設定
+	void SetAngle(const DirectX::XMFLOAT3& angle) { this->angle = angle; }
+
+	// スケール設定
+	void SetScale(const DirectX::XMFLOAT3& scale) { this->scale = scale; }
+
+	// 加速度設定
+	void SetVelocity(const DirectX::XMFLOAT3& velocity) { this->velocity = velocity; }
+
+	// スプライト非表示設定
+	void SetHideSprites(bool hideSprites) { this->hideSprites = hideSprites; }
+
+	// ムービー時間設定
+	void SetMovieTime(float movieTime)
+	{
+		movieScene = true;
+		this->movieTime = movieTime;
+	}
+
+/*******************************************************/
+
+	/*! ゲッター */
+
+	// 位置情報
+	const DirectX::XMFLOAT3& GetPosition() const { return position; }
+
+	// 回転取得
+	const DirectX::XMFLOAT3& GetAngle() const { return angle; }
+
+	// スケール取得
+	const DirectX::XMFLOAT3& GetScale() const { return scale; }
+
+	// 半径取得
+	float GetRadius() const { return radius; }
+
+	// 高さ取得
+	float GetHeight() const { return height; }
+
 	// 健康状態を取得
-	int GetHealth() const { return health; }
+	int GetHealth() const { return hp; }
 
 	// 最大健康状態を取得
-	int GetMaxHealth() const { return maxHealth; }
+	int GetMaxHealth() const { return maxHp; }
 
 protected:
 	// スティック入力値から移動ベクトルを習得
 	DirectX::XMFLOAT3 GetMoveVec() const;
+
+	// 移動処理
+	void Move(float vx, float vz, float speed);
 
 	// 旋回処理
 	void Turn(float elapsedTime, float vx, float vz, float speed);
@@ -65,12 +88,20 @@ protected:
 	// 速力処理更新
 	void UpdateVelocity(float elapsedTime);
 
-	// 移動処理
-	//void Move(float elapsedTime, float vx, float vz, float speed);
-	void Move(float vx, float vz, float speed);
+	// HP管理
+	void HpControll(float elapsedTime);
+
+	// HP演出
+	bool HpDirector(int hpPlusNum = 0, int doNum = 0);
+
+	// HPシェイク
+	bool UpdateHpShake(float elapsedTime);
 
 	// 無敵時間更新
 	void UpdateInvincibleTimer(float elapsedTime);
+
+	// ムービーシーンの時間処理
+	bool UpdateMovieTimer(float elapsedTime);
 
 	// 垂直速力更新処理
 	void UpdateVerticalVelocity(float elapsedFrame);
@@ -104,16 +135,57 @@ protected:
 		0,0,0,1
 	};
 	float radius = 0.5f;
+	float height = 2.0f;
 
 	float			  gravity = -0.3f;
 	DirectX::XMFLOAT3 velocity = { 0, 0, 0, };
 
 	bool isGround = false;
-	float height = 2.0f;
-	int health = 10;
-	int maxHealth = 5;
 
-	float invincibleTimer = 1.0f;
+	bool movieScene     = false;   // ムービー中かどうか
+	float movieTime     = 0.0f;   // ムービー時間
+	bool movieAnimation = false;  // ムービー中のアニメーションをしたか
+	int movieAnimNum    = 0;      // ムービー中のアニメーション番号
+	bool movieAnimLoop  = false;  // ムービー中アニメーションをにループさせるか
+
+/**************************************************************/
+
+	int hp                     = 10;     // HP
+	int maxHp                  = 5;      // 最大HP
+	int hpDamage               = 5;      // HPダメージ
+	bool hpDirectorFinished    = false;  // HPの演出が終わったか
+	int doHpDirectorCount      = 0;      // HPを増やした回数(HP演出用)
+	float doHpDirectorWaitTime = 0.005f; // HP増やすまでの待ち時間
+
+	float nameSpriteOpacity = 0.0f;            // 名前の不透明度
+	int hpSpriteHeight = 0;               // HP画像の高さ
+
+	DirectX::XMFLOAT2 hpSpritePos = { 0.0f, 0.0f };  // HPゲージの位置
+	float hpSpriteShakePosY = 0.0f;            // HPゲージシェイクの位置
+	DirectX::XMFLOAT2 hpImagePos = { 0.0f, 0.0f };  // HP画像の位置
+	DirectX::XMFLOAT3 hpSpriteColor = { 1, 1, 1 };     // HP画像の色
+
+	float hpImageShakePosY = 0.0f;  // HP画像シェイクの位置
+	float hpSpriteAdjust = 0.0f;  // HPの描画の調整
+	bool  hpShake = false; // HPシェイクするか
+	float hpShakeTimer = 0.0f;  // HPシェイクタイマー
+	bool hideSprites = false; // HPなどを隠す
+
+	float invincibleTimer = 0.0f;
+
+	float hpDamageCount = 2; // ダメージ演出を行うまでの時間
+	float hpDamageDirectorWaitCount = 0; // HPを減らす演出にディレイをかける
+	float maxHpDamageDirectorWaitCount = 0; // 最大HP減らす処理待ち時間
+	float deathWaitTimer = 0;         // 消滅カウント
+
+	int damage = 0;    // ダメージ
+	int defenses = 0;    // 防御力
+	float defensesUpTimer = 0.0f; // 防御力アップ時間
+
+	float stateChangeWaitTimer = 0.0f;   // ステート切り替えまでの時間
+	float actionTimer = 0.0f; // アクションタイマー
+
+/**************************************************************/
 
 	float friction = 0.5f;
 

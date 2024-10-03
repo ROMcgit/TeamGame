@@ -116,7 +116,7 @@ void EnemySika::RenderEnemyGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOAT
 	DirectX::XMStoreFloat3(&screenPos, ScreenPos);
 
 	// HPゲージの描画位置
-	float gaugeWidth = health * 8; // HPゲージの幅
+	float gaugeWidth = hp * 8; // HPゲージの幅
 	float gaugeHeight = 5.0f;      // HPゲージの高さ
 	float gaugeX = screenPos.x - gaugeWidth / 2;
 	float gaugeY = screenPos.y - gaugeHeight - 55.0f; // 少し上にオフセット

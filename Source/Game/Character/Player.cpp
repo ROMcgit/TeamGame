@@ -46,6 +46,19 @@ Player::~Player()
 // 更新処理
 void Player::Update(float elapsedTime)
 {
+	if (position.y > 0.0f)
+	{
+		isGround = false;
+		gravity = -0.5f;
+	}
+
+	if (position.y < 0.0f)
+	{
+		isGround   = true;
+		gravity    = 0.0f;
+		position.y = 0.0f;
+	}
+
 	// ステート毎の処理
 	switch (state)
 	{
@@ -320,11 +333,20 @@ void Player::UpdateMoveState(float elapsedTime)
 	DIR = DirectX::XMVector3Normalize(DIR);
 	DirectX::XMStoreFloat3(&dir, DIR);
 
-	// 移動処理
-	if(isGround)
-		Move(dir.x, dir.z, 300.0f);
+	//! 突進しているなら
+	if (lunges && lungesTimer > 0.0f)
+	{
+		Move(dir.x, dir.z, 2000.0f);
+
+		lungesTimer -= elapsedTime;
+	}
 	else
-		Move(dir.x, dir.z, 30);
+	{
+		lunges = false;
+
+		// 移動処理
+		Move(dir.x, dir.z, 10);
+	}
 
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
@@ -353,11 +375,11 @@ void Player::UpdateMoveState(float elapsedTime)
 		}
 	}
 
-	// 突進入力処理
-	if (gamePad.GetButtonDown() & GamePad::BTN_B)
+	// 突進入力処理(吹き飛んでいない時)
+	if (gamePad.GetButtonDown() & GamePad::BTN_A && isGround)
 	{
 		// 攻撃ステートへ遷移
-		TransitionAttackState();
+		TransitionLungesState();
 	}
 
 	// 弾丸入力処理
@@ -367,11 +389,79 @@ void Player::UpdateMoveState(float elapsedTime)
 // 突進ステートへ遷移
 void Player::TransitionLungesState()
 {
+	state = State::Lunges;
+
+	lunges = false;            // 突進する
+
+	lungesChargeTimer = 0.0f; // 突進チャージ時間
+
+	lungesTimer = 0.0f;       // 突進時間
+
+	model->PlayAnimation(Anim_Idle, true);
 }
 
 // 突進ステート更新
 void Player::UpdateLungesState(float elapsedTime)
 {
+	// 前方向
+	DirectX::XMFLOAT3 dir;
+
+	dir.x = transform._31;
+	dir.y = transform._32;
+	dir.z = transform._33;
+
+	DirectX::XMVECTOR DIR;
+	DIR = DirectX::XMLoadFloat3(&dir);
+	DIR = DirectX::XMVector3Normalize(DIR);
+	DirectX::XMStoreFloat3(&dir, DIR);
+
+	Move(dir.x, dir.z, 0.0f);
+
+	GamePad& gamePad = Input::Instance().GetGamePad();
+
+	float ax = gamePad.GetAxisLX();
+	// カメラの回転速度
+	float speed = turnSpeed * elapsedTime;
+	{
+		//スティックの入力値に合わせてX軸とY軸を回転
+		if (ax == -1)
+		{
+			angle.y -= speed;
+		}
+		if (ax == 1)
+		{
+			angle.y += speed;
+		}
+
+		/// X軸のカメラ回転を制限
+		if (angle.x < minAngleX)
+		{
+			angle.x = minAngleX;
+		}
+		if (angle.x > maxAngleX)
+		{
+			angle.x = maxAngleX;
+		}
+	}
+
+	// ボタンを離したら
+	if (!(gamePad.GetButtonHeld() & GamePad::BTN_A))
+	{
+		// 移動ステートへ遷移
+		TransitionMoveState();
+	}
+	// ボタンを押し続けているなら
+	else
+	{
+		lungesChargeTimer += elapsedTime;
+
+		if (lungesChargeTimer >= 0.5f)
+		{
+			lungesChargeTimer = 0.5f; // 突進チャージ時間
+			lunges      = true;       // 突進する
+			lungesTimer = 0.5f;       // 突進チャージ時間
+		}
+	}
 }
 
 // 攻撃ステートへ遷移
@@ -683,6 +773,13 @@ void Player::DrawDebugGUI()
 			angle.z = DirectX::XMConvertToRadians(a.z);
 			// スケール
 			ImGui::InputFloat3("Scale", &scale.x);
+		}
+
+		if (ImGui::CollapsingHeader("Status", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::Checkbox("Lunges", &lunges);
+			ImGui::InputFloat("LungesChargeTimer", &lungesChargeTimer);
+			ImGui::InputFloat("LungesTimer", &lungesTimer);
 		}
 	}
 	ImGui::End();

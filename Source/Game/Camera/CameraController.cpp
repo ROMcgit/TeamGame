@@ -79,7 +79,7 @@ void CameraController::DrawDebugGUI()
 			a.x = DirectX::XMConvertToDegrees(angle.x);
 			a.y = DirectX::XMConvertToDegrees(angle.y);
 			a.z = DirectX::XMConvertToDegrees(angle.z);
-			ImGui::InputFloat3("Angle", &a.x);
+			ImGui::DragFloat3("Angle", &a.x);
 			// ターゲット
 			ImGui::InputFloat3("Target", &target.x);
 			// RollSpeed

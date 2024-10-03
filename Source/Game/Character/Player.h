@@ -125,13 +125,14 @@ private:
 	std::unique_ptr<Model> model;
 	
 	float moveSpeed = 5.5f;
-	float turnSpeed = DirectX::XMConvertToRadians(90);
+	float turnSpeed = DirectX::XMConvertToRadians(120);
 
 	float minAngleX = DirectX::XMConvertToRadians(-45); // 角度最小値
 	float maxAngleX = DirectX::XMConvertToRadians(45);  // 角度最大値
 
-	bool lunges = false;     // 突進するか
-	float lungesTime = 0.0f; // 突進時間
+	bool  lunges            = false; // 突進するか
+	float lungesChargeTimer = 0.0f;  // 突進チャージ時間
+	float lungesTimer       = 0.0f;  // 突進時間
 
 	float jumpSpeed = 13.0f;
 

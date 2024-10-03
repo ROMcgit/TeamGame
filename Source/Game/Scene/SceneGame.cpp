@@ -34,58 +34,19 @@ void SceneGame::Initialize()
 		1000.0f
 	);
 
-	//カメラコントローラー初期化
+	//! カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
-
-	// エネミー初期化
-	EnemyManager& enemyManager = EnemyManager::Instance();
-	//Enemy* enemy = new EnemySika;
-	// slime->SetPosition(DirectX::XMFLOAT3(0,0,5))
-	//enemyManager.Register(enemy);
-
-	for (int i = 0; i < 2; ++i)
-	{
-		std::unique_ptr<EnemySika> slime = std::make_unique <EnemySika>();
-		slime->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 5));
-		slime->SetTerritory(slime->GetPosition(), 10.0f);
-		enemyManager.Register(std::move(slime));
-	}
-	
-	enemyHp = std::make_unique <Sprite>();
-
+	cameraController->SetAngle(DirectX::XMFLOAT3(
+		DirectX::XMConvertToRadians(20),
+		0, 0)
+	);
 }
 
 // 終了化
 void SceneGame::Finalize()
 {
-	//if (enemyHp != nullptr)
-	//{
-	//	delete enemyHp;
-	//	enemyHp = nullptr;
-	//}
-
-	// カメラコントローラー終了化
-	//if (cameraController != nullptr)
-	//{
-	//	delete cameraController;
-	//	cameraController = nullptr;
-	//}
-
-	// //ステージ終了化
-	//if (stage != nullptr)
-	//{
-	//	delete stage;
-	//	stage = nullptr;
-	//}
-
+	// ステージ終了化
 	StageManager::Instance().Clear();
-
-	// プレイヤー終了化
-	//if (player != nullptr)
-	//{
-	//	delete player;
-	//	player = nullptr;
-	//}
 
 	// エネミー終了化
 	EnemyManager::Instance().Clear();

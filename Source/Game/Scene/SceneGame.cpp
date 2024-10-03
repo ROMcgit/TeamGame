@@ -4,6 +4,7 @@
 #include "Game/Character/Enemy/EnemyManager.h"
 #include "Game/Character/Enemy/EnemySika.h"
 #include "Game/Character/Item/ItemManager.h"
+#include "Game/Character/Installation/InstallationManager.h"
 #include "Game/Effect/EffectManager.h"
 #include "Input/Input.h"
 #include "Game/Stage/StageManager.h"
@@ -176,43 +177,50 @@ void SceneGame::Render()
 // 敵とアイテム生成処理
 void SceneGame::NewEnemyOrItem()
 {
-	EnemyManager& enemyManager = EnemyManager::Instance();
-	ItemManager&  itemManager  = ItemManager::Instance();
+	EnemyManager& enemyManager               = EnemyManager::Instance();
+	ItemManager&  itemManager                = ItemManager::Instance();
+	InstallationManager& installationManager = InstallationManager::Instance();
 
 	int enemyCount         = enemyManager.GetEnemyCount();
 	int itemCount          = itemManager.GetItemCount();
-	int establishmentCount = enemyCount + itemCount;
+	int installationCount  = installationManager.GetInstallationCount();
+	int establishmentCount = enemyCount + itemCount + installationCount;
 
-	if (establishmentCount < 20)
+	if (establishmentCount < 30)
 	{
-		int ransu = rand() % 7 + 1;
+		int newRansu = rand() % 10 + 1;
 
-		switch (ransu)
+		switch (newRansu)
 		{
 		//! 敵生成
 		case 1:
 		case 2:
 		case 3:
 		case 4:
+		case 5:
+		case 6:
 		{
 			std::unique_ptr<EnemySika> sika = std::make_unique<EnemySika>();
 			sika->SetPosition(DirectX::XMFLOAT3(20, 0, 20));
 			enemyManager.Register(std::move(sika));
 		}
 			break;
-		//! アイテム生成
-		case 5:
-		case 6:
-			break;
-		//! 設置物生成
 		case 7:
+		case 8:
+		case 9:
+		//! アイテム生成
 		{
-
+			
 		}
+			break;
+		case 10:
+		//! 設置物生成
+		{
+			
+		}
+			break;
 		default:
 			break;
 		}
-		
 	}
-
 }

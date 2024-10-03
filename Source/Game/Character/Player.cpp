@@ -59,24 +59,52 @@ void Player::Update(float elapsedTime)
 		position.y = 0.0f;
 	}
 
-	// ステート毎の処理
-	switch (state)
+	// ムービー中なら待機ステートへ遷移
+	if (movieScene)
 	{
-	case State::Move:
-		UpdateMoveState(elapsedTime);
-		break;
-	case State::Lunges:
-		UpdateLungesState(elapsedTime);
-		break;
-	case State::Attack:
-		UpdateAttackState(elapsedTime);
-		break;
-	case State::Damage:
-		UpdateDamageState(elapsedTime);
-		break;
-	case State::Death:
-		UpdateDeathState(elapsedTime);
-		break;
+		// 全ての弾を破棄する
+		int projectileCount = projectileManager.GetProjectileCount();
+		for (int i = 0; i < projectileCount; ++i)
+		{
+			Projectile* projectile = projectileManager.GetProjectile(i);
+
+			// 弾破棄
+			projectile->Destroy();
+		}
+
+		// ムービー中のアニメーション
+		if (!movieAnimation)
+		{
+			state = State::Lunges; // ステートを待機に変更
+			model->PlayAnimation(movieAnimNum, movieAnimLoop);
+			movieAnimation = true;
+		}
+	}
+	// ムービー中では無い時
+	else
+		movieAnimation = false; // ムービー中に待機ステートかどうか
+
+	if (!movieScene)
+	{
+		// ステート毎の処理
+		switch (state)
+		{
+		case State::Move:
+			UpdateMoveState(elapsedTime);
+			break;
+		case State::Lunges:
+			UpdateLungesState(elapsedTime);
+			break;
+		case State::Attack:
+			UpdateAttackState(elapsedTime);
+			break;
+		case State::Damage:
+			UpdateDamageState(elapsedTime);
+			break;
+		case State::Death:
+			UpdateDeathState(elapsedTime);
+			break;
+		}
 	}
 
 	// 速力更新処理

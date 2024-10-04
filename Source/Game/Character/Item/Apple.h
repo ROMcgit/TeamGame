@@ -21,6 +21,9 @@ public:
 	// HPなどの描画
 	void SpriteRender(ID3D11DeviceContext* dc) override;
 
+	// デバッグ用GUI描画
+	void DrawDebugGUI() override;
+
 	// デバッグプリミティブ描画
 	void DrawDebugPrimitive() override;
 
@@ -59,4 +62,6 @@ private:
 	float stateTimer  = 0.0f;
 	float searchRange = 5.0f;
 	float attackRange = 1.5f;
+
+	float dist = 0;
 };

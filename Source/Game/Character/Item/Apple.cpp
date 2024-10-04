@@ -11,13 +11,15 @@ Apple::Apple()
 	model = std::make_unique<Model>("Data/Model/Item/Apple/Apple.mdl");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.03f;
+	scale.x = scale.y = scale.z = 0.007f;
 
 	gravity = 0.0f;
 
+	collisionOffset = { 0, -0.5f, 0 };
+
 	// 幅、高さ設定
-	radius = 0.5f;
-	height = 1.0f;
+	radius = 0.8f;
+	height = 1.5f;
 
 	// 待機ステートへ遷移
 	TransitionInitState();
@@ -31,6 +33,8 @@ Apple::~Apple()
 // 更新処理
 void Apple::Update(float elapsedTime)
 {
+	position.y = 0.8f;
+
 	// ステート毎の更新処理
 	switch (state)
 	{
@@ -45,6 +49,9 @@ void Apple::Update(float elapsedTime)
 	// 無敵時間更新
 	UpdateInvincibleTimer(elapsedTime);
 
+	// 当たり判定の位置設定
+	CollisionPosSettings();
+
 	// オブジェクト行列を更新
 	UpdateTransform();
 
@@ -56,6 +63,15 @@ void Apple::Update(float elapsedTime)
 
 	// モデル行列更新
 	model->UpdateTransform(transform);
+
+	// 一定の距離を離れたら破棄する
+	Player& player = Player::Instance();
+
+	float vx = player.GetPosition().x - position.x;
+	float vz = player.GetPosition().z - position.z;
+	dist = vx * vx + vz * vz;
+	if (dist > 1200)
+		Destroy();
 }
 
 // 描画処理
@@ -70,26 +86,41 @@ void Apple::SpriteRender(ID3D11DeviceContext* dc)
 
 }
 
+// デバッグ用GUI描画
+void Apple::DrawDebugGUI()
+{
+	if (ImGui::TreeNode("Apple"))
+	{
+		ImGui::InputFloat("Dist", &dist);
+
+		ImGui::InputFloat3("Velocity", &velocity.x);
+
+		// トランスフォーム
+		if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			// 位置
+			ImGui::InputFloat3("Position", &position.x);
+			// 回転
+			DirectX::XMFLOAT3 a;
+			a.x = DirectX::XMConvertToDegrees(angle.x);
+			a.y = DirectX::XMConvertToDegrees(angle.y);
+			a.z = DirectX::XMConvertToDegrees(angle.z);
+			ImGui::InputFloat3("Angle", &a.x);
+			angle.x = DirectX::XMConvertToRadians(a.x);
+			angle.y = DirectX::XMConvertToRadians(a.y);
+			angle.z = DirectX::XMConvertToRadians(a.z);
+			// スケール
+			ImGui::InputFloat3("Scale", &scale.x);
+		}
+		ImGui::TreePop();
+	}
+}
+
 // デバッグプリミティブ描画
 void Apple::DrawDebugPrimitive()
 {
 	// 基底クラスのデバッグプリミティブ描画
 	Item::DrawDebugPrimitive();
-
-	DebugRenderer* debugRender = Graphics::Instance().GetDebugRenderer();
-
-	// 縄張り範囲をデバッグ円柱描画
-	debugRender->DrawCylinder(territoryOrigin, territoryRange, 1.0f,
-		DirectX::XMFLOAT4(0, 1, 0, 1));
-
-	// ターゲット位置をデバッグ球描画
-	debugRender->DrawSphere(targetPosition, radius, DirectX::XMFLOAT4(1, 1, 0, 1));
-
-	// 索敵範囲をデバッグ円柱描画
-	debugRender->DrawCylinder(position, searchRange, 1.0f, DirectX::XMFLOAT4(0, 0, 1, 1));
-
-	// 攻撃範囲をデバッグ円柱描画
-	debugRender->DrawCylinder(position, attackRange, 1.0f, DirectX::XMFLOAT4(1, 0, 0, 1));
 }
 
 // プレイヤーとの接触処理

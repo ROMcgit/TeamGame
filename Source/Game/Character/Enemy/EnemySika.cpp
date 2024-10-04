@@ -11,7 +11,7 @@ EnemySika::EnemySika()
 	model = std::make_unique<Model>("Data/Model/Sika/Sika.mdl");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.03f;
+	scale.x = scale.y = scale.z = 0.05f;
 
 	gravity = 0.0f;
 
@@ -33,6 +33,8 @@ EnemySika::~EnemySika()
 // 更新処理
 void EnemySika::Update(float elapsedTime)
 {
+	position.y = 1;
+
 	// ステート毎の更新処理
 	switch (state)
 	{
@@ -53,6 +55,9 @@ void EnemySika::Update(float elapsedTime)
 		break;
 	}
 
+	// 当たり判定の位置設定
+	CollisionPosSettings();
+
 	// 速力処理更新
 	UpdateVelocity(elapsedTime);
 
@@ -70,6 +75,15 @@ void EnemySika::Update(float elapsedTime)
 
 	// モデル行列更新
 	model->UpdateTransform(transform);
+
+	// 一定の距離を離れたら破棄する
+	Player& player = Player::Instance();
+
+	float vx = player.GetPosition().x - position.x;
+	float vz = player.GetPosition().z - position.z;
+	dist = vx * vx + vz * vz;
+	if (dist > 1200)
+		Destroy();
 }
 
 // 描画処理

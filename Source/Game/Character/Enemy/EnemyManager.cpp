@@ -98,6 +98,15 @@ void EnemyManager::Remove(Enemy* enemy)
 	removes.push_back(enemy);
 }
 
+// デバッグ用GUI描画
+void EnemyManager::DrawDebugGUI()
+{
+	for (auto& enemy : enemies)
+	{
+		enemy->DrawDebugGUI();
+	}
+}
+
 void EnemyManager::CollisionEnemyVsEnemies()
 {
 	EnemyManager& enemyManager = EnemyManager::Instance();

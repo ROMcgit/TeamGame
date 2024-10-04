@@ -118,11 +118,13 @@ private:
 	{
 		Anim_Run,
 		Anim_Stop,
+		Anim_Damage,
 	};
 
 private:
 	std::unique_ptr<Model> model[3];
-	
+	std::unique_ptr<Sprite> hpSprite[4];
+
 	float moveSpeed = 5.5f;
 	float turnSpeed = DirectX::XMConvertToRadians(120);
 

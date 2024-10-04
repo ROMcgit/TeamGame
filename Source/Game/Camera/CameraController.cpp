@@ -1,5 +1,6 @@
 #include "Game/Camera/CameraController.h"
 #include "Game/Camera/Camera.h"
+#include "Game/Character/Player.h"
 #include "Input/Input.h"
 #include <imgui.h>
 
@@ -7,22 +8,6 @@
 
 void CameraController::Update(float elapsedTime)
 {
-	GamePad& gamePad = Input::Instance().GetGamePad();
-	float ax = gamePad.GetAxisLX();
-	// カメラの回転速度
-	float speed = rollSpeed * elapsedTime;
-	{
-		//スティックの入力値に合わせてX軸とY軸を回転
-		if (ax == -1)
-		{
-			angle.y -= speed;
-		}
-		if (ax == 1)
-		{
-			angle.y += speed;
-		}
-	}
-
 	/// X軸のカメラ回転を制限
 	if (angle.x < minAngleX)
 	{
@@ -33,15 +18,9 @@ void CameraController::Update(float elapsedTime)
 		angle.x = maxAngleX;
 	}
 
-	// Y軸の回転値を-3.14～3.14に収まるようにする
-	if (angle.y < -DirectX::XM_PI)
-	{
-		angle.y += DirectX::XM_2PI;
-	}
-	if (angle.y > DirectX::XM_PI)
-	{
-		angle.y -= DirectX::XM_2PI;
-	}
+	Player& player = Player::Instance();
+
+	angle.y = player.GetAngle().y;
 
 	// カメラの回転値を回転行列に変換
 	DirectX::XMMATRIX Transform = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
@@ -70,7 +49,7 @@ void CameraController::DrawDebugGUI()
 	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
 
-	if (ImGui::Begin("CameraController", nullptr, ImGuiWindowFlags_None))
+	if (ImGui::TreeNode("CameraController"))
 	{
 		if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
 		{
@@ -94,7 +73,6 @@ void CameraController::DrawDebugGUI()
 			angle.y = DirectX::XMConvertToRadians(a.y);
 			angle.z = DirectX::XMConvertToRadians(a.z);
 		}
-
+		ImGui::TreePop();
 	}
-	ImGui::End();
 }

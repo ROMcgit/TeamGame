@@ -24,6 +24,9 @@ public:
 		const DirectX::XMFLOAT4X4& view,
 		const DirectX::XMFLOAT4X4& projection) {};
 
+	// デバッグ用GUI描画
+	virtual void DrawDebugGUI() {};
+
 	// デバッグプリミティブ描画
 	virtual void DrawDebugPrimitive();
 

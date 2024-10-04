@@ -41,6 +41,9 @@ public:
 	// エネミー削除
 	void Remove(Enemy* enemy);
 
+	// デバッグ用GUI描画
+	void DrawDebugGUI();
+
 	// デバッグプリミティブ描画
 	void DrawDebugPrimitive();
 

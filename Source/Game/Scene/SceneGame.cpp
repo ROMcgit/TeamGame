@@ -54,6 +54,11 @@ void SceneGame::Finalize()
 	// エネミー終了化
 	EnemyManager::Instance().Clear();
 
+	// アイテム終了化
+	ItemManager::Instance().Clear();
+
+	// 設置物終了化
+	InstallationManager::Instance().Clear();
 }
 
 // 更新処理
@@ -65,6 +70,9 @@ void SceneGame::Update(float elapsedTime)
 	cameraController->SetTarget(target);
 	cameraController->Update(elapsedTime);
 
+	// 生成処理
+	Newestablishment(elapsedTime);
+
 	// ステージ更新処理
 	StageManager::Instance().Update(elapsedTime);
 
@@ -74,11 +82,14 @@ void SceneGame::Update(float elapsedTime)
 	// エネミー更新処理
 	EnemyManager::Instance().Update(elapsedTime);
 
+	// アイテム更新処理
+	ItemManager::Instance().Update(elapsedTime);
+
+	// 設置物更新処理
+	InstallationManager::Instance().Update(elapsedTime);
+
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
-
-	// 生成処理
-	Newestablishment();
 }
 
 // 描画処理
@@ -139,8 +150,14 @@ void SceneGame::Render()
 
 		//エネミー描画
 		EnemyManager::Instance().Render(dc,shader);
-		shader->End(dc);
+		
+		// アイテム描画処理
+		ItemManager::Instance().Render(dc, shader);
 
+		// 設置物描画処理
+		InstallationManager::Instance().Render(dc, shader);
+		
+		shader->End(dc);
 	}
 
 	// 3Dエフェクト描画
@@ -156,6 +173,12 @@ void SceneGame::Render()
 		// エネミーデバッグプリミティブ描画
 		EnemyManager::Instance().DrawDebugPrimitive();
 
+		// アイテムデブッグプリミティブ描画
+		ItemManager::Instance().DrawDebugPrimitive();
+
+		// 設置物デバッグプリミティブ描画
+		InstallationManager::Instance().DrawDebugPrimitive();
+
 		// ラインレンダラ描画実行
 		graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
 
@@ -165,21 +188,32 @@ void SceneGame::Render()
 
 	// 2Dスプライト描画
 	{
+		player->SpriteRender(dc);
 		EnemyManager::Instance().SpriteRender(dc);
 		EnemyManager::Instance().RenderEnemyGauge(dc, rc.view, rc.projection);
 	}
 
 	// 2DデバッグGUI描画
 	{
-		// プレイヤーデバッグ描画
-		player->DrawDebugGUI();
-		camera.DrawDebugGUI();
-		cameraController->DrawDebugGUI();
+		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
+		{
+			ImGui::InputInt("EstablishmentCount", &establishmentCount); // 設置した数
+			ImGui::InputFloat("NewestablishmentTimer", &newestablishmentTimer); // 設置した数
+
+
+			// プレイヤーデバッグ描画
+			player->DrawDebugGUI();
+			camera.DrawDebugGUI();
+			cameraController->DrawDebugGUI();
+
+			ItemManager::Instance().DrawDebugGUI();
+		}
+		ImGui::End();
 	}
 }
 
 // 生成処理
-void SceneGame::Newestablishment()
+void SceneGame::Newestablishment(float elapsedTime)
 {
 	EnemyManager& enemyManager               = EnemyManager::Instance();
 	ItemManager&  itemManager                = ItemManager::Instance();
@@ -188,45 +222,59 @@ void SceneGame::Newestablishment()
 	int enemyCount         = enemyManager.GetEnemyCount();               // 敵の数
 	int itemCount          = itemManager.GetItemCount();                 // アイテムの数
 	int installationCount  = installationManager.GetInstallationCount(); // 設置物の数
-	int establishmentCount = enemyCount + itemCount + installationCount; // 全ての数
+	establishmentCount = enemyCount + itemCount + installationCount;     // 全ての数
 
-	if (establishmentCount < 30)
+	if (newestablishmentTimer > newestablishmentMaxTimer)
 	{
-		int newRansu = rand() % 10 + 1;
+		if (establishmentCount < 50)
+		{
+			int newRansu = rand() % 10 + 1;
 
-		switch (newRansu)
-		{
-		//! 敵生成
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-		case 5:
-		case 6:
-		{
-			std::unique_ptr<EnemySika> sika = std::make_unique<EnemySika>();
-			sika->SetPosition(DirectX::XMFLOAT3(20, 0, 20));
-			enemyManager.Register(std::move(sika));
-		}
+			switch (newRansu)
+			{
+				//! 敵生成
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			{
+				std::unique_ptr<EnemySika> sika = std::make_unique<EnemySika>();
+				sika->SetPosition(DirectX::XMFLOAT3(0, 0, 80));
+				enemyManager.Register(std::move(sika));
+
+				newestablishmentTimer = 0.0f;
+			}
 			break;
-		case 7:
-		case 8:
-		case 9:
-		//! アイテム生成
-		{
-			std::unique_ptr<Apple> apple = std::make_unique<Apple>();
-			apple->SetPosition(DirectX::XMFLOAT3(20, 0, 20));
-			itemManager.Register(std::move(apple));
-		}
+			case 7:
+			case 8:
+			case 9:
+				//! アイテム生成
+			{
+				std::unique_ptr<Apple> apple = std::make_unique<Apple>();
+				apple->SetPosition(DirectX::XMFLOAT3(0, 1, 30));
+				itemManager.Register(std::move(apple));
+
+				newestablishmentTimer = 0.0f;
+			}
 			break;
-		case 10:
-		//! 設置物生成
-		{
-			
-		}
+			case 10:
+				//! 設置物生成
+			{
+
+
+				newestablishmentTimer = 0.0f;
+			}
 			break;
-		default:
-			break;
+			default:
+				break;
+			}
 		}
+		else
+			newestablishmentTimer = 0;
 	}
+	else
+		newestablishmentTimer += elapsedTime;
+	
 }

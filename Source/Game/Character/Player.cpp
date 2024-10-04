@@ -27,6 +27,8 @@ Player::Player()
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.03f;
 
+	hp = hpDamage = maxHp = 100;
+
 	// 当たり判定
 	radius = 0.9f;
 	height = 2.3f;
@@ -37,6 +39,15 @@ Player::Player()
 
 	// 移動ステートへ遷移
 	TransitionMoveState();
+
+	//! HPゲージの位置
+	hpSpritePos = { 100.0f, 640.0f };
+	hpSpriteShakePosY = hpSpritePos.y;
+
+	for (int i = 0; i < 3; i++)
+	{
+		hpSprite[i + 1] = std::make_unique<Sprite>();
+	}
 }
 
 // デストラクタ
@@ -120,6 +131,9 @@ void Player::Update(float elapsedTime)
 
 	// プレイヤーと敵との衝突処理
 	CollisionPlayerVsEnemies();
+
+	// HP管理
+	HpControll(elapsedTime);
 
 	// 無敵時間更新
 	UpdateInvincibleTimer(elapsedTime);
@@ -217,6 +231,61 @@ void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
 // HPなどのUI描画
 void Player::SpriteRender(ID3D11DeviceContext* dc)
 {
+	float textureWidth = static_cast<float>(hpSprite[1]->GetTextureWidth());
+	float textureHeight = static_cast<float>(hpSprite[1]->GetTextureHeight());
+
+	if (!hideSprites)
+	{
+		// ゲージの裏(黒色)
+		hpSprite[1]->Render(dc,
+			hpSpritePos.x, hpSpritePos.y,
+			137, 25,
+			0, 0, textureWidth, textureHeight,
+			0,
+			0.0f, 0.0f, 0.0f, 1);
+
+		if (hp > 25)
+		{
+			// ダメージ(赤色)
+			hpSprite[2]->Render(dc,
+				hpSpritePos.x, hpSpritePos.y,
+				hpDamage * 1.34f, 25,
+				0, 0, textureWidth, textureHeight,
+				0,
+				1, 0, 0, 1);
+
+			// ダメージ(緑色)
+			hpSprite[3]->Render(dc,
+				hpSpritePos.x, hpSpritePos.y,
+				hp * 1.34f, 25,
+				0, 0, textureWidth, textureHeight,
+				0,
+				0, 1, 0, 1);
+
+
+		}
+		else
+		{
+			textureWidth = static_cast<float>(hpSprite[1]->GetTextureWidth());
+			textureHeight = static_cast<float>(hpSprite[1]->GetTextureHeight());
+
+			// ダメージ(白色)
+			hpSprite[2]->Render(dc,
+				hpSpritePos.x, hpSpritePos.y,
+				hpDamage * 1.34f, 25,
+				0, 0, textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+
+			// ダメージ(赤色)
+			hpSprite[3]->Render(dc,
+				hpSpritePos.x, hpSpritePos.y,
+				hp * 1.34f, 25,
+				0, 0, textureWidth, textureHeight,
+				0,
+				1, 0, 0, 1);
+		}
+	}
 }
 
 // 移動入力処理
@@ -557,7 +626,8 @@ void Player::TransitionDamageState()
 	state = State::Damage;
 
 	// ダメージアニメーション再生
-	//model->PlayAnimation(Anim_Damage, false);
+	for(int i = 0; i < 3; i++)
+	model[i]->PlayAnimation(Anim_Damage, false);
 }
 
 // ダメージステート更新処理
@@ -739,8 +809,9 @@ void Player::DrawDebugGUI()
 	ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
 	ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
 
-	if (ImGui::Begin("Player", nullptr, ImGuiWindowFlags_None))
+	if (ImGui::TreeNode("Player"))
 	{
+		ImGui::InputInt("HP", &hp);
 		ImGui::InputFloat3("Velocity", &velocity.x);
 
 		// トランスフォーム
@@ -767,6 +838,6 @@ void Player::DrawDebugGUI()
 			ImGui::InputFloat("LungesChargeTimer", &lungesChargeTimer);
 			ImGui::InputFloat("LungesTimer", &lungesTimer);
 		}
+		ImGui::TreePop();
 	}
-	ImGui::End();
 }

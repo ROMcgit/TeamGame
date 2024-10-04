@@ -66,7 +66,6 @@ void ItemManager::DrawDebugPrimitive()
 	{
 		item->DrawDebugPrimitive();
 	}
-
 }
 
 // エネミー登録
@@ -85,6 +84,15 @@ void ItemManager::Remove(Item* item)
 {
 	// 破棄リストに追加
 	removes.push_back(item);
+}
+
+// デバッグ用GUI描画
+void ItemManager::DrawDebugGUI()
+{
+	for (auto& item : items)
+	{
+		item->DrawDebugGUI();
+	}
 }
 
 void ItemManager::CollisionItemVsEnemies()

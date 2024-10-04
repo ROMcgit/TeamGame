@@ -28,10 +28,13 @@ public:
 
 private:
 	// ¶¬ˆ—
-	void Newestablishment();
+	void Newestablishment(float elapsedTime);
 
 private:
 	std::unique_ptr <Player> player;
 	std::unique_ptr <CameraController> cameraController;
 	
+	int establishmentCount = 0;
+	float newestablishmentTimer    = 0.0f;
+	float newestablishmentMaxTimer = 0.2f;
 };

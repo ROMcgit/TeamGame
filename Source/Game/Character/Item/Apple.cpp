@@ -11,7 +11,7 @@ Apple::Apple()
 	model = std::make_unique<Model>("Data/Model/Item/Apple/Apple.mdl");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.01f;
+	scale.x = scale.y = scale.z = 0.03f;
 
 	gravity = 0.0f;
 

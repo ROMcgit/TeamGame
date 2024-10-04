@@ -11,7 +11,7 @@ EnemySika::EnemySika()
 	model = std::make_unique<Model>("Data/Model/Sika/Sika.mdl");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.01f;
+	scale.x = scale.y = scale.z = 0.03f;
 
 	gravity = 0.0f;
 
@@ -257,7 +257,7 @@ void EnemySika::UpdatePursuitState(float elapsedTime)
 	targetPosition = Player::Instance().GetPosition();
 
 	// 目標地点へ移動
-	MoveToTarget(elapsedTime, 10.0f);
+	MoveToTarget(elapsedTime, 5.0f);
 }
 
 // ノードとプレイヤーの衝突処理

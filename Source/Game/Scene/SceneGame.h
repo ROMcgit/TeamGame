@@ -27,8 +27,8 @@ public:
 	void Render() override;
 
 private:
-	// “G‚ÆƒAƒCƒeƒ€¶¬ˆ—
-	void NewEnemyOrItem();
+	// ¶¬ˆ—
+	void Newestablishment();
 
 private:
 	std::unique_ptr <Player> player;

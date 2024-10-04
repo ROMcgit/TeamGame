@@ -4,6 +4,7 @@
 #include "Game/Character/Enemy/EnemyManager.h"
 #include "Game/Character/Enemy/EnemySika.h"
 #include "Game/Character/Item/ItemManager.h"
+#include "Game/Character/Item/Apple.h"
 #include "Game/Character/Installation/InstallationManager.h"
 #include "Game/Effect/EffectManager.h"
 #include "Input/Input.h"
@@ -75,6 +76,9 @@ void SceneGame::Update(float elapsedTime)
 
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
+
+	// 生成処理
+	Newestablishment();
 }
 
 // 描画処理
@@ -174,8 +178,8 @@ void SceneGame::Render()
 	}
 }
 
-// 敵とアイテム生成処理
-void SceneGame::NewEnemyOrItem()
+// 生成処理
+void SceneGame::Newestablishment()
 {
 	EnemyManager& enemyManager               = EnemyManager::Instance();
 	ItemManager&  itemManager                = ItemManager::Instance();
@@ -210,7 +214,9 @@ void SceneGame::NewEnemyOrItem()
 		case 9:
 		//! アイテム生成
 		{
-			
+			std::unique_ptr<Apple> apple = std::make_unique<Apple>();
+			apple->SetPosition(DirectX::XMFLOAT3(20, 0, 20));
+			itemManager.Register(std::move(apple));
 		}
 			break;
 		case 10:

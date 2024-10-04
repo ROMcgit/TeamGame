@@ -52,11 +52,11 @@ private:
 	std::unique_ptr<Sprite> enemyHp;
 
 	State state = State::Init;
-	DirectX::XMFLOAT3 targetPosition = { 0,0,0 };
+	DirectX::XMFLOAT3 targetPosition  = { 0,0,0 };
 	DirectX::XMFLOAT3 territoryOrigin = { 0,0,0 };
 	float territoryRange = 10.0f;
 
-	float stateTimer = 0.0f;
+	float stateTimer  = 0.0f;
 	float searchRange = 5.0f;
 	float attackRange = 1.5f;
 };

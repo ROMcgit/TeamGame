@@ -22,6 +22,9 @@ ProjectileUnko::~ProjectileUnko()
 // 更新処理
 void ProjectileUnko::Update(float elapsedTime)
 {
+	// 当たり判定の位置設定
+	CollisionPosSettings();
+
 	// モデルアニメーション更新処理
 	model->UpdateAnimation(elapsedTime);
 

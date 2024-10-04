@@ -7,7 +7,6 @@
 class ProjectileUnko : public Projectile
 {
 public:
-	/*ProjectileUnko();*/
 	ProjectileUnko(ProjectileManager* manage);
 	~ProjectileUnko() override;
 

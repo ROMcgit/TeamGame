@@ -183,6 +183,9 @@ void Player::Update(float elapsedTime)
 	}
 #endif
 
+	// 当たり判定の位置設定
+	CollisionPosSettings();
+
 	// オブジェクト行列を更新
 	UpdateTransform();
 

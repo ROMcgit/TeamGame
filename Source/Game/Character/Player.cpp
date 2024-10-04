@@ -5,8 +5,7 @@
 #include "Graphics/Graphics.h"
 #include "Game/Character/Enemy/EnemyManager.h"
 #include "Other/Collision.h"
-#include "Game/Character/Projectile/ProjectileStraight.h"
-#include "Game/Character/Projectile/ProjectileHoming.h"
+#include "Game/Character/Projectile/ProjectileUnko.h"
 
 static Player* instance = nullptr;
 
@@ -21,12 +20,12 @@ Player::Player()
 	// インスタンスポインタ設定
 	instance = this;
 
-	//model = new Model("Data/Model/Mr.Incredible/Mr.Incredible.mdl");
-	model = std::make_unique <Model>("Data/Model/Jammo/Jammo.mdl");
-	//model->PlayAnimation(0);
+	model[0] = std::make_unique <Model>("Data/Model/Monkey/0.mdl/Monkey_Face.mdl");
+	model[1] = std::make_unique <Model>("Data/Model/Monkey/0.mdl/Monkey_Leg_Left.mdl");
+	model[2] = std::make_unique <Model>("Data/Model/Monkey/0.mdl/Monkey_Leg_Right.mdl");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.01f;
+	scale.x = scale.y = scale.z = 0.03f;
 
 	// ヒットエフェクト読み込み
 	hitEffect = std::make_unique <Effect>("Data/Effect/Hit.efk");
@@ -46,17 +45,17 @@ Player::~Player()
 // 更新処理
 void Player::Update(float elapsedTime)
 {
-	if (position.y > 0.0f)
+	if (position.y > 0.8f)
 	{
 		isGround = false;
 		gravity = -0.5f;
 	}
 
-	if (position.y < 0.0f)
+	if (position.y < 0.8f)
 	{
 		isGround   = true;
 		gravity    = 0.0f;
-		position.y = 0.0f;
+		position.y = 0.8f;
 	}
 
 	// ムービー中なら待機ステートへ遷移
@@ -76,7 +75,8 @@ void Player::Update(float elapsedTime)
 		if (!movieAnimation)
 		{
 			state = State::Lunges; // ステートを待機に変更
-			model->PlayAnimation(movieAnimNum, movieAnimLoop);
+			for(int i = 0; i < 3; i++)
+			model[i]->PlayAnimation(movieAnimNum, movieAnimLoop);
 			movieAnimation = true;
 		}
 	}
@@ -187,16 +187,20 @@ void Player::Update(float elapsedTime)
 	UpdateTransform();
 
 	// モデルアニメーション更新処理
-	model->UpdateAnimation(elapsedTime);
+	for (int i = 0; i < 3; i++)
+	{
+		model[i]->UpdateAnimation(elapsedTime);
 
-	// モデル更新処理
-	model->UpdateTransform(transform);
+		// モデル更新処理
+		model[i]->UpdateTransform(transform);
+	}
 }
 
 // 描画処理
 void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	shader->Draw(dc, model.get());
+	for (int i = 0; i < 3; i++)
+	shader->Draw(dc, model[i].get());
 
 	// 弾丸描画処理
 	projectileManager.Render(dc, shader);
@@ -278,10 +282,10 @@ void Player::InputProjectile()
 		}
 
 		//発射
-		//ProjectileStraight * projectile = new ProjectileStraight(&projectileManager);
-		//projectile->Launch(dir, pos);
-		ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
-		projectile->Launch(dir, pos, target);
+		ProjectileUnko * projectile = new ProjectileUnko(&projectileManager);
+		projectile->Launch(dir, pos);
+		/*ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
+		projectile->Launch(dir, pos, target);*/
 		
 		//projectileManager.Register(projectile);
 	}
@@ -301,46 +305,46 @@ bool Player::InputAttack()
 }
 
 // ノードと敵の衝突処理
-void Player::CollisionNodeVsEnemies(const char* nodeName, float nodeRadius)
-{
-	// ノード取得
-	Model::Node* node = model->FindNode(nodeName);
-
-	// ノードが存在しない場合は処理を終了
-	if (!node) return;
-
-	// ノード位置取得
-	DirectX::XMMATRIX nodeTransform = DirectX::XMLoadFloat4x4(&node->worldTransform);
-	DirectX::XMVECTOR nodePosVector = nodeTransform.r[3];
-	DirectX::XMFLOAT3 nodePosition;
-	DirectX::XMStoreFloat3(&nodePosition, nodePosVector);
-
-	// 敵マネージャーのインスタンスを取得
-	EnemyManager& enemyManager = EnemyManager::Instance();
-
-	// 指定のノードと全ての敵を総当たりで衝突処理
-	int enemyCount = enemyManager.GetEnemyCount();
-	for (int i = 0; i < enemyCount; ++i)
-	{
-		std::unique_ptr<Enemy>& enemy = enemyManager.GetEnemy(i);
-
-		// 衝突処理
-		DirectX::XMFLOAT3 outPosition;
-		if (Collision::IntersectSphereVsSphere(
-			nodePosition,
-			nodeRadius,
-			enemy->GetPosition(),
-			enemy->GetRadius(),
-			outPosition
-		))
-		{
-			// 押し出しの後の位置設定
-			enemy->SetPosition(outPosition);
-
-			enemy->ApplyDamage(1, 4.5f);
-		}
-	}
-}
+//void Player::CollisionNodeVsEnemies(const char* nodeName, float nodeRadius)
+//{
+//	// ノード取得
+//	Model::Node* node = model->FindNode(nodeName);
+//
+//	// ノードが存在しない場合は処理を終了
+//	if (!node) return;
+//
+//	// ノード位置取得
+//	DirectX::XMMATRIX nodeTransform = DirectX::XMLoadFloat4x4(&node->worldTransform);
+//	DirectX::XMVECTOR nodePosVector = nodeTransform.r[3];
+//	DirectX::XMFLOAT3 nodePosition;
+//	DirectX::XMStoreFloat3(&nodePosition, nodePosVector);
+//
+//	// 敵マネージャーのインスタンスを取得
+//	EnemyManager& enemyManager = EnemyManager::Instance();
+//
+//	// 指定のノードと全ての敵を総当たりで衝突処理
+//	int enemyCount = enemyManager.GetEnemyCount();
+//	for (int i = 0; i < enemyCount; ++i)
+//	{
+//		std::unique_ptr<Enemy>& enemy = enemyManager.GetEnemy(i);
+//
+//		// 衝突処理
+//		DirectX::XMFLOAT3 outPosition;
+//		if (Collision::IntersectSphereVsSphere(
+//			nodePosition,
+//			nodeRadius,
+//			enemy->GetPosition(),
+//			enemy->GetRadius(),
+//			outPosition
+//		))
+//		{
+//			// 押し出しの後の位置設定
+//			enemy->SetPosition(outPosition);
+//
+//			enemy->ApplyDamage(1, 4.5f);
+//		}
+//	}
+//}
 
 // 移動ステートへ遷移
 void Player::TransitionMoveState()
@@ -348,7 +352,8 @@ void Player::TransitionMoveState()
 	state = State::Move;
 
 	// 走りアニメーション再生
-	model->PlayAnimation(Anim_Running, true);
+	for (int i = 0; i < 3; i++)
+	model[i]->PlayAnimation(Anim_Run, true);
 }
 
 // 移動ステート更新処理
@@ -378,7 +383,7 @@ void Player::UpdateMoveState(float elapsedTime)
 		lunges = false;
 
 		// 移動処理
-		Move(dir.x, dir.z, 10);
+		Move(dir.x, dir.z, 15);
 	}
 
 	GamePad& gamePad = Input::Instance().GetGamePad();
@@ -430,7 +435,8 @@ void Player::TransitionLungesState()
 
 	lungesTimer = 0.0f;       // 突進時間
 
-	model->PlayAnimation(Anim_Idle, true);
+	for (int i = 0; i < 3; i++)
+	model[i]->PlayAnimation(Anim_Stop, true);
 }
 
 // 突進ステート更新
@@ -503,7 +509,7 @@ void Player::TransitionAttackState()
 	state = State::Attack;
 
 	// 着地アニメーション再生
-	model->PlayAnimation(Anim_Attack, false, 0.2f);
+	//model->PlayAnimation(Anim_Attack, false, 0.2f);
 
 	playerAnimeCount = 0.0f;
 }
@@ -511,10 +517,13 @@ void Player::TransitionAttackState()
 // 攻撃ステート更新処理
 void Player::UpdateAttackState(float elapsedTime)
 {
-	if (!model->IsPlayAnimation())
+	for (int i = 0; i < 3; i++)
 	{
-		// 待機ステートへ遷移
-		TransitionMoveState();
+		if (!model[i]->IsPlayAnimation())
+		{
+			// 待機ステートへ遷移
+			TransitionMoveState();
+		}
 	}
 
 	playerAnimeCount += elapsedTime;
@@ -530,7 +539,7 @@ void Player::UpdateAttackState(float elapsedTime)
 	if (attackCollisionFlag)
 	{
 		// 左手ノードとエネミーの衝突処理
-		CollisionNodeVsEnemies("mixamorig:LeftHand", leftHandRadius);
+		//CollisionNodeVsEnemies("mixamorig:LeftHand", leftHandRadius);
 	}
 }
 
@@ -540,16 +549,19 @@ void Player::TransitionDamageState()
 	state = State::Damage;
 
 	// ダメージアニメーション再生
-	model->PlayAnimation(Anim_GetHit1, false);
+	//model->PlayAnimation(Anim_Damage, false);
 }
 
 // ダメージステート更新処理
 void Player::UpdateDamageState(float elapsedTime)
 {
-	// ダメージアニメーションが終わったら待機ステートへ遷移
-	if (!model->IsPlayAnimation())
+	for (int i = 0; i < 3; i++)
 	{
-		TransitionMoveState();
+		// ダメージアニメーションが終わったら待機ステートへ遷移
+		if (!model[i]->IsPlayAnimation())
+		{
+			TransitionMoveState();
+		}
 	}
 }
 
@@ -559,7 +571,7 @@ void Player::TransitionDeathState()
 	state = State::Death;
 
 	// 死亡アニメーション再生
-	model->PlayAnimation(Anim_Death, false);
+	//model->PlayAnimation(Anim_Death, false);
 }
 
 // 死亡ステート更新処理
@@ -617,19 +629,6 @@ void Player::DrawDebugPrimitive()
 	//	leftHandRadius,
 	//	DirectX::XMFLOAT4(1, 0, 0, 1)
 	//);
-
-	// 攻撃衝突用の左手ノードのデバッグ球を描画
-	if (attackCollisionFlag)
-	{
-		Model::Node* leftHandBone = model->FindNode("mixamorig:LeftHand");
-		debugRenderer->DrawSphere(DirectX::XMFLOAT3(
-		leftHandBone->worldTransform._41,
-		leftHandBone->worldTransform._42,
-		leftHandBone->worldTransform._43),
-		leftHandRadius,
-		DirectX::XMFLOAT4(1, 0, 0, 1)
-		);
-	}
 }
 
 // 着地した時に呼ばれる

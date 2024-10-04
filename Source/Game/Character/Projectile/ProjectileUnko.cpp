@@ -1,32 +1,30 @@
-#include "Game/Character/Projectile/ProjectileStraight.h"
+#include "Game/Character/Projectile/ProjectileUnko.h"
 #include "Game/Character/Projectile/ProjectileManager.h"
 
 // コンストラクタ
-//ProjectileStraight::ProjectileStraight()
-//{
-//
-//}
-
-// コンストラクタ
-ProjectileStraight::ProjectileStraight(ProjectileManager* manager) : Projectile(manager)
+ProjectileUnko::ProjectileUnko(ProjectileManager* manager) : Projectile(manager)
 {
 	//model = new Model("./Data/Model/SpikeBall/SpikeBall.mdl");
-	model = new Model("./Data/Model/Sword/Sword.mdl");
+	model = new Model("./Data/Model/Monkey/0.mdl/Projectile_Unko.mdl");
 
 	// 表示サイズを調整
-	//scale.x = scale.y = scale.z = 0.5f;
-	scale.x = scale.y = scale.z = 6.0f;
+	scale.x = scale.y = scale.z = 0.03f;
+
+	model->PlayAnimation(0, true); // アニメーション
 }
 
 // デストラクタ
-ProjectileStraight::~ProjectileStraight()
+ProjectileUnko::~ProjectileUnko()
 {
 	delete model;
 }
 
 // 更新処理
-void ProjectileStraight::Update(float elapsedTime)
+void ProjectileUnko::Update(float elapsedTime)
 {
+	// モデルアニメーション更新処理
+	model->UpdateAnimation(elapsedTime);
+
 	// 寿命処理
 	lifeTimer -= elapsedTime;
 	if (lifeTimer <= 0)
@@ -52,13 +50,13 @@ void ProjectileStraight::Update(float elapsedTime)
 }
 
 // 描画処理
-void ProjectileStraight::Render(ID3D11DeviceContext* dc, Shader* shader)
+void ProjectileUnko::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	shader->Draw(dc, model);
 }
 
 // 発射
-void ProjectileStraight::Launch(const DirectX::XMFLOAT3& direction,
+void ProjectileUnko::Launch(const DirectX::XMFLOAT3& direction,
 	const DirectX::XMFLOAT3& position)
 {
 	this->direction = direction;

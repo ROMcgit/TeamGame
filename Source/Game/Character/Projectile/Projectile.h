@@ -9,9 +9,11 @@ class ProjectileManager;
 class Projectile
 {
 public:
-	/*Projectile() {}*/
 	Projectile(ProjectileManager* manager);
 	virtual ~Projectile() {}
+
+	// 当たり判定の位置を設定
+	void CollisionPosSettings();
 
 	// 更新処理
 	virtual void Update(float elapsedTime) = 0;
@@ -48,4 +50,7 @@ protected:
 	DirectX::XMFLOAT4X4 transform = { 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1 };
 	ProjectileManager* manager = nullptr;
 	float radius = 0.5f;
+
+	DirectX::XMFLOAT3 collisionPos    = { 0, 0, 0 };    // 当たり判定の位置
+	DirectX::XMFLOAT3 collisionOffset = { 0, 0, 0 }; // 判定位置ずらし用のオフセット
 };

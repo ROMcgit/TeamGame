@@ -50,7 +50,7 @@ protected:
 private:
 
 	// ノードとエネミーの衝突処理
-	void CollisionNodeVsEnemies(const char* nodeName, float nodeRadius);
+	//void CollisionNodeVsEnemies(const char* nodeName, float nodeRadius);
 
 	// 移動入力処理
 	bool InputMove(float elapsedTime);
@@ -110,22 +110,12 @@ private:
 	// アニメーション
 	enum Animation
 	{
-		Anim_Attack,
-		Anim_Death,
-		Anim_Falling,
-		Anim_GetHit1,
-		Anim_GetHit2,
-		Anim_Idle,
-		Anim_Jump,
-		Anim_Jump_Flip,
-		Anim_Landing,
-		Anim_Reving,
-		Anim_Running,
-		Anim_Walking
+		Anim_Run,
+		Anim_Stop,
 	};
 
 private:
-	std::unique_ptr<Model> model;
+	std::unique_ptr<Model> model[3];
 	
 	float moveSpeed = 5.5f;
 	float turnSpeed = DirectX::XMConvertToRadians(120);

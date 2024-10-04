@@ -3,6 +3,16 @@
 #include "Game/Camera/Camera.h"
 #include "Game/Stage/StageManager.h"
 
+// 当たり判定の位置を設定
+void Character::CollisionPosSettings()
+{
+	collisionPos = {
+		position.x + collisionOffset.x,
+		position.y + collisionOffset.y,
+		position.z + collisionOffset.z
+	};
+}
+
 // 行列更新処理
 void Character::UpdateTransform()
 {

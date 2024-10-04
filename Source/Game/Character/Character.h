@@ -9,6 +9,9 @@ public:
 	Character() {}
 	virtual ~Character() {}
 
+	// 当たり判定の位置を設定
+	void CollisionPosSettings();
+
 	// 行列更新処理
 	void UpdateTransform();
 
@@ -53,6 +56,9 @@ public:
 
 	// 位置情報
 	const DirectX::XMFLOAT3& GetPosition() const { return position; }
+
+	// 当たり判定の位置取得
+	const DirectX::XMFLOAT3& GetCollisionPos() const { return collisionPos; }
 
 	// 回転取得
 	const DirectX::XMFLOAT3& GetAngle() const { return angle; }
@@ -128,10 +134,12 @@ protected:
 	virtual void OnDead();
 
 protected:
-	DirectX::XMFLOAT3    position = { 0, 0, 0, };
-	DirectX::XMFLOAT3    angle = { 0, 0, 0 };
-	DirectX::XMFLOAT3    scale = { 1,1,1 };
-	DirectX::XMFLOAT4X4  transform = {
+	DirectX::XMFLOAT3    position     = { 0, 0, 0, };
+	DirectX::XMFLOAT3    collisionPos = { 0, 0, 0 };
+	DirectX::XMFLOAT3    collisionOffset = { 0, 0, 0 };
+	DirectX::XMFLOAT3    angle        = { 0, 0, 0 };
+	DirectX::XMFLOAT3    scale        = { 1,1,1 };
+	DirectX::XMFLOAT4X4  transform    = {
 		1,0,0,0,
 		0,1,0,0,
 		0,0,1,0,
@@ -145,13 +153,13 @@ protected:
 
 	bool isGround = false;
 
-	bool movieScene     = false;   // ムービー中かどうか
-	float movieTime     = 0.0f;   // ムービー時間
-	bool movieAnimation = false;  // ムービー中のアニメーションをしたか
-	int movieAnimNum    = 0;      // ムービー中のアニメーション番号
-	bool movieAnimLoop  = false;  // ムービー中アニメーションをにループさせるか
+	bool movieScene     = false; // ムービー中かどうか
+	float movieTime     = 0.0f;  // ムービー時間
+	bool movieAnimation = false; // ムービー中のアニメーションをしたか
+	int movieAnimNum    = 0;     // ムービー中のアニメーション番号
+	bool movieAnimLoop  = false; // ムービー中アニメーションをにループさせるか
 
-/**************************************************************/
+/********************************************************************************/
 
 	int hp                     = 10;     // HP
 	int maxHp                  = 5;      // 最大HP
@@ -160,8 +168,8 @@ protected:
 	int doHpDirectorCount      = 0;      // HPを増やした回数(HP演出用)
 	float doHpDirectorWaitTime = 0.005f; // HP増やすまでの待ち時間
 
-	float nameSpriteOpacity = 0.0f;            // 名前の不透明度
-	int hpSpriteHeight = 0;               // HP画像の高さ
+	float nameSpriteOpacity = 0.0f;       // 名前の不透明度
+	int hpSpriteHeight      = 0;          // HP画像の高さ
 
 	DirectX::XMFLOAT2 hpSpritePos = { 0.0f, 0.0f };  // HPゲージの位置
 	float hpSpriteShakePosY = 0.0f;            // HPゲージシェイクの位置
@@ -174,7 +182,7 @@ protected:
 	float hpShakeTimer = 0.0f;  // HPシェイクタイマー
 	bool hideSprites = false; // HPなどを隠す
 
-	float invincibleTimer = 0.0f;
+	float invincibleTimer = 0.0f; // 無敵時間
 
 	float hpDamageCount = 2; // ダメージ演出を行うまでの時間
 	float hpDamageDirectorWaitCount = 0; // HPを減らす演出にディレイをかける
@@ -188,7 +196,7 @@ protected:
 	float stateChangeWaitTimer = 0.0f;   // ステート切り替えまでの時間
 	float actionTimer = 0.0f; // アクションタイマー
 
-/**************************************************************/
+/********************************************************************************/
 
 	float friction = 0.5f;
 

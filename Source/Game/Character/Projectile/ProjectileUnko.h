@@ -4,12 +4,12 @@
 #include "Projectile.h"
 
 // íºêiíeä€
-class ProjectileStraight : public Projectile
+class ProjectileUnko : public Projectile
 {
 public:
-	/*ProjectileStraight();*/
-	ProjectileStraight(ProjectileManager* manage);
-	~ProjectileStraight() override;
+	/*ProjectileUnko();*/
+	ProjectileUnko(ProjectileManager* manage);
+	~ProjectileUnko() override;
 
 	// çXêVèàóù
 	void Update(float elapsedTime) override;
@@ -22,6 +22,6 @@ public:
 
 private:
 	Model* model = nullptr;
-	float  speed = 10.0f;
+	float  speed = 50.0f;
 	float  lifeTimer = 3.0f;
 };

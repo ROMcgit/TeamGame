@@ -153,13 +153,10 @@
     <ClInclude Include="Source\Game\Character\Projectile\Projectile.h">
       <Filter>Source\Projectile</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Character\Projectile\ProjectileHoming.h">
-      <Filter>Source\Projectile</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Game\Character\Projectile\ProjectileManager.h">
       <Filter>Source\Projectile</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Character\Projectile\ProjectileStraight.h">
+    <ClInclude Include="Source\Game\Character\Projectile\ProjectileUnko.h">
       <Filter>Source\Projectile</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Character\Player.h">
@@ -338,13 +335,10 @@
     <ClCompile Include="Source\Game\Character\Projectile\Projectile.cpp">
       <Filter>Source\Projectile</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Character\Projectile\ProjectileHoming.cpp">
-      <Filter>Source\Projectile</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Game\Character\Projectile\ProjectileManager.cpp">
       <Filter>Source\Projectile</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Character\Projectile\ProjectileStraight.cpp">
+    <ClCompile Include="Source\Game\Character\Projectile\ProjectileUnko.cpp">
       <Filter>Source\Projectile</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Player.cpp">

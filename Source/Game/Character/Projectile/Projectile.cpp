@@ -8,6 +8,16 @@ Projectile::Projectile(ProjectileManager* manager)
 	manager->Register(this);
 }
 
+// 当たり判定の位置を設定
+void Projectile::CollisionPosSettings()
+{
+	collisionPos = {
+		position.x + collisionOffset.x,
+		position.y + collisionOffset.y,
+		position.z + collisionOffset.z
+	};
+}
+
 // デバッグプリミティブ描画
 void Projectile::DrawDebugPrimitive()
 {

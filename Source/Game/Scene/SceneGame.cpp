@@ -181,10 +181,10 @@ void SceneGame::NewEnemyOrItem()
 	ItemManager&  itemManager                = ItemManager::Instance();
 	InstallationManager& installationManager = InstallationManager::Instance();
 
-	int enemyCount         = enemyManager.GetEnemyCount();
-	int itemCount          = itemManager.GetItemCount();
-	int installationCount  = installationManager.GetInstallationCount();
-	int establishmentCount = enemyCount + itemCount + installationCount;
+	int enemyCount         = enemyManager.GetEnemyCount();               // 敵の数
+	int itemCount          = itemManager.GetItemCount();                 // アイテムの数
+	int installationCount  = installationManager.GetInstallationCount(); // 設置物の数
+	int establishmentCount = enemyCount + itemCount + installationCount; // 全ての数
 
 	if (establishmentCount < 30)
 	{

@@ -276,6 +276,9 @@
     <ClInclude Include="Source\Game\Character\Installation\InstallationManager.h">
       <Filter>Source\Character\Installations</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Character\Item\Apple.h">
+      <Filter>Source\Character\Item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -442,6 +445,9 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Installation\InstallationManager.cpp">
       <Filter>Source\Character\Installations</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Item\Apple.cpp">
+      <Filter>Source\Character\Item</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

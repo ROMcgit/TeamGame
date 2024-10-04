@@ -27,6 +27,11 @@ Player::Player()
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.03f;
 
+	// 当たり判定
+	radius = 0.9f;
+	height = 2.3f;
+	collisionOffset = { 0, -1.0f, 0 };
+
 	// ヒットエフェクト読み込み
 	hitEffect = std::make_unique <Effect>("Data/Effect/Hit.efk");
 
@@ -45,17 +50,17 @@ Player::~Player()
 // 更新処理
 void Player::Update(float elapsedTime)
 {
-	if (position.y > 0.8f)
+	if (position.y > 1.3f)
 	{
 		isGround = false;
 		gravity = -0.5f;
 	}
 
-	if (position.y < 0.8f)
+	if (position.y < 1.3f)
 	{
 		isGround   = true;
 		gravity    = 0.0f;
-		position.y = 0.8f;
+		position.y = 1.3f;
 	}
 
 	// ムービー中なら待機ステートへ遷移
@@ -615,23 +620,11 @@ void Player::DrawDebugPrimitive()
 {
 	DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
 
-	//// 衝突判定用のデバッグ球を描画
-	//debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
-
 	// 衝突判定用のデバッグ円柱を描画
 	debugRenderer->DrawCylinder(collisionPos, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
 
 	// 弾丸デバッグプリミティブ描画
 	projectileManager.DrawDebugPrimitive();
-
-	//Model::Node* leftHandBone = model->FindNode("mixamorig:LeftHand");
-	//debugRenderer->DrawSphere(DirectX::XMFLOAT3(
-	//	leftHandBone->worldTransform._41,
-	//	leftHandBone->worldTransform._42,
-	//	leftHandBone->worldTransform._43),
-	//	leftHandRadius,
-	//	DirectX::XMFLOAT4(1, 0, 0, 1)
-	//);
 }
 
 // 着地した時に呼ばれる

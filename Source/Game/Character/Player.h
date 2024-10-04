@@ -37,6 +37,12 @@ public:
 	// ’eŠÛ‚Æ“G‚ÌÕ“Ëˆ—
 	void CollisionProjectilesVsEnemies();
 
+	// ƒAƒCƒeƒ€Žæ“¾Ý’è
+	void SetDiffusionAttacks(bool diffusionAttacks)
+	{
+		this->diffusionAttacks = diffusionAttacks;
+	}
+
 protected:
 	// ’…’n‚µ‚½Žž‚ÉŒÄ‚Î‚ê‚é
 	void OnLanding() override;
@@ -140,8 +146,10 @@ private:
 	State state = State::Move;
 
 	float playerAnimeCount = 0.0f;
-
 	float leftHandRadius = 0.4f;
-
 	bool attackCollisionFlag = false;
+
+/****************************************************/
+
+	bool diffusionAttacks = false;
 };

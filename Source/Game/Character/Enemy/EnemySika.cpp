@@ -8,7 +8,7 @@
 // コンストラクタ
 EnemySika::EnemySika()
 {
-	model = std::make_unique<Model>("Data/Model/Slime/Slime.mdl");
+	model = std::make_unique<Model>("Data/Model/Sika/Sika.mdl");
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.01f;

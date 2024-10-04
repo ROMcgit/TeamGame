@@ -11,7 +11,9 @@ EnemySika::EnemySika()
 	model = std::make_unique<Model>("Data/Model/Sika/Sika.mdl");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.05f;
+	scale.x = scale.y = scale.z = 0.00f;
+
+	SetScaleChange(DirectX::XMFLOAT3(0.05f, 0.05f, 0.05f), DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f));
 
 	gravity = 0.0f;
 
@@ -58,6 +60,9 @@ void EnemySika::Update(float elapsedTime)
 	// 当たり判定の位置設定
 	CollisionPosSettings();
 
+	// スケール変更更新処理
+	UpdateScaleChange(elapsedTime);
+
 	// 速力処理更新
 	UpdateVelocity(elapsedTime);
 
@@ -82,7 +87,7 @@ void EnemySika::Update(float elapsedTime)
 	float vx = player.GetPosition().x - position.x;
 	float vz = player.GetPosition().z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist > 1200)
+	if (dist > 3000)
 		Destroy();
 }
 
@@ -176,56 +181,13 @@ void EnemySika::DrawDebugPrimitive()
 
 	DebugRenderer* debugRender = Graphics::Instance().GetDebugRenderer();
 
-	// 縄張り範囲をデバッグ円柱描画
-	debugRender->DrawCylinder(territoryOrigin, territoryRange, 1.0f,
-		DirectX::XMFLOAT4(0, 1, 0, 1));
-
 	// ターゲット位置をデバッグ球描画
 	debugRender->DrawSphere(targetPosition, radius, DirectX::XMFLOAT4(1, 1, 0, 1));
-
-	// 索敵範囲をデバッグ円柱描画
-	debugRender->DrawCylinder(position, searchRange, 1.0f, DirectX::XMFLOAT4(0, 0, 1, 1));
-
-	// 攻撃範囲をデバッグ円柱描画
-	debugRender->DrawCylinder(position, attackRange, 1.0f, DirectX::XMFLOAT4(1, 0, 0, 1));
-}
-
-// 縄張り設定
-void EnemySika::SetTerritory(const DirectX::XMFLOAT3& origin, float range)
-{
-	territoryOrigin = origin;
-	territoryRange = range;
-}
-
-// ターゲット位置をランダム設定
-void EnemySika::SetRandomTargetPosition()
-{
-	// 縄張り範囲内でランダムな位置を生成
-	float randomX = Mathf::RandomRange(territoryOrigin.x - territoryRange, territoryOrigin.x + territoryRange);
-	float randomZ = Mathf::RandomRange(territoryOrigin.z - territoryRange, territoryOrigin.z + territoryRange);
-
-	// Y座標はスライムの高さに設定するか、固定の地面の高さに設定する
-	float randomY = territoryOrigin.y; // または固定値、例: 0.0f
-
-	// ターゲット位置に設定
-	targetPosition.x = randomX;
-	targetPosition.y = randomY;
-	targetPosition.z = randomZ;
 }
 
 // 目標地点へ移動
 void EnemySika::MoveToTarget(float elapsedTime, float speedRate)
 {
-	// ターゲット方向への進行ベクトルを算出
-	float vx = targetPosition.x - position.x;
-	float vz = targetPosition.z - position.z;
-	float dist = sqrtf(vx * vx + vz * vz);
-	vx /= dist;
-	vz /= dist;
-
-	// 移動処理
-	Move(vx, vz, moveSpeed * speedRate);
-	Turn(elapsedTime, vx, vz, turnSpeed * speedRate);
 }
 
 // プレイヤーとの接触処理
@@ -270,8 +232,16 @@ void EnemySika::UpdatePursuitState(float elapsedTime)
 	// 目標地点をプレイヤー位置に設定
 	targetPosition = Player::Instance().GetPosition();
 
-	// 目標地点へ移動
-	MoveToTarget(elapsedTime, 5.0f);
+	// ターゲット方向への進行ベクトルを算出
+	float vx = targetPosition.x - position.x;
+	float vz = targetPosition.z - position.z;
+	float dist = sqrtf(vx * vx + vz * vz);
+	vx /= dist;
+	vz /= dist;
+
+	// 移動処理
+	Move(vx, vz, 5.0f);
+	Turn(elapsedTime, vx, vz, 50.0f);
 }
 
 // ノードとプレイヤーの衝突処理

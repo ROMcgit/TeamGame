@@ -11,7 +11,9 @@ Apple::Apple()
 	model = std::make_unique<Model>("Data/Model/Item/Apple/Apple.mdl");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.007f;
+	scale.x = scale.y = scale.z = 0.000f;
+
+	SetScaleChange(DirectX::XMFLOAT3(0.007f, 0.007f, 0.007f), DirectX::XMFLOAT3(0.01f, 0.01f, 0.01f));
 
 	gravity = 0.0f;
 
@@ -46,6 +48,9 @@ void Apple::Update(float elapsedTime)
 	// 速力処理更新
 	UpdateVelocity(elapsedTime);
 
+	// スケール変更更新処理
+	UpdateScaleChange(elapsedTime);
+
 	// 無敵時間更新
 	UpdateInvincibleTimer(elapsedTime);
 
@@ -70,7 +75,7 @@ void Apple::Update(float elapsedTime)
 	float vx = player.GetPosition().x - position.x;
 	float vz = player.GetPosition().z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist > 1200)
+	if (dist > 3000)
 		Destroy();
 }
 

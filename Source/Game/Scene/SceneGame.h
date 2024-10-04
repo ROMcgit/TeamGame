@@ -36,5 +36,5 @@ private:
 	
 	int establishmentCount = 0;
 	float newestablishmentTimer    = 0.0f;
-	float newestablishmentMaxTimer = 0.2f;
+	float newestablishmentMaxTimer = 0.1f;
 };

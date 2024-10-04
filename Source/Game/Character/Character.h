@@ -37,6 +37,32 @@ public:
 	// スケール設定
 	void SetScale(const DirectX::XMFLOAT3& scale) { this->scale = scale; }
 
+	// スケール変更の設定
+	void SetScaleChange(const DirectX::XMFLOAT3& toScaleChange, const DirectX::XMFLOAT3& scaleChangePower)
+	{
+		this->scaleChange = true;                // スケールを変える
+		this->toScaleChange = toScaleChange;       // ここまでスケールを変える
+		this->scaleChangePower = scaleChangePower; // 1秒間にスケールを変える大きさ
+
+		/// Xスケールが目指す大きさより小さい時
+		if (scale.x < toScaleChange.x)
+			scaleChageUp.x = true;
+		else
+			scaleChageUp.x = false;
+
+		// Yスケールが目指す大きさより小さい時
+		if (scale.y < toScaleChange.y)
+			scaleChageUp.y = true;
+		else
+			scaleChageUp.y = false;
+
+		// Zスケールが目指す大きさより小さい時
+		if (scale.z < toScaleChange.z)
+			scaleChageUp.z = true;
+		else
+			scaleChageUp.z = false;
+	}
+
 	// 加速度設定
 	void SetVelocity(const DirectX::XMFLOAT3& velocity) { this->velocity = velocity; }
 
@@ -103,6 +129,9 @@ protected:
 	// HP演出
 	bool HpDirector(int hpPlusNum = 0, int doNum = 0);
 
+	// スケール変更更新処理
+	bool UpdateScaleChange(float elapsedTime);
+
 	// HPシェイク
 	bool UpdateHpShake(float elapsedTime);
 
@@ -152,6 +181,18 @@ protected:
 	DirectX::XMFLOAT3 velocity = { 0, 0, 0, };
 
 	bool isGround = false;
+
+	bool scaleChange = false;// スケールを変更するか
+	// スケールを大きくするか
+	struct ScaleChageUp
+	{
+		bool x = false;
+		bool y = false;
+		bool z = false;
+	}scaleChageUp;
+
+	DirectX::XMFLOAT3 toScaleChange = { 0, 0, 0 }; // ここまで大きさを変える
+	DirectX::XMFLOAT3 scaleChangePower = { 0, 0, 0 }; // スケールを変える大きさ
 
 	bool movieScene     = false; // ムービー中かどうか
 	float movieTime     = 0.0f;  // ムービー時間

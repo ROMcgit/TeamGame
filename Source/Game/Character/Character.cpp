@@ -289,6 +289,80 @@ bool Character::UpdateHpShake(float elapsedTime)
 	}
 }
 
+// スケール変更更新処理
+bool Character::UpdateScaleChange(float elapsedTime)
+{
+	if (scaleChange)
+	{
+		/*! Xスケール */
+		// 大きくする
+		if (scaleChageUp.x)
+		{
+			scale.x += scaleChangePower.x * elapsedTime;
+
+			// 目指すスケールより大きいとき
+			if (scale.x > toScaleChange.x)
+				scale.x = toScaleChange.x;
+		}
+		// 小さくする
+		else
+		{
+			scale.x -= scaleChangePower.x * elapsedTime;
+
+			// 目指すスケールより小さいとき
+			if (scale.x < toScaleChange.x)
+				scale.x = toScaleChange.x;
+		}
+
+		/*! Yスケール */
+		// 大きくする
+		if (scaleChageUp.y)
+		{
+			scale.y += scaleChangePower.y * elapsedTime;
+
+			// 目指すスケールより大きいとき
+			if (scale.y > toScaleChange.y)
+				scale.y = toScaleChange.y;
+		}
+		// 小さくする
+		else
+		{
+			scale.y -= scaleChangePower.y * elapsedTime;
+
+			// 目指すスケールより小さいとき
+			if (scale.y < toScaleChange.y)
+				scale.y = toScaleChange.y;
+		}
+
+		/*! Zスケール */
+		// 大きくする
+		if (scaleChageUp.z)
+		{
+			scale.z += scaleChangePower.z * elapsedTime;
+
+			// 目指すスケールより大きいとき
+			if (scale.z > toScaleChange.z)
+				scale.z = toScaleChange.z;
+		}
+		// 小さくする
+		else
+		{
+			scale.z -= scaleChangePower.z * elapsedTime;
+
+			// 目指すスケールより小さいとき
+			if (scale.z < toScaleChange.z)
+				scale.z = toScaleChange.z;
+		}
+
+		// 目指すスケールになったら処理を終了する
+		if (scale.x == toScaleChange.x && scale.y == toScaleChange.y && scale.z == toScaleChange.z)
+			scaleChange = false;
+
+		return true;
+	}
+	else
+		return false;
+}
 
 // 垂直速力更新処理
 void Character::UpdateVerticalVelocity(float elapsedFrame)

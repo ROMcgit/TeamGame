@@ -261,8 +261,6 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 				0, 0, textureWidth, textureHeight,
 				0,
 				0, 1, 0, 1);
-
-
 		}
 		else
 		{
@@ -453,6 +451,7 @@ void Player::UpdateMoveState(float elapsedTime)
 	{
 		Move(dir.x, dir.z, 2000.0f);
 
+		invincibleTimer = 0.5f;
 		lungesTimer -= elapsedTime;
 	}
 	else
@@ -488,6 +487,10 @@ void Player::UpdateMoveState(float elapsedTime)
 		{
 			angle.x = maxAngleX;
 		}
+
+		// Y²‚Ì‰ñ“]’l‚ğ-3.14`3.14‚Éû‚ß‚é
+		if (angle.y < -DirectX::XM_PI) angle.y += DirectX::XM_2PI;
+		if (angle.y > DirectX::XM_PI)  angle.y -= DirectX::XM_2PI;
 	}
 
 	// “Ëi“ü—Íˆ—(‚«”ò‚ñ‚Å‚¢‚È‚¢)

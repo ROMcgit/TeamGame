@@ -29,9 +29,6 @@ public:
 	// デバッグプリミティブ描画
 	void DrawDebugPrimitive() override;
 
-	// 縄張り設定
-	void SetTerritory(const DirectX::XMFLOAT3& origin, float range);
-
 protected:
 	//ダメージを受けた時に呼ばれる
 	void OnDamaged() override;
@@ -40,8 +37,6 @@ protected:
 	void OnDead() override;
 
 private:
-	// ターゲット位置をランダム設定
-	void SetRandomTargetPosition();
 
 	// 目標地点へ移動
 	void MoveToTarget(float elapsedTime, float speedRate);

@@ -226,7 +226,22 @@ void SceneGame::Newestablishment(float elapsedTime)
 
 	if (newestablishmentTimer > newestablishmentMaxTimer)
 	{
-		if (establishmentCount < 50)
+		float angleY = player->GetAngle().y;
+
+		int posX = player->GetPosition().x;
+		int posZ = player->GetPosition().z;
+
+		if (posX > 0)
+			posX += rand() % 10 + 20;
+		else
+			posX -= rand() % 10 + 20;
+
+		if (posZ < 0)
+			posZ += rand() % 10 + 20;
+		else
+			posZ -= rand() % 10 + 20;
+
+		if (establishmentCount < 60)
 		{
 			int newRansu = rand() % 10 + 1;
 
@@ -241,7 +256,7 @@ void SceneGame::Newestablishment(float elapsedTime)
 			case 6:
 			{
 				std::unique_ptr<EnemySika> sika = std::make_unique<EnemySika>();
-				sika->SetPosition(DirectX::XMFLOAT3(0, 0, 80));
+				sika->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
 				enemyManager.Register(std::move(sika));
 
 				newestablishmentTimer = 0.0f;
@@ -253,7 +268,7 @@ void SceneGame::Newestablishment(float elapsedTime)
 				//! ÉAÉCÉeÉÄê∂ê¨
 			{
 				std::unique_ptr<Apple> apple = std::make_unique<Apple>();
-				apple->SetPosition(DirectX::XMFLOAT3(0, 1, 30));
+				apple->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
 				itemManager.Register(std::move(apple));
 
 				newestablishmentTimer = 0.0f;

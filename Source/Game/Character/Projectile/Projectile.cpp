@@ -23,7 +23,7 @@ void Projectile::DrawDebugPrimitive()
 {
 	DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
 
-	debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
+	debugRenderer->DrawSphere(collisionPos, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
 }
 
 // ”jŠü

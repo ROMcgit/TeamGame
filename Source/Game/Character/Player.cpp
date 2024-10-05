@@ -310,59 +310,61 @@ void Player::InputProjectile()
 	// 直進弾丸発射
 	if (gamePad.GetButtonDown() & GamePad::BTN_X) //Cキー
 	{
-		// 前方向
-		DirectX::XMFLOAT3 dir;
-
-		dir.x = transform._31;
-		dir.y = transform._32;
-		dir.z = transform._33;
-		
-		DirectX::XMVECTOR DIR;
-		DIR = DirectX::XMLoadFloat3(&dir);
-		DIR = DirectX::XMVector3Normalize(DIR);
-		DirectX::XMStoreFloat3(&dir, DIR);
-
-		// 発射位置(プレイヤーの腰あたり)
-		DirectX::XMFLOAT3 pos;
-		pos.x = position.x;
-		pos.y = position.y - (height * 0.5f);
-		pos.z = position.z;
-
-		// ターゲット(デフォルトではプレイヤーの前方)
-		DirectX::XMFLOAT3 target;
-		target.x = pos.x + dir.x * 10.0f; // 10.0f は任意の距離
-		target.y = pos.y + dir.y * 10.0f;
-		target.z = pos.z + dir.z * 10.0f;
-
-		// 一番近くの敵をターゲット
-		float dist = FLT_MAX;
-		EnemyManager& enemyManager = EnemyManager::Instance();
-		int enemyCount = enemyManager.GetEnemyCount();
-		for (int i = 0; i < enemyCount; ++i)
+		if (diffusionAttacks)
 		{
-			// 敵との距離判定
-			std::unique_ptr<Enemy>& enemy = EnemyManager::Instance().GetEnemy(i);
-			DirectX::XMVECTOR P = DirectX::XMLoadFloat3(&position);
-			DirectX::XMVECTOR E = DirectX::XMLoadFloat3(&enemy->GetPosition());
-			DirectX::XMVECTOR V = DirectX::XMVectorSubtract(E, P);
-			DirectX::XMVECTOR D = DirectX::XMVector3LengthSq(V);
-			float d;
-			DirectX::XMStoreFloat(&d, D);
-			if (d < dist)
+			for (int i = 0; i < 36; i++)
 			{
-				dist = d;
-				target = enemy->GetPosition();
-				target.y += enemy->GetHeight() * 0.5f;
-			}
-		}
+				DirectX::XMFLOAT3 dir; // 方向
 
-		//発射
-		ProjectileUnko * projectile = new ProjectileUnko(&projectileManager);
-		projectile->Launch(dir, pos);
-		/*ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
-		projectile->Launch(dir, pos, target);*/
-		
-		//projectileManager.Register(projectile);
+				// 角度を計算 (360度を36で割ってそれぞれの方向へ飛ばす)
+				float angle = DirectX::XM_2PI * i / 36.0f;
+				dir.x = cosf(angle);
+				dir.z = sinf(angle);
+
+				dir.y = 0.0f;
+
+				/// XMVECTOR型に変換して正規化する
+				DirectX::XMVECTOR DIR;
+				DIR = DirectX::XMLoadFloat3(&dir);
+				DIR = DirectX::XMVector3Normalize(DIR);
+				DirectX::XMStoreFloat3(&dir, DIR);
+
+				DirectX::XMFLOAT3 pos; // 位置
+
+				// 位置設定
+				pos.x = position.x;
+				pos.y = position.y;
+				pos.z = position.z;
+
+				ProjectileUnko* projectile = new ProjectileUnko(&projectileManager);
+				projectile->Launch(dir, pos);
+			}
+			diffusionAttacks = false;
+		}
+		else
+		{
+			// 前方向
+			DirectX::XMFLOAT3 dir;
+
+			dir.x = transform._31;
+			dir.y = transform._32;
+			dir.z = transform._33;
+
+			DirectX::XMVECTOR DIR;
+			DIR = DirectX::XMLoadFloat3(&dir);
+			DIR = DirectX::XMVector3Normalize(DIR);
+			DirectX::XMStoreFloat3(&dir, DIR);
+
+			// 発射位置(プレイヤーの腰あたり)
+			DirectX::XMFLOAT3 pos;
+			pos.x = position.x;
+			pos.y = position.y - (height * 0.5f);
+			pos.z = position.z;
+
+			//発射
+			ProjectileUnko* projectile = new ProjectileUnko(&projectileManager);
+			projectile->Launch(dir, pos);
+		}
 	}
 }
 

@@ -310,6 +310,7 @@ void Player::InputProjectile()
 	// íºêiíeä€î≠éÀ
 	if (gamePad.GetButtonDown() & GamePad::BTN_X) //CÉLÅ[
 	{
+		//! ägéUçUåÇ
 		if (diffusionAttacks)
 		{
 			for (int i = 0; i < 36; i++)

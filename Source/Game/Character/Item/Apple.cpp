@@ -75,7 +75,7 @@ void Apple::Update(float elapsedTime)
 	float vx = player.GetPosition().x - position.x;
 	float vz = player.GetPosition().z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist > 3000)
+	if (dist > 3200)
 		Destroy();
 }
 

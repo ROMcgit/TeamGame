@@ -39,6 +39,9 @@ public:
 	// 半径取得
 	float GetRadius() const { return radius; }
 
+	// 当たり判定の位置所得
+	const DirectX::XMFLOAT3& GetCollisionPos() const { return collisionPos; }
+
 protected:
 	// 行列更新処理
 	void UpdateTransform();

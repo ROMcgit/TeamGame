@@ -8,7 +8,11 @@ ProjectileUnko::ProjectileUnko(ProjectileManager* manager) : Projectile(manager)
 	model = new Model("./Data/Model/Monkey/0.mdl/Projectile_Unko.mdl");
 
 	// 表示サイズを調整
-	scale.x = scale.y = scale.z = 0.03f;
+	scale.x = scale.y = scale.z = 0.023f;
+
+	collisionOffset = { 0, 0.7f, 0 };
+
+	radius = 0.8f;
 
 	model->PlayAnimation(0, true); // アニメーション
 }

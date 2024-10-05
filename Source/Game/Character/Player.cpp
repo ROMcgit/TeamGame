@@ -31,7 +31,7 @@ Player::Player()
 
 	// 当たり判定
 	radius = 0.9f;
-	height = 2.3f;
+	height = 2.4f;
 	collisionOffset = { 0, -1.0f, 0 };
 
 	// ヒットエフェクト読み込み
@@ -64,7 +64,7 @@ void Player::Update(float elapsedTime)
 	if (position.y > 1.3f)
 	{
 		isGround = false;
-		gravity = -0.5f;
+		gravity = -1.0f;
 	}
 
 	if (position.y < 1.3f)
@@ -325,7 +325,7 @@ void Player::InputProjectile()
 		// 発射位置(プレイヤーの腰あたり)
 		DirectX::XMFLOAT3 pos;
 		pos.x = position.x;
-		pos.y = position.y + (height / 2);
+		pos.y = position.y - (height * 0.5f);
 		pos.z = position.z;
 
 		// ターゲット(デフォルトではプレイヤーの前方)
@@ -636,11 +636,17 @@ void Player::TransitionDamageState()
 // ダメージステート更新処理
 void Player::UpdateDamageState(float elapsedTime)
 {
+	angle.x += DirectX::XMConvertToRadians(180) * elapsedTime;
+	angle.z += DirectX::XMConvertToRadians(200) * elapsedTime;
+
 	for (int i = 0; i < 3; i++)
 	{
 		// ダメージアニメーションが終わったら待機ステートへ遷移
-		if (!model[i]->IsPlayAnimation())
+		if (!model[i]->IsPlayAnimation() && isGround)
 		{
+			angle.x = DirectX::XMConvertToRadians(0);
+			angle.z = DirectX::XMConvertToRadians(0);
+
 			TransitionMoveState();
 		}
 	}
@@ -760,15 +766,15 @@ void Player::CollisionProjectilesVsEnemies()
 			// 衝突処理
 			DirectX::XMFLOAT3 outPosition;
 			if (Collision::IntersectSphereVsCylinder(
-				projectile->GetPosition(),
+				projectile->GetCollisionPos(),
 				projectile->GetRadius(),
-				enemy->GetPosition(),
+				enemy->GetCollisionPos(),
 				enemy->GetRadius(),
 				enemy->GetHeight(),
 				outPosition))
 			{
 				// ダメージを与える
-				if (enemy->ApplyDamage(1, 0.5f))
+				if (enemy->ApplyDamage(1, 1.0f))
 				{
 					// 吹き飛ばす
 					{
@@ -801,6 +807,9 @@ void Player::CollisionProjectilesVsEnemies()
 					// 弾丸破棄
 					projectile->Destroy();
 				}
+				else
+					// 弾丸破棄
+					projectile->Destroy();
 			}
 		}
 	}

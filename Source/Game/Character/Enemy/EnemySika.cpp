@@ -13,15 +13,18 @@ EnemySika::EnemySika()
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.00f;
 
-	SetScaleChange(DirectX::XMFLOAT3(0.05f, 0.05f, 0.05f), DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f));
+	SetScaleChange(DirectX::XMFLOAT3(0.05f, 0.05f, 0.05f), DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f));
 
 	gravity = 0.0f;
+	
+	radius = 0.0f;
+	height = 0.0f;
 
-	// 幅、高さ設定
-	radius = 0.5f;
-	height = 1.0f;
+	collisionOffset = { 0, -1.0f, 0 };
 
 	enemyHp = std::make_unique<Sprite>();
+
+	hp = 1;
 
 	// 追跡ステート
 	TransitionPursuitState();
@@ -36,6 +39,13 @@ EnemySika::~EnemySika()
 void EnemySika::Update(float elapsedTime)
 {
 	position.y = 1;
+
+	if (scale.x == 0.05f)
+	{
+		// 幅、高さ設定
+		radius = 1.5f;
+		height = 2.4f;
+	}
 
 	// ステート毎の更新処理
 	switch (state)
@@ -87,7 +97,7 @@ void EnemySika::Update(float elapsedTime)
 	float vx = player.GetPosition().x - position.x;
 	float vz = player.GetPosition().z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist > 3000)
+	if (dist > 3200)
 		Destroy();
 }
 
@@ -207,8 +217,23 @@ void EnemySika::CollisionEnemyVsPlayer()
 		outPosition
 	))
 	{
-		if (player.GetInvincibleTimer() <= 0.0f)
-			player.ApplyDamage(5, 1.0f);
+		if (player.ApplyDamage(5, 1.0f))
+		{
+			// 前方向
+			DirectX::XMFLOAT3 velocity;
+
+			if (position.x > player.GetPosition().x)
+				velocity.x = -80;
+			else
+				velocity.x = 80;
+
+			if (position.z > player.GetPosition().z)
+				velocity.z = -80;
+			else
+				velocity.z = 80;
+
+			player.SetVelocity(DirectX::XMFLOAT3(velocity.x, 100.0f, velocity.z));
+		}
 		else
 			Destroy(); // 破棄する
 	}
@@ -376,7 +401,7 @@ void EnemySika::TransitionDamageState()
 void EnemySika::UpdateDamageState(float elapsedTime)
 {
 	// ダメージアニメーションが終わったら戦闘待機ステートへ遷移
-	if (!model->IsPlayAnimation())
+	if (!model->IsPlayAnimation() && isGround)
 	{
 		TransitionIdleBattleState();
 	}

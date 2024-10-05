@@ -40,9 +40,10 @@ void SceneGame::Initialize()
 	//! カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
 	cameraController->SetAngle(DirectX::XMFLOAT3(
-		DirectX::XMConvertToRadians(20),
+		DirectX::XMConvertToRadians(18),
 		0, 0)
 	);
+	cameraController->SetRange(15.0f);
 }
 
 // 終了化

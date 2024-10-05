@@ -228,18 +228,12 @@ void SceneGame::Newestablishment(float elapsedTime)
 	{
 		float angleY = player->GetAngle().y;
 
-		int posX = player->GetPosition().x;
-		int posZ = player->GetPosition().z;
+		// 生成する範囲の角度をランダムに決める
+		float randomAngle = angleY + (rand() % 360 - 180) * (3.14159f / 180.0f); // -180度から+180度までランダム
 
-		if (posX > 0)
-			posX += rand() % 10 + 20;
-		else
-			posX -= rand() % 10 + 20;
-
-		if (posZ < 0)
-			posZ += rand() % 10 + 20;
-		else
-			posZ -= rand() % 10 + 20;
+		float distance = rand() % 20 + 20; // プレイヤーからの距離もランダム
+		int posX = player->GetPosition().x + distance * cos(randomAngle); // cosでX座標を計算
+		int posZ = player->GetPosition().z + distance * sin(randomAngle); // sinでZ座標を計算
 
 		if (establishmentCount < 60)
 		{

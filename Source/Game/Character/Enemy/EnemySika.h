@@ -38,9 +38,6 @@ protected:
 
 private:
 
-	// 目標地点へ移動
-	void MoveToTarget(float elapsedTime, float speedRate);
-
 	// プレイヤーとの接触処理
 	void CollisionEnemyVsPlayer();
 
@@ -56,22 +53,6 @@ private:
 
 	// 追跡ステート更新処理
 	void UpdatePursuitState(float elapsedTime);
-
-//-----------------------------------------------------------------//
-
-	// 攻撃ステートへ遷移
-	void TransitionAttackState();
-
-	// 攻撃ステート更新処理
-	void UpdateAttackState(float elapsedTime);
-
-//-----------------------------------------------------------------//
-
-	// 戦闘待機ステートへ遷移
-	void TransitionIdleBattleState();
-
-	// 戦闘待機ステート更新処理
-	void UpdateIdleBattleState(float elapsedTime);
 
 //-----------------------------------------------------------------//
 
@@ -137,4 +118,6 @@ private:
 	float attackRange = 1.5f;
 
 	float dist = 0.0f;
+
+	bool setVelocity = false;
 };

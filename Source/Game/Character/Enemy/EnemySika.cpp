@@ -38,8 +38,6 @@ EnemySika::~EnemySika()
 // 更新処理
 void EnemySika::Update(float elapsedTime)
 {
-	position.y = 1;
-
 	if (scale.x == 0.05f)
 	{
 		// 幅、高さ設定
@@ -52,12 +50,6 @@ void EnemySika::Update(float elapsedTime)
 	{
 	case State::Pursuit:
 		UpdatePursuitState(elapsedTime);
-		break;
-	case State::Attack:
-		UpdateAttackState(elapsedTime);
-		break;
-	case State::IdleBattle:
-		UpdateIdleBattleState(elapsedTime);
 		break;
 	case State::Damage:
 		UpdateDamageState(elapsedTime);
@@ -91,14 +83,7 @@ void EnemySika::Update(float elapsedTime)
 	// モデル行列更新
 	model->UpdateTransform(transform);
 
-	// 一定の距離を離れたら破棄する
-	Player& player = Player::Instance();
-
-	float vx = player.GetPosition().x - position.x;
-	float vz = player.GetPosition().z - position.z;
-	dist = vx * vx + vz * vz;
-	if (dist > 3200)
-		Destroy();
+	
 }
 
 // 描画処理
@@ -195,11 +180,6 @@ void EnemySika::DrawDebugPrimitive()
 	debugRender->DrawSphere(targetPosition, radius, DirectX::XMFLOAT4(1, 1, 0, 1));
 }
 
-// 目標地点へ移動
-void EnemySika::MoveToTarget(float elapsedTime, float speedRate)
-{
-}
-
 // プレイヤーとの接触処理
 void EnemySika::CollisionEnemyVsPlayer()
 {
@@ -235,7 +215,7 @@ void EnemySika::CollisionEnemyVsPlayer()
 			player.SetVelocity(DirectX::XMFLOAT3(velocity.x, 100.0f, velocity.z));
 		}
 		else
-			Destroy(); // 破棄する
+			TransitionDeathState();
 	}
 }
 
@@ -254,6 +234,8 @@ void EnemySika::TransitionPursuitState()
 // 追跡ステート更新処理
 void EnemySika::UpdatePursuitState(float elapsedTime)
 {
+	position.y = 1;
+
 	// 目標地点をプレイヤー位置に設定
 	targetPosition = Player::Instance().GetPosition();
 
@@ -267,6 +249,15 @@ void EnemySika::UpdatePursuitState(float elapsedTime)
 	// 移動処理
 	Move(vx, vz, 5.0f);
 	Turn(elapsedTime, vx, vz, 50.0f);
+
+	// 一定の距離を離れたら破棄する
+	Player& player = Player::Instance();
+
+	vx = player.GetPosition().x - position.x;
+	vz = player.GetPosition().z - position.z;
+	dist = vx * vx + vz * vz;
+	if (dist > 3200)
+		Destroy();
 }
 
 // ノードとプレイヤーの衝突処理
@@ -324,70 +315,6 @@ void EnemySika::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
 	}
 }
 
-// 攻撃ステートへ遷移
-void EnemySika::TransitionAttackState()
-{
-	state = State::Attack;
-
-	// 攻撃アニメーション再生
-	model->PlayAnimation(Anim_Attack1, false);
-}
-
-// 攻撃ステート更新処理
-void EnemySika::UpdateAttackState(float elapsedTime)
-{
-	// 任意のアニメーション再生区間でのみ衝突判定処理をする
-	float animationTime = model->GetCurrentAnimationSeconds();
-	if (animationTime >= 0.1f && animationTime <= 0.35f)
-	{
-		// 目玉ノードとプレイヤーの衝突処理
-		CollisionNodeVsPlayer("EyeBall", 0.2f);
-	}
-
-	// 攻撃アニメーションが終わったら戦闘待機ステートへ遷移
-	if (!model->IsPlayAnimation())
-	{
-		TransitionIdleBattleState();
-	}
-}
-
-// 戦闘待機ステートへ遷移
-void EnemySika::TransitionIdleBattleState()
-{
-	state = State::IdleBattle;
-
-	// 数秒間待機するタイマーをランダム設定
-	stateTimer = Mathf::RandomRange(2.0f, 3.0f);
-
-	// 戦闘待機アニメーション再生
-	model->PlayAnimation(Anim_IdleBattle, true);
-}
-
-// 戦闘待機ステート更新処理
-void EnemySika::UpdateIdleBattleState(float elapsedTime)
-{
-	// 目標地点をプレイヤー位置に設定
-	targetPosition = Player::Instance().GetPosition();
-
-	// タイマー処理
-	stateTimer -= elapsedTime;
-	if (stateTimer < 0.0f)
-	{
-		// プレイヤー攻撃範囲にいた場合は攻撃ステートへ遷移
-		float vx = targetPosition.x - position.x;
-		float vy = targetPosition.y - position.y;
-		float vz = targetPosition.z - position.z;
-		float dist = sqrtf(vx * vx + vy * vy + vz * vz);
-		if (dist < attackRange)
-		{
-			// 攻撃ステートへ遷移
-			TransitionAttackState();
-		}
-
-		MoveToTarget(elapsedTime, 0.0f);
-	}
-}
-
 // ダメージステートへ遷移
 void EnemySika::TransitionDamageState()
 {
@@ -401,9 +328,9 @@ void EnemySika::TransitionDamageState()
 void EnemySika::UpdateDamageState(float elapsedTime)
 {
 	// ダメージアニメーションが終わったら戦闘待機ステートへ遷移
-	if (!model->IsPlayAnimation() && isGround)
+	if (!model->IsPlayAnimation())
 	{
-		TransitionIdleBattleState();
+		TransitionPursuitState();
 	}
 }
 
@@ -414,16 +341,44 @@ void EnemySika::TransitionDeathState()
 
 	// ダメージアニメーション再生
 	model->PlayAnimation(Anim_Die, false);
+
+	stateTimer = 1.0f;
 }
 
 // 死亡ステート更新処理
 void EnemySika::UpdateDeathState(float elapsedTime)
 {
+	angle.x += DirectX::XMConvertToRadians(700) * elapsedTime;
+	angle.y += DirectX::XMConvertToRadians(700) * elapsedTime;
+
+	velocity.y = 40.0f;
+
+
+	Player& player = Player::Instance();
+
+	if (!setVelocity)
+	{
+		if (position.x > player.GetPosition().x)
+			velocity.x = 40;
+		else
+			velocity.x = -40;
+
+		if (position.z > player.GetPosition().z)
+			velocity.z = 40;
+		else
+			velocity.z = -40;
+
+		setVelocity = true;
+	}
+	
+
 	// ダメージアニメーションが終わったら自分を破棄
-	if (!model->IsPlayAnimation())
+	if (stateTimer <= 0)
 	{
 		Destroy();
 	}
+
+	stateTimer -= elapsedTime;
 }
 
 // ダメージ受けた時に呼ばれる

@@ -236,7 +236,7 @@ void SceneGame::Newestablishment(float elapsedTime)
 		int posX = player->GetPosition().x + distance * cos(randomAngle); // cosでX座標を計算
 		int posZ = player->GetPosition().z + distance * sin(randomAngle); // sinでZ座標を計算
 
-		if (establishmentCount < 60)
+		if (establishmentCount < 35)
 		{
 			int newRansu = rand() % 10 + 1;
 

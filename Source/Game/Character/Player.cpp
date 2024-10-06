@@ -308,7 +308,7 @@ void Player::InputProjectile()
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
 	// íºêiíeä€î≠éÀ
-	if (gamePad.GetButtonDown() & GamePad::BTN_X) //CÉLÅ[
+	if (gamePad.GetButtonDown() & GamePad::BTN_B) //CÉLÅ[
 	{
 		//! ägéUçUåÇ
 		if (diffusionAttacks)

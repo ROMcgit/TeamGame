@@ -146,7 +146,7 @@ void Apple::CollisionItemVsPlayer()
 	))
 	{
 		// ƒvƒŒƒCƒ„[‚ğŠgUUŒ‚‚Å‚«‚é‚æ‚¤‚É‚·‚é
-		player.SetDiffusionAttacks(true);
+		player.SetDiffusionAttacks(1);
 
 		// ”jŠü‚·‚é
 		Destroy();

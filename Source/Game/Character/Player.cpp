@@ -311,7 +311,7 @@ void Player::InputProjectile()
 	if (gamePad.GetButtonDown() & GamePad::BTN_B) //CƒL[
 	{
 		//! ŠgŽUUŒ‚
-		if (diffusionAttacks)
+		if (diffusionAttacks > 0)
 		{
 			for (int i = 0; i < 36; i++)
 			{
@@ -340,7 +340,7 @@ void Player::InputProjectile()
 				ProjectileUnko* projectile = new ProjectileUnko(&projectileManager);
 				projectile->Launch(dir, pos);
 			}
-			diffusionAttacks = false;
+			diffusionAttacks -= 1;
 		}
 		else
 		{

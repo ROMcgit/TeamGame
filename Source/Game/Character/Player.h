@@ -38,9 +38,10 @@ public:
 	void CollisionProjectilesVsEnemies();
 
 	// ƒAƒCƒeƒ€Žæ“¾Ý’è
-	void SetDiffusionAttacks(bool diffusionAttacks)
+	void SetDiffusionAttacks(int diffusionAttacks)
 	{
-		this->diffusionAttacks = diffusionAttacks;
+		if(this->diffusionAttacks < 5)
+		this->diffusionAttacks += diffusionAttacks;
 	}
 
 protected:
@@ -153,5 +154,5 @@ private:
 
 /****************************************************/
 
-	bool diffusionAttacks = false;
+	int diffusionAttacks = 0;
 };

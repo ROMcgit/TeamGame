@@ -215,7 +215,10 @@ void EnemySika::CollisionEnemyVsPlayer()
 			player.SetVelocity(DirectX::XMFLOAT3(velocity.x, 100.0f, velocity.z));
 		}
 		else
-			TransitionDeathState();
+		{
+			hp = 0;
+			TransitionDeathState(); // 死亡ステートへ遷移
+		}
 	}
 }
 

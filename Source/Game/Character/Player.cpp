@@ -454,7 +454,7 @@ void Player::UpdateMoveState(float elapsedTime)
 	{
 		Move(dir.x, dir.z, 2000.0f);
 
-		invincibleTimer = 0.5f;
+		invincibleTimer = 0.1f;
 		lungesTimer -= elapsedTime;
 	}
 	else
@@ -581,7 +581,7 @@ void Player::UpdateLungesState(float elapsedTime)
 		{
 			lungesChargeTimer = 0.5f; // 突進チャージ時間
 			lunges      = true;       // 突進する
-			lungesTimer = 0.5f;       // 突進チャージ時間
+			lungesTimer = 0.6f;       // 突進チャージ時間
 		}
 	}
 }

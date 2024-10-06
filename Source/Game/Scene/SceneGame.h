@@ -5,6 +5,7 @@
 #include "Game/Character/Enemy/EnemySika.h"
 #include "Scene.h"
 #include "Graphics/Sprite.h"
+#include "Graphics/Fade.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 //class SceneGame
@@ -31,10 +32,13 @@ private:
 	void Newestablishment(float elapsedTime);
 
 private:
-	std::unique_ptr <Player> player;
-	std::unique_ptr <CameraController> cameraController;
+	std::unique_ptr<Player> player;
+	std::unique_ptr<CameraController> cameraController;
+	std::unique_ptr<Fade> fade;
 	
-	int establishmentCount = 0;
+	int establishmentCount         = 0;
 	float newestablishmentTimer    = 0.0f;
 	float newestablishmentMaxTimer = 0.1f;
+
+	bool setFade = false;
 };

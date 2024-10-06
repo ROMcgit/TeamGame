@@ -1,5 +1,9 @@
 #include "Graphics/Graphics.h"
 #include "SceneGame.h"
+#include "Game/Scene/SceneLoading.h"
+#include "SceneManager.h"
+#include "Game/Scene/SceneGameOver.h"
+#include "Game/Scene/SceneGameClear.h"
 #include "Game/Camera/Camera.h"
 #include "Game/Character/Enemy/EnemyManager.h"
 #include "Game/Character/Enemy/EnemySika.h"
@@ -44,6 +48,8 @@ void SceneGame::Initialize()
 		0, 0)
 	);
 	cameraController->SetRange(15.0f);
+
+	fade = std::make_unique<Fade>();
 }
 
 // 終了化
@@ -91,6 +97,29 @@ void SceneGame::Update(float elapsedTime)
 
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
+
+	// フェードのアップデート
+	fade->Update(elapsedTime);
+
+	if (player->GetHealth() <= 0)
+	{
+		if (!setFade)
+		{
+			fade->SetFade(DirectX::XMFLOAT3(1, 1, 1),
+				0.0f, 1.0f,
+				2.5f);
+
+			setFade = true;
+		}
+
+		if (!fade->GetFade())
+		{
+			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGameOver>());
+
+			// シーンマネージャーにローディングシーンへの切り替えを指示
+			SceneManager::Instance().ChangeScene(std::move(loadingScene));
+		}
+	}
 }
 
 // 描画処理

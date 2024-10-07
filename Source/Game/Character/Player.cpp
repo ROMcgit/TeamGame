@@ -232,64 +232,67 @@ void Player::UpdateLevel()
 	switch (level)
 	{
 	case 1:
-		expMax = 10;
+		expMax = 5;
 		break;
 	case 2:
-		expMax = 12;
-		break;
-	case 3:
-		expMax = 14;
-		break;
-	case 4:
-		expMax = 16;
-		break;
-	case 5:
-		expMax = 18;
-		break;
-	case 6:
 		expMax = 10;
 		break;
-	case 7:
-		expMax = 11;
-		break;
-	case 8:
+	case 3:
 		expMax = 12;
 		break;
-	case 9:
-		expMax = 13;
-		break;
-	case 10:
+	case 4:
 		expMax = 14;
 		break;
+	case 5:
+		expMax = 16;
+		break;
+	// “GHP = 2
+	case 6:
+		expMax = 20;
+		break;
+	case 7:
+		expMax = 22;
+		break;
+	case 8:
+		expMax = 25;
+		break;
+	case 9:
+		expMax = 26;
+		break;
+	case 10:
+		expMax = 30;
+		break;
+	// “GHP = 3
 	case 11:
-		expMax = 3;
+		expMax = 14;
 		break;
 	case 12:
-		expMax = 4;
+		expMax = 16;
 		break;
 	case 13:
-		expMax = 5;
+		expMax = 18;
 		break;
 	case 14:
-		expMax = 6;
+		expMax = 20;
 		break;
 	case 15:
-		expMax = 7;
+		expMax = 22;
 		break;
+	// “GHP = 4
 	case 16:
-		expMax = 8;
+		expMax = 15;
 		break;
 	case 17:
-		expMax = 2;
+		expMax = 16;
 		break;
 	case 18:
-		expMax = 3;
+		expMax = 17;
 		break;
 	case 19:
-		expMax = 4;
+		expMax = 18;
 		break;
 	case 20:
-		expMax = 5;
+		expMax = 19;
 		break;
 	default:
 		break;
@@ -483,83 +486,83 @@ void Player::UpdateMoveState(float elapsedTime)
 		{
 		case 1:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 15);
+			Move(dir.x, dir.z, 5);
 			break;
 		case 2:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 17);
+			Move(dir.x, dir.z, 7);
 			break;
 		case 3:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 19);
+			Move(dir.x, dir.z, 9);
 			break;
 		case 4:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 22);
+			Move(dir.x, dir.z, 11);
 			break;
 		case 5:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 25);
+			Move(dir.x, dir.z, 13);
 			break;
 		case 6:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 28);
+			Move(dir.x, dir.z, 15);
 			break;
 		case 7:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 32);
+			Move(dir.x, dir.z, 16);
 			break;
 		case 8:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 36);
+			Move(dir.x, dir.z, 19);
 			break;
 		case 9:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 40);
+			Move(dir.x, dir.z, 21);
 			break;
 		case 10:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 44);
+			Move(dir.x, dir.z, 25);
 			break;
 		case 11:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 48);
+			Move(dir.x, dir.z, 28);
 			break;
 		case 12:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 52);
+			Move(dir.x, dir.z, 32);
 			break;
 		case 13:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 56);
+			Move(dir.x, dir.z, 35);
 			break;
 		case 14:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 60);
+			Move(dir.x, dir.z, 38);
 			break;
 		case 15:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 64);
+			Move(dir.x, dir.z, 42);
 			break;
 		case 16:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 68);
+			Move(dir.x, dir.z, 46);
 			break;
 		case 17:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 72);
+			Move(dir.x, dir.z, 50);
 			break;
 		case 18:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 77);
+			Move(dir.x, dir.z, 55);
 			break;
 		case 19:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 83);
+			Move(dir.x, dir.z, 60);
 			break;
 		case 20:
 			// ˆÚ“®ˆ—
-			Move(dir.x, dir.z, 90);
+			Move(dir.x, dir.z, 65);
 			break;
 		default:
 			break;

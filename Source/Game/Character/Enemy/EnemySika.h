@@ -120,4 +120,6 @@ private:
 	float dist = 0.0f;
 
 	bool setVelocity = false;
+
+	float lifeTimer = 10.0f;
 };

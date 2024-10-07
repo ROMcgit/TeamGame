@@ -271,6 +271,7 @@ void SceneGame::Newestablishment(float elapsedTime)
 		float randomAngle = angleY + (rand() % 360 - 180) * (3.14159f / 180.0f); // -180度から+180度までランダム
 
 		float distance = rand() % 20 + 20; // プレイヤーからの距離もランダム
+
 		int posX = player->GetPosition().x + distance * cos(randomAngle); // cosでX座標を計算
 		int posZ = player->GetPosition().z + distance * sin(randomAngle); // sinでZ座標を計算
 

@@ -15,7 +15,7 @@ Apple::Apple()
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.000f;
 
-	SetScaleChange(DirectX::XMFLOAT3(0.007f, 0.007f, 0.007f), DirectX::XMFLOAT3(0.01f, 0.01f, 0.01f));
+	SetScaleChange(DirectX::XMFLOAT3(0.007f, 0.007f, 0.007f), DirectX::XMFLOAT3(0.04f, 0.04f, 0.04f));
 
 	gravity = 0.0f;
 
@@ -79,6 +79,16 @@ void Apple::Update(float elapsedTime)
 	dist = vx * vx + vz * vz;
 	if (dist > 3200)
 		Destroy();
+
+	// 自然消滅
+	lifeTimer -= elapsedTime;
+	if (lifeTimer < 0.0f)
+	{
+		SetScaleChange(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0.04f, 0.04f, 0.04f));
+
+		if (scale.x <= 0)
+			Destroy();
+	}
 }
 
 // 描画処理

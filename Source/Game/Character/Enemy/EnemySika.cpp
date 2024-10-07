@@ -13,7 +13,8 @@ EnemySika::EnemySika()
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.00f;
 
-	SetScaleChange(DirectX::XMFLOAT3(0.05f, 0.05f, 0.05f), DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f));
+	// 大きさ変更
+	SetScaleChange(DirectX::XMFLOAT3(0.05f, 0.05f, 0.05f), DirectX::XMFLOAT3(0.4f, 0.4f, 0.4f));
 
 	gravity = 0.0f;
 	
@@ -33,21 +34,19 @@ EnemySika::EnemySika()
 	case 3:
 	case 4:
 	case 5:
-		hp = 1;
-		break;
 	case 6:
 	case 7:
 	case 8:
 	case 9:
 	case 10:
-		hp = 2;
+		hp = 1;
 		break;
 	case 11:
 	case 12:
 	case 13:
 	case 14:
 	case 15:
-		hp = 3;
+		hp = 2;
 		break;
 	case 16:
 	case 17:
@@ -284,18 +283,72 @@ void EnemySika::UpdatePursuitState(float elapsedTime)
 	vx /= dist;
 	vz /= dist;
 
-	// 移動処理
-	Move(vx, vz, 5.0f);
-	Turn(elapsedTime, vx, vz, 50.0f);
-
 	// 一定の距離を離れたら破棄する
 	Player& player = Player::Instance();
+
+	// 移動処理
+	switch (player.GetLevel())
+	{
+	case 1:
+	case 2:
+	case 3:
+		Move(vx, vz, 2.0f);
+		break;
+	case 4:
+	case 5:
+	case 6:
+		Move(vx, vz, 8.0f);
+		break;
+	case 7:
+	case 8:
+		Move(vx, vz, 10.0f);
+		break;
+	case 9:
+	case 10:
+		Move(vx, vz, 14.0f);
+		break;
+	case 11:
+	case 12:
+		Move(vx, vz, 20.0f);
+		break;
+	case 13:
+	case 14:
+		Move(vx, vz, 25.0f);
+		break;
+	case 15:
+	case 16:
+		Move(vx, vz, 30.0f);
+		break;
+	case 17:
+	case 18:
+		Move(vx, vz, 37.0f);
+		break;
+	case 19:
+	case 20:
+		Move(vx, vz, 45.0f);
+		break;
+	default:
+		break;
+	}
+
+	Turn(elapsedTime, vx, vz, 50.0f);
+
+	
 
 	vx = player.GetPosition().x - position.x;
 	vz = player.GetPosition().z - position.z;
 	dist = vx * vx + vz * vz;
 	if (dist > 2500)
 		Destroy();
+
+	lifeTimer -= elapsedTime;
+	if (lifeTimer < 0.0f)
+	{
+		SetScaleChange(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0.8f, 0.8f, 0.8f));
+
+		if (scale.x <= 0)
+			Destroy();
+	}
 }
 
 // ノードとプレイヤーの衝突処理

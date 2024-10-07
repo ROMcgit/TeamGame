@@ -53,6 +53,15 @@ public:
 	// レベルを取得
 	int GetLevel() { return level; }
 
+	// バナナの数を増やす
+	void SetBananaNum(float bananaNum)
+	{
+		this->bananaNum += bananaNum;
+	}
+
+	// バナナの習得数取得
+	int GetBananaNum() { return bananaNum; }
+
 protected:
 	// 着地した時に呼ばれる
 	void OnLanding() override;
@@ -172,4 +181,6 @@ private:
 	int level  = 1;
 
 	float moveSpeed = 15.0f;
+
+	int bananaNum = 0;
 };

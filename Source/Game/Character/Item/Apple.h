@@ -64,7 +64,5 @@ private:
 	float searchRange = 5.0f;
 	float attackRange = 1.5f;
 
-	float dist = 0;
-
 	float lifeTimer = 10.0f;
 };

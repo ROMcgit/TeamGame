@@ -107,6 +107,9 @@ public:
 	// 無敵時間取得
 	float GetInvincibleTimer() const { return invincibleTimer; }
 
+	// 距離取得
+	float GetDist() const { return dist; }
+
 protected:
 	// スティック入力値から移動ベクトルを習得
 	DirectX::XMFLOAT3 GetMoveVec() const;
@@ -208,6 +211,8 @@ protected:
 	bool hpDirectorFinished    = false;  // HPの演出が終わったか
 	int doHpDirectorCount      = 0;      // HPを増やした回数(HP演出用)
 	float doHpDirectorWaitTime = 0.005f; // HP増やすまでの待ち時間
+
+	float dist = 0.0f;
 
 	float nameSpriteOpacity = 0.0f;       // 名前の不透明度
 	int hpSpriteHeight      = 0;          // HP画像の高さ

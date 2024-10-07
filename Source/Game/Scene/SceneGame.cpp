@@ -7,8 +7,12 @@
 #include "Game/Camera/Camera.h"
 #include "Game/Character/Enemy/EnemyManager.h"
 #include "Game/Character/Enemy/EnemySika.h"
+
 #include "Game/Character/Item/ItemManager.h"
+#include "Game/Character/Item/ImportantItemManager.h"
 #include "Game/Character/Item/Apple.h"
+#include "Game/Character/Item/Banana.h"
+
 #include "Game/Character/Installation/InstallationManager.h"
 #include "Game/Effect/EffectManager.h"
 #include "Input/Input.h"
@@ -50,6 +54,8 @@ void SceneGame::Initialize()
 	cameraController->SetRange(15.0f);
 
 	fade = std::make_unique<Fade>();
+
+	text = std::make_unique<Text>();
 }
 
 // 終了化
@@ -79,6 +85,9 @@ void SceneGame::Update(float elapsedTime)
 
 	// 生成処理
 	Newestablishment(elapsedTime);
+
+	// バナナ生成
+	NewBanana(elapsedTime);
 
 	// ステージ更新処理
 	StageManager::Instance().Update(elapsedTime);
@@ -221,6 +230,24 @@ void SceneGame::Render()
 		player->SpriteRender(dc);
 		EnemyManager::Instance().SpriteRender(dc);
 		EnemyManager::Instance().RenderEnemyGauge(dc, rc.view, rc.projection);
+
+		ImportantItemManager& importantItemManager = ImportantItemManager::Instance();
+		int importantItemCount = importantItemManager.GetImportantItemCount();
+
+		if (importantItemCount > 0)
+		{
+			std::unique_ptr<ImportantItem>& banana = importantItemManager.GetImportantItem(0);
+
+			text->Render(dc,
+				true, false,
+				true, true, true,
+				0, 0, 0, banana->GetDist(),
+				50, 50,
+				10, 10,
+				0,
+				5, 
+				1, 1, 1, 1);
+		}
 	}
 
 	// 2DデバッグGUI描画
@@ -261,7 +288,7 @@ void SceneGame::Newestablishment(float elapsedTime)
 	int enemyCount         = enemyManager.GetEnemyCount();               // 敵の数
 	int itemCount          = itemManager.GetItemCount();                 // アイテムの数
 	int installationCount  = installationManager.GetInstallationCount(); // 設置物の数
-	establishmentCount = enemyCount + itemCount + installationCount;     // 全ての数
+	establishmentCount     = enemyCount + itemCount + installationCount; // 全ての数
 
 	if (newestablishmentTimer > newestablishmentMaxTimer)
 	{
@@ -326,4 +353,32 @@ void SceneGame::Newestablishment(float elapsedTime)
 	else
 		newestablishmentTimer += elapsedTime;
 	
+}
+
+// バナナ生成
+void SceneGame::NewBanana(float elapsedTime)
+{
+	Player& player = Player::Instance();
+
+	ImportantItemManager& importantItemManager = ImportantItemManager::Instance();
+	int importantItemCount = importantItemManager.GetImportantItemCount();
+
+	// バナナ生成までの時間
+	if (importantItemCount == 0)
+		newBananaWaitTimer -= elapsedTime;
+
+	if (newBananaWaitTimer < 0.0f)
+	{
+		for (int i = 0; i < 7; i++)
+		{
+			// バナナを生成
+			if (i == player.GetBananaNum() && !newBanana[i])
+			{
+				std::unique_ptr<Banana> banana = std::make_unique<Banana>();
+				importantItemManager.Register(std::move(banana));
+				newBananaWaitTimer = 0.5f;
+				newBanana[i] = true;
+			}
+		}
+	}
 }

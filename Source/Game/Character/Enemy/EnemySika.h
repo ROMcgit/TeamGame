@@ -117,8 +117,6 @@ private:
 	float searchRange = 5.0f;
 	float attackRange = 1.5f;
 
-	float dist = 0.0f;
-
 	bool setVelocity = false;
 
 	float lifeTimer = 10.0f;

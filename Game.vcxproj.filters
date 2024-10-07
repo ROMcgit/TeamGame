@@ -88,6 +88,9 @@
     <Filter Include="Source\Character\Installations">
       <UniqueIdentifier>{bedf9b53-0c0d-448b-a4a8-44a4f8f6cd3d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Character\Item\Important">
+      <UniqueIdentifier>{e56239fa-dbb4-492e-bb09-0974d7d57ac6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -279,6 +282,15 @@
     <ClInclude Include="Source\Game\Character\Item\Apple.h">
       <Filter>Source\Character\Item</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Character\Item\Banana.h">
+      <Filter>Source\Character\Item\Important</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Item\ImportantItemManager.h">
+      <Filter>Source\Character\Item\Important</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Item\ImportantItem.h">
+      <Filter>Source\Character\Item\Important</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -448,6 +460,15 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Item\Apple.cpp">
       <Filter>Source\Character\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Item\Banana.cpp">
+      <Filter>Source\Character\Item\Important</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Item\ImportantItemManager.cpp">
+      <Filter>Source\Character\Item\Important</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Item\ImportantItem.cpp">
+      <Filter>Source\Character\Item\Important</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

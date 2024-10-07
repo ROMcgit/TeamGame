@@ -113,11 +113,33 @@ void SceneGame::Update(float elapsedTime)
 	// フェードのアップデート
 	fade->Update(elapsedTime);
 
-	if (player->GetHealth() <= 0)
+	// ゲームクリア
+	if (player->GetHealth() > 0 && player->GetBananaNum() == 7)
 	{
 		if (!setFade)
 		{
 			fade->SetFade(DirectX::XMFLOAT3(1, 1, 1),
+				0.0f, 1.0f,
+				2.5f);
+
+			setFade = true;
+		}
+
+		if (!fade->GetFade())
+		{
+			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGameOver>());
+
+			// シーンマネージャーにローディングシーンへの切り替えを指示
+			SceneManager::Instance().ChangeScene(std::move(loadingScene));
+		}
+	}
+
+	// ゲームオーバー
+	if (player->GetHealth() <= 0)
+	{
+		if (!setFade)
+		{
+			fade->SetFade(DirectX::XMFLOAT3(1, 0, 0),
 				0.0f, 1.0f,
 				2.5f);
 
@@ -258,6 +280,8 @@ void SceneGame::Render()
 				30, 
 				1, 1, 1, 1);
 		}
+
+		fade->Render(dc);
 	}
 
 	// 2DデバッグGUI描画

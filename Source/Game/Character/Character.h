@@ -110,6 +110,9 @@ public:
 	// 距離取得
 	float GetDist() const { return dist; }
 
+	// 地面にいるか
+	bool GetIsGround() const { return isGround; }
+
 protected:
 	// スティック入力値から移動ベクトルを習得
 	DirectX::XMFLOAT3 GetMoveVec() const;

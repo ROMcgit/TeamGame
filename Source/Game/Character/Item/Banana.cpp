@@ -14,18 +14,43 @@ Banana::Banana()
 
 	Player& player = Player::Instance();
 
-	position.x = player.GetPosition().x + ((rand() % 100 + 100) * (rand() % 2 == -1 ? -1 : 1));
-	position.z = player.GetPosition().x + ((rand() % 100 + 100) * (rand() % 2 == -1 ? -1 : 1));
+	if (player.GetBananaNum() < 3)
+	{
+		position.x = player.GetPosition().x + ((rand() % 100 + 100) * (rand() % 2 == -1 ? -1 : 1));
+		position.z = player.GetPosition().x + ((rand() % 100 + 100) * (rand() % 2 == -1 ? -1 : 1));
+	}
+	else if(player.GetBananaNum() >= 3 && player.GetBananaNum() <= 5)
+	{
+		position.x = player.GetPosition().x + ((rand() % 100 + 300) * (rand() % 2 == -1 ? -1 : 1));
+		position.z = player.GetPosition().x + ((rand() % 100 + 300) * (rand() % 2 == -1 ? -1 : 1));
+	}
+	else if (player.GetBananaNum() > 5)
+	{
+		position.x = player.GetPosition().x + ((rand() % 100 + 600) * (rand() % 2 == -1 ? -1 : 1));
+		position.z = player.GetPosition().x + ((rand() % 100 + 600) * (rand() % 2 == -1 ? -1 : 1));
+	}
+
+	/// X座標制限
+	if (position.x > 1000.0f)
+		position.x = 800.0f;
+	else if (position.x < -1000.0f)
+		position.x = -800.0f;
+
+	// Z座標制限
+	if (position.z > 1000.0f)
+		position.z = 800.0f;
+	else if (position.z < -1000.0f)
+		position.z = -800.0f;
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.008f;
+	scale.x = scale.y = scale.z = 0.015f;
 
 	gravity = 0.0f;
 
 	collisionOffset = { 0, -0.0f, 0 };
 
 	// 幅、高さ設定
-	radius = 0.8f;
+	radius = 1.2f;
 	height = 1.5f;
 
 	// 待機ステートへ遷移
@@ -41,6 +66,8 @@ Banana::~Banana()
 void Banana::Update(float elapsedTime)
 {
 	position.y = 0.5f;
+
+	
 
 	// ステート毎の更新処理
 	switch (state)
@@ -170,4 +197,6 @@ void Banana::UpdateInitState(float elapsedTime)
 	float vx = player.GetPosition().x - position.x;
 	float vz = player.GetPosition().z - position.z;
 	dist = vx * vx + vz * vz;
+
+	dist = (int)(dist + 0.5f);
 }

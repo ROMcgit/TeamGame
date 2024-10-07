@@ -75,6 +75,18 @@ void Player::Update(float elapsedTime)
 		position.y = 1.3f;
 	}
 
+	/// X座標制限
+	if (position.x > 1000.0f)
+		position.x = 1000.0f;
+	else if (position.x < -1000.0f)
+		position.x = -1000.0f;
+
+	// Z座標制限
+	if (position.z > 1000.0f)
+		position.z = 1000.0f;
+	else if (position.z < -1000.0f)
+		position.z = -1000.0f;
+
 	// ムービー中なら待機ステートへ遷移
 	if (movieScene)
 	{
@@ -485,40 +497,28 @@ void Player::UpdateMoveState(float elapsedTime)
 		switch (level)
 		{
 		case 1:
-			// 移動処理
-			Move(dir.x, dir.z, 5);
-			break;
 		case 2:
 			// 移動処理
-			Move(dir.x, dir.z, 7);
+			Move(dir.x, dir.z, 10);
 			break;
 		case 3:
-			// 移動処理
-			Move(dir.x, dir.z, 9);
-			break;
 		case 4:
-			// 移動処理
-			Move(dir.x, dir.z, 11);
-			break;
-		case 5:
-			// 移動処理
-			Move(dir.x, dir.z, 13);
-			break;
-		case 6:
 			// 移動処理
 			Move(dir.x, dir.z, 15);
 			break;
-		case 7:
+		case 5:
+		case 6:
 			// 移動処理
-			Move(dir.x, dir.z, 16);
+			Move(dir.x, dir.z, 17);
 			break;
+		case 7:
 		case 8:
 			// 移動処理
-			Move(dir.x, dir.z, 19);
+			Move(dir.x, dir.z, 20);
 			break;
 		case 9:
 			// 移動処理
-			Move(dir.x, dir.z, 21);
+			Move(dir.x, dir.z, 23);
 			break;
 		case 10:
 			// 移動処理
@@ -934,7 +934,7 @@ void Player::DrawDebugGUI()
 		ImGui::InputInt("EXP", &exp);
 		ImGui::InputInt("Level", &level);
 		
-
+		ImGui::Checkbox("IsGround", &isGround);
 		ImGui::InputFloat3("Velocity", &velocity.x);
 
 		// トランスフォーム

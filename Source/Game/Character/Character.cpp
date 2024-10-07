@@ -446,14 +446,14 @@ void Character::UpdateVerticalMove(float elapsedTime)
 		{
 			// ‹ó’†‚É•‚‚¢‚Ä‚¢‚é
 			position.y += my;
-			isGround = false;
+			//isGround = false;
 		}
 	}
 	// ã¸’†
 	else if (my > 0.0f)
 	{
 		position.y += my;
-		isGround = false;
+		//isGround = false;
 	}
 
 #if 0

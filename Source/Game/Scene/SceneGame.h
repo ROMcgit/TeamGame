@@ -41,12 +41,19 @@ private:
 	std::unique_ptr<Fade> fade;
 	std::unique_ptr<Text> text;
 	
-	int establishmentCount         = 0;
-	float newestablishmentTimer    = 0.0f;
-	float newestablishmentMaxTimer = 0.1f;
+	int enemyMaxCount      = 0;
+	float newEnemyTimer    = 0.0f;
+	float newEnemyMaxTimer = 0.1f;
+
+	float newItemTimer    = 0.0f;
+	float newItemMaxTimer = 0.5f;
+
+	float newInstallationTimer    = 0.0f;
+	float newInstallationMaxTimer = 1.0f;
+
 
 	bool setFade = false;
 
-	bool newBanana[7]; // バナナを生成したか
+	bool newBanana[6]; // バナナを生成したか
 	float newBananaWaitTimer = 0.5f; // バナナを出すまでの時間
 };

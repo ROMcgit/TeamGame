@@ -100,6 +100,9 @@ void SceneGame::Update(float elapsedTime)
 
 	// アイテム更新処理
 	ItemManager::Instance().Update(elapsedTime);
+	
+	// 重要アイテム更新処理
+	ImportantItemManager::Instance().Update(elapsedTime);
 
 	// 設置物更新処理
 	InstallationManager::Instance().Update(elapsedTime);
@@ -193,6 +196,9 @@ void SceneGame::Render()
 		// アイテム描画処理
 		ItemManager::Instance().Render(dc, shader);
 
+		// 重要アイテム描画処理
+		ImportantItemManager::Instance().Render(dc, shader);
+
 		// 設置物描画処理
 		InstallationManager::Instance().Render(dc, shader);
 		
@@ -214,6 +220,9 @@ void SceneGame::Render()
 
 		// アイテムデブッグプリミティブ描画
 		ItemManager::Instance().DrawDebugPrimitive();
+
+		// 重要アイテムデバッグプリミティブ描画
+		ImportantItemManager::Instance().DrawDebugPrimitive();
 
 		// 設置物デバッグプリミティブ描画
 		InstallationManager::Instance().DrawDebugPrimitive();
@@ -239,13 +248,14 @@ void SceneGame::Render()
 			std::unique_ptr<ImportantItem>& banana = importantItemManager.GetImportantItem(0);
 
 			text->Render(dc,
-				true, false,
-				true, true, true,
-				0, 0, 0, banana->GetDist(),
-				50, 50,
+				true, true,
+				false,
+				0, 0, 0, 0, 0,0,
+				0, 0, banana->GetDist(),
+				100, 50,
 				10, 10,
 				0,
-				5, 
+				30, 
 				1, 1, 1, 1);
 		}
 	}
@@ -254,8 +264,43 @@ void SceneGame::Render()
 	{
 		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
 		{
-			ImGui::InputInt("EstablishmentCount", &establishmentCount); // 設置した数
-			ImGui::InputFloat("NewestablishmentTimer", &newestablishmentTimer); // 設置した数
+			EnemyManager& enemyManager = EnemyManager::Instance();
+			ItemManager& itemManager = ItemManager::Instance();
+			InstallationManager& installationManager = InstallationManager::Instance();
+
+			int enemyCount        = enemyManager.GetEnemyCount();               // 敵の数
+			int itemCount         = itemManager.GetItemCount();                 // アイテムの数
+			int installationCount = installationManager.GetInstallationCount(); // 設置物の数
+
+			/*! 敵の数 */
+			ImGui::InputInt("EnemyCount", &enemyCount);
+			ImGui::InputFloat("NewEnemyTimer", &newEnemyTimer);
+
+//-----------------------------------------------------------------------------------------------------//
+			ImGui::Spacing(); // 一行空ける
+			ImGui::Separator(); // セクションの間に区切り線を表示
+			ImGui::Spacing(); // 一行空ける
+//-----------------------------------------------------------------------------------------------------//
+
+			/*! アイテムの数 */
+			ImGui::InputInt("ItemCount", &itemCount);
+			ImGui::InputFloat("NewItemTimer", &newEnemyTimer);
+
+//-----------------------------------------------------------------------------------------------------//
+			ImGui::Spacing(); // 一行空ける
+			ImGui::Separator(); // セクションの間に区切り線を表示
+			ImGui::Spacing(); // 一行空ける
+//-----------------------------------------------------------------------------------------------------//
+
+			/*! 設置物の数 */
+			ImGui::InputInt("InstallationCount", &installationCount);
+			ImGui::InputFloat("InstallationTimer", &newInstallationTimer);
+
+//-----------------------------------------------------------------------------------------------------//
+			ImGui::Spacing(); // 一行空ける
+			ImGui::Separator(); // セクションの間に区切り線を表示
+			ImGui::Spacing(); // 一行空ける
+//-----------------------------------------------------------------------------------------------------//
 
 			// プレイヤーデバッグ描画
 			player->DrawDebugGUI();
@@ -288,9 +333,17 @@ void SceneGame::Newestablishment(float elapsedTime)
 	int enemyCount         = enemyManager.GetEnemyCount();               // 敵の数
 	int itemCount          = itemManager.GetItemCount();                 // アイテムの数
 	int installationCount  = installationManager.GetInstallationCount(); // 設置物の数
-	establishmentCount     = enemyCount + itemCount + installationCount; // 全ての数
 
-	if (newestablishmentTimer > newestablishmentMaxTimer)
+	if (player->GetBananaNum() < 1)
+		enemyMaxCount = 10;
+	else if(player->GetBananaNum() >= 1 && player->GetBananaNum() <= 4)
+		enemyMaxCount = 15;
+	else if((player->GetBananaNum() >= 5 && player->GetBananaNum() <= 7))
+		enemyMaxCount = 20;
+
+/***************************************************************************************************/
+
+	if (player->GetIsGround())
 	{
 		float angleY = player->GetAngle().y;
 
@@ -302,57 +355,42 @@ void SceneGame::Newestablishment(float elapsedTime)
 		int posX = player->GetPosition().x + distance * cos(randomAngle); // cosでX座標を計算
 		int posZ = player->GetPosition().z + distance * sin(randomAngle); // sinでZ座標を計算
 
-		if (establishmentCount < 35)
+		if (enemyCount < enemyMaxCount && newEnemyTimer >  newEnemyMaxTimer)
 		{
-			int newRansu = rand() % 10 + 1;
+			posX = player->GetPosition().x + distance * cos(randomAngle);
+			posZ = player->GetPosition().z + distance * sin(randomAngle);
 
-			switch (newRansu)
-			{
-				//! 敵生成
-			case 1:
-			case 2:
-			case 3:
-			case 4:
-			case 5:
-			case 6:
-			{
-				std::unique_ptr<EnemySika> sika = std::make_unique<EnemySika>();
-				sika->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
-				enemyManager.Register(std::move(sika));
+			std::unique_ptr<EnemySika> sika = std::make_unique<EnemySika>();
+			sika->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
+			enemyManager.Register(std::move(sika));
 
-				newestablishmentTimer = 0.0f;
-			}
-			break;
-			case 7:
-			case 8:
-			case 9:
-				//! アイテム生成
-			{
-				std::unique_ptr<Apple> apple = std::make_unique<Apple>();
-				apple->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
-				itemManager.Register(std::move(apple));
-
-				newestablishmentTimer = 0.0f;
-			}
-			break;
-			case 10:
-				//! 設置物生成
-			{
-
-
-				newestablishmentTimer = 0.0f;
-			}
-			break;
-			default:
-				break;
-			}
+			newEnemyTimer = 0.0f;
 		}
-		else
-			newestablishmentTimer = 0;
+
+		if (itemCount < 5 && newItemTimer > newItemMaxTimer)
+		{
+			posX = player->GetPosition().x + distance * cos(randomAngle);
+			posZ = player->GetPosition().z + distance * sin(randomAngle);
+
+			std::unique_ptr<Apple> apple = std::make_unique<Apple>();
+			apple->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
+			itemManager.Register(std::move(apple));
+
+			newItemTimer = 0.0f;
+		}
+
+		if (installationCount < 1 && newInstallationTimer > newInstallationMaxTimer)
+		{
+			posX = player->GetPosition().x + distance * cos(randomAngle);
+			posZ = player->GetPosition().z + distance * sin(randomAngle);
+
+			newInstallationTimer = 0.0f;
+		}
+
+		newEnemyTimer += elapsedTime;
+		newItemTimer += elapsedTime;
+		newInstallationTimer += elapsedTime;
 	}
-	else
-		newestablishmentTimer += elapsedTime;
-	
 }
 
 // バナナ生成
@@ -369,7 +407,7 @@ void SceneGame::NewBanana(float elapsedTime)
 
 	if (newBananaWaitTimer < 0.0f)
 	{
-		for (int i = 0; i < 7; i++)
+		for (int i = 0; i < 6; i++)
 		{
 			// バナナを生成
 			if (i == player.GetBananaNum() && !newBanana[i])

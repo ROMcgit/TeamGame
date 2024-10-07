@@ -3,6 +3,7 @@
 #include "Graphics//Model.h"
 #include "Item.h"
 #include "Graphics/Graphics.h"
+#include "Game/Effect/Effect.h"
 #include "Other/Mathf.h"
 
 // ƒXƒ‰ƒCƒ€
@@ -51,8 +52,8 @@ private:
 
 private:
 	std::unique_ptr<Model> model;
-
 	std::unique_ptr<Sprite> enemyHp;
+	std::unique_ptr<Effect> getEffect;
 
 	State state = State::Init;
 	DirectX::XMFLOAT3 targetPosition  = { 0,0,0 };

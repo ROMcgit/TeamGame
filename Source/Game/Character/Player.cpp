@@ -35,7 +35,7 @@ Player::Player()
 	collisionOffset = { 0, -1.0f, 0 };
 
 	// ヒットエフェクト読み込み
-	hitEffect = std::make_unique <Effect>("Data/Effect/Hit.efk");
+	hitEffect = std::make_unique <Effect>("Data/Effect/Effect/Hit.efk");
 
 	// 移動ステートへ遷移
 	TransitionMoveState();
@@ -804,7 +804,7 @@ void Player::CollisionProjectilesVsEnemies()
 					{
 						DirectX::XMFLOAT3 e = enemy->GetPosition();
 						e.y += enemy->GetHeight() * 0.5f;
-						hitEffect->Play(e);
+						hitEffect->Play(e, 0.9f);
 					}
 
 					// 弾丸破棄

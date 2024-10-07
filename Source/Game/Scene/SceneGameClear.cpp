@@ -1,5 +1,9 @@
 #include "SceneGameClear.h"
 #include "Graphics/Graphics.h"
+#include "SceneManager.h"
+#include "Game/Scene/SceneLoading.h"
+#include "Game/Scene/SceneTitle.h"
+#include "Input/Input.h"
 
 // 初期化
 void SceneGameClear::Initialize()
@@ -14,6 +18,15 @@ void SceneGameClear::Finalize()
 // 更新処理
 void SceneGameClear::Update(float elapsedTime)
 {
+	GamePad& gamePad = Input::Instance().GetGamePad();
+
+	if (gamePad.GetButtonDown() & GamePad::BTN_A)
+	{
+		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneTitle>());
+
+		// シーンマネージャーにローディングシーンへの切り替えを指示
+		SceneManager::Instance().ChangeScene(std::move(loadingScene));
+	}
 }
 
 // 描画処理

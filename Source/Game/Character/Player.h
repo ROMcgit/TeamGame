@@ -123,7 +123,7 @@ private:
 	};
 
 private:
-	std::unique_ptr<Model> model[3];
+	std::unique_ptr<Model>  model[3];
 	std::unique_ptr<Sprite> hpSprite[4];
 
 	float moveSpeed = 5.5f;

@@ -230,10 +230,19 @@ void SceneGame::Render()
 			ImGui::InputInt("EstablishmentCount", &establishmentCount); // 設置した数
 			ImGui::InputFloat("NewestablishmentTimer", &newestablishmentTimer); // 設置した数
 
-
 			// プレイヤーデバッグ描画
 			player->DrawDebugGUI();
+//-----------------------------------------------------------------------------------------------------//
+			ImGui::Spacing(); // 一行空ける
+			ImGui::Separator(); // セクションの間に区切り線を表示
+			ImGui::Spacing(); // 一行空ける
+//-----------------------------------------------------------------------------------------------------//
 			camera.DrawDebugGUI();
+//-----------------------------------------------------------------------------------------------------//
+			ImGui::Spacing(); // 一行空ける
+			ImGui::Separator(); // セクションの間に区切り線を表示
+			ImGui::Spacing(); // 一行空ける
+//-----------------------------------------------------------------------------------------------------//
 			cameraController->DrawDebugGUI();
 
 			ItemManager::Instance().DrawDebugGUI();

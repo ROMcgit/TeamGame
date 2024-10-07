@@ -10,6 +10,8 @@ Apple::Apple()
 {
 	model = std::make_unique<Model>("Data/Model/Item/Apple/Apple.mdl");
 
+	getEffect = std::make_unique <Effect>("Data/Effect/Effect/Apple.efk");
+
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.000f;
 
@@ -147,6 +149,10 @@ void Apple::CollisionItemVsPlayer()
 	{
 		// プレイヤーを拡散攻撃できるようにする
 		player.SetDiffusionAttacks(1);
+
+		DirectX::XMFLOAT3 e = player.GetPosition();
+		e.y += player.GetHeight() * 0.5f;
+		getEffect->Play(e, 0.6f);
 
 		// 破棄する
 		Destroy();

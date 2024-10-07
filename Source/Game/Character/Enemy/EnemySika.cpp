@@ -24,7 +24,42 @@ EnemySika::EnemySika()
 
 	enemyHp = std::make_unique<Sprite>();
 
-	hp = 1;
+	Player& player = Player::Instance();
+
+	switch (player.GetLevel())
+	{
+	case 1:
+	case 2:
+	case 3:
+	case 4:
+	case 5:
+		hp = 1;
+		break;
+	case 6:
+	case 7:
+	case 8:
+	case 9:
+	case 10:
+		hp = 2;
+		break;
+	case 11:
+	case 12:
+	case 13:
+	case 14:
+	case 15:
+		hp = 3;
+		break;
+	case 16:
+	case 17:
+	case 18:
+	case 19:
+	case 20:
+		hp = 4;
+		break;
+	default:
+		break;
+	}
+	
 
 	// 追跡ステート
 	TransitionPursuitState();
@@ -259,7 +294,7 @@ void EnemySika::UpdatePursuitState(float elapsedTime)
 	vx = player.GetPosition().x - position.x;
 	vz = player.GetPosition().z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist > 3200)
+	if (dist > 2500)
 		Destroy();
 }
 
@@ -344,6 +379,10 @@ void EnemySika::TransitionDeathState()
 
 	// ダメージアニメーション再生
 	model->PlayAnimation(Anim_Die, false);
+
+	Player& player = Player::Instance();
+
+	player.SetExp(1);
 
 	stateTimer = 1.0f;
 }

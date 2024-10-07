@@ -10,6 +10,12 @@ public:
 	SceneTitle() {};
 	~SceneTitle() override {};
 
+	static SceneTitle& Instance()
+	{
+		static SceneTitle instance;
+		return instance;
+	}
+
 	// ‰Šú‰»
 	void Initialize() override;
 

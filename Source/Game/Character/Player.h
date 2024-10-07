@@ -44,6 +44,15 @@ public:
 		this->diffusionAttacks += diffusionAttacks;
 	}
 
+	// expを与える
+	void SetExp(int exp)
+	{
+		this->exp += exp;
+	}
+
+	// レベルを取得
+	int GetLevel() { return level; }
+
 protected:
 	// 着地した時に呼ばれる
 	void OnLanding() override;
@@ -58,6 +67,9 @@ private:
 
 	// ノードとエネミーの衝突処理
 	//void CollisionNodeVsEnemies(const char* nodeName, float nodeRadius);
+
+	// レベル更新処理
+	void UpdateLevel();
 
 	// 移動入力処理
 	bool InputMove(float elapsedTime);
@@ -126,7 +138,6 @@ private:
 	std::unique_ptr<Model>  model[3];
 	std::unique_ptr<Sprite> hpSprite[4];
 
-	float moveSpeed = 5.5f;
 	float turnSpeed = DirectX::XMConvertToRadians(120);
 
 	float minAngleX = DirectX::XMConvertToRadians(-45); // 角度最小値
@@ -155,4 +166,10 @@ private:
 /****************************************************/
 
 	int diffusionAttacks = 0;
+
+	int exp    = 0;
+	int expMax = 10;
+	int level  = 1;
+
+	float moveSpeed = 15.0f;
 };

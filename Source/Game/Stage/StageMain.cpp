@@ -2,6 +2,13 @@
 
 StageMain::StageMain()
 {
+	// 位置
+	position.x = position.z = 0;
+	position.y = -1.8f;
+
+	scale.x = scale.z = 100.0f;
+	scale.y = 0.1f;
+
 	// ステージモデルを読み込み
 	model = new Model("Data/Model/Stage/StageMain.mdl");
 }

@@ -1,10 +1,11 @@
 #include <imgui.h>
-#include "Game/Character/Player.h"
-#include "Input/Input.h"
-#include "Game/Camera/Camera.h"
 #include "Graphics/Graphics.h"
-#include "Game/Character/Enemy/EnemyManager.h"
 #include "Other/Collision.h"
+#include "Input/Input.h"
+#include "Game/Character/Player.h"
+#include "Game/Camera/Camera.h"
+#include "Game/Character/Enemy/EnemyManager.h"
+#include "Game/Scene/SceneTitle.h"
 #include "Game/Character/Projectile/ProjectileUnko.h"
 
 static Player* instance = nullptr;
@@ -129,9 +130,6 @@ void Player::Update(float elapsedTime)
 	// 弾丸更新処理
 	projectileManager.Update(elapsedTime);
 
-	// プレイヤーと敵との衝突処理
-	CollisionPlayerVsEnemies();
-
 	// HP管理
 	HpControll(elapsedTime);
 
@@ -141,66 +139,8 @@ void Player::Update(float elapsedTime)
 	// 弾丸と敵に衝突処理
 	CollisionProjectilesVsEnemies();
 
-#if 0
-	// 進行ベクトル取得
-	DirectX::XMFLOAT3 moveVec = GetMoveVec();
-
-	// 移動処理
-	float moveSpeed = this->moveSpeed * elapsedTime;
-	position.x += moveVec.x * moveSpeed;
-	position.z += moveVec.z * moveSpeed;
-
-	// 入力情報を取得
-	GamePad& gamePad = Input::Instance().GetGamePad();
-	float ax = gamePad.GetAxisLX();
-	float ay = gamePad.GetAxisLY();
-#endif
-
-#if 0
-	// 移動操作
-	float moveSpeed = 5.0f * elapsedTime;
-	{
-		// X移動
-		if (ax == 1)
-		{
-			position.x += 0.1;
-		}
-		else if (ax == -1)
-		{
-			position.x -= 0.1;
-		}
-
-		// Z移動
-		if (ay == 1)
-		{
-			position.z += 0.1;
-		}
-		else if (ay == -1)
-		{
-			position.z -= 0.1;
-		}
-	}
-
-	// 回転処理
-	float rotateSpeed = DirectX::XMConvertToRadians(360) * elapsedTime;
-	if (gamePad.GetButton() & GamePad::BTN_A)
-	{
-		// X軸回転操作
-		angle.x += 0.1;
-	}
-
-	if (gamePad.GetButton() & GamePad::BTN_B)
-	{
-		// Y軸回転操作
-		angle.y += 0.1;
-	}
-
-	if (gamePad.GetButton() & GamePad::BTN_X)
-	{
-		// Z軸回転操作
-		angle.z += 0.1;
-	}
-#endif
+	// レベル更新処理
+	UpdateLevel();
 
 	// 当たり判定の位置設定
 	CollisionPosSettings();
@@ -286,6 +226,82 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 	}
 }
 
+// レベル更新処理
+void Player::UpdateLevel()
+{
+	switch (level)
+	{
+	case 1:
+		expMax = 10;
+		break;
+	case 2:
+		expMax = 12;
+		break;
+	case 3:
+		expMax = 14;
+		break;
+	case 4:
+		expMax = 16;
+		break;
+	case 5:
+		expMax = 18;
+		break;
+	case 6:
+		expMax = 10;
+		break;
+	case 7:
+		expMax = 11;
+		break;
+	case 8:
+		expMax = 12;
+		break;
+	case 9:
+		expMax = 13;
+		break;
+	case 10:
+		expMax = 14;
+		break;
+	case 11:
+		expMax = 3;
+		break;
+	case 12:
+		expMax = 4;
+		break;
+	case 13:
+		expMax = 5;
+		break;
+	case 14:
+		expMax = 6;
+		break;
+	case 15:
+		expMax = 7;
+		break;
+	case 16:
+		expMax = 8;
+		break;
+	case 17:
+		expMax = 2;
+		break;
+	case 18:
+		expMax = 3;
+		break;
+	case 19:
+		expMax = 4;
+		break;
+	case 20:
+		expMax = 5;
+		break;
+	default:
+		break;
+	}
+
+	if (exp >= expMax && level < 20)
+	{
+		exp = 0;
+		level++;
+	}
+}
+
 // 移動入力処理
 bool Player::InputMove(float elapsedTime)
 {
@@ -307,8 +323,10 @@ void Player::InputProjectile()
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
+	const GamePadButton attackButton = GamePad::BTN_B | GamePad::BTN_X;
+
 	// 直進弾丸発射
-	if (gamePad.GetButtonDown() & GamePad::BTN_B) //Cキー
+	if (gamePad.GetButtonDown() & attackButton) //CキーとXキー
 	{
 		//! 拡散攻撃
 		if (diffusionAttacks > 0)
@@ -461,8 +479,91 @@ void Player::UpdateMoveState(float elapsedTime)
 	{
 		lunges = false;
 
-		// 移動処理
-		Move(dir.x, dir.z, 15);
+		switch (level)
+		{
+		case 1:
+			// 移動処理
+			Move(dir.x, dir.z, 15);
+			break;
+		case 2:
+			// 移動処理
+			Move(dir.x, dir.z, 17);
+			break;
+		case 3:
+			// 移動処理
+			Move(dir.x, dir.z, 19);
+			break;
+		case 4:
+			// 移動処理
+			Move(dir.x, dir.z, 22);
+			break;
+		case 5:
+			// 移動処理
+			Move(dir.x, dir.z, 25);
+			break;
+		case 6:
+			// 移動処理
+			Move(dir.x, dir.z, 28);
+			break;
+		case 7:
+			// 移動処理
+			Move(dir.x, dir.z, 32);
+			break;
+		case 8:
+			// 移動処理
+			Move(dir.x, dir.z, 36);
+			break;
+		case 9:
+			// 移動処理
+			Move(dir.x, dir.z, 40);
+			break;
+		case 10:
+			// 移動処理
+			Move(dir.x, dir.z, 44);
+			break;
+		case 11:
+			// 移動処理
+			Move(dir.x, dir.z, 48);
+			break;
+		case 12:
+			// 移動処理
+			Move(dir.x, dir.z, 52);
+			break;
+		case 13:
+			// 移動処理
+			Move(dir.x, dir.z, 56);
+			break;
+		case 14:
+			// 移動処理
+			Move(dir.x, dir.z, 60);
+			break;
+		case 15:
+			// 移動処理
+			Move(dir.x, dir.z, 64);
+			break;
+		case 16:
+			// 移動処理
+			Move(dir.x, dir.z, 68);
+			break;
+		case 17:
+			// 移動処理
+			Move(dir.x, dir.z, 72);
+			break;
+		case 18:
+			// 移動処理
+			Move(dir.x, dir.z, 77);
+			break;
+		case 19:
+			// 移動処理
+			Move(dir.x, dir.z, 83);
+			break;
+		case 20:
+			// 移動処理
+			Move(dir.x, dir.z, 90);
+			break;
+		default:
+			break;
+		}
 	}
 
 	GamePad& gamePad = Input::Instance().GetGamePad();
@@ -537,7 +638,7 @@ void Player::UpdateLungesState(float elapsedTime)
 	DIR = DirectX::XMVector3Normalize(DIR);
 	DirectX::XMStoreFloat3(&dir, DIR);
 
-	Move(dir.x, dir.z, 0.0f);
+	//Move(dir.x, dir.z, 0.0f);
 
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
@@ -777,7 +878,7 @@ void Player::CollisionProjectilesVsEnemies()
 				outPosition))
 			{
 				// ダメージを与える
-				if (enemy->ApplyDamage(1, 1.0f))
+				if (enemy->ApplyDamage(1, 0.0f))
 				{
 					// 吹き飛ばす
 					{
@@ -827,6 +928,10 @@ void Player::DrawDebugGUI()
 	if (ImGui::TreeNode("Player"))
 	{
 		ImGui::InputInt("HP", &hp);
+		ImGui::InputInt("EXP", &exp);
+		ImGui::InputInt("Level", &level);
+		
+
 		ImGui::InputFloat3("Velocity", &velocity.x);
 
 		// トランスフォーム

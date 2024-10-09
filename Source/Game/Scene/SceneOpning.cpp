@@ -70,7 +70,7 @@ void SceneOpning::Update(float elapsedTime)
 		sceneChangeTimer += elapsedTime;
 
 		//! 画像シーンを切り替える
-		if (sceneChangeTimer > 3.0f)
+		if (sceneChangeTimer > 2.0f)
 		{
 			sceneChangeTimer = 0.0f;
 			spriteScene = SpriteScene::Tv;
@@ -95,14 +95,14 @@ void SceneOpning::Update(float elapsedTime)
 		sceneChangeTimer += elapsedTime;
 
 		//! 画像シーンを切り替える
-		if (sceneChangeTimer > 6.5f)
+		if (sceneChangeTimer > 6.0f)
 		{
 			viewSpriteNum = 0;
 			sceneChangeTimer = 0.0f;
 			spriteScene = SpriteScene::SaruKimaru;
 		}
 
-		if (tvChangeTimer < 3.0f)
+		if (tvChangeTimer < 2.5f)
 		{
 			if (spriteChangeTimer > 0.1f && viewSpriteNum != 1)
 			{
@@ -123,12 +123,12 @@ void SceneOpning::Update(float elapsedTime)
 				tvChangeSet = true;
 			}
 
-			if (spriteChangeTimer > 0.1f && viewSpriteNum != 3)
+			if (spriteChangeTimer > 0.15f && viewSpriteNum != 3)
 			{
 				spriteChangeTimer = 0.0f;
 				viewSpriteNum++;
 			}
-			else if (spriteChangeTimer > 0.1f)
+			else if (spriteChangeTimer > 0.15f)
 			{
 				spriteChangeTimer = 0.0f;
 				viewSpriteNum--;

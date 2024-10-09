@@ -2,6 +2,7 @@
 
 #include "Graphics/Sprite.h"
 #include "Scene.h"
+#include "Graphics/Fade.h"
 
 // タイトルシーン
 class SceneOpning : public Scene
@@ -23,5 +24,25 @@ public:
 	void Render() override;
 
 private:
-	std::unique_ptr<Sprite> sprite;
+	enum class SpriteScene
+	{
+		Home,
+		Tv,
+		SaruKimaru,
+	};
+
+private:
+
+	std::unique_ptr<Fade> fade;
+	bool setFade = false;
+	std::unique_ptr<Sprite> homeSprite[2];
+	std::unique_ptr<Sprite> tvSprite[4];
+	std::unique_ptr<Sprite> saruKimaruSprite[2];
+
+	SpriteScene spriteScene = SpriteScene::Home;
+	int viewSpriteNum = 0;
+	float spriteChangeTimer = 0.0f;
+	float sceneChangeTimer  = 0.0f;
+	float tvChangeTimer     = 0.0f;
+	bool  tvChangeSet       = false;
 };

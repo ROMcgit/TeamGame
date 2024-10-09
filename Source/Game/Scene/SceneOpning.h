@@ -46,17 +46,27 @@ private:
 	std::unique_ptr<Sprite> tvSprite[4];
 	std::unique_ptr<Sprite> saruKimaruSprite[2];
 	std::unique_ptr<Sprite> house[2];
+
 	std::unique_ptr<Sprite> shopping;
+	float shoppingPosY = 720.0f;
 	std::unique_ptr<Sprite> saru[3];
+	float saruScalePlusTimer = 0.0f;
+	DirectX::XMFLOAT2 saruPos = { 830 ,650 };
 	DirectX::XMFLOAT2 saruScale = { 0, 0 };
+
 	std::unique_ptr<Sprite> unko;
+	float unkoScaleTimer = 0.0f;
+	DirectX::XMFLOAT2 unkoPos   = { 650, 400 };
 	DirectX::XMFLOAT2 unkoScale = { 0, 0 };
 	float unkoAngle = DirectX::XMConvertToRadians(0);
+
 	std::unique_ptr<Sprite> sika[2];
+	float sikaMoveTimer = 0.0f;
+	float sikaPosX = 1500;
 	std::unique_ptr<Sprite> kemuri;
 	float kemuriOpacity = 1.0f;
 	std::unique_ptr<Sprite> sikaFinal[100];
-	DirectX::XMFLOAT2 sikaPos = { 0, 0 };
+	DirectX::XMFLOAT2 sikaPos[100];
 
 	SpriteScene spriteScene = SpriteScene::Home;
 	int viewSpriteNum = 0;

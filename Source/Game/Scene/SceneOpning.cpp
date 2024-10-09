@@ -31,7 +31,7 @@ void SceneOpning::Initialize()
 	for (int i = 0; i < 2; i++)
 	{
 		std::string filePath = "Data/Sprite/背景/家" + std::to_string(i + 1) + ".png";
-		house[i] = std::make_unique<Sprite>(filePath);
+		house[i] = std::make_unique<Sprite>(filePath.c_str());
 	}
 	
 	//! ショッピングモール
@@ -41,16 +41,20 @@ void SceneOpning::Initialize()
 	for (int i = 0; i < 3; i++)
 	{
 		std::string filePath = "Data/Sprite/背景/Saru" + std::to_string(i + 1) + ".png";
-		saru[i] = std::make_unique<Sprite>(filePath);
+		saru[i] = std::make_unique<Sprite>(filePath.c_str());
 	}
+
+	unko = std::make_unique<Sprite>("Data/Sprite/背景/うんち.png");
 
 	//! シカ
 	for (int i = 0; i < 2; i++)
 	{
 		std::string filePath = "Data/Sprite/背景/シカ" + std::to_string(i + 1) + ".png";
-		sika[i] = std::make_unique<Sprite>(filePath);
+		sika[i] = std::make_unique<Sprite>(filePath.c_str());
 	}
 	
+	kemuri = std::make_unique<Sprite>("Data/Sprite/背景/煙.png");
+
 	//! シカ(最終形態)
 	for (int i = 0; i < 100; i++)
 	{
@@ -171,6 +175,13 @@ void SceneOpning::Update(float elapsedTime)
 		spriteChangeTimer += elapsedTime;
 		sceneChangeTimer += elapsedTime;
 
+		//! 画像シーンを切り替える
+		if (sceneChangeTimer > 3.0f)
+		{
+			sceneChangeTimer = 0.0f;
+			spriteScene = SpriteScene::SaruRan;
+		}
+
 		if (spriteChangeTimer > 0.1f && viewSpriteNum != 1)
 		{
 			spriteChangeTimer = 0.0f;
@@ -183,6 +194,94 @@ void SceneOpning::Update(float elapsedTime)
 		}
 	}
 		break;
+	case SpriteScene::SaruRan:
+	{
+		sceneChangeTimer += elapsedTime;
+		saruScalePlusTimer += elapsedTime;
+
+		//! 画像シーンを切り替える
+		if (sceneChangeTimer > 3.5f)
+		{
+			sceneChangeTimer = 0.0f;
+			spriteScene = SpriteScene::ShoppingMall;
+		}
+
+		if (saruScalePlusTimer > 1.0f)
+		{
+			saruScale.x += 500 * elapsedTime;
+			saruScale.y += 515 * elapsedTime;
+
+			saruPos.x -= 200 * elapsedTime;
+			saruPos.y -= 350 * elapsedTime;
+		}
+	}
+		break;
+	case SpriteScene::ShoppingMall:
+	{
+		sceneChangeTimer += elapsedTime;
+		sikaMoveTimer += elapsedTime;
+
+		if (sceneChangeTimer > 8.5f)
+		{
+			sceneChangeTimer = 0.0f;
+			spriteScene = SpriteScene::SaruKireru;
+		}
+
+		if (shoppingPosY > 0)
+		{
+			shoppingPosY -= 100 * elapsedTime;
+		}
+		//! 大きさ制限
+		if (shoppingPosY < 0)
+			shoppingPosY = 0;
+
+		if (sikaMoveTimer > 7.0f)
+		{
+			//! シカのX座標
+			if (sikaPosX > 300)
+				sikaPosX -= 2000 * elapsedTime;
+
+			if (sikaPosX < 300)
+				sikaPosX = 300;
+		}
+	}
+		break;
+	case SpriteScene::SaruKireru:
+	{
+		sceneChangeTimer += elapsedTime;
+		unkoScaleTimer   += elapsedTime;
+
+		//! うんこを出す
+		if (unkoScaleTimer > 1.5f)
+		{
+			unkoPos.x -= 500 * elapsedTime;
+			unkoPos.y -= 450 * elapsedTime;
+
+			unkoScale.x += 800 * elapsedTime;
+			unkoScale.y += 1020 * elapsedTime;
+			unkoAngle += DirectX::XMConvertToRadians(500) * elapsedTime;
+		}
+	}
+		break;
+	case SpriteScene::UnkoAttack:
+	{
+
+	}
+		break;
+	case SpriteScene::UnkoHit:
+	{
+
+	}
+		break;
+	case SpriteScene::SaruOdoroku:
+	{
+
+	}
+		break;
+	case SpriteScene::SikaRash:
+	{
+
+	}
 	default:
 		break;
 	}
@@ -247,12 +346,39 @@ void SceneOpning::Render()
 			break;
 		case SpriteScene::SaruRan:
 		{
+			textureWidth = static_cast<float>(house[0]->GetTextureWidth());
+			textureHeight = static_cast<float>(house[0]->GetTextureHeight());
+
+			if (saruScalePlusTimer > 1.0f)
+			{
+				//! 家
+				house[1]->Render(dc,
+					0, 0,
+					screenWidth, screenHeight,
+					0, 0,
+					textureWidth, textureHeight,
+					0,
+					1, 1, 1, 1);
+			}
+			else
+			{
+				//! 家
+				house[0]->Render(dc,
+					0, 0,
+					screenWidth, screenHeight,
+					0, 0,
+					textureWidth, textureHeight,
+					0,
+					1, 1, 1, 1);
+			}
+			
+
 			textureWidth = static_cast<float>(saru[0]->GetTextureWidth());
 			textureHeight = static_cast<float>(saru[0]->GetTextureHeight());
 
 			//! サル(通常)
 			saru[0]->Render(dc,
-				0, 0,
+				saruPos.x, saruPos.y,
 				saruScale.x, saruScale.y,
 				0, 0,
 				textureWidth, textureHeight,
@@ -267,7 +393,7 @@ void SceneOpning::Render()
 
 			//! ショッピングモール
 			shopping->Render(dc,
-				0, 0,
+				0, shoppingPosY,
 				screenWidth, screenHeight,
 				0, 0,
 				textureWidth, textureHeight,
@@ -279,7 +405,7 @@ void SceneOpning::Render()
 
 			//! シカ
 			sika[0]->Render(dc,
-				300, 0,
+				sikaPosX, 0,
 				650, 720,
 				0, 0,
 				textureWidth, textureHeight,
@@ -294,8 +420,8 @@ void SceneOpning::Render()
 
 			//! サル(キレる)
 			saru[1]->Render(dc,
-				0, 0,
-				328, 372,
+				330, 80,
+				588, 632,
 				0, 0,
 				textureWidth, textureHeight,
 				0,
@@ -306,7 +432,7 @@ void SceneOpning::Render()
 
 			//! うんこ
 			unko->Render(dc,
-				0, 0,
+				unkoPos.x, unkoPos.y,
 				unkoScale.x, unkoScale.y,
 				0, 0,
 				textureWidth, textureHeight,
@@ -378,11 +504,11 @@ void SceneOpning::Render()
 			for (int i = 0; i < 100; i++)
 			{
 				sikaFinal[i]->Render(dc,
-					0, 0,
-					screenWidth, screenWidth,
+					sikaPos[i].x, sikaPos[i].y,
+					624, 410,
 					0, 0,
 					textureWidth, textureHeight,
-					unkoAngle,
+					0,
 					1, 1, 1, 1);
 			}
 		}

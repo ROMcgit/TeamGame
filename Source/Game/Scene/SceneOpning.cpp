@@ -27,6 +27,36 @@ void SceneOpning::Initialize()
 		tvSprite[i] = std::make_unique<Sprite>(filePath.c_str());
 	}
 
+	//! 家
+	for (int i = 0; i < 2; i++)
+	{
+		std::string filePath = "Data/Sprite/背景/家" + std::to_string(i + 1) + ".png";
+		house[i] = std::make_unique<Sprite>(filePath);
+	}
+	
+	//! ショッピングモール
+	shopping = std::make_unique < Sprite>("Data/Sprite/背景/ショッピングモール.png");
+
+	//! サル
+	for (int i = 0; i < 3; i++)
+	{
+		std::string filePath = "Data/Sprite/背景/Saru" + std::to_string(i + 1) + ".png";
+		saru[i] = std::make_unique<Sprite>(filePath);
+	}
+
+	//! シカ
+	for (int i = 0; i < 2; i++)
+	{
+		std::string filePath = "Data/Sprite/背景/シカ" + std::to_string(i + 1) + ".png";
+		sika[i] = std::make_unique<Sprite>(filePath);
+	}
+	
+	//! シカ(最終形態)
+	for (int i = 0; i < 100; i++)
+	{
+		sikaFinal[i] = std::make_unique<Sprite>("Data/Sprite/背景/シカ2.png");
+	}
+
 	//! フェード
 	fade = std::make_unique<Fade>();
 }
@@ -182,7 +212,7 @@ void SceneOpning::Render()
 	{
 		switch (spriteScene)
 		{
-		case SceneOpning::SpriteScene::Home:
+		case SpriteScene::Home:
 		{
 			homeSprite[viewSpriteNum]->Render(dc,
 				0, 0,
@@ -193,7 +223,7 @@ void SceneOpning::Render()
 				1, 1, 1, 1);
 		}
 			break;
-		case SceneOpning::SpriteScene::Tv:
+		case SpriteScene::Tv:
 		{
 			tvSprite[viewSpriteNum]->Render(dc,
 				0, 0,
@@ -204,7 +234,7 @@ void SceneOpning::Render()
 				1, 1, 1, 1);
 		}
 			break;
-		case SceneOpning::SpriteScene::SaruKimaru:
+		case SpriteScene::SaruKimaru:
 		{
 			saruKimaruSprite[viewSpriteNum]->Render(dc,
 				0, 0,
@@ -213,6 +243,148 @@ void SceneOpning::Render()
 				textureWidth, textureHeight,
 				0,
 				1, 1, 1, 1);
+		}
+			break;
+		case SpriteScene::SaruRan:
+		{
+			textureWidth = static_cast<float>(saru[0]->GetTextureWidth());
+			textureHeight = static_cast<float>(saru[0]->GetTextureHeight());
+
+			//! サル(通常)
+			saru[0]->Render(dc,
+				0, 0,
+				saruScale.x, saruScale.y,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+		}
+			break;
+		case SpriteScene::ShoppingMall:
+		{
+			textureWidth = static_cast<float>(shopping->GetTextureWidth());
+			textureHeight = static_cast<float>(shopping->GetTextureHeight());
+
+			//! ショッピングモール
+			shopping->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+
+			textureWidth = static_cast<float>(sika[0]->GetTextureWidth());
+			textureHeight = static_cast<float>(sika[0]->GetTextureHeight());
+
+			//! シカ
+			sika[0]->Render(dc,
+				300, 0,
+				650, 720,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+		}
+			break;
+		case SpriteScene::SaruKireru:
+		{
+			textureWidth = static_cast<float>(saru[1]->GetTextureWidth());
+			textureHeight = static_cast<float>(saru[1]->GetTextureHeight());
+
+			//! サル(キレる)
+			saru[1]->Render(dc,
+				0, 0,
+				328, 372,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+
+			textureWidth = static_cast<float>(unko->GetTextureWidth());
+			textureHeight = static_cast<float>(unko->GetTextureHeight());
+
+			//! うんこ
+			unko->Render(dc,
+				0, 0,
+				unkoScale.x, unkoScale.y,
+				0, 0,
+				textureWidth, textureHeight,
+				unkoAngle,
+				1, 1, 1, 1);
+		}
+			break;
+		case SpriteScene::UnkoAttack:
+		{
+			textureWidth = static_cast<float>(sika[0]->GetTextureWidth());
+			textureHeight = static_cast<float>(sika[0]->GetTextureHeight());
+
+			//! シカ
+			sika[0]->Render(dc,
+				300, 0,
+				650, 720,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+
+			textureWidth = static_cast<float>(unko->GetTextureWidth());
+			textureHeight = static_cast<float>(unko->GetTextureHeight());
+
+			//! うんこ
+			unko->Render(dc,
+				0, 0,
+				unkoScale.x, unkoScale.y,
+				0, 0,
+				textureWidth, textureHeight,
+				unkoAngle,
+				1, 1, 1, 1);
+		}
+			break;
+		case SpriteScene::UnkoHit:
+		{
+			textureWidth = static_cast<float>(kemuri->GetTextureWidth());
+			textureHeight = static_cast<float>(kemuri->GetTextureHeight());
+
+			kemuri->Render(dc,
+				0, 0,
+				screenWidth, screenWidth,
+				0, 0,
+				textureWidth, textureHeight,
+				unkoAngle,
+				1, 1, 1, kemuriOpacity);
+		}
+			break;
+		case SpriteScene::SaruOdoroku:
+		{
+			textureWidth = static_cast<float>(sika[1]->GetTextureWidth());
+			textureHeight = static_cast<float>(sika[1]->GetTextureHeight());
+
+			//! シカ(最終形態)
+			sika[1]->Render(dc,
+				0, 0,
+				screenWidth, screenWidth,
+				0, 0,
+				textureWidth, textureHeight,
+				unkoAngle,
+				1, 1, 1, 1);
+		}
+			break;
+		case SpriteScene::SikaRash:
+		{
+			textureWidth = static_cast<float>(sikaFinal[0]->GetTextureWidth());
+			textureHeight = static_cast<float>(sikaFinal[0]->GetTextureHeight());
+
+			for (int i = 0; i < 100; i++)
+			{
+				sikaFinal[i]->Render(dc,
+					0, 0,
+					screenWidth, screenWidth,
+					0, 0,
+					textureWidth, textureHeight,
+					unkoAngle,
+					1, 1, 1, 1);
+			}
 		}
 			break;
 		default:

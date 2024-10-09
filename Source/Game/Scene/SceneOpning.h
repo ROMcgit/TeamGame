@@ -29,6 +29,13 @@ private:
 		Home,
 		Tv,
 		SaruKimaru,
+		SaruRan,
+		ShoppingMall,
+		SaruKireru,
+		UnkoAttack,
+		UnkoHit,
+		SaruOdoroku,
+		SikaRash,
 	};
 
 private:
@@ -38,6 +45,18 @@ private:
 	std::unique_ptr<Sprite> homeSprite[2];
 	std::unique_ptr<Sprite> tvSprite[4];
 	std::unique_ptr<Sprite> saruKimaruSprite[2];
+	std::unique_ptr<Sprite> house[2];
+	std::unique_ptr<Sprite> shopping;
+	std::unique_ptr<Sprite> saru[3];
+	DirectX::XMFLOAT2 saruScale = { 0, 0 };
+	std::unique_ptr<Sprite> unko;
+	DirectX::XMFLOAT2 unkoScale = { 0, 0 };
+	float unkoAngle = DirectX::XMConvertToRadians(0);
+	std::unique_ptr<Sprite> sika[2];
+	std::unique_ptr<Sprite> kemuri;
+	float kemuriOpacity = 1.0f;
+	std::unique_ptr<Sprite> sikaFinal[100];
+	DirectX::XMFLOAT2 sikaPos = { 0, 0 };
 
 	SpriteScene spriteScene = SpriteScene::Home;
 	int viewSpriteNum = 0;

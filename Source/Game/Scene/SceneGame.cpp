@@ -365,6 +365,25 @@ void SceneGame::Newestablishment(float elapsedTime)
 	else if((player->GetBananaNum() >= 5 && player->GetBananaNum() <= 7))
 		enemyMaxCount = 20;
 
+	if (player->GetPosition().y > 60)
+	{
+		for (int i = 0; i < enemyCount; i++)
+		{
+			std::unique_ptr<Enemy>& enemy = enemyManager.GetEnemy(i);
+			enemy->Destroy();
+		}
+
+		for (int i = 0; i < itemCount; i++)
+		{
+			std::unique_ptr<Item>& item = itemManager.GetItem(i);
+			item->Destroy();
+		}
+
+		for (int i = 0; i < installationCount; i++)
+		{
+		}
+	}
+
 /***************************************************************************************************/
 
 	if (player->GetIsGround())

@@ -7,6 +7,7 @@
 #include "Game/Character/Enemy/EnemyManager.h"
 #include "Game/Scene/SceneTitle.h"
 #include "Game/Character/Projectile/ProjectileUnko.h"
+#include "Game/Character/Projectile/ProjectileYazirusi.h"
 
 static Player* instance = nullptr;
 
@@ -24,6 +25,8 @@ Player::Player()
 	model[0] = std::make_unique <Model>("Data/Model/Monkey/0.mdl/Monkey_Face.mdl");
 	model[1] = std::make_unique <Model>("Data/Model/Monkey/0.mdl/Monkey_Leg_Left.mdl");
 	model[2] = std::make_unique <Model>("Data/Model/Monkey/0.mdl/Monkey_Leg_Right.mdl");
+
+	ProjectileYazirusi* projectile = new ProjectileYazirusi(&projectileManager);
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.03f;

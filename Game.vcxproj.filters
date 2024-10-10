@@ -291,6 +291,9 @@
     <ClInclude Include="Source\Game\Character\Item\ImportantItem.h">
       <Filter>Source\Character\Item\Important</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Character\Projectile\ProjectileYazirusi.h">
+      <Filter>Source\Projectile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -469,6 +472,9 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Item\ImportantItem.cpp">
       <Filter>Source\Character\Item\Important</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Projectile\ProjectileYazirusi.cpp">
+      <Filter>Source\Projectile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

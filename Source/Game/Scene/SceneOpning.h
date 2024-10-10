@@ -66,10 +66,10 @@ private:
 	float sikaMoveTimer = 0.0f;
 	float sikaPosX = 1500;
 
-	std::unique_ptr<Sprite> sikaFinal[200];
-	DirectX::XMFLOAT2 sikaPos[200];
-	DirectX::XMFLOAT2 sikaPosPower[200];
-	float sikaStopTimer[200];
+	std::unique_ptr<Sprite> sikaFinal[300];
+	DirectX::XMFLOAT2 sikaPos[300];
+	DirectX::XMFLOAT2 sikaPosPower[300];
+	float sikaStopTimer[300];
 
 	SpriteScene spriteScene = SpriteScene::Home;
 	int viewSpriteNum = 0;

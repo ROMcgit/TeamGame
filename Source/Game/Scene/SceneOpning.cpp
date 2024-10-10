@@ -54,7 +54,7 @@ void SceneOpning::Initialize()
 	}
 
 	//! シカ(最終形態)
-	for (int i = 0; i < 200; i++)
+	for (int i = 0; i < 300; i++)
 	{
 		sikaFinal[i] = std::make_unique<Sprite>("Data/Sprite/背景/シカ2.png");
 
@@ -341,13 +341,13 @@ void SceneOpning::Update(float elapsedTime)
 	{
 		sceneChangeTimer += elapsedTime;
 
-		if (sceneChangeTimer > 3.0f)
+		if (sceneChangeTimer > 2.0f)
 		{
 			sceneChangeTimer = 0.0f;
 			spriteScene = SpriteScene::SaruOdoroku2;
 		}
 
-		for (int i = 0; i < 200; i++)
+		for (int i = 0; i < 300; i++)
 		{
 			sikaPos[i].x += sikaPosPower[i].x * elapsedTime;
 			sikaPos[i].y += sikaPosPower[i].y * elapsedTime;
@@ -599,7 +599,7 @@ void SceneOpning::Render()
 			textureWidth = static_cast<float>(sikaFinal[0]->GetTextureWidth());
 			textureHeight = static_cast<float>(sikaFinal[0]->GetTextureHeight());
 
-			for (int i = 0; i < 200; i++)
+			for (int i = 0; i < 300; i++)
 			{
 				sikaFinal[i]->Render(dc,
 					sikaPos[i].x, sikaPos[i].y,

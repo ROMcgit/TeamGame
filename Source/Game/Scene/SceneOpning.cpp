@@ -20,7 +20,7 @@ void SceneOpning::Initialize()
 		saruKimaruSprite[i] = std::make_unique<Sprite>(filePath.c_str());
 	}
 
-	backGround = std::make_unique<Sprite>(");
+	//backGround = std::make_unique<Sprite>(");
 
 	//! ƒeƒŒƒr‚Ì‰f‘œ‰æ‘œ
 	for (int i = 0; i < 4; i++)

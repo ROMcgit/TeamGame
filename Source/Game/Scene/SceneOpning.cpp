@@ -52,8 +52,6 @@ void SceneOpning::Initialize()
 		std::string filePath = "Data/Sprite/背景/シカ" + std::to_string(i + 1) + ".png";
 		sika[i] = std::make_unique<Sprite>(filePath.c_str());
 	}
-	
-	kemuri = std::make_unique<Sprite>("Data/Sprite/背景/煙.png");
 
 	//! シカ(最終形態)
 	for (int i = 0; i < 100; i++)
@@ -73,7 +71,7 @@ void SceneOpning::Finalize()
 // 更新処理
 void SceneOpning::Update(float elapsedTime)
 {
-
+	fade->Update(elapsedTime);
 
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
@@ -219,7 +217,7 @@ void SceneOpning::Update(float elapsedTime)
 	case SpriteScene::ShoppingMall:
 	{
 		sceneChangeTimer += elapsedTime;
-		sikaMoveTimer += elapsedTime;
+		sikaMoveTimer    += elapsedTime;
 
 		if (sceneChangeTimer > 8.5f)
 		{
@@ -251,36 +249,85 @@ void SceneOpning::Update(float elapsedTime)
 		sceneChangeTimer += elapsedTime;
 		unkoScaleTimer   += elapsedTime;
 
+		if (sceneChangeTimer > 3.5f)
+		{
+			sceneChangeTimer = 0.0f;
+			spriteScene = SpriteScene::UnkoAttack;
+		}
+
 		//! うんこを出す
 		if (unkoScaleTimer > 1.5f)
 		{
-			unkoPos.x -= 500 * elapsedTime;
-			unkoPos.y -= 450 * elapsedTime;
+			unkoPos.x -= 550 * elapsedTime;
+			unkoPos.y -= 650 * elapsedTime;
 
-			unkoScale.x += 800 * elapsedTime;
-			unkoScale.y += 1020 * elapsedTime;
-			unkoAngle += DirectX::XMConvertToRadians(500) * elapsedTime;
+			unkoScale.x += 1200 * elapsedTime;
+			unkoScale.y += 1420 * elapsedTime;
+			unkoAngle += DirectX::XMConvertToRadians(1500) * elapsedTime;
 		}
 	}
 		break;
 	case SpriteScene::UnkoAttack:
 	{
+		sceneChangeTimer += elapsedTime;
 
+		if (sceneChangeTimer > 1.6f)
+		{
+			//! フェードをセット
+			fade->SetFade(DirectX::XMFLOAT3(0.8f, 0.8f, 0.8f),
+				1.0f, 0.0f,
+				1.0f, 1.0f
+			);
+
+			sceneChangeTimer = 0;
+
+			spriteScene = SpriteScene::UnkoHit;
+		}
+
+
+		unkoPos.x += 720 * elapsedTime;
+		unkoPos.y += 850 * elapsedTime;
+		unkoAngle += DirectX::XMConvertToRadians(1500) * elapsedTime;
+
+		//! うんこを小さくする
+		if (unkoScale.x > 0.0f)
+			unkoScale.x -= 1500 * elapsedTime;
+		if (unkoScale.y > 0.0f)
+			unkoScale.y -= 1820 * elapsedTime;
 	}
 		break;
 	case SpriteScene::UnkoHit:
 	{
+		sceneChangeTimer += elapsedTime;
 
+		if(sceneChangeTimer > 6.0f)
+		{
+			sceneChangeTimer = 0.0f;
+			spriteScene = SpriteScene::SaruOdoroku;
+		}
 	}
 		break;
 	case SpriteScene::SaruOdoroku:
 	{
+		sceneChangeTimer += elapsedTime;
 
+		if (sceneChangeTimer > 2.0f)
+		{
+			sceneChangeTimer = 0.0f;
+			spriteScene = SpriteScene::SikaRash;
+		}
 	}
 		break;
 	case SpriteScene::SikaRash:
 	{
-
+		if (sikaScale.x > 724)
+			sikaScale.x -= 300 * elapsedTime;
+		else
+			sikaScale.x = 724;
+		if (sikaScale.y > 510)
+			sikaScale.y -= 300 * elapsedTime;
+		else
+			sikaScale.y = 510;
 	}
 	default:
 		break;
@@ -349,7 +396,7 @@ void SceneOpning::Render()
 			textureWidth = static_cast<float>(house[0]->GetTextureWidth());
 			textureHeight = static_cast<float>(house[0]->GetTextureHeight());
 
-			if (saruScalePlusTimer > 1.0f)
+			if (saruScalePlusTimer > 1.02f)
 			{
 				//! 家
 				house[1]->Render(dc,
@@ -459,7 +506,7 @@ void SceneOpning::Render()
 
 			//! うんこ
 			unko->Render(dc,
-				0, 0,
+				unkoPos.x, unkoPos.y,
 				unkoScale.x, unkoScale.y,
 				0, 0,
 				textureWidth, textureHeight,
@@ -469,35 +516,48 @@ void SceneOpning::Render()
 			break;
 		case SpriteScene::UnkoHit:
 		{
-			textureWidth = static_cast<float>(kemuri->GetTextureWidth());
-			textureHeight = static_cast<float>(kemuri->GetTextureHeight());
+			textureWidth = static_cast<float>(sika[1]->GetTextureWidth());
+			textureHeight = static_cast<float>(sika[1]->GetTextureHeight());
 
-			kemuri->Render(dc,
-				0, 0,
-				screenWidth, screenWidth,
+			//! シカ(最終形態)
+			sika[1]->Render(dc,
+				150, 0,
+				924, 710,
 				0, 0,
 				textureWidth, textureHeight,
-				unkoAngle,
-				1, 1, 1, kemuriOpacity);
+				0,
+				1, 1, 1, 1);
 		}
 			break;
 		case SpriteScene::SaruOdoroku:
+		{
+			textureWidth = static_cast<float>(saru[2]->GetTextureWidth());
+			textureHeight = static_cast<float>(saru[2]->GetTextureHeight());
+
+			//! サル(驚く)
+			saru[2]->Render(dc,
+				330, 80,
+				588, 632,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+		}
+			break;
+		case SpriteScene::SikaRash:
 		{
 			textureWidth = static_cast<float>(sika[1]->GetTextureWidth());
 			textureHeight = static_cast<float>(sika[1]->GetTextureHeight());
 
 			//! シカ(最終形態)
 			sika[1]->Render(dc,
-				0, 0,
-				screenWidth, screenWidth,
+				280, 80,
+				sikaScale.x, sikaScale.y,
 				0, 0,
 				textureWidth, textureHeight,
-				unkoAngle,
+				0,
 				1, 1, 1, 1);
-		}
-			break;
-		case SpriteScene::SikaRash:
-		{
+
 			textureWidth = static_cast<float>(sikaFinal[0]->GetTextureWidth());
 			textureHeight = static_cast<float>(sikaFinal[0]->GetTextureHeight());
 

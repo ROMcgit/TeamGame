@@ -54,9 +54,22 @@ void SceneOpning::Initialize()
 	}
 
 	//! シカ(最終形態)
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 200; i++)
 	{
 		sikaFinal[i] = std::make_unique<Sprite>("Data/Sprite/背景/シカ2.png");
+
+		sikaPos[i] = { 280, 80 };
+
+		DirectX::XMFLOAT2 posPower = { 
+			(float)(rand() % 10 + 1 * (rand() % 2 == 1 ? -1 : 1)) * 100,
+			(float)(rand() % 10 + 1 * (rand() % 2 == 1 ? -1 : 1)) * 100
+		};
+
+		if (i >= 0 && i < 10)
+			posPower.x *= -1;
+
+		//! シカの移動スピード
+		sikaPosPower[i] = { posPower.x, posPower.y };
 	}
 
 	//! フェード
@@ -76,17 +89,23 @@ void SceneOpning::Update(float elapsedTime)
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
 	if (gamePad.GetButtonDown() & GamePad::BTN_A && !setFade)
-	{
-		setFade = true;
+		doFade = true;
 
-		// フェードをセット
-		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
-			0.0f, 1.0f,
-			3.0f);
+	if (doFade)
+	{
+		if (!setFade)
+		{
+			// フェードをセット
+			fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+				0.0f, 1.0f,
+				3.0f);
+
+			setFade = true;
+		}
 	}
 
 	//! フェードが終わったらシーン遷移
-	if (setFade && !fade->Update(elapsedTime))
+	if (setFade && !fade->GetFade())
 	{
 		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGame>());
 
@@ -320,15 +339,34 @@ void SceneOpning::Update(float elapsedTime)
 		break;
 	case SpriteScene::SikaRash:
 	{
-		if (sikaScale.x > 724)
-			sikaScale.x -= 300 * elapsedTime;
-		else
-			sikaScale.x = 724;
-		if (sikaScale.y > 510)
-			sikaScale.y -= 300 * elapsedTime;
-		else
-			sikaScale.y = 510;
+		sceneChangeTimer += elapsedTime;
+
+		if (sceneChangeTimer > 3.0f)
+		{
+			sceneChangeTimer = 0.0f;
+			spriteScene = SpriteScene::SaruOdoroku2;
+		}
+
+		for (int i = 0; i < 200; i++)
+		{
+			sikaPos[i].x += sikaPosPower[i].x * elapsedTime;
+			sikaPos[i].y += sikaPosPower[i].y * elapsedTime;
+
+			sikaStopTimer[i] += elapsedTime;
+
+			if (sikaStopTimer[i] > 0.5f)
+				sikaPosPower[i] = { 0, 0 };
+		}
 	}
+	break;
+	case SpriteScene::SaruOdoroku2:
+	{
+		sceneChangeTimer += elapsedTime;
+
+		if (sceneChangeTimer > 2.0f)
+			doFade = true;
+	}
+		break;
 	default:
 		break;
 	}
@@ -552,7 +590,7 @@ void SceneOpning::Render()
 			//! シカ(最終形態)
 			sika[1]->Render(dc,
 				280, 80,
-				sikaScale.x, sikaScale.y,
+				724, 510,
 				0, 0,
 				textureWidth, textureHeight,
 				0,
@@ -561,7 +599,7 @@ void SceneOpning::Render()
 			textureWidth = static_cast<float>(sikaFinal[0]->GetTextureWidth());
 			textureHeight = static_cast<float>(sikaFinal[0]->GetTextureHeight());
 
-			for (int i = 0; i < 100; i++)
+			for (int i = 0; i < 200; i++)
 			{
 				sikaFinal[i]->Render(dc,
 					sikaPos[i].x, sikaPos[i].y,
@@ -571,6 +609,21 @@ void SceneOpning::Render()
 					0,
 					1, 1, 1, 1);
 			}
+		}
+			break;
+		case SpriteScene::SaruOdoroku2:
+		{
+			textureWidth = static_cast<float>(saru[2]->GetTextureWidth());
+			textureHeight = static_cast<float>(saru[2]->GetTextureHeight());
+
+			//! サル(驚く)
+			saru[2]->Render(dc,
+				100, 0,
+				1088,1132,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
 		}
 			break;
 		default:

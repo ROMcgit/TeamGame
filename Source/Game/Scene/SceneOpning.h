@@ -36,12 +36,14 @@ private:
 		UnkoHit,
 		SaruOdoroku,
 		SikaRash,
+		SaruOdoroku2
 	};
 
 private:
 
 	std::unique_ptr<Fade> fade;
 	bool setFade = false;
+	bool doFade  = false;
 	std::unique_ptr<Sprite> homeSprite[2];
 	std::unique_ptr<Sprite> tvSprite[4];
 	std::unique_ptr<Sprite> saruKimaruSprite[2];
@@ -64,9 +66,10 @@ private:
 	float sikaMoveTimer = 0.0f;
 	float sikaPosX = 1500;
 
-	DirectX::XMFLOAT2 sikaScale = { 724, 510 };
-	std::unique_ptr<Sprite> sikaFinal[100];
-	DirectX::XMFLOAT2 sikaPos[100];
+	std::unique_ptr<Sprite> sikaFinal[200];
+	DirectX::XMFLOAT2 sikaPos[200];
+	DirectX::XMFLOAT2 sikaPosPower[200];
+	float sikaStopTimer[200];
 
 	SpriteScene spriteScene = SpriteScene::Home;
 	int viewSpriteNum = 0;

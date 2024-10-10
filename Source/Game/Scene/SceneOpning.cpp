@@ -20,6 +20,8 @@ void SceneOpning::Initialize()
 		saruKimaruSprite[i] = std::make_unique<Sprite>(filePath.c_str());
 	}
 
+	backGround = std::make_unique<Sprite>(");
+
 	//! ƒeƒŒƒr‚Ì‰f‘œ‰æ‘œ
 	for (int i = 0; i < 4; i++)
 	{
@@ -431,6 +433,18 @@ void SceneOpning::Render()
 			break;
 		case SpriteScene::SaruRan:
 		{
+			textureWidth = static_cast<float>(backGround->GetTextureWidth());
+			textureHeight = static_cast<float>(backGround->GetTextureHeight());
+
+			//! ”wŒi
+			backGround->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+
 			textureWidth = static_cast<float>(house[0]->GetTextureWidth());
 			textureHeight = static_cast<float>(house[0]->GetTextureHeight());
 
@@ -473,6 +487,18 @@ void SceneOpning::Render()
 			break;
 		case SpriteScene::ShoppingMall:
 		{
+			textureWidth = static_cast<float>(backGround->GetTextureWidth());
+			textureHeight = static_cast<float>(backGround->GetTextureHeight());
+
+			//! ”wŒi
+			backGround->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+
 			textureWidth = static_cast<float>(shopping->GetTextureWidth());
 			textureHeight = static_cast<float>(shopping->GetTextureHeight());
 

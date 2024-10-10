@@ -44,6 +44,8 @@ private:
 	std::unique_ptr<Fade> fade;
 	bool setFade = false;
 	bool doFade  = false;
+	std::unique_ptr<Sprite> backGround;
+
 	std::unique_ptr<Sprite> homeSprite[2];
 	std::unique_ptr<Sprite> tvSprite[4];
 	std::unique_ptr<Sprite> saruKimaruSprite[2];

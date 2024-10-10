@@ -23,5 +23,6 @@ public:
 	void Render() override;
 
 private:
-	std::unique_ptr<Sprite> sprite;
+	std::unique_ptr<Sprite> saru;
+	std::unique_ptr<Sprite> ganban;
 };

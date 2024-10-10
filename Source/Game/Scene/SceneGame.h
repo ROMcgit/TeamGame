@@ -39,7 +39,6 @@ private:
 	std::unique_ptr<Player> player;
 	std::unique_ptr<CameraController> cameraController;
 	std::unique_ptr<Fade> fade;
-	std::unique_ptr<Text> text;
 	
 	int enemyMaxCount      = 0;
 	float newEnemyTimer    = 0.0f;

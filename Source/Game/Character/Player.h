@@ -5,6 +5,7 @@
 #include "Game/Character/Character.h"
 #include "Game/Character/Projectile/ProjectileManager.h"
 #include "Game/Effect/Effect.h"
+#include "Graphics/Text.h"
 
 // プレイヤー
 class Player : public Character
@@ -146,6 +147,10 @@ private:
 private:
 	std::unique_ptr<Model>  model[3];
 	std::unique_ptr<Sprite> hpSprite[4];
+	std::unique_ptr<Text>   text[3];
+
+	float viewMoveSpeedPlusTimer = 0.0f; // スピードを増やす処理
+	float viewMoveSpeed = 0.0f;
 
 	float turnSpeed = DirectX::XMConvertToRadians(120);
 

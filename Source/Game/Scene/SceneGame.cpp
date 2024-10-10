@@ -54,8 +54,6 @@ void SceneGame::Initialize()
 	cameraController->SetRange(15.0f);
 
 	fade = std::make_unique<Fade>();
-
-	text = std::make_unique<Text>();
 }
 
 // I—¹‰»
@@ -261,25 +259,6 @@ void SceneGame::Render()
 		player->SpriteRender(dc);
 		EnemyManager::Instance().SpriteRender(dc);
 		EnemyManager::Instance().RenderEnemyGauge(dc, rc.view, rc.projection);
-
-		ImportantItemManager& importantItemManager = ImportantItemManager::Instance();
-		int importantItemCount = importantItemManager.GetImportantItemCount();
-
-		if (importantItemCount > 0)
-		{
-			std::unique_ptr<ImportantItem>& banana = importantItemManager.GetImportantItem(0);
-
-			text->Render(dc,
-				true, true,
-				false,
-				0, 0, 0, 0, 0,0,
-				0, 0, banana->GetDist(),
-				100, 50,
-				10, 10,
-				0,
-				30, 
-				1, 1, 1, 1);
-		}
 
 		fade->Render(dc);
 	}

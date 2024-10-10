@@ -39,21 +39,19 @@ EnemySika::EnemySika()
 	case 8:
 	case 9:
 	case 10:
-		hp = 1;
-		break;
 	case 11:
 	case 12:
 	case 13:
 	case 14:
 	case 15:
-		hp = 2;
+		hp = 1;
 		break;
 	case 16:
 	case 17:
 	case 18:
 	case 19:
 	case 20:
-		hp = 4;
+		hp = 2;
 		break;
 	default:
 		break;

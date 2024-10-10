@@ -8,6 +8,8 @@
 #include "Game/Scene/SceneTitle.h"
 #include "Game/Character/Projectile/ProjectileUnko.h"
 #include "Game/Character/Projectile/ProjectileYazirusi.h"
+#include "Game/Character/Item/ImportantItem.h"
+#include "Game/Character/Item/ImportantItemManager.h"
 
 static Player* instance = nullptr;
 
@@ -52,6 +54,9 @@ Player::Player()
 	{
 		hpSprite[i + 1] = std::make_unique<Sprite>();
 	}
+
+	for(int i = 0; i < 3; i++)
+	text[i] = std::make_unique<Text>();
 }
 
 // デストラクタ
@@ -171,6 +176,8 @@ void Player::Update(float elapsedTime)
 		// モデル更新処理
 		model[i]->UpdateTransform(transform);
 	}
+
+	viewMoveSpeedPlusTimer += elapsedTime;
 }
 
 // 描画処理
@@ -239,6 +246,56 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 				1, 0, 0, 1);
 		}
 	}
+	ImportantItemManager& importantItemManager = ImportantItemManager::Instance();
+	int importantItemCount = importantItemManager.GetImportantItemCount();
+
+	if (importantItemCount > 0)
+	{
+		std::unique_ptr<ImportantItem>& banana = importantItemManager.GetImportantItem(0);
+
+		text[0]->Render(dc,
+			true, true,
+			false,
+			0, 0, 0, 0, 0, 0,
+			0, 0, banana->GetDist(),
+			-50, 0,
+			10, 10,
+			0,
+			30,
+			1, 1, 1, 1);
+	}
+
+	// レベル
+	text[1]->Render(dc,
+		true, true,
+		false, false, false,
+		0, 0, 0, level,
+		-60, 50,
+		10, 10,
+		0,
+		30,
+		1, 1, 1, 1);
+
+	// スピード
+	if (viewMoveSpeed < (int)moveSpeed + 0.5f && viewMoveSpeedPlusTimer > 0.3f)
+	{
+		viewMoveSpeedPlusTimer = 0.0f;
+		viewMoveSpeed++;
+	}
+
+	// 大きさを超えないようにする
+	if (viewMoveSpeed > (int)moveSpeed + 0.5f)
+		viewMoveSpeed = (int)moveSpeed + 0.5f;
+
+	text[2]->Render(dc,
+		true, true,
+		false, false, false,
+		0, 0, 0, viewMoveSpeed,
+		50, 50,
+		10, 10,
+		0,
+		30,
+		1, 1, 1, 1);
 }
 
 // レベル更新処理
@@ -488,7 +545,7 @@ void Player::UpdateMoveState(float elapsedTime)
 	//! 突進しているなら
 	if (lunges && lungesTimer > 0.0f)
 	{
-		Move(dir.x, dir.z, 2000.0f);
+		moveSpeed = 2000.0f;
 
 		invincibleTimer = 0.1f;
 		lungesTimer -= elapsedTime;
@@ -501,76 +558,62 @@ void Player::UpdateMoveState(float elapsedTime)
 		{
 		case 1:
 		case 2:
-			// 移動処理
-			Move(dir.x, dir.z, 10);
+			moveSpeed = 10;
 			break;
 		case 3:
 		case 4:
-			// 移動処理
-			Move(dir.x, dir.z, 15);
+			moveSpeed = 15;
 			break;
 		case 5:
 		case 6:
-			// 移動処理
-			Move(dir.x, dir.z, 17);
+			moveSpeed = 17;
 			break;
 		case 7:
 		case 8:
-			// 移動処理
-			Move(dir.x, dir.z, 20);
+			moveSpeed = 20;
 			break;
 		case 9:
-			// 移動処理
-			Move(dir.x, dir.z, 23);
+			moveSpeed = 23;
 			break;
 		case 10:
-			// 移動処理
-			Move(dir.x, dir.z, 25);
+			moveSpeed = 25;
 			break;
 		case 11:
-			// 移動処理
-			Move(dir.x, dir.z, 28);
+			moveSpeed = 28;
 			break;
 		case 12:
-			// 移動処理
-			Move(dir.x, dir.z, 32);
+			moveSpeed = 32;
 			break;
 		case 13:
-			// 移動処理
-			Move(dir.x, dir.z, 35);
+			moveSpeed = 35;
 			break;
 		case 14:
-			// 移動処理
-			Move(dir.x, dir.z, 38);
+			moveSpeed = 38;
 			break;
 		case 15:
-			// 移動処理
-			Move(dir.x, dir.z, 42);
+			moveSpeed = 42;
 			break;
 		case 16:
-			// 移動処理
-			Move(dir.x, dir.z, 46);
+			moveSpeed = 46;
 			break;
 		case 17:
-			// 移動処理
-			Move(dir.x, dir.z, 50);
+			moveSpeed = 50;
 			break;
 		case 18:
-			// 移動処理
-			Move(dir.x, dir.z, 55);
+			moveSpeed = 55;
 			break;
 		case 19:
-			// 移動処理
-			Move(dir.x, dir.z, 60);
+			moveSpeed = 60;
 			break;
 		case 20:
-			// 移動処理
-			Move(dir.x, dir.z, 65);
+			moveSpeed = 65;
 			break;
 		default:
 			break;
 		}
 	}
+
+	Move(dir.x, dir.z, moveSpeed);
 
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
@@ -937,6 +980,7 @@ void Player::DrawDebugGUI()
 		ImGui::InputInt("EXP", &exp);
 		ImGui::InputInt("Level", &level);
 		
+		ImGui::InputFloat("MoveSpeed", &moveSpeed);
 		ImGui::Checkbox("IsGround", &isGround);
 		ImGui::InputFloat3("Velocity", &velocity.x);
 

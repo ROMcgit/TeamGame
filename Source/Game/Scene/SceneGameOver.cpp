@@ -31,17 +31,36 @@ void SceneGameOver::Update(float elapsedTime)
 		SceneManager::Instance().ChangeScene(std::move(loadingScene));
 	}
 
-	if(hekomiScale.x < 1280.0f)
-		hekomiScale.x += 1600 * elapsedTime;
+	if (saruAngle < DirectX::XMConvertToRadians(180))
+		saruAngle -= DirectX::XMConvertToRadians(10000) * elapsedTime;
 
-	if (hekomiScale.y < 720.0f)
-		hekomiScale.y += 900 * elapsedTime;
+	if (saruPos.x < 620)
+		saruPos.x += 500 * elapsedTime;
 
-	if (hekomiPos.x > 0)
-		hekomiPos.x -= 775 * elapsedTime;
+	if (saruPos.y > 310)
+		saruPos.y -= 200 * elapsedTime;
 
-	if (hekomiPos.y > 0)
-		hekomiPos.y -= 370 * elapsedTime;
+	if (saruScale.x > 0)
+		saruScale.x -= 600 * elapsedTime;
+
+	if (saruScale.y > 0)
+		saruScale.y -= 600 * elapsedTime;
+
+	if(hekomiTimer > 1.05f)
+	{
+		if (hekomiScale.x < 1280.0f)
+			hekomiScale.x += 1600 * elapsedTime;
+
+		if (hekomiScale.y < 720.0f)
+			hekomiScale.y += 900 * elapsedTime;
+
+		if (hekomiPos.x > 0)
+			hekomiPos.x -= 775 * elapsedTime;
+
+		if (hekomiPos.y > 0)
+			hekomiPos.y -= 370 * elapsedTime;
+	}
+	hekomiTimer += elapsedTime;
 }
 
 // ï`âÊèàóù
@@ -80,11 +99,14 @@ void SceneGameOver::Render()
 		0,
 		1, 1, 1, 1);
 
+	textureWidth = static_cast<float>(saru->GetTextureWidth());
+	textureHeight = static_cast<float>(saru->GetTextureHeight());
+
 	saru->Render(dc,
 		saruPos.x, saruPos.y,
 		saruScale.x, saruScale.y,
 		0, 0,
 		textureWidth, textureHeight,
-		0,
+		saruAngle,
 		1, 1, 1, 1);
 }

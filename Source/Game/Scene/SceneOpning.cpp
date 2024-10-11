@@ -20,7 +20,7 @@ void SceneOpning::Initialize()
 		saruKimaruSprite[i] = std::make_unique<Sprite>(filePath.c_str());
 	}
 
-	//backGround = std::make_unique<Sprite>(");
+	backGround = std::make_unique<Sprite>("Data/Sprite/”wŒi/‹ó.png");
 
 	//! ƒeƒŒƒr‚Ì‰f‘œ‰æ‘œ
 	for (int i = 0; i < 4; i++)
@@ -383,7 +383,7 @@ void SceneOpning::Render()
 	ID3D11DepthStencilView* dsv = graphics.GetDepthStencilView();
 
 	// ‰æ–ÊƒNƒŠƒA•ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒgÝ’è
-	FLOAT color[] = { 0.0f, 0.0f, 0.5f, 1.0f };	// RGBA(0.0`1.0)
+	FLOAT color[] = { 0.0f, 0.0f, 1.0f, 1.0f };	// RGBA(0.0`1.0)
 	dc->ClearRenderTargetView(rtv, color);
 	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	dc->OMSetRenderTargets(1, &rtv, dsv);
@@ -433,17 +433,17 @@ void SceneOpning::Render()
 			break;
 		case SpriteScene::SaruRan:
 		{
-			//textureWidth = static_cast<float>(backGround->GetTextureWidth());
-			//textureHeight = static_cast<float>(backGround->GetTextureHeight());
+			textureWidth = static_cast<float>(backGround->GetTextureWidth());
+			textureHeight = static_cast<float>(backGround->GetTextureHeight());
 
-			////! ”wŒi
-			//backGround->Render(dc,
-			//	0, 0,
-			//	screenWidth, screenHeight,
-			//	0, 0,
-			//	textureWidth, textureHeight,
-			//	0,
-			//	1, 1, 1, 1);
+			//! ”wŒi
+			backGround->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
 
 			textureWidth = static_cast<float>(house[0]->GetTextureWidth());
 			textureHeight = static_cast<float>(house[0]->GetTextureHeight());
@@ -487,17 +487,17 @@ void SceneOpning::Render()
 			break;
 		case SpriteScene::ShoppingMall:
 		{
-			//textureWidth = static_cast<float>(backGround->GetTextureWidth());
-			//textureHeight = static_cast<float>(backGround->GetTextureHeight());
+			textureWidth = static_cast<float>(backGround->GetTextureWidth());
+			textureHeight = static_cast<float>(backGround->GetTextureHeight());
 
-			////! ”wŒi
-			//backGround->Render(dc,
-			//	0, 0,
-			//	screenWidth, screenHeight,
-			//	0, 0,
-			//	textureWidth, textureHeight,
-			//	0,
-			//	1, 1, 1, 1);
+			//! ”wŒi
+			backGround->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
 
 			textureWidth = static_cast<float>(shopping->GetTextureWidth());
 			textureHeight = static_cast<float>(shopping->GetTextureHeight());
@@ -526,6 +526,18 @@ void SceneOpning::Render()
 			break;
 		case SpriteScene::SaruKireru:
 		{
+			textureWidth = static_cast<float>(backGround->GetTextureWidth());
+			textureHeight = static_cast<float>(backGround->GetTextureHeight());
+
+			//! ”wŒi
+			backGround->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+
 			textureWidth = static_cast<float>(saru[1]->GetTextureWidth());
 			textureHeight = static_cast<float>(saru[1]->GetTextureHeight());
 
@@ -553,6 +565,30 @@ void SceneOpning::Render()
 			break;
 		case SpriteScene::UnkoAttack:
 		{
+			textureWidth = static_cast<float>(backGround->GetTextureWidth());
+			textureHeight = static_cast<float>(backGround->GetTextureHeight());
+
+			//! ”wŒi
+			backGround->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+
+			textureWidth = static_cast<float>(shopping->GetTextureWidth());
+			textureHeight = static_cast<float>(shopping->GetTextureHeight());
+
+			//! ƒVƒ‡ƒbƒsƒ“ƒOƒ‚[ƒ‹
+			shopping->Render(dc,
+				0, shoppingPosY,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+
 			textureWidth = static_cast<float>(sika[0]->GetTextureWidth());
 			textureHeight = static_cast<float>(sika[0]->GetTextureHeight());
 
@@ -580,6 +616,30 @@ void SceneOpning::Render()
 			break;
 		case SpriteScene::UnkoHit:
 		{
+			textureWidth = static_cast<float>(backGround->GetTextureWidth());
+			textureHeight = static_cast<float>(backGround->GetTextureHeight());
+
+			//! ”wŒi
+			backGround->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+
+			textureWidth = static_cast<float>(shopping->GetTextureWidth());
+			textureHeight = static_cast<float>(shopping->GetTextureHeight());
+
+			//! ƒVƒ‡ƒbƒsƒ“ƒOƒ‚[ƒ‹
+			shopping->Render(dc,
+				0, shoppingPosY,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+
 			textureWidth = static_cast<float>(sika[1]->GetTextureWidth());
 			textureHeight = static_cast<float>(sika[1]->GetTextureHeight());
 
@@ -595,6 +655,18 @@ void SceneOpning::Render()
 			break;
 		case SpriteScene::SaruOdoroku:
 		{
+			textureWidth = static_cast<float>(backGround->GetTextureWidth());
+			textureHeight = static_cast<float>(backGround->GetTextureHeight());
+
+			//! ”wŒi
+			backGround->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+
 			textureWidth = static_cast<float>(saru[2]->GetTextureWidth());
 			textureHeight = static_cast<float>(saru[2]->GetTextureHeight());
 
@@ -610,6 +682,30 @@ void SceneOpning::Render()
 			break;
 		case SpriteScene::SikaRash:
 		{
+			textureWidth = static_cast<float>(backGround->GetTextureWidth());
+			textureHeight = static_cast<float>(backGround->GetTextureHeight());
+
+			//! ”wŒi
+			backGround->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+
+			textureWidth = static_cast<float>(shopping->GetTextureWidth());
+			textureHeight = static_cast<float>(shopping->GetTextureHeight());
+
+			//! ƒVƒ‡ƒbƒsƒ“ƒOƒ‚[ƒ‹
+			shopping->Render(dc,
+				0, shoppingPosY,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+
 			textureWidth = static_cast<float>(sika[1]->GetTextureWidth());
 			textureHeight = static_cast<float>(sika[1]->GetTextureHeight());
 

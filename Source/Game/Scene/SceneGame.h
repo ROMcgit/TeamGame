@@ -38,6 +38,7 @@ private:
 private:
 	std::unique_ptr<Player> player;
 	std::unique_ptr<CameraController> cameraController;
+	std::unique_ptr<Sprite> backGround;
 	std::unique_ptr<Fade> fade;
 	
 	int enemyMaxCount      = 0;

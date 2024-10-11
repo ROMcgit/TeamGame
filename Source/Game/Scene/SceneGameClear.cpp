@@ -8,6 +8,17 @@
 // 初期化
 void SceneGameClear::Initialize()
 {
+	//! 空
+	backGround = std::make_unique<Sprite>("Data/Sprite/背景/空.png");
+
+	//! ショッピングモール
+	shopping = std::make_unique <Sprite>("Data/Sprite/背景/ショッピングモール.png");
+
+	//! ショッピングモール(崩壊)
+	collapseShopping = std::make_unique<Sprite>("Data/Sprite/背景/ショッピングモール(崩壊).png");
+
+	//! シカ
+	sika = std::make_unique<Sprite>("Data/Sprite/背景/シカ2.png");
 }
 
 // 終了化
@@ -18,6 +29,9 @@ void SceneGameClear::Finalize()
 // 更新処理
 void SceneGameClear::Update(float elapsedTime)
 {
+	sikaPosY  += 300 * elapsedTime;
+	sikaAngle += DirectX::XMConvertToRadians(5000) * elapsedTime;
+
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
 	if (gamePad.GetButtonDown() & GamePad::BTN_A)
@@ -42,4 +56,51 @@ void SceneGameClear::Render()
 	dc->ClearRenderTargetView(rtv, color);
 	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	dc->OMSetRenderTargets(1, &rtv, dsv);
+
+	float screenWidth = static_cast<float>(graphics.GetScreenWidth());
+	float screenHeight = static_cast<float>(graphics.GetScreenHeight());
+
+	float textureWidth = static_cast<float>(backGround->GetTextureWidth());
+	float textureHeight = static_cast<float>(backGround->GetTextureHeight());
+
+	//! 背景
+	backGround->Render(dc,
+		0, 0,
+		screenWidth, screenHeight,
+		0, 0,
+		textureWidth, textureHeight,
+		0,
+		1, 1, 1, 1);
+
+	if (spriteScene == SpriteScene::SikaDown)
+	{
+		textureWidth = static_cast<float>(shopping->GetTextureWidth());
+		textureHeight = static_cast<float>(shopping->GetTextureHeight());
+
+		//! ショッピングモール
+		shopping->Render(dc,
+			0, 0,
+			screenWidth, screenHeight,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1);
+
+		textureWidth = static_cast<float>(sika->GetTextureWidth());
+		textureHeight = static_cast<float>(sika->GetTextureHeight());
+
+		//! シカ
+		sika->Render(dc,
+			650, sikaPosY,
+			10, 10,
+			0, 0,
+			textureWidth, textureHeight,
+			sikaAngle,
+			1, 1, 1, 1);
+	}
+
+	if (spriteScene == SpriteScene::CollapseShoppingMall)
+	{
+
+	}
 }

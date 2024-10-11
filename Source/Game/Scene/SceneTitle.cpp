@@ -2,6 +2,8 @@
 #include "Input/Input.h"
 #include "SceneTitle.h"
 #include "SceneGameOver.h"
+#include "SceneGameClear.h"
+#include "SceneGame.h"
 #include "SceneLoading.h"
 #include "SceneOpning.h"
 #include "SceneManager.h"
@@ -29,11 +31,10 @@ void SceneTitle::Update(float elapsedTime)
 		GamePad::BTN_B;
 	if (gamePad.GetButtonDown() & anyButton)
 	{
-		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneOpning>());
+		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGameClear>());
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示
 		SceneManager::Instance().ChangeScene(std::move(loadingScene));
-		
 	}
 }
 

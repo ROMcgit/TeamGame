@@ -2,6 +2,7 @@
 
 #include "Scene.h"
 #include "Graphics/Sprite.h"
+#include "Graphics/Fade.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 class SceneGameOver : public Scene
@@ -23,6 +24,8 @@ public:
 	void Render() override;
 
 private:
+	std::unique_ptr<Fade> fade;
+	bool setFade = false;
 	std::unique_ptr<Sprite> saru;
 	DirectX::XMFLOAT2 saruPos   = { 500, 500 };
 	DirectX::XMFLOAT2 saruScale = { 628, 672 };
@@ -33,4 +36,10 @@ private:
 	float hekomiTimer = 0.0f;
 	DirectX::XMFLOAT2 hekomiPos = { 620, 300 };
 	DirectX::XMFLOAT2 hekomiScale = { 0, 0 };
+
+	std::unique_ptr<Sprite> gameOver;
+	float viewGameOverWaitTime = 0.0f;
+	float gameOverOpacity = 0.0f;
+
+	bool operationAccept = false;
 };

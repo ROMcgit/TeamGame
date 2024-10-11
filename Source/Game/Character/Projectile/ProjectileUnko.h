@@ -2,6 +2,7 @@
 
 #include "Graphics/Model.h"
 #include "Projectile.h"
+#include "Game/Effect/Effect.h"
 
 // íºêiíeä€
 class ProjectileUnko : public Projectile
@@ -23,4 +24,6 @@ private:
 	Model* model = nullptr;
 	float  speed = 50.0f;
 	float  lifeTimer = 1.5f;
+
+	std::unique_ptr<Effect> destoryEffect;
 };

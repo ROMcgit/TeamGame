@@ -4,8 +4,9 @@
 // コンストラクタ
 ProjectileUnko::ProjectileUnko(ProjectileManager* manager) : Projectile(manager)
 {
-	//model = new Model("./Data/Model/SpikeBall/SpikeBall.mdl");
 	model = new Model("./Data/Model/Monkey/0.mdl/Projectile_Unko.mdl");
+
+	destoryEffect = std::make_unique <Effect>("Data/Effect/Effect/Hit.efk");
 
 	// 表示サイズを調整
 	scale.x = scale.y = scale.z = 0.023f;
@@ -36,6 +37,10 @@ void ProjectileUnko::Update(float elapsedTime)
 	lifeTimer -= elapsedTime;
 	if (lifeTimer <= 0)
 	{
+		DirectX::XMFLOAT3 e = collisionPos;
+		e.y += collisionPos.y - 0.2f;
+		destoryEffect->Play(e, 0.5f);
+
 		// 自分を削除
 		Destroy();
 	}

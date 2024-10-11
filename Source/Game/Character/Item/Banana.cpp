@@ -67,8 +67,6 @@ void Banana::Update(float elapsedTime)
 {
 	position.y = 0.5f;
 
-	
-
 	// ステート毎の更新処理
 	switch (state)
 	{

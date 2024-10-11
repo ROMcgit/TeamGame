@@ -6,7 +6,7 @@ StageMain::StageMain()
 	position.x = position.z = 0;
 	position.y = -1.8f;
 
-	scale.x = scale.z = 10.0f;
+	scale.x = scale.z = 10.02f;
 	scale.y = 0.1f;
 
 	// ステージモデルを読み込み

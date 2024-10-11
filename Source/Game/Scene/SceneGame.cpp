@@ -382,6 +382,18 @@ void SceneGame::Newestablishment(float elapsedTime)
 			posX = player->GetPosition().x + distance * cos(randomAngle);
 			posZ = player->GetPosition().z + distance * sin(randomAngle);
 
+			//! 位置制限(X)
+			if (posX >= 990)
+				posX = 950;
+			else if (posX <= -990)
+				posX = -950;
+
+			//! 位置制限(Z)
+			if (posZ >= 990)
+				posZ = 950;
+			else if (posZ <= -990)
+				posZ = -950;
+
 			std::unique_ptr<EnemySika> sika = std::make_unique<EnemySika>();
 			sika->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
 			enemyManager.Register(std::move(sika));
@@ -393,6 +405,18 @@ void SceneGame::Newestablishment(float elapsedTime)
 		{
 			posX = player->GetPosition().x + distance * cos(randomAngle);
 			posZ = player->GetPosition().z + distance * sin(randomAngle);
+
+			//! 位置制限(X)
+			if (posX >= 990)
+				posX = 950;
+			else if (posX <= -990)
+				posX = -950;
+
+			//! 位置制限(Z)
+			if (posZ >= 990)
+				posZ = 950;
+			else if (posZ <= -990)
+				posZ = -950;
 
 			std::unique_ptr<Apple> apple = std::make_unique<Apple>();
 			apple->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));

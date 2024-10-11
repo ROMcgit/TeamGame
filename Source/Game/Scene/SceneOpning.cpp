@@ -297,7 +297,7 @@ void SceneOpning::Update(float elapsedTime)
 			//! フェードをセット
 			fade->SetFade(DirectX::XMFLOAT3(0.8f, 0.8f, 0.8f),
 				1.0f, 0.0f,
-				1.0f, 1.0f
+				4.0f, 1.0f
 			);
 
 			sceneChangeTimer = 0;
@@ -321,7 +321,7 @@ void SceneOpning::Update(float elapsedTime)
 	{
 		sceneChangeTimer += elapsedTime;
 
-		if(sceneChangeTimer > 6.0f)
+		if(sceneChangeTimer > 3.0f)
 		{
 			sceneChangeTimer = 0.0f;
 			spriteScene = SpriteScene::SaruOdoroku;
@@ -343,7 +343,7 @@ void SceneOpning::Update(float elapsedTime)
 	{
 		sceneChangeTimer += elapsedTime;
 
-		if (sceneChangeTimer > 2.0f)
+		if (sceneChangeTimer > 1.2f)
 		{
 			sceneChangeTimer = 0.0f;
 			spriteScene = SpriteScene::SaruOdoroku2;

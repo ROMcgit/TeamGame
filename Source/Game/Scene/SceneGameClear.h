@@ -35,6 +35,6 @@ private:
 	std::unique_ptr<Sprite> shopping;
 	std::unique_ptr<Sprite> collapseShopping;
 	std::unique_ptr<Sprite> sika;
-	float sikaPosY = 0;
+	float sikaPosY = -20;
 	float sikaAngle = DirectX::XMConvertToRadians(0);
 };

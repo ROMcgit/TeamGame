@@ -31,7 +31,7 @@ void SceneTitle::Update(float elapsedTime)
 		GamePad::BTN_B;
 	if (gamePad.GetButtonDown() & anyButton)
 	{
-		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneOpning>());
+		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGameClear>());
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示
 		SceneManager::Instance().ChangeScene(std::move(loadingScene));

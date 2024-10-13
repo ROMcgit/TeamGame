@@ -810,13 +810,16 @@ void Player::TransitionDeathState()
 {
 	state = State::Death;
 
-	// 死亡アニメーション再生
-	//model->PlayAnimation(Anim_Death, false);
+	// ダメージアニメーション再生
+	for (int i = 0; i < 3; i++)
+		model[i]->PlayAnimation(Anim_Damage, false);
 }
 
 // 死亡ステート更新処理
-void Player::UpdateDeathState(float elapsedTimae)
+void Player::UpdateDeathState(float elapsedTime)
 {
+	angle.x += DirectX::XMConvertToRadians(180) * elapsedTime;
+	angle.z += DirectX::XMConvertToRadians(200) * elapsedTime;
 }
 
 // プレイヤーとエネミーとの衝突処理

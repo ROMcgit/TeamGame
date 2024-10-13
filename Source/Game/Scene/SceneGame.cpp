@@ -121,7 +121,7 @@ void SceneGame::Update(float elapsedTime)
 		{
 			fade->SetFade(DirectX::XMFLOAT3(1, 1, 1),
 				0.0f, 1.0f,
-				2.5f);
+				3.5f);
 
 			setFade = true;
 		}
@@ -142,7 +142,7 @@ void SceneGame::Update(float elapsedTime)
 		{
 			fade->SetFade(DirectX::XMFLOAT3(1, 0, 0),
 				0.0f, 1.0f,
-				2.5f);
+				3.5f);
 
 			setFade = true;
 		}

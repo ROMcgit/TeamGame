@@ -204,6 +204,9 @@ void SceneGameClear::Update(float elapsedTime)
 
 		if (sceneChangeTimer > 5.0f && thankOpacity > 0.0f)
 			thankOpacity -= 0.5 * elapsedTime;
+
+		if (sceneChangeTimer > 8.0f)
+			sceneChange = true;
 	}
 		break;
 	default:

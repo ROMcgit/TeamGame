@@ -128,7 +128,7 @@ void SceneGame::Update(float elapsedTime)
 
 		if (!fade->GetFade())
 		{
-			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGameOver>());
+			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGameClear>());
 
 			// シーンマネージャーにローディングシーンへの切り替えを指示
 			SceneManager::Instance().ChangeScene(std::move(loadingScene));

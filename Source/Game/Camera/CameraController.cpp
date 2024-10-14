@@ -42,6 +42,27 @@ void CameraController::Update(float elapsedTime)
 
 	// カメラの視点と注視点を設定
 	Camera::Instance().SetLookAt(eye, target, DirectX::XMFLOAT3(0, 1, 0));
+
+	//! カメラのムービー中の処理
+	UpdateCameraMovieTimer(elapsedTime);
+}
+
+// カメラムービー時間処理
+bool CameraController::UpdateCameraMovieTimer(float elapsedTime)
+{
+	// カメラがムービー中なら
+	if (cameraMovie && movieTime > 0.0f)
+	{
+		movieTime -= elapsedTime;
+
+		return true;
+	}
+	else
+	{
+		cameraMovie = false;
+		movieTime = 0;
+		return false;
+	}
 }
 
 void CameraController::DrawDebugGUI()

@@ -35,9 +35,14 @@ private:
 	// バナナ生成
 	void NewBanana(float elapsedTime);
 
+	// ムービー
+	void UpdateMovie(float elapsedTime);
+
 private:
 	std::unique_ptr<Player> player;
 	std::unique_ptr<CameraController> cameraController;
+	DirectX::XMFLOAT3 target = { 0, 0, 0 };
+	float cameraMovieTimer = 0.0f;
 	std::unique_ptr<Sprite> backGround;
 	std::unique_ptr<Fade> fade;
 	
@@ -58,4 +63,5 @@ private:
 	float newBananaWaitTimer = 0.5f; // バナナを出すまでの時間
 
 	bool enemyStop = false;
+	bool setMovie  = false;
 };

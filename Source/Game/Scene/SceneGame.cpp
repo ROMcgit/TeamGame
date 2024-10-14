@@ -78,17 +78,24 @@ void SceneGame::Finalize()
 // 更新処理
 void SceneGame::Update(float elapsedTime)
 {
-	// カメラコントローラー更新処理
-	DirectX::XMFLOAT3 target = player->GetPosition();
-	target.y += 0.5f;
-	cameraController->SetTarget(target);
-	cameraController->Update(elapsedTime);
-
 	// 生成処理
 	Newestablishment(elapsedTime);
 
 	// バナナ生成
 	NewBanana(elapsedTime);
+
+	// ムービー
+	UpdateMovie(elapsedTime);
+
+	// カメラコントローラー更新処理
+	if (!cameraController->GetCameraMovie())
+	{
+		target = player->GetPosition();
+		target.y += 0.5f;
+	}
+
+	cameraController->SetTarget(target);
+	cameraController->Update(elapsedTime);
 
 	// ステージ更新処理
 	StageManager::Instance().Update(elapsedTime);
@@ -471,5 +478,21 @@ void SceneGame::NewBanana(float elapsedTime)
 				newBanana[i] = true;
 			}
 		}
+	}
+}
+
+// ムービー
+void SceneGame::UpdateMovie(float elapsedTime)
+{
+	if (!setMovie && player->GetBananaNum() >= 6)
+	{
+		player->SetMovieTime(15.0f);
+		cameraController->SetCameraMovieTime(15.0f);
+	}
+
+	//! カメラがムービー中なら
+	if (cameraController->GetCameraMovie())
+	{
+
 	}
 }

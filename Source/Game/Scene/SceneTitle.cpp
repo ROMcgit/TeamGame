@@ -11,8 +11,14 @@
 // 初期化
 void SceneTitle::Initialize()
 {
-	// スプライト初期化
-	sprite = std::make_unique<Sprite>("Data/Sprite/Title.png");
+	title = std::make_unique<Sprite>("Data/Sprite/サル系MonTuber.png");
+	button = std::make_unique<Sprite>("Data/Sprite/サル系MonTuber(ボタン).png");
+
+	//! フェード
+	fade = std::make_unique<Fade>();
+	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+		1.0f, 0.0f,
+		4.0f);
 }
 
 // 終了化
@@ -23,19 +29,53 @@ void SceneTitle::Finalize()
 // 更新処理
 void SceneTitle::Update(float elapsedTime)
 {
-	GamePad& gamePad = Input::Instance().GetGamePad();
-
-	// なにかボタンを押したらローディングシーンを挟んでゲームシーンへ切り替え
-	const GamePadButton anyButton =
-		GamePad::BTN_A |
-		GamePad::BTN_B;
-	if (gamePad.GetButtonDown() & anyButton)
+	if (!fade->GetFade())
 	{
-		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneOpning>());
+		if (!buttonOpacityDown)
+		{
+			buttonOpacity += opacitySpeed * elapsedTime;
+			if (buttonOpacity >= 1.0f)
+			{
+				buttonOpacity = 1.0f;
+				buttonOpacityDown = true;
+			}
+		}
+		else
+		{
+			buttonOpacity -= opacitySpeed * elapsedTime;
+			if (buttonOpacity <= 0.0f)
+			{
+				buttonOpacity = 0.0f;
+				buttonOpacityDown = false;
+			}
+		}
 
-		// シーンマネージャーにローディングシーンへの切り替えを指示
-		SceneManager::Instance().ChangeScene(std::move(loadingScene));
+		GamePad& gamePad = Input::Instance().GetGamePad();
+
+		// なにかボタンを押したらローディングシーンを挟んでゲームシーンへ切り替え
+		const GamePadButton anyButton =
+			GamePad::BTN_A |
+			GamePad::BTN_B;
+		if (gamePad.GetButtonDown() & anyButton)
+		{
+			fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+				0.0f, 1.0f,
+				3.0f);
+
+			setFade = true;
+		}
+
+		if (setFade && !fade->GetFade())
+		{
+			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGameClear>());
+
+			// シーンマネージャーにローディングシーンへの切り替えを指示
+			SceneManager::Instance().ChangeScene(std::move(loadingScene));
+		}
 	}
+
+	//! フェード更新処理
+	fade->Update(elapsedTime);
 }
 
 // 描画処理
@@ -56,13 +96,22 @@ void SceneTitle::Render()
 	{
 		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
 		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
-		float textureWidth = static_cast<float>(sprite->GetTextureWidth());
-		float textureHeight = static_cast<float>(sprite->GetTextureHeight());
+		float textureWidth = static_cast<float>(title->GetTextureWidth());
+		float textureHeight = static_cast<float>(title->GetTextureHeight());
 		// タイトルスプライト描画
-		sprite->Render(dc,
+		title->Render(dc,
 			0, 0, screenWidth, screenHeight,
 			0, 0, textureWidth, textureHeight,
 			0,
 			1, 1, 1, 1);
+
+		// タイトルボタン描画
+		button->Render(dc,
+			0, 0, screenWidth, screenHeight,
+			0, 0, textureWidth, textureHeight,
+			0,
+			1, 1, 1, buttonOpacity);
 	}
+
+	fade->Render(dc);
 }

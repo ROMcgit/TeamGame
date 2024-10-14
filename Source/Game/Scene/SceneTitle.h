@@ -2,6 +2,7 @@
 
 #include "Graphics/Sprite.h"
 #include "Scene.h"
+#include "Graphics/Fade.h"
 
 // タイトルシーン
 class SceneTitle : public Scene
@@ -29,5 +30,13 @@ public:
 	void Render() override;
 
 private:
-	std::unique_ptr<Sprite> sprite;
+	std::unique_ptr<Sprite> title;
+	std::unique_ptr<Sprite> button;
+	bool buttonOpacityDown = false;
+	float buttonOpacity = 0.0f;
+	float opacitySpeed = 1.0;
+
+	std::unique_ptr<Fade> fade;
+
+	bool setFade = false;
 };

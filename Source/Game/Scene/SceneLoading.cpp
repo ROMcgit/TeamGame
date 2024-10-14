@@ -6,8 +6,16 @@
 // 初期化
 void SceneLoading::Initialize()
 {
-	// スプライト初期化
-	sprite = std::make_unique<Sprite>("Data/Sprite/LoadingIcon.png");
+	// バナナ
+	banana = std::make_unique<Sprite>("Data/Sprite/Banana.png");
+
+	// ローディング
+	for (int i = 0; i < 4; i++)
+	{
+		std::string filePath = "Data/Sprite/Loading" + std::to_string(i + 1) + ".png";
+
+		loading[i] = std::make_unique<Sprite>(filePath.c_str());
+	}
 
 	// スレッド開始
 	thread = std::make_unique <std::thread>(LoadingThread, this);
@@ -16,22 +24,6 @@ void SceneLoading::Initialize()
 // 終了化
 void SceneLoading::Finalize()
 {
-	//if (sprite != nullptr)
-	//{
-	//	delete sprite;
-	//	sprite = nullptr;
-	//}
-
-	//// スレッド終了化
-	//if (thread != nullptr)
-	//{
-	//	if (thread->joinable())
-	//	{
-	//		thread->join(); // スレッドの終了を待つ
-	//	}
-	//	delete thread;
-	//	thread = nullptr;
-	//}
 	if (thread->joinable())
 	{
 		thread->join(); // スレッドの終了を待つ
@@ -41,13 +33,28 @@ void SceneLoading::Finalize()
 // 更新処理
 void SceneLoading::Update(float elapsedTime)
 {
-	constexpr float speed = 180;
-	angle += speed * elapsedTime;
+	//! バナナ回転速度
+	constexpr float speed = 360;
+	angle -= speed * elapsedTime;
 
-	//if (thread->joinable())
-	//{
-	//	thread->join(); // スレッドの終了を待つ
-	//}
+	//! バナナの位置
+	bananaPos.x -= 400 * elapsedTime;
+
+	if (bananaPos.x < -250)
+		bananaPos.x = 1350;
+
+//--------------------------------------------------------------------------------------------//
+
+	spriteChangeTimer += elapsedTime;
+
+	if (spriteChangeTimer > 0.3)
+	{
+		spriteChangeTimer = 0.0f;
+		spriteNum++;
+	}
+
+	if (spriteNum > 3)
+		spriteNum = 0;
 
 	// 次のシーンの準備が完了したらシーンを切り替える
 	if (nextScene->IsReady())
@@ -65,7 +72,7 @@ void SceneLoading::Render()
 	ID3D11DepthStencilView* dsv = graphics.GetDepthStencilView();
 
 	// 画面クリア&レンダーターゲット設定
-	FLOAT color[] = { 0.0f, 0.0f, 0.5f, 1.0f }; //RGBA(0.0～1.0)
+	FLOAT color[] = { 0.0f, 0.0f, 0.0f, 1.0f }; //RGBA(0.0～1.0)
 	dc->ClearRenderTargetView(rtv, color);
 	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	dc->OMSetRenderTargets(1, &rtv, dsv);
@@ -74,17 +81,31 @@ void SceneLoading::Render()
 	{
 		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
 		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
-		float textureWidth = static_cast<float>(sprite->GetTextureWidth());
-		float textureHeight = static_cast<float>(sprite->GetTextureHeight());
-		float positionX = screenWidth - textureWidth;
-		float positionY = screenHeight - textureHeight;
-		// タイトルスプライト描画
-		sprite->Render(dc,
-			positionX, positionY, textureWidth, textureHeight,
+		float textureWidth = static_cast<float>(banana->GetTextureWidth());
+		float textureHeight = static_cast<float>(banana->GetTextureHeight());
+		// バナナ描画
+		banana->Render(dc,
+			bananaPos.x, bananaPos.y, 260, 220,
 			0, 0, textureWidth, textureHeight,
 			angle,
 			1, 1, 1, 1);
+
+		textureWidth  = static_cast<float>(loading[0]->GetTextureWidth());
+		textureHeight = static_cast<float>(loading[0]->GetTextureHeight());
+
+		// ローディング
+		loading[spriteNum]->Render(dc,
+			0, 0, screenWidth, screenHeight,
+			0, 0, textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1);
 	}
+
+	if ((ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None)))
+	{
+		ImGui::DragFloat2("BananaPos", &bananaPos.x);
+	}
+	ImGui::End();
 }
 
 //ローディングスレッド

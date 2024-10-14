@@ -28,8 +28,13 @@ private:
 	static void LoadingThread(SceneLoading* scene);
 
 private:
-	std::unique_ptr<Sprite> sprite;
+	std::unique_ptr<Sprite> banana;
+	DirectX::XMFLOAT2 bananaPos = { 1350, 250 };
 	float angle = 0.0f;
+
+	std::unique_ptr<Sprite> loading[4];
+	int spriteNum = 0;
+	float spriteChangeTimer = 0.0f;
 	
 	std::unique_ptr<Scene> nextScene;
 	std::unique_ptr<std::thread> thread;

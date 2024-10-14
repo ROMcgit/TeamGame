@@ -36,6 +36,8 @@ Player::Player()
 	ui[0] = std::make_unique<Sprite>("Data/Sprite/UI/Lv.png");
 	ui[1] = std::make_unique<Sprite>("Data/Sprite/UI/Speed.png");
 	ui[2] = std::make_unique<Sprite>("Data/Sprite/UI/cm.png");
+	ui[3] = std::make_unique<Sprite>("Data/Sprite/UI/ハテナ.png");
+	ui[4] = std::make_unique<Sprite>("Data/Sprite/UI/バナナ.png");
 
 	// 当たり判定
 	radius = 0.9f;
@@ -356,14 +358,27 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 		textureWidth = static_cast<float>(ui[2]->GetTextureWidth());
 		textureHeight = static_cast<float>(ui[2]->GetTextureHeight());
 
+		//! cm
 		ui[2]->Render(dc,
-			350, 20,
+			240, 15,
 			76, 36,
 			0, 0,
 			textureWidth, textureHeight,
 			0,
 			1, 1, 1, 1
 		);
+
+		textureWidth = static_cast<float>(ui[4]->GetTextureWidth());
+		textureHeight = static_cast<float>(ui[4]->GetTextureHeight());
+
+		//! バナナ
+		ui[4]->Render(dc,
+			325, 5,
+			60, 48,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1);
 
 		if (importantItemCount > 0)
 		{
@@ -374,10 +389,24 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 				false,
 				0, 0, 0, 0, 0, 0,
 				0, 0, banana->GetDist(),
-				-50, 0,
+				-50, 5,
 				10, 10,
 				0,
 				30,
+				1, 1, 1, 1);
+		}
+		else
+		{
+			textureWidth = static_cast<float>(ui[3]->GetTextureWidth());
+			textureHeight = static_cast<float>(ui[3]->GetTextureHeight());
+
+			//! ？？？？
+			ui[3]->Render(dc,
+				12, 5,
+				216, 48,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
 				1, 1, 1, 1);
 		}
 
@@ -386,7 +415,7 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 
 		// レベル文字
 		ui[0]->Render(dc,
-			20, 50,
+			20, 60,
 			82, 50,
 			0, 0, textureWidth, textureHeight,
 			0,
@@ -399,7 +428,7 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 				true, true,
 				false, false, false,
 				0, 0, 0, level,
-				15, 50,
+				15, 60,
 				10, 10,
 				0,
 				30,
@@ -412,7 +441,7 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 				true, true,
 				false, false, false,
 				0, 0, 0, level,
-				35, 50,
+				35, 60,
 				10, 10,
 				0,
 				30,
@@ -425,7 +454,7 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 				true, true,
 				false, false, false,
 				0, 0, 0, level,
-				35, 50,
+				35, 60,
 				10, 10,
 				0,
 				30,
@@ -438,7 +467,7 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 
 		// スピード文字
 		ui[1]->Render(dc,
-			200, 50,
+			200, 60,
 			176, 50,
 			0, 0, textureWidth, textureHeight,
 			0,
@@ -462,7 +491,7 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 				true, true,
 				false, false, false,
 				0, 0, 0, viewMoveSpeed,
-				298, 50,
+				298, 60,
 				10, 10,
 				0,
 				30,
@@ -475,7 +504,7 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 				true, true,
 				false, false, false,
 				0, 0, 0, viewMoveSpeed,
-				320, 50,
+				320, 60,
 				10, 10,
 				0,
 				35,

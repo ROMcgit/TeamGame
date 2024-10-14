@@ -149,7 +149,7 @@ private:
 
 private:
 	std::unique_ptr<Model>  model[3];
-	std::unique_ptr<Sprite> ui[3];
+	std::unique_ptr<Sprite> ui[5];
 	std::unique_ptr<Sprite> hpSprite[4];
 	std::unique_ptr<Text>   text[3];
 

@@ -459,7 +459,7 @@ void SceneGame::NewBanana(float elapsedTime)
 			{
 				std::unique_ptr<Banana> banana = std::make_unique<Banana>();
 				importantItemManager.Register(std::move(banana));
-				newBananaWaitTimer = 0.5f;
+				newBananaWaitTimer = 1.0f;
 				newBanana[i] = true;
 			}
 		}

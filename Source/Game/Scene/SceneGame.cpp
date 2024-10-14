@@ -449,7 +449,7 @@ void SceneGame::NewBanana(float elapsedTime)
 
 	if (newBananaWaitTimer < 0.0f)
 	{
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < 7; i++)
 		{
 			// ƒoƒiƒi‚ð¶¬
 			if (i == player.GetBananaNum() && !newBanana[i])

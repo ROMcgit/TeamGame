@@ -35,6 +35,7 @@ Player::Player()
 
 	ui[0] = std::make_unique<Sprite>("Data/Sprite/UI/Lv.png");
 	ui[1] = std::make_unique<Sprite>("Data/Sprite/UI/Speed.png");
+	ui[2] = std::make_unique<Sprite>("Data/Sprite/UI/cm.png");
 
 	// 当たり判定
 	radius = 0.9f;
@@ -106,7 +107,7 @@ void Player::Update(float elapsedTime)
 	else if (position.z < -1000.0f)
 		position.z = -1000.0f;
 
-	if (moveSpeed > 0)
+	if (viewMoveSpeed > 0)
 	{
 		//! カラーX
 		if (!viewMoveSpeedColorUp.x)
@@ -115,7 +116,7 @@ void Player::Update(float elapsedTime)
 
 			if (viewMoveSpeedColor.x < 0.0f)
 			{
-				viewMoveSpeedColor.x = 0.0f;
+				viewMoveSpeedColor.x   = 0.0f;
 				viewMoveSpeedColorUp.x = true;
 			}
 		}
@@ -125,7 +126,7 @@ void Player::Update(float elapsedTime)
 
 			if (viewMoveSpeedColor.x > 1.0f)
 			{
-				viewMoveSpeedColor.x = 1.0f;
+				viewMoveSpeedColor.x   = 1.0f;
 				viewMoveSpeedColorUp.x = false;
 			}
 		}
@@ -137,7 +138,7 @@ void Player::Update(float elapsedTime)
 
 			if (viewMoveSpeedColor.y < 0.0f)
 			{
-				viewMoveSpeedColor.y = 0.0f;
+				viewMoveSpeedColor.y   = 0.0f;
 				viewMoveSpeedColorUp.y = true;
 			}
 		}
@@ -159,7 +160,7 @@ void Player::Update(float elapsedTime)
 
 			if (viewMoveSpeedColor.z < 0.0f)
 			{
-				viewMoveSpeedColor.z = 0.0f;
+				viewMoveSpeedColor.z   = 0.0f;
 				viewMoveSpeedColorUp.z = true;
 			}
 		}
@@ -169,7 +170,7 @@ void Player::Update(float elapsedTime)
 
 			if (viewMoveSpeedColor.z > 1.0f)
 			{
-				viewMoveSpeedColor.z = 1.0f;
+				viewMoveSpeedColor.z   = 1.0f;
 				viewMoveSpeedColorUp.z = false;
 			}
 		}
@@ -177,15 +178,14 @@ void Player::Update(float elapsedTime)
 	else
 	{
 		if (viewMoveSpeedColor.x < 1.0f)
-			viewMoveSpeedColor.x += elapsedTime;
+			viewMoveSpeedColor.x += 0.5f * elapsedTime;
 
 		if(viewMoveSpeedColor.y < 1.0f)
-			viewMoveSpeedColor.y += elapsedTime;
+			viewMoveSpeedColor.y += 0.5f * elapsedTime;
 
 		if (viewMoveSpeedColor.z < 1.0f)
-			viewMoveSpeedColor.z += elapsedTime;
+			viewMoveSpeedColor.z += 0.5f * elapsedTime;
 	}
-		
 
 	// ムービー中なら待機ステートへ遷移
 	if (movieScene)
@@ -353,6 +353,18 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 		ImportantItemManager& importantItemManager = ImportantItemManager::Instance();
 		int importantItemCount = importantItemManager.GetImportantItemCount();
 
+		textureWidth = static_cast<float>(ui[2]->GetTextureWidth());
+		textureHeight = static_cast<float>(ui[2]->GetTextureHeight());
+
+		ui[2]->Render(dc,
+			350, 20,
+			76, 36,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1
+		);
+
 		if (importantItemCount > 0)
 		{
 			std::unique_ptr<ImportantItem>& banana = importantItemManager.GetImportantItem(0);
@@ -463,10 +475,10 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 				true, true,
 				false, false, false,
 				0, 0, 0, viewMoveSpeed,
-				318, 50,
+				320, 50,
 				10, 10,
 				0,
-				30,
+				35,
 				viewMoveSpeedColor.x,
 				viewMoveSpeedColor.y,
 				viewMoveSpeedColor.z,

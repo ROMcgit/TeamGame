@@ -149,7 +149,7 @@ private:
 
 private:
 	std::unique_ptr<Model>  model[3];
-	std::unique_ptr<Sprite> ui[2];
+	std::unique_ptr<Sprite> ui[3];
 	std::unique_ptr<Sprite> hpSprite[4];
 	std::unique_ptr<Text>   text[3];
 
@@ -157,7 +157,7 @@ private:
 	float viewMoveSpeed = 0.0f;
 
 	DirectX::XMFLOAT3 viewMoveSpeedColor = { 1, 1, 1 }; // 表示スピードの色
-	DirectX::XMFLOAT3 viewMoveSpeedColorSpeed = { 1.0f, 1.5f, 1.8f }; // 色を変えるスピード
+	DirectX::XMFLOAT3 viewMoveSpeedColorSpeed = { 0.8f, 1.3f, 1.6f }; // 色を変えるスピード
 
 	struct ViewMoveSpeedColorUp
 	{

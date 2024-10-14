@@ -226,7 +226,7 @@ protected:
 	DirectX::XMFLOAT3 hpSpriteColor = { 1, 1, 1 };     // HP画像の色
 
 	float hpImageShakePosY = 0.0f;  // HP画像シェイクの位置
-	float hpSpriteAdjust = 0.0f;  // HPの描画の調整
+	float hpSpriteAdjust = 0.0f;  // HPの描画の長さの調整(例: 〇 * 0.5f)
 	bool  hpShake = false; // HPシェイクするか
 	float hpShakeTimer = 0.0f;  // HPシェイクタイマー
 	bool hideSprites = false; // HPなどを隠す

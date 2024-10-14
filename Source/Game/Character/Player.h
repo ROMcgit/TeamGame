@@ -63,6 +63,9 @@ public:
 	// バナナの習得数取得
 	int GetBananaNum() { return bananaNum; }
 
+	// 移動スピードを取得
+	float GetMoveSpeed() { return moveSpeed; }
+
 protected:
 	// 着地した時に呼ばれる
 	void OnLanding() override;
@@ -146,11 +149,22 @@ private:
 
 private:
 	std::unique_ptr<Model>  model[3];
+	std::unique_ptr<Sprite> ui[2];
 	std::unique_ptr<Sprite> hpSprite[4];
 	std::unique_ptr<Text>   text[3];
 
 	float viewMoveSpeedPlusTimer = 0.0f; // スピードを増やす処理
 	float viewMoveSpeed = 0.0f;
+
+	DirectX::XMFLOAT3 viewMoveSpeedColor = { 1, 1, 1 }; // 表示スピードの色
+	DirectX::XMFLOAT3 viewMoveSpeedColorSpeed = { 1.0f, 1.5f, 1.8f }; // 色を変えるスピード
+
+	struct ViewMoveSpeedColorUp
+	{
+		bool x = false;
+		bool y = false;
+		bool z = false;
+	}viewMoveSpeedColorUp;
 
 	float turnSpeed = DirectX::XMConvertToRadians(120);
 

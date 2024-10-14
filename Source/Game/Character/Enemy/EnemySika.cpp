@@ -229,7 +229,7 @@ void EnemySika::CollisionEnemyVsPlayer()
 		outPosition
 	))
 	{
-		if (player.ApplyDamage(5, 1.0f))
+		if (player.ApplyDamage(player.GetMoveSpeed() * 1.5f, 1.0f))
 		{
 			// ‘O•ûŒü
 			DirectX::XMFLOAT3 velocity;

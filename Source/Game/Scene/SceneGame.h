@@ -56,4 +56,6 @@ private:
 
 	bool newBanana[6]; // バナナを生成したか
 	float newBananaWaitTimer = 0.5f; // バナナを出すまでの時間
+
+	bool enemyStop = false;
 };

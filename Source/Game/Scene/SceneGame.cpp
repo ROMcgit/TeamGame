@@ -96,6 +96,7 @@ void SceneGame::Update(float elapsedTime)
 	// プレイヤー更新処理
 	player->Update(elapsedTime);
 
+	if(!enemyStop)
 	// エネミー更新処理
 	EnemyManager::Instance().Update(elapsedTime);
 
@@ -263,6 +264,8 @@ void SceneGame::Render()
 	{
 		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
 		{
+			ImGui::Checkbox("enemyStop", &enemyStop);
+
 			EnemyManager& enemyManager = EnemyManager::Instance();
 			ItemManager& itemManager = ItemManager::Instance();
 			InstallationManager& installationManager = InstallationManager::Instance();

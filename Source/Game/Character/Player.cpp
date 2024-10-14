@@ -33,7 +33,8 @@ Player::Player()
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.03f;
 
-	hp = hpDamage = maxHp = 100;
+	ui[0] = std::make_unique<Sprite>("Data/Sprite/UI/Lv.png");
+	ui[1] = std::make_unique<Sprite>("Data/Sprite/UI/Speed.png");
 
 	// 当たり判定
 	radius = 0.9f;
@@ -46,9 +47,22 @@ Player::Player()
 	// 移動ステートへ遷移
 	TransitionMoveState();
 
+	//! HP設定
+	hp = hpDamage = maxHp = 300;
+
+	//! HPの長さ調整
+	hpSpriteAdjust = 0.63f;
+
+	//! HP画像位置
+	hpImagePos = { 30, 650 };
+	hpImageShakePosY = hpImagePos.y;
+
 	//! HPゲージの位置
-	hpSpritePos = { 100.0f, 640.0f };
+	hpSpritePos = { 38, 658.3f };
 	hpSpriteShakePosY = hpSpritePos.y;
+
+	//! HP
+	hpSprite[0] = std::make_unique<Sprite>("Data/Sprite/UI/HP.png");
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -56,15 +70,12 @@ Player::Player()
 	}
 
 	for(int i = 0; i < 3; i++)
-	text[i] = std::make_unique<Text>();
+		text[i] = std::make_unique<Text>();
 }
 
 // デストラクタ
 Player::~Player()
 {
-	//delete hitEffect;
-
-	//delete model;
 }
 
 // 更新処理
@@ -94,6 +105,87 @@ void Player::Update(float elapsedTime)
 		position.z = 1000.0f;
 	else if (position.z < -1000.0f)
 		position.z = -1000.0f;
+
+	if (moveSpeed > 0)
+	{
+		//! カラーX
+		if (!viewMoveSpeedColorUp.x)
+		{
+			viewMoveSpeedColor.x -= viewMoveSpeedColorSpeed.x * elapsedTime;
+
+			if (viewMoveSpeedColor.x < 0.0f)
+			{
+				viewMoveSpeedColor.x = 0.0f;
+				viewMoveSpeedColorUp.x = true;
+			}
+		}
+		else
+		{
+			viewMoveSpeedColor.x += viewMoveSpeedColorSpeed.x * elapsedTime;
+
+			if (viewMoveSpeedColor.x > 1.0f)
+			{
+				viewMoveSpeedColor.x = 1.0f;
+				viewMoveSpeedColorUp.x = false;
+			}
+		}
+
+		//! カラーY
+		if (!viewMoveSpeedColorUp.y)
+		{
+			viewMoveSpeedColor.y -= viewMoveSpeedColorSpeed.y * elapsedTime;
+
+			if (viewMoveSpeedColor.y < 0.0f)
+			{
+				viewMoveSpeedColor.y = 0.0f;
+				viewMoveSpeedColorUp.y = true;
+			}
+		}
+		else
+		{
+			viewMoveSpeedColor.y += viewMoveSpeedColorSpeed.y * elapsedTime;
+
+			if (viewMoveSpeedColor.y > 1.0f)
+			{
+				viewMoveSpeedColor.y   = 1.0f;
+				viewMoveSpeedColorUp.y = false;
+			}
+		}
+
+		//! カラーZ
+		if (!viewMoveSpeedColorUp.z)
+		{
+			viewMoveSpeedColor.z -= viewMoveSpeedColorSpeed.z * elapsedTime;
+
+			if (viewMoveSpeedColor.z < 0.0f)
+			{
+				viewMoveSpeedColor.z = 0.0f;
+				viewMoveSpeedColorUp.z = true;
+			}
+		}
+		else
+		{
+			viewMoveSpeedColor.z += viewMoveSpeedColorSpeed.z * elapsedTime;
+
+			if (viewMoveSpeedColor.z > 1.0f)
+			{
+				viewMoveSpeedColor.z = 1.0f;
+				viewMoveSpeedColorUp.z = false;
+			}
+		}
+	}
+	else
+	{
+		if (viewMoveSpeedColor.x < 1.0f)
+			viewMoveSpeedColor.x += elapsedTime;
+
+		if(viewMoveSpeedColor.y < 1.0f)
+			viewMoveSpeedColor.y += elapsedTime;
+
+		if (viewMoveSpeedColor.z < 1.0f)
+			viewMoveSpeedColor.z += elapsedTime;
+	}
+		
 
 	// ムービー中なら待機ステートへ遷移
 	if (movieScene)
@@ -201,7 +293,7 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 		// ゲージの裏(黒色)
 		hpSprite[1]->Render(dc,
 			hpSpritePos.x, hpSpritePos.y,
-			137, 25,
+			185, 30,
 			0, 0, textureWidth, textureHeight,
 			0,
 			0.0f, 0.0f, 0.0f, 1);
@@ -210,8 +302,8 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 		{
 			// ダメージ(赤色)
 			hpSprite[2]->Render(dc,
-				hpSpritePos.x, hpSpritePos.y,
-				hpDamage * 1.34f, 25,
+				hpSpritePos.x , hpSpritePos.y,
+				hpDamage * hpSpriteAdjust, 28,
 				0, 0, textureWidth, textureHeight,
 				0,
 				1, 0, 0, 1);
@@ -219,14 +311,14 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 			// ダメージ(緑色)
 			hpSprite[3]->Render(dc,
 				hpSpritePos.x, hpSpritePos.y,
-				hp * 1.34f, 25,
+				hp * hpSpriteAdjust, 28,
 				0, 0, textureWidth, textureHeight,
 				0,
 				0, 1, 0, 1);
 		}
 		else
 		{
-			textureWidth = static_cast<float>(hpSprite[1]->GetTextureWidth());
+			textureWidth  = static_cast<float>(hpSprite[1]->GetTextureWidth());
 			textureHeight = static_cast<float>(hpSprite[1]->GetTextureHeight());
 
 			// ダメージ(白色)
@@ -245,57 +337,142 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 				0,
 				1, 0, 0, 1);
 		}
-	}
-	ImportantItemManager& importantItemManager = ImportantItemManager::Instance();
-	int importantItemCount = importantItemManager.GetImportantItemCount();
 
-	if (importantItemCount > 0)
-	{
-		std::unique_ptr<ImportantItem>& banana = importantItemManager.GetImportantItem(0);
-
-		text[0]->Render(dc,
-			true, true,
-			false,
-			0, 0, 0, 0, 0, 0,
-			0, 0, banana->GetDist(),
-			-50, 0,
-			10, 10,
+		textureWidth  = static_cast<float>(hpSprite[0]->GetTextureWidth());
+		textureHeight = static_cast<float>(hpSprite[0]->GetTextureHeight());	
+		//! HP画像
+		hpSprite[0]->Render(dc,
+			hpImagePos.x, hpImagePos.y,
+			200, 44,
+			0, 0,
+			textureWidth, textureHeight,
 			0,
-			30,
-			1, 1, 1, 1);
+			1, 1, 1, 1
+		);
+
+		ImportantItemManager& importantItemManager = ImportantItemManager::Instance();
+		int importantItemCount = importantItemManager.GetImportantItemCount();
+
+		if (importantItemCount > 0)
+		{
+			std::unique_ptr<ImportantItem>& banana = importantItemManager.GetImportantItem(0);
+
+			text[0]->Render(dc,
+				true, true,
+				false,
+				0, 0, 0, 0, 0, 0,
+				0, 0, banana->GetDist(),
+				-50, 0,
+				10, 10,
+				0,
+				30,
+				1, 1, 1, 1);
+		}
+
+		textureWidth  = static_cast<float>(ui[0]->GetTextureWidth());
+		textureHeight = static_cast<float>(ui[0]->GetTextureHeight());
+
+		// レベル文字
+		ui[0]->Render(dc,
+			20, 50,
+			82, 50,
+			0, 0, textureWidth, textureHeight,
+			0,
+			1, 1, 0, 1);
+
+		if (level < 10)
+		{
+			// レベル
+			text[1]->Render(dc,
+				true, true,
+				false, false, false,
+				0, 0, 0, level,
+				15, 50,
+				10, 10,
+				0,
+				30,
+				1, 1, 1, 1);
+		}
+		else if(level < 20)
+		{
+			// レベル
+			text[1]->Render(dc,
+				true, true,
+				false, false, false,
+				0, 0, 0, level,
+				35, 50,
+				10, 10,
+				0,
+				30,
+				1, 1, 1, 1);
+		}
+		else
+		{
+			// レベル
+			text[1]->Render(dc,
+				true, true,
+				false, false, false,
+				0, 0, 0, level,
+				35, 50,
+				10, 10,
+				0,
+				30,
+				1, 1, 0, 1);
+		}
+		
+
+		textureWidth = static_cast<float>(ui[1]->GetTextureWidth());
+		textureHeight = static_cast<float>(ui[1]->GetTextureHeight());
+
+		// スピード文字
+		ui[1]->Render(dc,
+			200, 50,
+			176, 50,
+			0, 0, textureWidth, textureHeight,
+			0,
+			0, 1, 1, 1);
+
+		// スピード
+		if (viewMoveSpeed < (int)moveSpeed + 0.5f && viewMoveSpeedPlusTimer > 0.05f)
+		{
+			viewMoveSpeedPlusTimer = 0.0f;
+			viewMoveSpeed++;
+		}
+
+		// 大きさを超えないようにする
+		if (viewMoveSpeed > (int)moveSpeed + 0.5f)
+			viewMoveSpeed = (int)moveSpeed + 0.5f;
+
+		if (viewMoveSpeed < 10)
+		{
+			// スピード
+			text[2]->Render(dc,
+				true, true,
+				false, false, false,
+				0, 0, 0, viewMoveSpeed,
+				298, 50,
+				10, 10,
+				0,
+				30,
+				1, 1, 1, 1);
+		}
+		else
+		{
+			// スピード
+			text[2]->Render(dc,
+				true, true,
+				false, false, false,
+				0, 0, 0, viewMoveSpeed,
+				318, 50,
+				10, 10,
+				0,
+				30,
+				viewMoveSpeedColor.x,
+				viewMoveSpeedColor.y,
+				viewMoveSpeedColor.z,
+				1);
+		}
 	}
-
-	// レベル
-	text[1]->Render(dc,
-		true, true,
-		false, false, false,
-		0, 0, 0, level,
-		-60, 50,
-		10, 10,
-		0,
-		30,
-		1, 1, 1, 1);
-
-	// スピード
-	if (viewMoveSpeed < (int)moveSpeed + 0.5f && viewMoveSpeedPlusTimer > 0.3f)
-	{
-		viewMoveSpeedPlusTimer = 0.0f;
-		viewMoveSpeed++;
-	}
-
-	// 大きさを超えないようにする
-	if (viewMoveSpeed > (int)moveSpeed + 0.5f)
-		viewMoveSpeed = (int)moveSpeed + 0.5f;
-
-	text[2]->Render(dc,
-		true, true,
-		false, false, false,
-		0, 0, 0, viewMoveSpeed,
-		50, 50,
-		10, 10,
-		0,
-		30,
-		1, 1, 1, 1);
 }
 
 // レベル更新処理
@@ -675,6 +852,9 @@ void Player::TransitionLungesState()
 // 突進ステート更新
 void Player::UpdateLungesState(float elapsedTime)
 {
+	if (moveSpeed > 0)
+		moveSpeed -= 30 * elapsedTime;
+
 	// 前方向
 	DirectX::XMFLOAT3 dir;
 
@@ -789,6 +969,9 @@ void Player::TransitionDamageState()
 // ダメージステート更新処理
 void Player::UpdateDamageState(float elapsedTime)
 {
+	if (moveSpeed > 0)
+		moveSpeed -= 30 * elapsedTime;
+
 	angle.x += DirectX::XMConvertToRadians(180) * elapsedTime;
 	angle.z += DirectX::XMConvertToRadians(200) * elapsedTime;
 
@@ -800,6 +983,7 @@ void Player::UpdateDamageState(float elapsedTime)
 			angle.x = DirectX::XMConvertToRadians(0);
 			angle.z = DirectX::XMConvertToRadians(0);
 
+			//! 移動ステートへ遷移
 			TransitionMoveState();
 		}
 	}
@@ -979,7 +1163,14 @@ void Player::DrawDebugGUI()
 
 	if (ImGui::TreeNode("Player"))
 	{
-		ImGui::InputInt("HP", &hp);
+		if (ImGui::CollapsingHeader("Hp", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::InputInt("HP", &hp);
+			ImGui::DragFloat2("HpImagePos", &hpImagePos.x);
+			ImGui::DragFloat2("HpSpritePos", &hpSpritePos.x, 0.1f);
+			ImGui::DragFloat("HpSpriteAdjust", &hpSpriteAdjust, 0.01f);
+		}
+		
 		ImGui::InputInt("EXP", &exp);
 		ImGui::InputInt("Level", &level);
 		

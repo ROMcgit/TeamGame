@@ -338,9 +338,9 @@ void SceneGame::Newestablishment(float elapsedTime)
 
 	if (player->GetBananaNum() < 1)
 		enemyMaxCount = 10;
-	else if(player->GetBananaNum() >= 1 && player->GetBananaNum() <= 4)
+	else if(player->GetBananaNum() >= 1 && player->GetBananaNum() <= 3)
 		enemyMaxCount = 15;
-	else if((player->GetBananaNum() >= 5 && player->GetBananaNum() <= 7))
+	else if((player->GetBananaNum() >= 4 && player->GetBananaNum() < 6))
 		enemyMaxCount = 20;
 
 	if (player->GetPosition().y > 60)
@@ -376,7 +376,7 @@ void SceneGame::Newestablishment(float elapsedTime)
 		int posX = player->GetPosition().x + distance * cos(randomAngle); // cosでX座標を計算
 		int posZ = player->GetPosition().z + distance * sin(randomAngle); // sinでZ座標を計算
 
-		if (enemyCount < enemyMaxCount && newEnemyTimer >  newEnemyMaxTimer)
+		if (player->GetBananaNum() < 6 && enemyCount < enemyMaxCount && newEnemyTimer >  newEnemyMaxTimer)
 		{
 			posX = player->GetPosition().x + distance * cos(randomAngle);
 			posZ = player->GetPosition().z + distance * sin(randomAngle);
@@ -398,6 +398,14 @@ void SceneGame::Newestablishment(float elapsedTime)
 			enemyManager.Register(std::move(sika));
 
 			newEnemyTimer = 0.0f;
+		}
+		else if (player->GetBananaNum() >= 6)
+		{
+			for (int i = 0; i < enemyCount; i++)
+			{
+				std::unique_ptr<Enemy>& enemy = enemyManager.GetEnemy(i);
+				enemy->Destroy();
+			}
 		}
 
 		if (itemCount < 5 && newItemTimer > newItemMaxTimer)
@@ -452,7 +460,7 @@ void SceneGame::NewBanana(float elapsedTime)
 
 	if (newBananaWaitTimer < 0.0f)
 	{
-		for (int i = 0; i < 7; i++)
+		for (int i = 0; i < 6; i++)
 		{
 			// バナナを生成
 			if (i == player.GetBananaNum() && !newBanana[i])

@@ -63,7 +63,14 @@ private:
 	bool newBanana[6]; // バナナを生成したか
 	float newBananaWaitTimer = 0.5f; // バナナを出すまでの時間
 
-	bool enemyStop = false;
-	bool setMovie  = false;
-	bool setMovieFade = false;
+	bool enemyStop     = false;
+	bool enemyDelete   = false;
+	bool setMovie      = false;
+	bool setMovieFade  = false;
+	bool newSikaTentyo = false;
+
+	DirectX::XMFLOAT3 cameraTarget = { 0, 0, 0 }; // カメラのターゲット
+	DirectX::XMFLOAT3 cameraAngle  = { 0, 0, 0 }; // カメラの角度
+	float cameraRange = 0.0f;
+	bool setCameraShake[2];
 };

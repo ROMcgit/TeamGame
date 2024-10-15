@@ -8,6 +8,39 @@
 // コンストラクタ
 SikaTentyo::SikaTentyo()
 {
+	model = std::make_unique<Model>("Data/Model/SikaTentyo/SikaTentyo.mdl");
+
+	scale.x = scale.y = scale.z = 0.07f;
+
+	gravity = 0.0f;
+
+	angle.y = DirectX::XMConvertToRadians(180);
+
+	hp = 0;
+
+	//! HPゲージの位置
+	hpSpritePos = { 558.5f, 663.1f };
+	hpSpriteShakePosY = hpSpritePos.y;
+
+	//! HP画像の位置
+	hpImagePos = { 550.0f, 661.0f };
+	hpImageShakePosY = hpImagePos.y;
+
+	//! UIを表示しない
+	hideSprites = true;
+
+	//! HPを減らす演出までの時間
+	hpDamageDirectorWaitCount = maxHpDamageDirectorWaitCount = 0.005f;
+
+	name = std::make_unique<Sprite>("Data/Sprite/シカテンチョウ.png");
+
+	//! HP描画
+	hpSprite[0] = std::make_unique<Sprite>("Data/Sprite/ボスHP.png");
+	hpSprite[1] = std::make_unique<Sprite>(); //黒色
+	hpSprite[2] = std::make_unique<Sprite>(); //黄色
+	hpSprite[3] = std::make_unique<Sprite>(); //紫色
+
+	TransitionEntryState();
 }
 
 // デストラクタ
@@ -72,7 +105,70 @@ void SikaTentyo::Render(ID3D11DeviceContext* dc, Shader* shader)
 // HPなどの描画
 void SikaTentyo::SpriteRender(ID3D11DeviceContext* dc)
 {
+	float textureWidth = static_cast<float>(hpSprite[1]->GetTextureWidth());
+	float textureHeight = static_cast<float>(hpSprite[1]->GetTextureHeight());
 
+	// バトル１
+	if (!movieScene && !hideSprites)
+	{
+		// ゲージの裏(濃い灰色)
+		hpSprite[1]->Render(dc,
+			hpSpritePos.x, hpSpritePos.y,
+			690, hpSpriteHeight * 0.9f,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			0.2f, 0.2f, 0.2f, 1);
+
+		// ゲージ(黄色)
+		hpSprite[2]->Render(dc,
+			hpSpritePos.x, hpSpritePos.y,
+			hpDamage * hpSpriteAdjust, 36.0f,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 1, 0, 1);
+
+		// ゲージ(紫色)
+		hpSprite[2]->Render(dc,
+			hpSpritePos.x, hpSpritePos.y,
+			hp * hpSpriteAdjust, 36.0f,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 0, 1, 1);
+
+		//! HP画像
+		textureWidth = static_cast<float>(hpSprite[0]->GetTextureWidth());
+		textureHeight = static_cast<float>(hpSprite[0]->GetTextureHeight());
+
+		// HPゲージ
+		hpSprite[0]->Render(dc,
+			hpImagePos.x, hpImagePos.y,
+			700, hpSpriteHeight,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			hpSpriteColor.x,
+			hpSpriteColor.y,
+			hpSpriteColor.z,
+			1);
+
+		textureWidth = static_cast<float>(name->GetTextureWidth());
+		textureHeight = static_cast<float>(name->GetTextureHeight());
+
+		//! 名前
+		name->Render(dc,
+			hpImagePos.x + 530, hpImagePos.y - 45,
+			142, 46,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			hpSpriteColor.x,
+			hpSpriteColor.y,
+			hpSpriteColor.z,
+			nameSpriteOpacity);
+	}
 }
 
 // HP表示
@@ -131,18 +227,18 @@ void SikaTentyo::RenderEnemyGauge(ID3D11DeviceContext* dc, const DirectX::XMFLOA
 	DirectX::XMFLOAT3 worldPos;
 	DirectX::XMStoreFloat3(&worldPos, WorldPosition);
 
-	enemyHp->Render(dc,
-		gaugeX, //dx
-		gaugeY, //dy
-		gaugeWidth, //dw
-		gaugeHeight, //dh
-		0,           //sx
-		0,           //sy
-		gaugeWidth,  //sw
-		gaugeHeight, //sh
-		0,			 //angle
-		1, 0, 0, 1   //color
-	);
+	//enemyHp->Render(dc,
+	//	gaugeX, //dx
+	//	gaugeY, //dy
+	//	gaugeWidth, //dw
+	//	gaugeHeight, //dh
+	//	0,           //sx
+	//	0,           //sy
+	//	gaugeWidth,  //sw
+	//	gaugeHeight, //sh
+	//	0,			 //angle
+	//	1, 0, 0, 1   //color
+	//);
 }
 
 // デバッグプリミティブ描画
@@ -155,6 +251,42 @@ void SikaTentyo::DrawDebugPrimitive()
 
 	// ターゲット位置をデバッグ球描画
 	debugRender->DrawSphere(targetPosition, radius, DirectX::XMFLOAT4(1, 1, 0, 1));
+}
+
+// デバッグ用GUI描画
+void SikaTentyo::DrawDebugGUI()
+{
+	if (ImGui::TreeNode("SikaTentyo"))
+	{
+		if (ImGui::CollapsingHeader("Hp", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::InputInt("HP", &hp);
+			ImGui::DragFloat2("HpImagePos", &hpImagePos.x);
+			ImGui::DragFloat2("HpSpritePos", &hpSpritePos.x, 0.1f);
+			ImGui::DragFloat("HpSpriteAdjust", &hpSpriteAdjust, 0.01f);
+		}
+
+		ImGui::InputFloat3("Velocity", &velocity.x);
+
+		// トランスフォーム
+		if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			// 位置
+			ImGui::InputFloat3("Position", &position.x);
+			// 回転
+			DirectX::XMFLOAT3 a;
+			a.x = DirectX::XMConvertToDegrees(angle.x);
+			a.y = DirectX::XMConvertToDegrees(angle.y);
+			a.z = DirectX::XMConvertToDegrees(angle.z);
+			ImGui::InputFloat3("Angle", &a.x);
+			angle.x = DirectX::XMConvertToRadians(a.x);
+			angle.y = DirectX::XMConvertToRadians(a.y);
+			angle.z = DirectX::XMConvertToRadians(a.z);
+			// スケール
+			ImGui::InputFloat3("Scale", &scale.x);
+		}
+		ImGui::TreePop();
+	}
 }
 
 // プレイヤーとの接触処理
@@ -264,6 +396,18 @@ void SikaTentyo::TransitionEntryState()
 // 登場ステート更新処理
 void SikaTentyo::UpdateEntryState(float elapsedTime)
 {
+	if (position.y > 1.3f)
+	{
+		velocity.y -= 15 * elapsedTime;
+	}
+	else if(position.y <= 1.3f)
+	{
+		velocity.y = 0;
+		position.y = 1.3f;
+
+		//! 開始ステートへ遷移
+		TransitionStartState();
+	}
 }
 
 // 開始ステートへ遷移
@@ -277,6 +421,16 @@ void SikaTentyo::TransitionStartState()
 // 開始ステート更新処理
 void SikaTentyo::UpdateStartState(float elapsedTime)
 {
+	velocity.y = 0;
+	position.y = 1.3f;
+
+	if (!model->IsPlayAnimation())
+	{
+		actionTimer += elapsedTime;
+
+		if (actionTimer > 2.0f)
+			TransitionMoveState();
+	}
 }
 
 // 開始ステートへ遷移
@@ -284,12 +438,16 @@ void SikaTentyo::TransitionMoveState()
 {
 	state = State::Move;
 
-	model->PlayAnimation(Anim_Move, false);
+	hideSprites = false;
+
+	model->PlayAnimation(Anim_Move, true);
 }
 
 // 開始ステート更新処理
 void SikaTentyo::UpdateMoveState(float elapsedTime)
 {
+	HpDirector(2, 50);
+
 	// プレイヤーのインスタンス取得
 	Player& player = Player::Instance();
 
@@ -297,7 +455,7 @@ void SikaTentyo::UpdateMoveState(float elapsedTime)
 	float vz = player.GetPosition().z - position.z;
 
 	// 移動処理
-	Move(vx, vz, 5.0f);
+	Move(vx, vz, player.GetMoveSpeed());
 	Turn(elapsedTime, vx, vz, 50.0f);
 }
 

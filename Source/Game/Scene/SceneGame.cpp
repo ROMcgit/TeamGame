@@ -7,6 +7,7 @@
 #include "Game/Camera/Camera.h"
 #include "Game/Character/Enemy/EnemyManager.h"
 #include "Game/Character/Enemy/EnemySika.h"
+#include "Game/Character/Enemy/SikaTentyo.h"
 
 #include "Game/Character/Item/ItemManager.h"
 #include "Game/Character/Item/ImportantItemManager.h"
@@ -326,7 +327,9 @@ void SceneGame::Render()
 //-----------------------------------------------------------------------------------------------------//
 			cameraController->DrawDebugGUI();
 
-			ItemManager::Instance().DrawDebugGUI();
+			itemManager.DrawDebugGUI();
+
+			enemyManager.DrawDebugGUI();
 		}
 		ImGui::End();
 	}
@@ -406,16 +409,18 @@ void SceneGame::Newestablishment(float elapsedTime)
 
 			newEnemyTimer = 0.0f;
 		}
-		else if (player->GetBananaNum() >= 6)
+		else if (player->GetBananaNum() >= 6 && !enemyDelete)
 		{
 			for (int i = 0; i < enemyCount; i++)
 			{
 				std::unique_ptr<Enemy>& enemy = enemyManager.GetEnemy(i);
 				enemy->Destroy();
 			}
+
+			enemyDelete = true;
 		}
 
-		if (itemCount < 5 && newItemTimer > newItemMaxTimer)
+		if (!cameraController->GetCameraMovie() && itemCount < 5 && newItemTimer > newItemMaxTimer)
 		{
 			posX = player->GetPosition().x + distance * cos(randomAngle);
 			posZ = player->GetPosition().z + distance * sin(randomAngle);
@@ -439,7 +444,7 @@ void SceneGame::Newestablishment(float elapsedTime)
 			newItemTimer = 0.0f;
 		}
 
-		if (installationCount < 1 && newInstallationTimer > newInstallationMaxTimer)
+		if (!cameraController->GetCameraMovie() && installationCount < 1 && newInstallationTimer > newInstallationMaxTimer)
 		{
 			posX = player->GetPosition().x + distance * cos(randomAngle);
 			posZ = player->GetPosition().z + distance * sin(randomAngle);
@@ -486,8 +491,8 @@ void SceneGame::UpdateMovie(float elapsedTime)
 {
 	if (!setMovie && player->GetBananaNum() >= 6)
 	{
-		player->SetMovieTime(15.0f);
-		cameraController->SetCameraMovieTime(15.0f);
+		player->SetMovieTime(11.0f);
+		cameraController->SetCameraMovieTime(11.0f);
 
 		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 			0.0f, 1.0f,
@@ -501,7 +506,7 @@ void SceneGame::UpdateMovie(float elapsedTime)
 	{
 		doCameraMovieTimer += elapsedTime;
 
-		if (doCameraMovieTimer < 4.0f)
+		if (doCameraMovieTimer < 2.5f)
 		{
 			target = player->GetPosition();
 			target.y += 0.5f;
@@ -510,12 +515,63 @@ void SceneGame::UpdateMovie(float elapsedTime)
 		{
 			if (!setMovieFade)
 			{
+				//! カメラのターゲット
+				cameraTarget = { 0, 8, 0 };
+
+				//! カメラの範囲
+				cameraRange = 15.0f;
+
+				//! カメラの角度
+				cameraAngle = { DirectX::XMFLOAT3(
+					DirectX::XMConvertToRadians(-6),
+					DirectX::XMConvertToRadians(0),
+					0)
+				};
+
 				fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 					1.0f, 0.0f,
 					3.0f);
 
 				setMovieFade = true;
 			}
+
+			if (doCameraMovieTimer > 2.5f && !newSikaTentyo)
+			{
+				std::unique_ptr<SikaTentyo> sikaTenstyo = std::make_unique<SikaTentyo>();
+				sikaTenstyo->SetPosition(DirectX::XMFLOAT3(0, 120, 10));
+				EnemyManager::Instance().Register(std::move(sikaTenstyo));
+
+				newSikaTentyo = true;
+			}
+
+			if (doCameraMovieTimer > 3.5f && doCameraMovieTimer < 5.8f && cameraAngle.x > DirectX::XMConvertToRadians(-40))
+				cameraAngle.x -= DirectX::XMConvertToRadians(20) * elapsedTime;
+			else if(doCameraMovieTimer >= 5.8f && cameraAngle.x < DirectX::XMConvertToRadians(0))
+				cameraAngle.x += DirectX::XMConvertToRadians(50) * elapsedTime;
+
+			if (doCameraMovieTimer > 6.5f && !setCameraShake[0])
+			{
+				cameraController->SetCameraShake(0.4f, DirectX::XMINT3(0, 30, 0));
+				setCameraShake[0] = true;
+			}
+
+
+			if (doCameraMovieTimer > 9.0f && doCameraMovieTimer < 9.8f && cameraRange > 10.0f)
+				cameraRange -= 20 * elapsedTime;
+			else if (doCameraMovieTimer >= 9.8f && cameraRange < 20.0f)
+			{
+				cameraRange += 25 * elapsedTime;
+
+				if (!setCameraShake[1])
+				{
+					cameraController->SetCameraShake(2.0f, DirectX::XMINT3(0, 30, 0));
+					setCameraShake[1] = true;
+				}
+			}
+
+			cameraController->SetAngle(cameraAngle);
+			target = cameraTarget;
+			cameraController->SetRange(cameraRange);
 		}
 	}
 }

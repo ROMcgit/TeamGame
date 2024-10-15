@@ -29,6 +29,9 @@ public:
 	// デバッグプリミティブ描画
 	void DrawDebugPrimitive() override;
 
+	// デバッグ用GUI描画
+	void DrawDebugGUI() override;
+
 protected:
 	//ダメージを受けた時に呼ばれる
 	void OnDamaged() override;
@@ -108,7 +111,8 @@ private:
 private:
 	std::unique_ptr<Model> model;
 
-	std::unique_ptr<Sprite> enemyHp;
+	std::unique_ptr<Sprite> hpSprite[5];
+	std::unique_ptr<Sprite> name;
 
 	State state = State::Entry;
 	DirectX::XMFLOAT3 targetPosition = { 0,0,0 };

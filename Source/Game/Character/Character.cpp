@@ -38,13 +38,6 @@ void Character::UpdateTransform()
 	DirectX::XMStoreFloat4x4(&transform, W);
 }
 
-//void Character::Move(float elapsedTime, float vx, float vz, float speed)
-//{
-//	speed *= elapsedTime;
-//	position.x += vx * speed;
-//	position.z += vz * speed;
-//}
-
 void Character::Move(float vx, float vz, float speed)
 {
 	// 移動方向ベクトルを設定
@@ -97,7 +90,6 @@ void Character::Turn(float elapsedTime, float vx, float vz, float speed)
 	}
 }
 
-
 void Character::OnDead()
 {
 }
@@ -147,7 +139,7 @@ bool Character::ApplyDamage(int damage, float invincibleTime)
 	invincibleTimer = invincibleTime;
 
 	// 死亡通知
-	if (hp == 0)
+	if (hp <= 0 && hpDirectorFinished)
 	{
 		OnDead();
 	}

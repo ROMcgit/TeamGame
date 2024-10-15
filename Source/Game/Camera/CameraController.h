@@ -34,6 +34,31 @@ public:
 	// カメラがムービー中かの取得
 	bool GetCameraMovie() { return cameraMovie; }
 
+	// カメラシェイク設定
+	void SetCameraShake(float shakeTime, DirectX::XMINT3 shakePower)
+	{
+		this->cameraShake = true;
+		this->shakeTimer = shakeTime;
+		this->shakePower = shakePower;
+
+		if (this->shakePower.x > 0)
+			shakeFlag.x = true;
+		else
+			shakeFlag.x = false;
+		if (this->shakePower.y > 0)
+			shakeFlag.y = true;
+		else
+			shakeFlag.y = false;
+		if (this->shakePower.z > 0)
+			shakeFlag.z = true;
+		else
+			shakeFlag.z = false;
+	}
+
+	// カメラシェイク更新処理
+	bool UpdateCameraShake(float elapsedTime);
+
+
 	// デバッグGUI描画
 	void DrawDebugGUI();
 
@@ -46,4 +71,16 @@ private:
 	float             maxAngleX = DirectX::XMConvertToRadians(45);
 	bool  cameraMovie = false; // カメラのムービー中か
 	float movieTime = 0.0f;  // ムービーの時間
+
+	bool  cameraShake = false; // カメラを揺らすか
+	float shakeTimer = 0.0f;  // 揺らす時間
+	DirectX::XMINT3 shakePower = { 0,0,0 }; // 揺らす大きさ
+	// 揺らす処理を行うか
+	struct ShakeFlag
+	{
+		bool x = false;
+		bool y = false;
+		bool z = false;
+	}shakeFlag;
+
 };

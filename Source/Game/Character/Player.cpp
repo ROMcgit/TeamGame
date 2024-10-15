@@ -198,6 +198,10 @@ void Player::Update(float elapsedTime)
 		{
 			Projectile* projectile = projectileManager.GetProjectile(i);
 
+			DirectX::XMFLOAT3 e = projectile->GetCollisionPos();
+			e.y += projectile->GetCollisionPos().y - 0.2f;
+			hitEffect->Play(e, 0.5f);
+
 			// 弾破棄
 			projectile->Destroy();
 		}
@@ -261,6 +265,9 @@ void Player::Update(float elapsedTime)
 
 	// オブジェクト行列を更新
 	UpdateTransform();
+
+	// ムービー時間タイマー
+	UpdateMovieTimer(elapsedTime);
 
 	// モデルアニメーション更新処理
 	for (int i = 0; i < 3; i++)

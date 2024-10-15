@@ -40,6 +40,9 @@ void CameraController::Update(float elapsedTime)
 	eye.y = target.y - front.y * range;
 	eye.z = target.z - front.z * range;
 
+	// カメラを揺らす更新処理
+	UpdateCameraShake(elapsedTime);
+
 	// カメラの視点と注視点を設定
 	Camera::Instance().SetLookAt(eye, target, DirectX::XMFLOAT3(0, 1, 0));
 
@@ -64,6 +67,30 @@ bool CameraController::UpdateCameraMovieTimer(float elapsedTime)
 		return false;
 	}
 }
+
+// カメラシェイク更新処理
+bool CameraController::UpdateCameraShake(float elapsedTime)
+{
+	if (cameraShake && shakeTimer > 0.0f)
+	{
+		// 揺らす大きさが1より大きいなら処理を行う
+		if (shakeFlag.x)
+			target.x += (rand() % shakePower.x * 2 + 1) * elapsedTime;
+		if (shakeFlag.y)
+			target.y += (rand() % shakePower.y * 2 + 1) * elapsedTime;
+		if (shakeFlag.z)
+			target.z += (rand() % shakePower.z * 2 + 1) * elapsedTime;
+
+		shakeTimer -= elapsedTime;
+
+		return true;
+	}
+	else
+		cameraShake = false;
+
+	return false;
+}
+
 
 void CameraController::DrawDebugGUI()
 {

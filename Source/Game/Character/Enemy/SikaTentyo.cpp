@@ -4,19 +4,26 @@
 #include "Other/Mathf.h"
 #include "Game/Character/Player.h"
 #include "Other/Collision.h"
+#include "Game/Scene/SceneTitle.h"
 
 // コンストラクタ
 SikaTentyo::SikaTentyo()
 {
 	model = std::make_unique<Model>("Data/Model/SikaTentyo/SikaTentyo.mdl");
 
-	scale.x = scale.y = scale.z = 0.07f;
+	scale.x = scale.y = scale.z = 0.04f;
 
 	gravity = 0.0f;
 
 	angle.y = DirectX::XMConvertToRadians(180);
 
-	hp = 0;
+	hp = hpDamage = 0;
+	maxHp = 500;
+
+	collisionOffset = { -0.1f, 0, 0 };
+
+	radius = 2;
+	height = 5;
 
 	//! HPゲージの位置
 	hpSpritePos = { 558.5f, 663.1f };
@@ -25,6 +32,8 @@ SikaTentyo::SikaTentyo()
 	//! HP画像の位置
 	hpImagePos = { 550.0f, 661.0f };
 	hpImageShakePosY = hpImagePos.y;
+
+	hpSpriteAdjust = 1.38f;
 
 	//! UIを表示しない
 	hideSprites = true;
@@ -70,6 +79,9 @@ void SikaTentyo::Update(float elapsedTime)
 		UpdateDeathState(elapsedTime);
 		break;
 	}
+
+	// HP管理
+	HpControll(elapsedTime);
 
 	// 当たり判定の位置設定
 	CollisionPosSettings();
@@ -159,8 +171,8 @@ void SikaTentyo::SpriteRender(ID3D11DeviceContext* dc)
 
 		//! 名前
 		name->Render(dc,
-			hpImagePos.x + 530, hpImagePos.y - 45,
-			142, 46,
+			hpImagePos.x + 350, hpImagePos.y - 45,
+			232, 46,
 			0, 0,
 			textureWidth, textureHeight,
 			0,
@@ -261,9 +273,11 @@ void SikaTentyo::DrawDebugGUI()
 		if (ImGui::CollapsingHeader("Hp", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			ImGui::InputInt("HP", &hp);
+			ImGui::InputInt("HPDamage", &hpDamage);
 			ImGui::DragFloat2("HpImagePos", &hpImagePos.x);
 			ImGui::DragFloat2("HpSpritePos", &hpSpritePos.x, 0.1f);
 			ImGui::DragFloat("HpSpriteAdjust", &hpSpriteAdjust, 0.01f);
+			ImGui::Checkbox("HpDirectorFinished", &hpDirectorFinished);
 		}
 
 		ImGui::InputFloat3("Velocity", &velocity.x);
@@ -306,7 +320,7 @@ void SikaTentyo::CollisionEnemyVsPlayer()
 		outPosition
 	))
 	{
-		if (player.ApplyDamage(player.GetMoveSpeed(), 1.0f))
+		if (player.ApplyDamage(player.GetViewMoveSpeed(), 1.0f))
 		{
 			// 前方向
 			DirectX::XMFLOAT3 velocity;
@@ -322,10 +336,6 @@ void SikaTentyo::CollisionEnemyVsPlayer()
 				velocity.z = 80;
 
 			player.SetVelocity(DirectX::XMFLOAT3(velocity.x, 100.0f, velocity.z));
-		}
-		else
-		{
-			hp = 0;
 		}
 	}
 }
@@ -446,8 +456,18 @@ void SikaTentyo::TransitionMoveState()
 // 開始ステート更新処理
 void SikaTentyo::UpdateMoveState(float elapsedTime)
 {
-	HpDirector(2, 50);
+	HpDirector(10, 50);
 
+	if (position.y > 1.3f)
+	{
+		velocity.y = -5;
+	}
+	else if(position.y <= 1.3f)
+	{
+		velocity.y = 0;
+		position.y = 1.3f;
+	}
+	
 	// プレイヤーのインスタンス取得
 	Player& player = Player::Instance();
 
@@ -455,24 +475,35 @@ void SikaTentyo::UpdateMoveState(float elapsedTime)
 	float vz = player.GetPosition().z - position.z;
 
 	// 移動処理
-	Move(vx, vz, player.GetMoveSpeed());
+	Move(vx, vz, 3.0f);
 	Turn(elapsedTime, vx, vz, 50.0f);
 }
 
 // ダメージステートへ遷移
 void SikaTentyo::TransitionDamageState()
 {
+	velocity.y = 5;
+
+	velocity.x = (rand() % 5 + 20) * (rand() % 2 == 1 ? -1 : 1);
+	velocity.z = (rand() % 5 + 20) * (rand() % 2 == 1 ? -1 : 1);
+
 	state = State::Damage;
+
+	actionTimer = 1.0f;
 }
 
 // ダメージステート更新処理
 void SikaTentyo::UpdateDamageState(float elapsedTime)
 {
+	angle.y += DirectX::XMConvertToRadians(2000) * elapsedTime;
+
 	// ダメージアニメーションが終わったら戦闘待機ステートへ遷移
-	if (!model->IsPlayAnimation())
+	if (actionTimer < 0.0f)
 	{
 		TransitionMoveState();
 	}
+
+	actionTimer -= elapsedTime;
 }
 
 // 死亡ステートへ遷移
@@ -480,9 +511,8 @@ void SikaTentyo::TransitionDeathState()
 {
 	state = State::Death;
 
-	Player& player = Player::Instance();
-
-	player.SetExp(1);
+	SceneTitle& scene = SceneTitle::Instance();
+	scene.gameClear = true;
 
 	stateTimer = 1.0f;
 }
@@ -494,7 +524,6 @@ void SikaTentyo::UpdateDeathState(float elapsedTime)
 	angle.y += DirectX::XMConvertToRadians(700) * elapsedTime;
 
 	velocity.y = 40.0f;
-
 
 	Player& player = Player::Instance();
 
@@ -513,7 +542,6 @@ void SikaTentyo::UpdateDeathState(float elapsedTime)
 		setVelocity = true;
 	}
 
-
 	// ダメージアニメーションが終わったら自分を破棄
 	if (stateTimer <= 0)
 	{
@@ -526,8 +554,16 @@ void SikaTentyo::UpdateDeathState(float elapsedTime)
 // ダメージ受けた時に呼ばれる
 void SikaTentyo::OnDamaged()
 {
-	// ダメージステートへ遷移
-	TransitionDamageState();
+	invincibleTimer = 1.0f;
+
+	hp -= 20;
+
+	if (hp <= 0)
+		// 死亡ステートへ遷移
+		TransitionDeathState();
+	else
+		// ダメージステートへ遷移
+		TransitionDamageState();
 }
 
 // 死亡しと時に呼ばれる

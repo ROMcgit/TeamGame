@@ -11,6 +11,9 @@
 // 初期化
 void SceneTitle::Initialize()
 {
+	SceneTitle& scene = SceneTitle::Instance();
+	scene.gameClear = false;
+
 	title = std::make_unique<Sprite>("Data/Sprite/サル系MonTuber.png");
 	button = std::make_unique<Sprite>("Data/Sprite/サル系MonTuber(ボタン).png");
 

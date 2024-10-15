@@ -192,20 +192,6 @@ void Player::Update(float elapsedTime)
 	// ムービー中なら待機ステートへ遷移
 	if (movieScene)
 	{
-		// 全ての弾を破棄する
-		int projectileCount = projectileManager.GetProjectileCount();
-		for (int i = 0; i < projectileCount; ++i)
-		{
-			Projectile* projectile = projectileManager.GetProjectile(i);
-
-			DirectX::XMFLOAT3 e = projectile->GetCollisionPos();
-			e.y += projectile->GetCollisionPos().y - 0.2f;
-			hitEffect->Play(e, 0.5f);
-
-			// 弾破棄
-			projectile->Destroy();
-		}
-
 		// ムービー中のアニメーション
 		if (!movieAnimation)
 		{
@@ -279,6 +265,11 @@ void Player::Update(float elapsedTime)
 	}
 
 	viewMoveSpeedPlusTimer += elapsedTime;
+
+	if (bananaNum >= 6 && moveSpeed > 25.0f)
+	{
+		moveSpeed = 25.0f;
+	}
 }
 
 // 描画処理

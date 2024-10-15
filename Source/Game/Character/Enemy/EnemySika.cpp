@@ -8,6 +8,8 @@
 // コンストラクタ
 EnemySika::EnemySika()
 {
+	hpDirectorFinished = true;
+
 	model = std::make_unique<Model>("Data/Model/Sika/Sika.mdl");
 
 	// モデルが大きいのでスケーリング
@@ -57,7 +59,6 @@ EnemySika::EnemySika()
 		break;
 	}
 	
-
 	// 追跡ステート
 	TransitionPursuitState();
 }

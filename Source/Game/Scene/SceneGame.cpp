@@ -19,6 +19,7 @@
 #include "Input/Input.h"
 #include "Game/Stage/StageManager.h"
 #include "Game/Stage/StageMain.h"
+#include "SceneTitle.h"
 
 // 初期化
 void SceneGame::Initialize()
@@ -123,8 +124,9 @@ void SceneGame::Update(float elapsedTime)
 	// フェードのアップデート
 	fade->Update(elapsedTime);
 
+	SceneTitle& scene = SceneTitle::Instance();
 	// ゲームクリア
-	if (player->GetHealth() > 0 && player->GetBananaNum() == 7)
+	if (player->GetHealth() > 0 && scene.gameClear)
 	{
 		if (!setFade)
 		{
@@ -355,10 +357,13 @@ void SceneGame::Newestablishment(float elapsedTime)
 
 	if (player->GetPosition().y > 60)
 	{
-		for (int i = 0; i < enemyCount; i++)
+		if (player->GetBananaNum() < 6)
 		{
-			std::unique_ptr<Enemy>& enemy = enemyManager.GetEnemy(i);
-			enemy->Destroy();
+			for (int i = 0; i < enemyCount; i++)
+			{
+				std::unique_ptr<Enemy>& enemy = enemyManager.GetEnemy(i);
+				enemy->Destroy();
+			}
 		}
 
 		for (int i = 0; i < itemCount; i++)
@@ -491,8 +496,8 @@ void SceneGame::UpdateMovie(float elapsedTime)
 {
 	if (!setMovie && player->GetBananaNum() >= 6)
 	{
-		player->SetMovieTime(11.0f);
-		cameraController->SetCameraMovieTime(11.0f);
+		player->SetMovieTime(12.5f);
+		cameraController->SetCameraMovieTime(12.5f);
 
 		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 			0.0f, 1.0f,
@@ -515,18 +520,26 @@ void SceneGame::UpdateMovie(float elapsedTime)
 		{
 			if (!setMovieFade)
 			{
+				player->SetPosition(DirectX::XMFLOAT3(0, 1.3f, -100));
+
 				//! カメラのターゲット
-				cameraTarget = { 0, 8, 0 };
+				cameraTarget = { 0, 6, 0 };
 
 				//! カメラの範囲
-				cameraRange = 15.0f;
+				cameraRange = 10.0f;
 
 				//! カメラの角度
 				cameraAngle = { DirectX::XMFLOAT3(
 					DirectX::XMConvertToRadians(-6),
 					DirectX::XMConvertToRadians(0),
-					0)
+					DirectX::XMConvertToRadians(0))
 				};
+
+				// プレイヤーの角度を設定
+				player->SetAngle(DirectX::XMFLOAT3(
+					DirectX::XMConvertToRadians(0),
+					DirectX::XMConvertToRadians(0),
+					DirectX::XMConvertToRadians(0)));
 
 				fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 					1.0f, 0.0f,
@@ -556,9 +569,9 @@ void SceneGame::UpdateMovie(float elapsedTime)
 			}
 
 
-			if (doCameraMovieTimer > 9.0f && doCameraMovieTimer < 9.8f && cameraRange > 10.0f)
+			if (doCameraMovieTimer > 9.0f && doCameraMovieTimer < 9.8f && cameraRange > 5.0f)
 				cameraRange -= 20 * elapsedTime;
-			else if (doCameraMovieTimer >= 9.8f && cameraRange < 20.0f)
+			else if (doCameraMovieTimer >= 9.8f && cameraRange < 13.0f)
 			{
 				cameraRange += 25 * elapsedTime;
 
@@ -568,6 +581,11 @@ void SceneGame::UpdateMovie(float elapsedTime)
 					setCameraShake[1] = true;
 				}
 			}
+
+			if (doCameraMovieTimer >= 12.5f)
+				cameraAngle = { DirectX::XMFLOAT3(DirectX::XMConvertToRadians(18),
+					0,0)
+			};
 
 			cameraController->SetAngle(cameraAngle);
 			target = cameraTarget;

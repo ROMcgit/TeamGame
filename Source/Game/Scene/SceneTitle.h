@@ -29,6 +29,9 @@ public:
 	// •`‰æˆ—
 	void Render() override;
 
+public:
+	bool gameClear = false;
+
 private:
 	std::unique_ptr<Sprite> title;
 	std::unique_ptr<Sprite> button;

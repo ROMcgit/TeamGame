@@ -42,7 +42,8 @@ private:
 	std::unique_ptr<Player> player;
 	std::unique_ptr<CameraController> cameraController;
 	DirectX::XMFLOAT3 target = { 0, 0, 0 };
-	float cameraMovieTimer = 0.0f;
+	float doCameraMovieTimer = 0.0f;
+
 	std::unique_ptr<Sprite> backGround;
 	std::unique_ptr<Fade> fade;
 	
@@ -64,4 +65,5 @@ private:
 
 	bool enemyStop = false;
 	bool setMovie  = false;
+	bool setMovieFade = false;
 };

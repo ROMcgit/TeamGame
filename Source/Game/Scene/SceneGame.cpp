@@ -488,11 +488,34 @@ void SceneGame::UpdateMovie(float elapsedTime)
 	{
 		player->SetMovieTime(15.0f);
 		cameraController->SetCameraMovieTime(15.0f);
+
+		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+			0.0f, 1.0f,
+			3.0f);
+
+		setMovie = true;
 	}
 
 	//! カメラがムービー中なら
 	if (cameraController->GetCameraMovie())
 	{
+		doCameraMovieTimer += elapsedTime;
 
+		if (doCameraMovieTimer < 4.0f)
+		{
+			target = player->GetPosition();
+			target.y += 0.5f;
+		}
+		else
+		{
+			if (!setMovieFade)
+			{
+				fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+					1.0f, 0.0f,
+					3.0f);
+
+				setMovieFade = true;
+			}
+		}
 	}
 }

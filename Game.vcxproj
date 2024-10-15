@@ -154,6 +154,7 @@
     <ClInclude Include="Source\Game\Camera\Camera.h" />
     <ClInclude Include="Source\Game\Camera\CameraController.h" />
     <ClInclude Include="Source\Game\Character\Character.h" />
+    <ClInclude Include="Source\Game\Character\Enemy\SikaTentyo.h" />
     <ClInclude Include="Source\Game\Character\Installation\Installation.h" />
     <ClInclude Include="Source\Game\Character\Installation\InstallationManager.h" />
     <ClInclude Include="Source\Game\Character\Item\Apple.h" />
@@ -221,6 +222,7 @@
     <ClCompile Include="Source\Game\Camera\Camera.cpp" />
     <ClCompile Include="Source\Game\Camera\CameraController.cpp" />
     <ClCompile Include="Source\Game\Character\Character.cpp" />
+    <ClCompile Include="Source\Game\Character\Enemy\SikaTentyo.cpp" />
     <ClCompile Include="Source\Game\Character\Installation\Installation.cpp" />
     <ClCompile Include="Source\Game\Character\Installation\InstallationManager.cpp" />
     <ClCompile Include="Source\Game\Character\Item\Apple.cpp" />

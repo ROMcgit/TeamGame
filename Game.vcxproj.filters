@@ -294,6 +294,9 @@
     <ClInclude Include="Source\Game\Character\Projectile\ProjectileYazirusi.h">
       <Filter>Source\Projectile</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Character\Enemy\SikaTentyo.h">
+      <Filter>Source\Character\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -475,6 +478,9 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Projectile\ProjectileYazirusi.cpp">
       <Filter>Source\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Enemy\SikaTentyo.cpp">
+      <Filter>Source\Character\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

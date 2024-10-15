@@ -229,7 +229,7 @@ void EnemySika::CollisionEnemyVsPlayer()
 		outPosition
 	))
 	{
-		if (player.ApplyDamage(player.GetMoveSpeed(), 1.0f))
+		if (player.ApplyDamage(player.GetViewMoveSpeed(), 1.0f))
 		{
 			// 前方向
 			DirectX::XMFLOAT3 velocity;
@@ -262,8 +262,7 @@ void EnemySika::TransitionPursuitState()
 	// 数秒間追跡するタイマーをランダム設定
 	stateTimer = Mathf::RandomRange(3.0f, 5.0f);
 
-	// 歩きアニメーション再生
-	model->PlayAnimation(Anim_RunFWD, true);
+	model->PlayAnimation(0, true);
 }
 
 // 追跡ステート更新処理
@@ -271,27 +270,16 @@ void EnemySika::UpdatePursuitState(float elapsedTime)
 {
 	position.y = 1;
 
-	// 目標地点をプレイヤー位置に設定
-	targetPosition = Player::Instance().GetPosition();
-
-	// ターゲット方向への進行ベクトルを算出
-	float vx = targetPosition.x - position.x;
-	float vz = targetPosition.z - position.z;
-	float dist = sqrtf(vx * vx + vz * vz);
-	vx /= dist;
-	vz /= dist;
-
 	// プレイヤーのインスタンス取得
 	Player& player = Player::Instance();
+
+	float vx = player.GetPosition().x - position.x;
+	float vz = player.GetPosition().z - position.z;
 
 	// 移動処理
 	Move(vx, vz, 5.0f);
 	Turn(elapsedTime, vx, vz, 50.0f);
 
-	
-
-	vx = player.GetPosition().x - position.x;
-	vz = player.GetPosition().z - position.z;
 	dist = vx * vx + vz * vz;
 	if (dist > 2500)
 		Destroy();
@@ -365,9 +353,6 @@ void EnemySika::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
 void EnemySika::TransitionDamageState()
 {
 	state = State::Damage;
-
-	// ダメージアニメーション再生
-	model->PlayAnimation(Anim_GetHit, false);
 }
 
 // ダメージステート更新処理
@@ -384,9 +369,6 @@ void EnemySika::UpdateDamageState(float elapsedTime)
 void EnemySika::TransitionDeathState()
 {
 	state = State::Death;
-
-	// ダメージアニメーション再生
-	model->PlayAnimation(Anim_Die, false);
 
 	Player& player = Player::Instance();
 

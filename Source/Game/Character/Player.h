@@ -66,6 +66,9 @@ public:
 	// 移動スピードを取得
 	float GetMoveSpeed() { return moveSpeed; }
 
+	// 表示スピードを取得
+	int GetViewMoveSpeed() { return viewMoveSpeed; }
+
 protected:
 	// 着地した時に呼ばれる
 	void OnLanding() override;

@@ -73,4 +73,6 @@ private:
 	DirectX::XMFLOAT3 cameraAngle  = { 0, 0, 0 }; // ƒJƒƒ‰‚ÌŠp“x
 	float cameraRange = 0.0f;
 	bool setCameraShake[2];
+
+	bool setGameClearMovie = false;
 };

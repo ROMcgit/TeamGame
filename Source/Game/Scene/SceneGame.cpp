@@ -214,6 +214,8 @@ void SceneGame::Render()
 		//stage->Render(dc, shader);
 		StageManager::Instance().Render(dc, shader);
 
+		SceneTitle& scene = SceneTitle::Instance();
+		if(!scene.gameClear)
 		// プレイヤー描画
 		player->Render(dc, shader);
 
@@ -350,10 +352,12 @@ void SceneGame::Newestablishment(float elapsedTime)
 
 	if (player->GetBananaNum() < 1)
 		enemyMaxCount = 10;
-	else if(player->GetBananaNum() >= 1 && player->GetBananaNum() <= 3)
+	else if (player->GetBananaNum() >= 1 && player->GetBananaNum() <= 3)
 		enemyMaxCount = 15;
-	else if((player->GetBananaNum() >= 4 && player->GetBananaNum() < 6))
+	else if ((player->GetBananaNum() >= 4 && player->GetBananaNum() < 6))
 		enemyMaxCount = 20;
+	else if (player->GetBananaNum() >= 6)
+		enemyMaxCount = 8;
 
 	if (player->GetPosition().y > 60)
 	{
@@ -379,7 +383,7 @@ void SceneGame::Newestablishment(float elapsedTime)
 
 /***************************************************************************************************/
 
-	if (player->GetIsGround())
+	if (player->GetIsGround() && !cameraController->GetCameraMovie())
 	{
 		float angleY = player->GetAngle().y;
 
@@ -391,7 +395,7 @@ void SceneGame::Newestablishment(float elapsedTime)
 		int posX = player->GetPosition().x + distance * cos(randomAngle); // cosでX座標を計算
 		int posZ = player->GetPosition().z + distance * sin(randomAngle); // sinでZ座標を計算
 
-		if (player->GetBananaNum() < 6 && enemyCount < enemyMaxCount && newEnemyTimer >  newEnemyMaxTimer)
+		if (enemyCount < enemyMaxCount && newEnemyTimer >  newEnemyMaxTimer)
 		{
 			posX = player->GetPosition().x + distance * cos(randomAngle);
 			posZ = player->GetPosition().z + distance * sin(randomAngle);
@@ -494,7 +498,42 @@ void SceneGame::NewBanana(float elapsedTime)
 // ムービー
 void SceneGame::UpdateMovie(float elapsedTime)
 {
-	if (!setMovie && player->GetBananaNum() >= 6)
+	SceneTitle& scene = SceneTitle::Instance();
+	if (scene.gameClear)
+	{
+		if (!setGameClearMovie)
+		{
+			doCameraMovieTimer = 0.0f;
+
+			EnemyManager& enemyManager = EnemyManager::Instance();
+			std::unique_ptr<Enemy>& sikaTentyo = enemyManager.GetEnemy(0);
+
+			DirectX::XMFLOAT3 pos = sikaTentyo->GetPosition();
+
+			cameraTarget = { pos };
+
+			//! カメラの角度
+			cameraAngle = { DirectX::XMFLOAT3(
+				DirectX::XMConvertToRadians(-6),
+				DirectX::XMConvertToRadians(0),
+				DirectX::XMConvertToRadians(0)) };
+
+			cameraRange = 5.0f;
+
+			player->SetMovieTime(20.0f);
+			cameraController->SetCameraMovieTime(20.0f);
+
+			setGameClearMovie = true;
+		}
+
+		if (cameraController->GetCameraMovie())
+		{
+			cameraController->SetAngle(cameraAngle);
+			target = cameraTarget;
+			cameraController->SetRange(cameraRange);
+		}
+	}
+	else if (!setMovie && player->GetBananaNum() >= 6)
 	{
 		player->SetMovieTime(12.5f);
 		cameraController->SetCameraMovieTime(12.5f);

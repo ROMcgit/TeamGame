@@ -23,7 +23,7 @@ SikaTentyo::SikaTentyo()
 	collisionOffset = { -0.1f, 0, 0 };
 
 	radius = 2;
-	height = 5;
+	height = 6;
 
 	//! HPゲージの位置
 	hpSpritePos = { 558.5f, 663.1f };
@@ -556,7 +556,7 @@ void SikaTentyo::OnDamaged()
 {
 	invincibleTimer = 1.0f;
 
-	hp -= 20;
+	hp -= 520;
 
 	if (hp <= 0)
 		// 死亡ステートへ遷移

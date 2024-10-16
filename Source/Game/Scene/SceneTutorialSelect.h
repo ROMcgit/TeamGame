@@ -5,11 +5,11 @@
 #include "Graphics/Fade.h"
 
 // タイトルシーン
-class SceneTutorial : public Scene
+class SceneTutorialSelect : public Scene
 {
 public:
-	SceneTutorial() {};
-	~SceneTutorial() override {};
+	SceneTutorialSelect() {};
+	~SceneTutorialSelect() override {};
 
 	// 初期化
 	void Initialize() override;
@@ -24,8 +24,14 @@ public:
 	void Render() override;
 
 private:
-	std::unique_ptr<Sprite> image[11];
-	int imageNum = 1;
+	std::unique_ptr<Sprite> message;
+	float messageTexW = 0.0f;
+	int select = 1;
+	std::unique_ptr<Sprite> yes;
+	std::unique_ptr<Sprite> no;
+	float viewSelectTimer = 0.0f;
+	bool viewSelect = false;
+	std::unique_ptr<Sprite> banana;
 
 	std::unique_ptr<Fade> fade;
 

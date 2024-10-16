@@ -309,6 +309,9 @@
     <ClInclude Include="Source\Game\Scene\SceneTutorialAction.h">
       <Filter>Source\Scene\GameScene\GameEvent</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Scene\SceneTutorialSelect.h">
+      <Filter>Source\Scene\GameScene\GameEvent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -498,6 +501,9 @@
       <Filter>Source\Scene\GameScene\GameEvent</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Scene\SceneTutorialAction.cpp">
+      <Filter>Source\Scene\GameScene\GameEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\SceneTutorialSelect.cpp">
       <Filter>Source\Scene\GameScene\GameEvent</Filter>
     </ClCompile>
   </ItemGroup>

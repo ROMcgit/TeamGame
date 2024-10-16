@@ -2,6 +2,7 @@
 #include "Input/Input.h"
 #include "SceneTitle.h"
 #include "SceneGameOver.h"
+#include "SceneTutorialSelect.h"
 #include "SceneGameClear.h"
 #include "SceneGame.h"
 #include "SceneLoading.h"
@@ -70,7 +71,7 @@ void SceneTitle::Update(float elapsedTime)
 
 		if (setFade && !fade->GetFade())
 		{
-			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGame>());
+			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneTutorialSelect>());
 
 			// シーンマネージャーにローディングシーンへの切り替えを指示
 			SceneManager::Instance().ChangeScene(std::move(loadingScene));

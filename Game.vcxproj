@@ -169,6 +169,7 @@
     <ClInclude Include="Source\Game\Scene\SceneOpning.h" />
     <ClInclude Include="Source\Game\Scene\SceneTutorial.h" />
     <ClInclude Include="Source\Game\Scene\SceneTutorialAction.h" />
+    <ClInclude Include="Source\Game\Scene\SceneTutorialSelect.h" />
     <ClInclude Include="Source\Other\Collision.h" />
     <ClInclude Include="Source\Game\Effect\Effect.h" />
     <ClInclude Include="Source\Game\Effect\EffectManager.h" />
@@ -239,6 +240,7 @@
     <ClCompile Include="Source\Game\Scene\SceneOpning.cpp" />
     <ClCompile Include="Source\Game\Scene\SceneTutorial.cpp" />
     <ClCompile Include="Source\Game\Scene\SceneTutorialAction.cpp" />
+    <ClCompile Include="Source\Game\Scene\SceneTutorialSelect.cpp" />
     <ClCompile Include="Source\Other\Collision.cpp" />
     <ClCompile Include="Source\Game\Effect\Effect.cpp" />
     <ClCompile Include="Source\Game\Effect\EffectManager.cpp" />

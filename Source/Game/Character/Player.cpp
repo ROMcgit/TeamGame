@@ -281,9 +281,9 @@ void Player::Update(float elapsedTime)
 
 	viewMoveSpeedPlusTimer += elapsedTime;
 
-	if (bananaNum >= 6 && moveSpeed > 25.0f)
+	if (bananaNum >= 6 && moveSpeed > 20.0f)
 	{
-		moveSpeed = 25.0f;
+		moveSpeed = 20.0f;
 	}
 }
 
@@ -927,11 +927,11 @@ void Player::UpdateMoveState(float elapsedTime)
 	float speed = turnSpeed * elapsedTime;
 	{
 		//スティックの入力値に合わせてX軸とY軸を回転
-		if (ax == -1)
+		if (ax < 0)
 		{
 			angle.y -= speed;
 		}
-		if (ax == 1)
+		if (ax > 0)
 		{
 			angle.y += speed;
 		}
@@ -1004,11 +1004,11 @@ void Player::UpdateLungesState(float elapsedTime)
 	float speed = turnSpeed * elapsedTime;
 	{
 		//スティックの入力値に合わせてX軸とY軸を回転
-		if (ax == -1)
+		if (ax < 0)
 		{
 			angle.y -= speed;
 		}
-		if (ax == 1)
+		if (ax > 0)
 		{
 			angle.y += speed;
 		}

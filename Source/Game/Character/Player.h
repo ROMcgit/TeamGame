@@ -177,7 +177,7 @@ private:
 		bool z = false;
 	}viewMoveSpeedColorUp;
 
-	float turnSpeed = DirectX::XMConvertToRadians(120);
+	float turnSpeed = DirectX::XMConvertToRadians(80);
 
 	float minAngleX = DirectX::XMConvertToRadians(-45); // 角度最小値
 	float maxAngleX = DirectX::XMConvertToRadians(45);  // 角度最大値

@@ -211,7 +211,6 @@ void SceneGame::Render()
 		Shader* shader = graphics.GetShader();
 		shader->Begin(dc, rc);
 		// ステージ描画
-		//stage->Render(dc, shader);
 		StageManager::Instance().Render(dc, shader);
 
 		SceneTitle& scene = SceneTitle::Instance();
@@ -509,6 +508,7 @@ void SceneGame::UpdateMovie(float elapsedTime)
 			std::unique_ptr<Enemy>& sikaTentyo = enemyManager.GetEnemy(0);
 
 			DirectX::XMFLOAT3 pos = sikaTentyo->GetPosition();
+			pos.y += 2;
 
 			cameraTarget = { pos };
 
@@ -518,7 +518,7 @@ void SceneGame::UpdateMovie(float elapsedTime)
 				DirectX::XMConvertToRadians(0),
 				DirectX::XMConvertToRadians(0)) };
 
-			cameraRange = 5.0f;
+			cameraRange = 10.0f;
 
 			player->SetMovieTime(20.0f);
 			cameraController->SetCameraMovieTime(20.0f);

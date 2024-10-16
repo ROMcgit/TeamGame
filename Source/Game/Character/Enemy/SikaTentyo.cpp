@@ -523,7 +523,7 @@ void SikaTentyo::UpdateDeathState(float elapsedTime)
 	angle.x += DirectX::XMConvertToRadians(700) * elapsedTime;
 	angle.y += DirectX::XMConvertToRadians(700) * elapsedTime;
 
-	velocity.y = 40.0f;
+	velocity.y = 50.0f;
 
 	Player& player = Player::Instance();
 
@@ -556,7 +556,7 @@ void SikaTentyo::OnDamaged()
 {
 	invincibleTimer = 1.0f;
 
-	hp -= 520;
+	hp -= 20;
 
 	if (hp <= 0)
 		// Ž€–SƒXƒe[ƒg‚Ö‘JˆÚ

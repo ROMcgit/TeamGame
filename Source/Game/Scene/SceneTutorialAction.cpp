@@ -29,6 +29,9 @@
 #include "Input/Input.h"
 #include "SceneTitle.h"
 
+#include "Game/Stage/StageMain.h"
+#include "Game/Stage/StageManager.h"
+
 // 初期化
 void SceneTutorialAction::Initialize()
 {
@@ -39,9 +42,9 @@ void SceneTutorialAction::Initialize()
 	}
 
 	// ステージ初期化
-	/*StageManager& stageManager = StageManager::Instance();
+	StageManager& stageManager = StageManager::Instance();
 	StageMain* stageMain = new StageMain();
-	stageManager.Register(stageMain);*/
+	stageManager.Register(stageMain);
 
 	// プレイヤー初期化
 	player = std::make_unique<Player>();
@@ -79,7 +82,7 @@ void SceneTutorialAction::Initialize()
 void SceneTutorialAction::Finalize()
 {
 	// ステージ終了化
-	/*StageManager::Instance().Clear();*/
+	StageManager::Instance().Clear();
 
 	// エネミー終了化
 	/*EnemyManager::Instance().Clear();*/
@@ -100,16 +103,22 @@ void SceneTutorialAction::Update(float elapsedTime)
 	{
 	case MessageScene::Message1:
 	{
-		if (messageOpacity >= 1.2f)
-		{
-			messageOpacity -= 0.8f * elapsedTime;
-			messageOpacityWaitTime = 0.5f;
+		messageNum = 1;
 
+		if (messageOpacity >= 1.0f && !finishMessage[0])
+		{
+			answerTimer = 1.0f;
 			finishMessage[0] = true;
 		}
 		
+		if (finishMessage[0] && answerTimer < 0.0f)
+		{
+			messageOpacity -= 0.8f * elapsedTime;
+			messageOpacityWaitTime = 1.0f;
+		}
+
 		//! 次のメッセージへ
-		if (messageOpacity < 0.0f && finishMessage[0])
+		if (messageOpacity <= 0.0f && finishMessage[0])
 		{
 			messageScene = MessageScene::Message2;
 		}
@@ -117,6 +126,8 @@ void SceneTutorialAction::Update(float elapsedTime)
 		break;
 	case MessageScene::Message2:
 	{
+		messageNum = 2;
+
 		if (messageOpacity >= 1.0f && 
 			(gamePad.GetButtonHeld() & GamePad::BTN_LEFT || gamePad.GetButtonHeld() & GamePad::BTN_RIGHT))
 		{
@@ -132,10 +143,10 @@ void SceneTutorialAction::Update(float elapsedTime)
 		if (messageFinish[1] && answerTimer < 0.0f)
 		{
 			messageOpacity -= 0.8f * elapsedTime;
-			messageOpacityWaitTime = 0.5f;
+			messageOpacityWaitTime = 1.0f;
 		}
 
-		if (messageFinish[1] && messageOpacity < 0.0f)
+		if (messageFinish[1] && messageOpacity <= 0.0f)
 		{
 			messageScene = MessageScene::Message3;
 		}
@@ -143,6 +154,8 @@ void SceneTutorialAction::Update(float elapsedTime)
 		break;
 	case MessageScene::Message3:
 	{
+		messageNum = 3;
+
 		if (messageOpacity >= 1.0f &&
 			(gamePad.GetButtonDown() & GamePad::BTN_B || gamePad.GetButtonDown() & GamePad::BTN_X))
 		{
@@ -157,13 +170,13 @@ void SceneTutorialAction::Update(float elapsedTime)
 		}
 
 
-		if (answerTimer < 0.0f && messageFinish[2])
+		if (answerTimer <= 0.0f && messageFinish[2])
 		{
 			messageOpacity -= 0.8f * elapsedTime;
-			messageOpacityWaitTime = 0.5f;
+			messageOpacityWaitTime = 1.0f;
 		}
 
-		if (messageFinish[2] && messageOpacity < 0.0f)
+		if (messageFinish[2] && messageOpacity <= 0.0f)
 		{
 			messageScene = MessageScene::Message4;
 		}
@@ -171,6 +184,8 @@ void SceneTutorialAction::Update(float elapsedTime)
 		break;
 	case MessageScene::Message4:
 	{
+		messageNum = 4;
+
 		if (messageOpacity >= 1.0f &&
 			player->GetLungesCount() >= 3 && !messageFinish[3])
 		{
@@ -178,13 +193,13 @@ void SceneTutorialAction::Update(float elapsedTime)
 			messageFinish[3] = true;
 		}
 			
-		if (answerTimer < 0.0f && messageFinish[3])
+		if (answerTimer <= 0.0f && messageFinish[3])
 		{
 			messageOpacity -= 0.8f * elapsedTime;
-			messageOpacityWaitTime = 0.5f;
+			messageOpacityWaitTime = 1.0f;
 		}
 
-		if (messageFinish[3] && messageOpacity < 0.0f)
+		if (messageFinish[3] && messageOpacity <= 0.0f)
 		{
 			messageScene = MessageScene::Message5;
 		}
@@ -192,16 +207,22 @@ void SceneTutorialAction::Update(float elapsedTime)
 		break;
 	case MessageScene::Message5:
 	{
-		if (messageOpacity >= 1.2f)
-		{
-			messageOpacity -= 0.8f * elapsedTime;
-			messageOpacityWaitTime = 0.5f;
+		messageNum = 5;
 
+		if (messageOpacity >= 1.0f && !finishMessage[4])
+		{
+			answerTimer = 2.0f;
 			finishMessage[4] = true;
 		}
 
+		if (finishMessage[4] && answerTimer < 0.0f)
+		{
+			messageOpacity -= 0.8f * elapsedTime;
+			messageOpacityWaitTime = 1.0f;
+		}
+
 		//! 次のメッセージへ
-		if (messageOpacity < 0.0f && finishMessage[4])
+		if (messageOpacity <= 0.0f && finishMessage[4])
 		{
 			messageScene = MessageScene::Message6;
 		}
@@ -209,12 +230,30 @@ void SceneTutorialAction::Update(float elapsedTime)
 		break;
 	case MessageScene::Message6:
 	{
+		messageNum = 6;
 
+		if (gamePad.GetButtonDown() & GamePad::BTN_Y && !setFade)
+		{
+			fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+				0.0f, 1.0f,
+				4.0f
+			);
+		}
+
+		if (setFade && !fade->GetFade())
+		{
+			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGame>());
+			// シーンマネージャーにローディングシーンへの切り替えを指示
+			SceneManager::Instance().ChangeScene(std::move(loadingScene));
+		}
 	}
 		break;
 	default:
 		break;
 	}
+
+	if (answerTimer > 0.0f)
+		answerTimer -= elapsedTime;
 
 	if (messageOpacityWaitTime > 0.0f)
 		messageOpacityWaitTime -= elapsedTime;
@@ -235,6 +274,8 @@ void SceneTutorialAction::Update(float elapsedTime)
 
 	cameraController->SetTarget(target);
 	cameraController->Update(elapsedTime);
+
+	StageManager::Instance().Update(elapsedTime);
 
 	// プレイヤー更新処理
 	player->Update(elapsedTime);
@@ -305,6 +346,8 @@ void SceneTutorialAction::Render()
 
 		SceneTitle& scene = SceneTitle::Instance();
 
+		StageManager::Instance().Render(dc, shader);
+
 		// プレイヤー描画
 		player->Render(dc, shader);
 
@@ -320,15 +363,22 @@ void SceneTutorialAction::Render()
 		shader->End(dc);
 	}
 
+	// 3Dエフェクト描画
+	{
+		EffectManager::Instance().Render(rc.view, rc.projection);
+	}
+
 	//! 2D画像
 	{
+		player->SpriteRender(dc);
+
 		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
 		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
 
-		float textureWidth = static_cast<float>(message[messageNum]->GetTextureWidth());
-		float textureHeight = static_cast<float>(message[messageNum]->GetTextureHeight());
+		float textureWidth = static_cast<float>(message[messageNum - 1]->GetTextureWidth());
+		float textureHeight = static_cast<float>(message[messageNum - 1]->GetTextureHeight());
 
-		message[messageNum]->Render(dc,
+		message[messageNum - 1]->Render(dc,
 			0, 0,
 			screenWidth, screenHeight,
 			0, 0,
@@ -336,7 +386,7 @@ void SceneTutorialAction::Render()
 			0,
 			1, 1, 1, messageOpacity);
 
-		player->SpriteRender(dc);
+		
 	}
 
 	fade->Render(dc);

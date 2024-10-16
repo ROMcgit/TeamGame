@@ -154,7 +154,12 @@ private:
 	std::unique_ptr<Model>  model[3];
 	std::unique_ptr<Sprite> ui[5];
 	std::unique_ptr<Sprite> hpSprite[4];
-	std::unique_ptr<Text>   text[3];
+	std::unique_ptr<Text>   text[4];
+	std::unique_ptr<Sprite> runAttack[3];
+	std::unique_ptr<Sprite> itemImage[3];
+	std::unique_ptr<Text>   itemNum[3];
+
+	DirectX::XMFLOAT2 hpSpriteMinus = { 26, -40 };
 
 	float viewMoveSpeedPlusTimer = 0.0f; // スピードを増やす処理
 	float viewMoveSpeed = 0.0f;

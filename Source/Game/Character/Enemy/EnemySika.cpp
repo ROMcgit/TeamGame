@@ -4,6 +4,7 @@
 #include "Other/Mathf.h"
 #include "Game/Character/Player.h"
 #include "Other/Collision.h"
+#include <Game\Scene\SceneTitle.h>
 
 // コンストラクタ
 EnemySika::EnemySika()
@@ -115,8 +116,6 @@ void EnemySika::Update(float elapsedTime)
 
 	// モデル行列更新
 	model->UpdateTransform(transform);
-
-	
 }
 
 // 描画処理
@@ -271,6 +270,10 @@ void EnemySika::UpdatePursuitState(float elapsedTime)
 {
 	position.y = 1;
 
+	SceneTitle& scene = SceneTitle::Instance();
+	if (scene.gameClear)
+		TransitionDeathState();
+
 	// プレイヤーのインスタンス取得
 	Player& player = Player::Instance();
 
@@ -369,6 +372,8 @@ void EnemySika::UpdateDamageState(float elapsedTime)
 // 死亡ステートへ遷移
 void EnemySika::TransitionDeathState()
 {
+	hp = 0;
+
 	state = State::Death;
 
 	Player& player = Player::Instance();

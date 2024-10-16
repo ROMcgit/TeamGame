@@ -556,6 +556,8 @@ void SikaTentyo::OnDamaged()
 {
 	invincibleTimer = 1.0f;
 
+	hpShake = true;
+
 	hp -= 20;
 
 	if (hp <= 0)

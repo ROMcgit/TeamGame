@@ -32,27 +32,27 @@ void SceneTitle::Finalize()
 // 更新処理
 void SceneTitle::Update(float elapsedTime)
 {
+	if (!buttonOpacityDown)
+	{
+		buttonOpacity += opacitySpeed * elapsedTime;
+		if (buttonOpacity >= 1.0f)
+		{
+			buttonOpacity = 1.0f;
+			buttonOpacityDown = true;
+		}
+	}
+	else
+	{
+		buttonOpacity -= opacitySpeed * elapsedTime;
+		if (buttonOpacity <= 0.0f)
+		{
+			buttonOpacity = 0.0f;
+			buttonOpacityDown = false;
+		}
+	}
+
 	if (!fade->GetFade())
 	{
-		if (!buttonOpacityDown)
-		{
-			buttonOpacity += opacitySpeed * elapsedTime;
-			if (buttonOpacity >= 1.0f)
-			{
-				buttonOpacity = 1.0f;
-				buttonOpacityDown = true;
-			}
-		}
-		else
-		{
-			buttonOpacity -= opacitySpeed * elapsedTime;
-			if (buttonOpacity <= 0.0f)
-			{
-				buttonOpacity = 0.0f;
-				buttonOpacityDown = false;
-			}
-		}
-
 		GamePad& gamePad = Input::Instance().GetGamePad();
 
 		// なにかボタンを押したらローディングシーンを挟んでゲームシーンへ切り替え

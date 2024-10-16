@@ -39,6 +39,13 @@ Player::Player()
 	ui[3] = std::make_unique<Sprite>("Data/Sprite/UI/ハテナ.png");
 	ui[4] = std::make_unique<Sprite>("Data/Sprite/UI/バナナ.png");
 
+	itemImage[0] = std::make_unique<Sprite>("Data/Sprite/UI/リンゴ.png");
+
+	for (int i = 0; i < 3; i++)
+	{
+		itemNum[i] = std::make_unique<Text>();
+	}
+
 	// 当たり判定
 	radius = 0.9f;
 	height = 2.4f;
@@ -54,14 +61,14 @@ Player::Player()
 	hp = hpDamage = maxHp = 300;
 
 	//! HPの長さ調整
-	hpSpriteAdjust = 0.63f;
+	hpSpriteAdjust = 0.615f;
 
 	//! HP画像位置
-	hpImagePos = { 30, 650 };
+	hpImagePos = { 30, 660 };
 	hpImageShakePosY = hpImagePos.y;
 
 	//! HPゲージの位置
-	hpSpritePos = { 38, 658.3f };
+	hpSpritePos = { 38, 668.3f };
 	hpSpriteShakePosY = hpSpritePos.y;
 
 	//! HP
@@ -72,7 +79,15 @@ Player::Player()
 		hpSprite[i + 1] = std::make_unique<Sprite>();
 	}
 
-	for(int i = 0; i < 3; i++)
+	//! 体当たり
+	runAttack[0] = std::make_unique<Sprite>("Data/Sprite/UI/HP.png");
+
+	for (int i = 0; i < 2; i++)
+	{
+		runAttack[i + 1] = std::make_unique<Sprite>();
+	}
+
+	for(int i = 0; i < 4; i++)
 		text[i] = std::make_unique<Text>();
 }
 
@@ -338,6 +353,28 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 				1, 0, 0, 1);
 		}
 
+		textureWidth = static_cast<float>(itemImage[0]->GetTextureWidth());
+		textureHeight = static_cast<float>(itemImage[0]->GetTextureHeight());
+
+		//! リンゴ
+		itemImage[0]->Render(dc,
+			240, 640,
+			135 * 0.4f, 169 * 0.4f,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1);
+
+		//! リンゴの数
+		itemNum[0]->Render(dc,
+			true, false, false, false, false,
+			0, 0, 0, diffusionAttacks,
+			295, 675,
+			6, 6,
+			0,
+			0,
+			1, 1, 1, 1);
+
 		textureWidth  = static_cast<float>(hpSprite[0]->GetTextureWidth());
 		textureHeight = static_cast<float>(hpSprite[0]->GetTextureHeight());	
 		//! HP画像
@@ -349,6 +386,50 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 			0,
 			1, 1, 1, 1
 		);
+
+		{
+			textureWidth = static_cast<float>(runAttack[0]->GetTextureWidth());
+			textureHeight = static_cast<float>(runAttack[0]->GetTextureHeight());
+
+			// ゲージの裏(黒色)
+			runAttack[1]->Render(dc,
+				hpSpritePos.x + hpSpriteMinus.x - 5, hpSpritePos.y + hpSpriteMinus.y - 3,
+				140, 26,
+				0, 0, textureWidth, textureHeight,
+				0,
+				0.0f, 0.0f, 0.0f, 1);
+
+			if (lungesChargeTimer < 0.5f)
+			{
+				// ゲージの色(緑色)
+				runAttack[2]->Render(dc,
+					hpSpritePos.x + hpSpriteMinus.x - 5, hpSpritePos.y + hpSpriteMinus.y - 3,
+					lungesChargeTimer * 240, 26,
+					0, 0, textureWidth, textureHeight,
+					0,
+					0.0f, 0.0f, 1.0f, 1);
+			}
+			else
+			{
+				// ゲージの色(緑色)
+				runAttack[2]->Render(dc,
+					hpSpritePos.x + hpSpriteMinus.x - 5, hpSpritePos.y + hpSpriteMinus.y - 3,
+					lungesChargeTimer * 240, 26,
+					0, 0, textureWidth, textureHeight,
+					0,
+					0.0f, 1.0f, 1.0f, 1);
+			}
+
+			//! HP画像
+			runAttack[0]->Render(dc,
+				hpImagePos.x + hpSpriteMinus.x, hpImagePos.y + hpSpriteMinus.y,
+				150, 34,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1
+			);
+		}
 
 		ImportantItemManager& importantItemManager = ImportantItemManager::Instance();
 		int importantItemCount = importantItemManager.GetImportantItemCount();
@@ -375,6 +456,16 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 			60, 48,
 			0, 0,
 			textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1);
+
+		//! バナナの数
+		text[3]->Render(dc,
+			true, false, false, false, false,
+			0, 0, 0, bananaNum,
+			380, 22,
+			6, 6,
+			0,
 			0,
 			1, 1, 1, 1);
 
@@ -477,9 +568,7 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 			viewMoveSpeedPlusTimer = 0.0f;
 			viewMoveSpeed++;
 		}
-
-		// 大きさを超えないようにする
-		if (viewMoveSpeed > (int)moveSpeed + 0.5f)
+		else if (viewMoveSpeed > (int)moveSpeed + 0.5f)
 			viewMoveSpeed = (int)moveSpeed + 0.5f;
 
 		if (viewMoveSpeed < 10)
@@ -759,12 +848,12 @@ void Player::UpdateMoveState(float elapsedTime)
 	DirectX::XMStoreFloat3(&dir, DIR);
 
 	//! 突進しているなら
-	if (lunges && lungesTimer > 0.0f)
+	if (lunges && lungesChargeTimer > 0.0f)
 	{
 		moveSpeed = 2000.0f;
 
 		invincibleTimer = 0.1f;
-		lungesTimer -= elapsedTime;
+		lungesChargeTimer -= elapsedTime;
 	}
 	else
 	{
@@ -863,7 +952,7 @@ void Player::UpdateMoveState(float elapsedTime)
 	}
 
 	// 突進入力処理(吹き飛んでいない時)
-	if (gamePad.GetButtonDown() & GamePad::BTN_A && isGround)
+	if (((gamePad.GetButtonDown() & GamePad::BTN_A) || (gamePad.GetButtonHeld() & GamePad::BTN_A)) && isGround && !lunges)
 	{
 		// 攻撃ステートへ遷移
 		TransitionLungesState();
@@ -946,11 +1035,10 @@ void Player::UpdateLungesState(float elapsedTime)
 	{
 		lungesChargeTimer += elapsedTime;
 
-		if (lungesChargeTimer >= 0.5f)
+		if (lungesChargeTimer >= 0.6f)
 		{
-			lungesChargeTimer = 0.5f; // 突進チャージ時間
+			lungesChargeTimer = 0.6f; // 突進チャージ時間
 			lunges      = true;       // 突進する
-			lungesTimer = 0.6f;       // 突進チャージ時間
 		}
 	}
 }
@@ -1093,6 +1181,8 @@ void Player::OnLanding()
 // ダメージを受けた時に呼ばれる
 void Player::OnDamaged()
 {
+	hpShake = true;
+
 	// ダメージステートへ遷移
 	TransitionDamageState();
 }

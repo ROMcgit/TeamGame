@@ -954,7 +954,7 @@ void Player::UpdateMoveState(float elapsedTime)
 	// 突進入力処理(吹き飛んでいない時)
 	if (((gamePad.GetButtonDown() & GamePad::BTN_A) || (gamePad.GetButtonHeld() & GamePad::BTN_A)) && isGround && !lunges)
 	{
-		// 攻撃ステートへ遷移
+		// 突進ステートへ遷移
 		TransitionLungesState();
 	}
 
@@ -1027,6 +1027,9 @@ void Player::UpdateLungesState(float elapsedTime)
 	// ボタンを離したら
 	if (!(gamePad.GetButtonHeld() & GamePad::BTN_A))
 	{
+		if(lunges < 3)
+		lungesCount++;
+
 		// 移動ステートへ遷移
 		TransitionMoveState();
 	}

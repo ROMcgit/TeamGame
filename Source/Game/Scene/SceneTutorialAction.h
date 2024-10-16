@@ -28,7 +28,33 @@ public:
 	void Render() override;
 
 private:
-	std::unique_ptr<Sprite> image[11];
+	// ¶¬ˆ—
+	void Newestablishment(float elapsedTime);
+
+private:
+
+	enum class MessageScene
+	{
+		Message1,
+		Message2,
+		Message3,
+		Message4,
+		Message5,
+		Message6,
+	}messageScene = MessageScene::Message1;
+
+private:
+	std::unique_ptr<Text> text[5];
+	std::unique_ptr<Sprite> message[6];
+	int messageNum = 0;
+	float messageOpacityWaitTime = 0.0f;
+	float messageOpacity = 0.0f;
+	int inputCount = false;
+	float inputTimer = 0.0f;
+	float answerTimer = 0.0f;
+	bool messageFinish[6];
+	bool finishMessage[6];
+
 	std::unique_ptr<Player> player;
 	std::unique_ptr<CameraController> cameraController;
 	DirectX::XMFLOAT3 target = { 0, 0, 0 };
@@ -36,7 +62,9 @@ private:
 
 	std::unique_ptr<Sprite> backGround;
 	std::unique_ptr<Fade> fade;
-	std::unique_ptr<Fade> fade;
 
 	bool setFade = false;
+
+	float newItemTimer = 0.0f;
+	float newItemMaxTimer = 0.5f;
 };

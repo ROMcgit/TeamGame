@@ -27,23 +27,21 @@
 #include "Game/Character/Installation/InstallationManager.h"
 #include "Game/Effect/EffectManager.h"
 #include "Input/Input.h"
-#include "Game/Stage/StageManager.h"
-#include "Game/Stage/StageMain.h"
 #include "SceneTitle.h"
 
 // 初期化
 void SceneTutorialAction::Initialize()
 {
-	for (int i = 0; i < 11; i++)
+	for (int i = 0; i < 6; i++)
 	{
-		std::string filePath = "Data/Sprite/チュートリアル/チュートリアル" + std::to_string(i + 1) + ".png";
-		image[i] = std::make_unique<Sprite>(filePath.c_str());
+		std::string filePath = "Data/Sprite/チュートリアル/メッセージ/メッセージ" + std::to_string(i + 1) + ".png";
+		message[i] = std::make_unique<Sprite>(filePath.c_str());
 	}
 
 	// ステージ初期化
-	StageManager& stageManager = StageManager::Instance();
+	/*StageManager& stageManager = StageManager::Instance();
 	StageMain* stageMain = new StageMain();
-	stageManager.Register(stageMain);
+	stageManager.Register(stageMain);*/
 
 	// プレイヤー初期化
 	player = std::make_unique<Player>();
@@ -80,11 +78,183 @@ void SceneTutorialAction::Initialize()
 // 終了化
 void SceneTutorialAction::Finalize()
 {
+	// ステージ終了化
+	/*StageManager::Instance().Clear();*/
+
+	// エネミー終了化
+	/*EnemyManager::Instance().Clear();*/
+
+	// アイテム終了化
+	ItemManager::Instance().Clear();
+
+	// 設置物終了化
+	/*InstallationManager::Instance().Clear();*/
 }
 
 // 更新処理
 void SceneTutorialAction::Update(float elapsedTime)
 {
+	GamePad& gamePad = Input::Instance().GetGamePad();
+
+	switch (messageScene)
+	{
+	case MessageScene::Message1:
+	{
+		if (messageOpacity >= 1.2f)
+		{
+			messageOpacity -= 0.8f * elapsedTime;
+			messageOpacityWaitTime = 0.5f;
+
+			finishMessage[0] = true;
+		}
+		
+		//! 次のメッセージへ
+		if (messageOpacity < 0.0f && finishMessage[0])
+		{
+			messageScene = MessageScene::Message2;
+		}
+	}
+		break;
+	case MessageScene::Message2:
+	{
+		if (messageOpacity >= 1.0f && 
+			(gamePad.GetButtonHeld() & GamePad::BTN_LEFT || gamePad.GetButtonHeld() & GamePad::BTN_RIGHT))
+		{
+			inputTimer += elapsedTime;
+		}
+
+		if (inputTimer >= 3 && !messageFinish[1])
+		{
+			answerTimer = 1.0f;
+			messageFinish[1] = true;
+		}
+
+		if (messageFinish[1] && answerTimer < 0.0f)
+		{
+			messageOpacity -= 0.8f * elapsedTime;
+			messageOpacityWaitTime = 0.5f;
+		}
+
+		if (messageFinish[1] && messageOpacity < 0.0f)
+		{
+			messageScene = MessageScene::Message3;
+		}
+	}
+		break;
+	case MessageScene::Message3:
+	{
+		if (messageOpacity >= 1.0f &&
+			(gamePad.GetButtonDown() & GamePad::BTN_B || gamePad.GetButtonDown() & GamePad::BTN_X))
+		{
+			inputCount++;
+		}
+
+		if (inputCount >= 20 && !messageFinish[2])
+		{
+			
+			answerTimer = 1.0f;
+			messageFinish[2] = true;
+		}
+
+
+		if (answerTimer < 0.0f && messageFinish[2])
+		{
+			messageOpacity -= 0.8f * elapsedTime;
+			messageOpacityWaitTime = 0.5f;
+		}
+
+		if (messageFinish[2] && messageOpacity < 0.0f)
+		{
+			messageScene = MessageScene::Message4;
+		}
+	}
+		break;
+	case MessageScene::Message4:
+	{
+		if (messageOpacity >= 1.0f &&
+			player->GetLungesCount() >= 3 && !messageFinish[3])
+		{
+			answerTimer = 1.0f;
+			messageFinish[3] = true;
+		}
+			
+		if (answerTimer < 0.0f && messageFinish[3])
+		{
+			messageOpacity -= 0.8f * elapsedTime;
+			messageOpacityWaitTime = 0.5f;
+		}
+
+		if (messageFinish[3] && messageOpacity < 0.0f)
+		{
+			messageScene = MessageScene::Message5;
+		}
+	}
+		break;
+	case MessageScene::Message5:
+	{
+		if (messageOpacity >= 1.2f)
+		{
+			messageOpacity -= 0.8f * elapsedTime;
+			messageOpacityWaitTime = 0.5f;
+
+			finishMessage[4] = true;
+		}
+
+		//! 次のメッセージへ
+		if (messageOpacity < 0.0f && finishMessage[4])
+		{
+			messageScene = MessageScene::Message6;
+		}
+	}
+		break;
+	case MessageScene::Message6:
+	{
+
+	}
+		break;
+	default:
+		break;
+	}
+
+	if (messageOpacityWaitTime > 0.0f)
+		messageOpacityWaitTime -= elapsedTime;
+
+	//! メッセージの不透明度
+	if (messageOpacityWaitTime <= 0.0 && messageOpacity < 1.0f)
+		messageOpacity += elapsedTime;
+
+	// 生成処理
+	Newestablishment(elapsedTime);
+
+	// カメラコントローラー更新処理
+	if (!cameraController->GetCameraMovie())
+	{
+		target = player->GetPosition();
+		target.y += 0.8f;
+	}
+
+	cameraController->SetTarget(target);
+	cameraController->Update(elapsedTime);
+
+	// プレイヤー更新処理
+	player->Update(elapsedTime);
+
+	// エネミー更新処理
+	EnemyManager::Instance().Update(elapsedTime);
+
+	// アイテム更新処理
+	ItemManager::Instance().Update(elapsedTime);
+
+	// 重要アイテム更新処理
+	ImportantItemManager::Instance().Update(elapsedTime);
+
+	// 設置物更新処理
+	InstallationManager::Instance().Update(elapsedTime);
+
+	// エフェクト更新処理
+	EffectManager::Instance().Update(elapsedTime);
+
+	fade->Update(elapsedTime);
 }
 
 // 描画処理
@@ -132,8 +302,6 @@ void SceneTutorialAction::Render()
 	{
 		Shader* shader = graphics.GetShader();
 		shader->Begin(dc, rc);
-		// ステージ描画
-		StageManager::Instance().Render(dc, shader);
 
 		SceneTitle& scene = SceneTitle::Instance();
 
@@ -150,5 +318,89 @@ void SceneTutorialAction::Render()
 		InstallationManager::Instance().Render(dc, shader);
 
 		shader->End(dc);
+	}
+
+	//! 2D画像
+	{
+		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
+		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
+
+		float textureWidth = static_cast<float>(message[messageNum]->GetTextureWidth());
+		float textureHeight = static_cast<float>(message[messageNum]->GetTextureHeight());
+
+		message[messageNum]->Render(dc,
+			0, 0,
+			screenWidth, screenHeight,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 1, 1, messageOpacity);
+
+		player->SpriteRender(dc);
+	}
+
+	fade->Render(dc);
+}
+
+// 生成処理
+void SceneTutorialAction::Newestablishment(float elapsedTime)
+{
+	ItemManager& itemManager = ItemManager::Instance();
+	InstallationManager& installationManager = InstallationManager::Instance();
+
+	int itemCount = itemManager.GetItemCount();                 // アイテムの数
+	int installationCount = installationManager.GetInstallationCount(); // 設置物の数
+
+	if (player->GetPosition().y > 60)
+	{
+		for (int i = 0; i < itemCount; i++)
+		{
+			std::unique_ptr<Item>& item = itemManager.GetItem(i);
+			item->Destroy();
+		}
+
+		for (int i = 0; i < installationCount; i++)
+		{
+		}
+	}
+
+	/***************************************************************************************************/
+
+	if (player->GetIsGround() && !cameraController->GetCameraMovie())
+	{
+		float angleY = player->GetAngle().y;
+
+		// 生成する範囲の角度をランダムに決める
+		float randomAngle = angleY + (rand() % 360 - 180) * (3.14159f / 180.0f); // -180度から+180度までランダム
+
+		float distance = rand() % 20 + 20; // プレイヤーからの距離もランダム
+
+		int posX = player->GetPosition().x + distance * cos(randomAngle); // cosでX座標を計算
+		int posZ = player->GetPosition().z + distance * sin(randomAngle); // sinでZ座標を計算
+
+		if (!cameraController->GetCameraMovie() && itemCount < 5 && newItemTimer > newItemMaxTimer && messageFinish[4])
+		{
+			posX = player->GetPosition().x + distance * cos(randomAngle);
+			posZ = player->GetPosition().z + distance * sin(randomAngle);
+
+			//! 位置制限(X)
+			if (posX >= 990)
+				posX = 950;
+			else if (posX <= -990)
+				posX = -950;
+
+			//! 位置制限(Z)
+			if (posZ >= 990)
+				posZ = 950;
+			else if (posZ <= -990)
+				posZ = -950;
+
+			std::unique_ptr<Apple> apple = std::make_unique<Apple>();
+			apple->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
+			itemManager.Register(std::move(apple));
+
+			newItemTimer = 0.0f;
+		}
+		newItemTimer += elapsedTime;
 	}
 }

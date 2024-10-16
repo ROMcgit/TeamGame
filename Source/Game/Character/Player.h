@@ -69,6 +69,9 @@ public:
 	// 表示スピードを取得
 	int GetViewMoveSpeed() { return viewMoveSpeed; }
 
+	// 突進カウント
+	int GetLungesCount() { return lungesCount; }
+
 protected:
 	// 着地した時に呼ばれる
 	void OnLanding() override;
@@ -210,4 +213,6 @@ private:
 	float moveSpeed = 15.0f;
 
 	int bananaNum = 0;
+
+	int lungesCount = 0;
 };

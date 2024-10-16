@@ -29,6 +29,17 @@ void SceneTutorial::Update(float elapsedTime)
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
+	if (gamePad.GetButtonDown() & GamePad::BTN_A && imageNum < 11)
+		imageNum++;
+	if(gamePad.GetButtonDown() & GamePad::BTN_B && imageNum > 1)
+		imageNum--;
+
+	if (imageNum < 11)
+		sceneChangeTime = 0.1f;
+	else if(sceneChangeTime > 0.0f)
+		sceneChangeTime -= elapsedTime;
+
+	if(imageNum == 11 && gamePad.GetButtonDown() & GamePad::BTN_A && sceneChangeTime <= 0.0f)
 	{
 		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneTutorialAction>());
 		// シーンマネージャーにローディングシーンへの切り替えを指示

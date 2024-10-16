@@ -26,6 +26,7 @@ public:
 private:
 	std::unique_ptr<Sprite> image[11];
 	int imageNum = 1;
+	float sceneChangeTime = 0.0f;
 
 	std::unique_ptr<Fade> fade;
 

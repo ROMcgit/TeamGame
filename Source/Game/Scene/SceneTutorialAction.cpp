@@ -41,6 +41,8 @@ void SceneTutorialAction::Initialize()
 		message[i] = std::make_unique<Sprite>(filePath.c_str());
 	}
 
+	text = std::make_unique<Text>();
+
 	// ステージ初期化
 	StageManager& stageManager = StageManager::Instance();
 	StageMain* stageMain = new StageMain();
@@ -105,20 +107,20 @@ void SceneTutorialAction::Update(float elapsedTime)
 	{
 		messageNum = 1;
 
-		if (messageOpacity >= 1.0f && !finishMessage[0])
+		if (messageOpacity >= 1.0f && !messageFinish[0])
 		{
 			answerTimer = 1.0f;
-			finishMessage[0] = true;
+			messageFinish[0] = true;
 		}
 		
-		if (finishMessage[0] && answerTimer < 0.0f)
+		if (messageFinish[0] && answerTimer < 0.0f)
 		{
 			messageOpacity -= 0.8f * elapsedTime;
 			messageOpacityWaitTime = 1.0f;
 		}
 
 		//! 次のメッセージへ
-		if (messageOpacity <= 0.0f && finishMessage[0])
+		if (messageOpacity <= 0.0f && messageFinish[0])
 		{
 			messageScene = MessageScene::Message2;
 		}
@@ -127,6 +129,8 @@ void SceneTutorialAction::Update(float elapsedTime)
 	case MessageScene::Message2:
 	{
 		messageNum = 2;
+
+		textPos = { 1032, 637 };
 
 		if (messageOpacity >= 1.0f && 
 			(gamePad.GetButtonHeld() & GamePad::BTN_LEFT || gamePad.GetButtonHeld() & GamePad::BTN_RIGHT))
@@ -156,6 +160,8 @@ void SceneTutorialAction::Update(float elapsedTime)
 	{
 		messageNum = 3;
 
+		textPos = { 875, 637 };
+
 		if (messageOpacity >= 1.0f &&
 			(gamePad.GetButtonDown() & GamePad::BTN_B || gamePad.GetButtonDown() & GamePad::BTN_X))
 		{
@@ -168,7 +174,6 @@ void SceneTutorialAction::Update(float elapsedTime)
 			answerTimer = 1.0f;
 			messageFinish[2] = true;
 		}
-
 
 		if (answerTimer <= 0.0f && messageFinish[2])
 		{
@@ -185,6 +190,8 @@ void SceneTutorialAction::Update(float elapsedTime)
 	case MessageScene::Message4:
 	{
 		messageNum = 4;
+
+		textPos = { 930, 637 };
 
 		if (messageOpacity >= 1.0f &&
 			player->GetLungesCount() >= 3 && !messageFinish[3])
@@ -209,20 +216,20 @@ void SceneTutorialAction::Update(float elapsedTime)
 	{
 		messageNum = 5;
 
-		if (messageOpacity >= 1.0f && !finishMessage[4])
+		if (messageOpacity >= 1.0f && !messageFinish[4])
 		{
 			answerTimer = 2.0f;
-			finishMessage[4] = true;
+			messageFinish[4] = true;
 		}
 
-		if (finishMessage[4] && answerTimer < 0.0f)
+		if (messageFinish[4] && answerTimer < 0.0f)
 		{
 			messageOpacity -= 0.8f * elapsedTime;
 			messageOpacityWaitTime = 1.0f;
 		}
 
 		//! 次のメッセージへ
-		if (messageOpacity <= 0.0f && finishMessage[4])
+		if (messageOpacity <= 0.0f && messageFinish[4])
 		{
 			messageScene = MessageScene::Message6;
 		}
@@ -251,6 +258,9 @@ void SceneTutorialAction::Update(float elapsedTime)
 	default:
 		break;
 	}
+
+	if (messageScene != MessageScene::Message4)
+		player->SetLungesCount(0);
 
 	if (answerTimer > 0.0f)
 		answerTimer -= elapsedTime;
@@ -386,8 +396,55 @@ void SceneTutorialAction::Render()
 			0,
 			1, 1, 1, messageOpacity);
 
+		switch (messageNum)
+		{
+		case 2:
+			text->Render(dc,
+				true, true, false, false, false,
+				0, 0, 0, (int)inputTimer,
+				textPos.x, textPos.y,
+				textScale.x, textScale.y,
+				0,
+				10,
+				1, 1, 1, messageOpacity);
+			break;
+		case 3:
+			text->Render(dc,
+				true, true, false, false, false,
+				0, 0, 0, inputCount,
+				textPos.x, textPos.y,
+				textScale.x, textScale.y,
+				0,
+				30,
+				1, 1, 1, messageOpacity);
+			break;
+		case 4:
+			text->Render(dc,
+				true, true, false, false, false,
+				0, 0, 0, player->GetLungesCount(),
+				textPos.x, textPos.y,
+				textScale.x, textScale.y,
+				0,
+				10,
+				1, 1, 1, messageOpacity);
+			break;
+		default:
+			break;
+		}
 		
 	}
+
+#ifdef _DEBUG
+	// 2DデバッグGUI描画
+	{
+		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
+		{
+			ImGui::DragFloat2("TextPos", &textPos.x);
+			ImGui::DragFloat2("TextScale", &textScale.x, 0.1f);
+		}
+		ImGui::End();
+	}
+#endif
 
 	fade->Render(dc);
 }
@@ -396,10 +453,8 @@ void SceneTutorialAction::Render()
 void SceneTutorialAction::Newestablishment(float elapsedTime)
 {
 	ItemManager& itemManager = ItemManager::Instance();
-	InstallationManager& installationManager = InstallationManager::Instance();
 
 	int itemCount = itemManager.GetItemCount();                 // アイテムの数
-	int installationCount = installationManager.GetInstallationCount(); // 設置物の数
 
 	if (player->GetPosition().y > 60)
 	{
@@ -408,13 +463,9 @@ void SceneTutorialAction::Newestablishment(float elapsedTime)
 			std::unique_ptr<Item>& item = itemManager.GetItem(i);
 			item->Destroy();
 		}
-
-		for (int i = 0; i < installationCount; i++)
-		{
-		}
 	}
 
-	/***************************************************************************************************/
+/***************************************************************************************************/
 
 	if (player->GetIsGround() && !cameraController->GetCameraMovie())
 	{
@@ -428,7 +479,7 @@ void SceneTutorialAction::Newestablishment(float elapsedTime)
 		int posX = player->GetPosition().x + distance * cos(randomAngle); // cosでX座標を計算
 		int posZ = player->GetPosition().z + distance * sin(randomAngle); // sinでZ座標を計算
 
-		if (!cameraController->GetCameraMovie() && itemCount < 5 && newItemTimer > newItemMaxTimer && messageFinish[4])
+		if (itemCount < 10 && newItemTimer > newItemMaxTimer && messageFinish[4])
 		{
 			posX = player->GetPosition().x + distance * cos(randomAngle);
 			posZ = player->GetPosition().z + distance * sin(randomAngle);

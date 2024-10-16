@@ -21,9 +21,13 @@
 #include "Game/Stage/StageMain.h"
 #include "SceneTitle.h"
 
+#include "Audio/BgmManager.h"
+
 // 初期化
 void SceneGame::Initialize()
 {
+	BgmManager::Instance().LoadBgm("ボス", "Data/Audio/bgm/boss.wav");
+
 	// ステージ初期化
 	StageManager& stageManager = StageManager::Instance();
 	StageMain* stageMain = new StageMain();
@@ -94,6 +98,12 @@ void SceneGame::Update(float elapsedTime)
 	{
 		target = player->GetPosition();
 		target.y += 0.5f;
+
+		if (setMovie && !bgmPlay)
+		{
+			BgmManager::Instance().PlayBgm("ボス");
+			bgmPlay = true;
+		}
 	}
 
 	cameraController->SetTarget(target);
@@ -238,7 +248,7 @@ void SceneGame::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -274,7 +284,7 @@ void SceneGame::Render()
 		fade->Render(dc);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 	// 2DデバッグGUI描画
 	{
 		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
@@ -299,7 +309,7 @@ void SceneGame::Render()
 			ImGui::Spacing(); // 一行空ける
 			//-----------------------------------------------------------------------------------------------------//
 
-						/*! アイテムの数 */
+			/*! アイテムの数 */
 			ImGui::InputInt("ItemCount", &itemCount);
 			ImGui::InputFloat("NewItemTimer", &newEnemyTimer);
 
@@ -309,7 +319,7 @@ void SceneGame::Render()
 			ImGui::Spacing(); // 一行空ける
 			//-----------------------------------------------------------------------------------------------------//
 
-						/*! 設置物の数 */
+			/*! 設置物の数 */
 			ImGui::InputInt("InstallationCount", &installationCount);
 			ImGui::InputFloat("InstallationTimer", &newInstallationTimer);
 
@@ -505,6 +515,8 @@ void SceneGame::UpdateMovie(float elapsedTime)
 	SceneTitle& scene = SceneTitle::Instance();
 	if (scene.gameClear)
 	{
+		BgmManager::Instance().UnloadBgm("ボス");
+
 		if (!setGameClearMovie)
 		{
 			doCameraMovieTimer = 0.0f;

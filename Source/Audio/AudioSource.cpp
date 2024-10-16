@@ -15,11 +15,11 @@ AudioSource::AudioSource(IXAudio2* xaudio, std::shared_ptr<AudioResource>& resou
 // デストラクタ
 AudioSource::~AudioSource()
 {
-	if (sourceVoice != nullptr)
+	/*if (sourceVoice != nullptr)
 	{
 		sourceVoice->DestroyVoice();
 		sourceVoice = nullptr;
-	}
+	}*/
 }
 
 // 再生

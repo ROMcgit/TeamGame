@@ -8,12 +8,16 @@
 #include "SceneLoading.h"
 #include "SceneOpning.h"
 #include "SceneManager.h"
+#include "Audio/BgmManager.h"
 
 // 初期化
 void SceneTitle::Initialize()
 {
 	SceneTitle& scene = SceneTitle::Instance();
 	scene.gameClear = false;
+
+	BgmManager::Instance().LoadBgm("タイトル", "Data/Audio/bgm/famipop3.wav");
+	BgmManager::Instance().PlayBgm("タイトル", 0.5f);
 
 	title = std::make_unique<Sprite>("Data/Sprite/サル系MonTuber.png");
 	button = std::make_unique<Sprite>("Data/Sprite/サル系MonTuber(ボタン).png");
@@ -71,6 +75,8 @@ void SceneTitle::Update(float elapsedTime)
 
 		if (setFade && !fade->GetFade())
 		{
+			BgmManager::Instance().UnloadBgm("タイトル");
+
 			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneTutorialSelect>());
 
 			// シーンマネージャーにローディングシーンへの切り替えを指示

@@ -30,6 +30,8 @@ private:
 private:
 	std::unique_ptr<Sprite> banana;
 	DirectX::XMFLOAT2 bananaPos = { 1350, 250 };
+	float moveSpeed = 400;
+	float rotationSpeed = 360;
 	float angle = 0.0f;
 
 	std::unique_ptr<Sprite> loading[4];

@@ -34,14 +34,23 @@ void SceneLoading::Finalize()
 void SceneLoading::Update(float elapsedTime)
 {
 	//! バナナ回転速度
-	constexpr float speed = 360;
-	angle -= speed * elapsedTime;
+	angle -= rotationSpeed * elapsedTime;
 
 	//! バナナの位置
-	bananaPos.x -= 400 * elapsedTime;
+	bananaPos.x -= moveSpeed * elapsedTime;
 
 	if (bananaPos.x < -250)
+	{
+		rotationSpeed += 300;
+		moveSpeed += 300;
 		bananaPos.x = 1350;
+	}
+	
+	if (rotationSpeed > 6000)
+		rotationSpeed = 6000;
+
+	if (moveSpeed > 6000)
+		moveSpeed = 6000;
 
 //--------------------------------------------------------------------------------------------//
 

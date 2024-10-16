@@ -44,7 +44,9 @@ private:
 	}messageScene = MessageScene::Message1;
 
 private:
-	std::unique_ptr<Text> text[5];
+	std::unique_ptr<Text> text;
+	DirectX::XMFLOAT2 textPos = { 0, 0 };
+	DirectX::XMFLOAT2 textScale = { 13.5f, 13.5f };
 	std::unique_ptr<Sprite> message[6];
 	int messageNum = 0;
 	float messageOpacityWaitTime = 0.0f;
@@ -52,8 +54,7 @@ private:
 	int inputCount = false;
 	float inputTimer = 0.0f;
 	float answerTimer = 0.0f;
-	bool messageFinish[6];
-	bool finishMessage[6];
+	bool messageFinish[5];
 
 	std::unique_ptr<Player> player;
 	std::unique_ptr<CameraController> cameraController;

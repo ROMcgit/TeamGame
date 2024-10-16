@@ -280,11 +280,6 @@ void Player::Update(float elapsedTime)
 	}
 
 	viewMoveSpeedPlusTimer += elapsedTime;
-
-	if (bananaNum >= 6 && moveSpeed > 20.0f)
-	{
-		moveSpeed = 20.0f;
-	}
 }
 
 // 描画処理
@@ -918,6 +913,9 @@ void Player::UpdateMoveState(float elapsedTime)
 		}
 	}
 
+	if (bananaNum >= 6 && moveSpeed > 20.0f)
+		moveSpeed = 20.0f;
+
 	Move(dir.x, dir.z, moveSpeed);
 
 	GamePad& gamePad = Input::Instance().GetGamePad();
@@ -957,6 +955,8 @@ void Player::UpdateMoveState(float elapsedTime)
 		// 突進ステートへ遷移
 		TransitionLungesState();
 	}
+	else if (lungesChargeTimer > 0.0f && !lunges)
+		lungesChargeTimer -= elapsedTime;
 
 	// 弾丸入力処理
 	InputProjectile();
@@ -970,8 +970,6 @@ void Player::TransitionLungesState()
 	lunges = false;            // 突進する
 
 	lungesChargeTimer = 0.0f; // 突進チャージ時間
-
-	lungesTimer = 0.0f;       // 突進時間
 
 	for (int i = 0; i < 3; i++)
 	model[i]->PlayAnimation(Anim_Stop, true);

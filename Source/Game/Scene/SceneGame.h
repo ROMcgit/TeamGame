@@ -57,7 +57,6 @@ private:
 	float newInstallationTimer    = 0.0f;
 	float newInstallationMaxTimer = 1.0f;
 
-
 	bool setFade = false;
 
 	bool newBanana[6]; // バナナを生成したか
@@ -65,8 +64,11 @@ private:
 
 	bool enemyStop     = false;
 	bool enemyDelete   = false;
+
 	bool setMovie      = false;
 	bool setMovieFade  = false;
+	bool bgmPlay       = false;
+
 	bool newSikaTentyo = false;
 
 	DirectX::XMFLOAT3 cameraTarget = { 0, 0, 0 }; // カメラのターゲット

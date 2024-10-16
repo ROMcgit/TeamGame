@@ -100,12 +100,6 @@ void SceneLoading::Render()
 			0,
 			1, 1, 1, 1);
 	}
-
-	if ((ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None)))
-	{
-		ImGui::DragFloat2("BananaPos", &bananaPos.x);
-	}
-	ImGui::End();
 }
 
 //ローディングスレッド

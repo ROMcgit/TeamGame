@@ -91,6 +91,12 @@
     <Filter Include="Source\Character\Item\Important">
       <UniqueIdentifier>{e56239fa-dbb4-492e-bb09-0974d7d57ac6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Scene\GameScene\GameEnd">
+      <UniqueIdentifier>{ffcd9f3e-a560-4705-8ff6-5127cc635220}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\GameScene\GameEvent">
+      <UniqueIdentifier>{23d4bac6-ce9d-4f87-a700-c177abaf034a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -252,18 +258,6 @@
     <ClInclude Include="Source\Game\Scene\SceneGame.h">
       <Filter>Source\Scene\GameScene</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Scene\SceneTitle.h">
-      <Filter>Source\Scene\GameScene</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Scene\SceneGameOver.h">
-      <Filter>Source\Scene\GameScene</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Scene\SceneGameClear.h">
-      <Filter>Source\Scene\GameScene</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Scene\SceneOpning.h">
-      <Filter>Source\Scene\GameScene</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Game\Character\Character.h">
       <Filter>Source\Character</Filter>
     </ClInclude>
@@ -296,6 +290,24 @@
     </ClInclude>
     <ClInclude Include="Source\Game\Character\Enemy\SikaTentyo.h">
       <Filter>Source\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\SceneGameClear.h">
+      <Filter>Source\Scene\GameScene\GameEnd</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\SceneGameOver.h">
+      <Filter>Source\Scene\GameScene\GameEnd</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\SceneOpning.h">
+      <Filter>Source\Scene\GameScene\GameEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\SceneTitle.h">
+      <Filter>Source\Scene\GameScene\GameEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\SceneTutorial.h">
+      <Filter>Source\Scene\GameScene\GameEvent</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\SceneTutorialAction.h">
+      <Filter>Source\Scene\GameScene\GameEvent</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -437,18 +449,6 @@
     <ClCompile Include="Source\Game\Scene\SceneGame.cpp">
       <Filter>Source\Scene\GameScene</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Scene\SceneTitle.cpp">
-      <Filter>Source\Scene\GameScene</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Scene\SceneGameOver.cpp">
-      <Filter>Source\Scene\GameScene</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Scene\SceneGameClear.cpp">
-      <Filter>Source\Scene\GameScene</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Scene\SceneOpning.cpp">
-      <Filter>Source\Scene\GameScene</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Game\Character\Character.cpp">
       <Filter>Source\Character</Filter>
     </ClCompile>
@@ -481,6 +481,24 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Enemy\SikaTentyo.cpp">
       <Filter>Source\Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\SceneGameClear.cpp">
+      <Filter>Source\Scene\GameScene\GameEnd</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\SceneGameOver.cpp">
+      <Filter>Source\Scene\GameScene\GameEnd</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\SceneOpning.cpp">
+      <Filter>Source\Scene\GameScene\GameEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\SceneTitle.cpp">
+      <Filter>Source\Scene\GameScene\GameEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\SceneTutorial.cpp">
+      <Filter>Source\Scene\GameScene\GameEvent</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\SceneTutorialAction.cpp">
+      <Filter>Source\Scene\GameScene\GameEvent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

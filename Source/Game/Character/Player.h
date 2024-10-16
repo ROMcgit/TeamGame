@@ -209,5 +209,5 @@ private:
 
 	float moveSpeed = 15.0f;
 
-	int bananaNum = 5;
+	int bananaNum = 0;
 };

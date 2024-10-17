@@ -117,9 +117,6 @@ void Player::Update(float elapsedTime)
 
 	if (position.y < 1.3f)
 	{
-		SoundEffectManager& sound = SoundEffectManager::Instance();
-		sound.StopSoundEffect("叫び");
-
 		isGround   = true;
 		gravity    = 0.0f;
 		position.y = 1.3f;
@@ -1065,6 +1062,7 @@ void Player::UpdateLungesState(float elapsedTime)
 		lungesCount++;
 
 		lungesSound = false;
+		SoundEffectManager::Instance().StopSoundEffect("突進");
 		SoundEffectManager::Instance().PlaySoundEffect("突進");
 
 		// 移動ステートへ遷移
@@ -1236,7 +1234,7 @@ void Player::OnDamaged()
 
 	SoundEffectManager& sound = SoundEffectManager::Instance();
 	sound.StopSoundEffect("叫び");
-	sound.PlaySoundEffect("叫び");
+	sound.PlaySoundEffect("叫び", 1.2f);
 
 	// ダメージステートへ遷移
 	TransitionDamageState();

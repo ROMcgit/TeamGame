@@ -29,6 +29,7 @@ private:
 
 private:
 	std::unique_ptr<Sprite> tips;
+	float tipsOpacity = 0.0f;
 	std::unique_ptr<Sprite> banana;
 	DirectX::XMFLOAT2 bananaPos = { 1350, 250 };
 	float moveSpeed = 400;

@@ -36,6 +36,9 @@ void SceneLoading::Finalize()
 // 更新処理
 void SceneLoading::Update(float elapsedTime)
 {
+	if(tipsOpacity < 1.0f)
+		tipsOpacity += 0.5f * elapsedTime;
+
 	//! バナナ回転速度
 	angle -= rotationSpeed * elapsedTime;
 
@@ -121,7 +124,7 @@ void SceneLoading::Render()
 			0, 0,
 			textureWidth, textureHeight,
 			0,
-			1, 1, 1, 1);
+			1, 1, 1, tipsOpacity);
 	}
 }
 

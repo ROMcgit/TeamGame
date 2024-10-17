@@ -572,7 +572,7 @@ void SceneGame::UpdateMovie(float elapsedTime)
 	}
 	else if (!setMovie && player->GetBananaNum() >= 6)
 	{
-		BgmManager::Instance().UnloadBgm("オープニング");
+		BgmManager::Instance().UnloadBgm("バトル");
 
 		player->SetMovieTime(12.5f);
 		cameraController->SetCameraMovieTime(12.5f);

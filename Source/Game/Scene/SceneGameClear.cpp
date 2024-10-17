@@ -4,6 +4,7 @@
 #include "Game/Scene/SceneLoading.h"
 #include "Game/Scene/SceneTitle.h"
 #include "Input/Input.h"
+#include "Audio/SoundEffectManager.h"
 
 // 初期化
 void SceneGameClear::Initialize()
@@ -43,6 +44,11 @@ void SceneGameClear::Initialize()
 
 	//! フェード
 	fade = std::make_unique<Fade>();
+
+	SoundEffectManager& sound = SoundEffectManager::Instance();
+	sound.LoadSoundEffect("爆発", "Data/Audio/爆発.wav");
+	sound.LoadSoundEffect("警察に連絡させてもらうね", "Data/Audio/voice/警察に連絡させてもらうね.wav");
+	sound.LoadSoundEffect("大都会の道路", "Data/Audio/大都会の道路.wav");
 }
 
 // 終了化
@@ -58,13 +64,18 @@ void SceneGameClear::Update(float elapsedTime)
 
 	fade->Update(elapsedTime);
 
+	SoundEffectManager& sound = SoundEffectManager::Instance();
+
 	if (sceneChange)
 	{
+		sound.UnloadSoundEffect("大都会の道路");
+
 		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneTitle>());
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示
 		SceneManager::Instance().ChangeScene(std::move(loadingScene));
 	}
+	
 	
 
 	switch (spriteScene)
@@ -76,6 +87,8 @@ void SceneGameClear::Update(float elapsedTime)
 		if (sceneChangeTimer > 2.0f)
 		{
 			sceneChangeTimer = 0.0f;
+
+			sound.PlaySoundEffect("爆発");
 
 			//! フェードをセット
 			fade->SetFade(DirectX::XMFLOAT3(1, 1, 1),
@@ -106,6 +119,8 @@ void SceneGameClear::Update(float elapsedTime)
 		{
 			sceneChangeTimer = 0.0f;
 
+			sound.PlaySoundEffect("警察に連絡させてもらうね", 2.0f);
+
 			spriteScene = SpriteScene::MonTube2;
 		}
 	}
@@ -135,6 +150,8 @@ void SceneGameClear::Update(float elapsedTime)
 				fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 					1.0f, 0.0f,
 					2.0f, 0.0f);
+
+				sound.PlaySoundEffect("大都会の道路");
 
 				spriteScene = SpriteScene::House;
 			}

@@ -944,8 +944,8 @@ void Player::UpdateMoveState(float elapsedTime)
 		}
 	}
 
-	if (bananaNum >= 6 && moveSpeed > 25.0f && !lunges)
-		moveSpeed = 25.0f;
+	if (bananaNum >= 6 && moveSpeed > 15.0f && !lunges)
+		moveSpeed = 15.0f;
 
 	Move(dir.x, dir.z, moveSpeed);
 
@@ -1062,8 +1062,14 @@ void Player::UpdateLungesState(float elapsedTime)
 		lungesCount++;
 
 		lungesSound = false;
-		SoundEffectManager::Instance().StopSoundEffect("突進");
-		SoundEffectManager::Instance().PlaySoundEffect("突進");
+
+		SoundEffectManager::Instance().StopSoundEffect("突進チャージ");
+
+		if (lunges)
+		{
+			SoundEffectManager::Instance().StopSoundEffect("突進");
+			SoundEffectManager::Instance().PlaySoundEffect("突進");
+		}
 
 		// 移動ステートへ遷移
 		TransitionMoveState();
@@ -1134,6 +1140,10 @@ void Player::TransitionDamageState()
 {
 	state = State::Damage;
 
+	SoundEffectManager& sound = SoundEffectManager::Instance();
+	sound.StopSoundEffect("叫び");
+	sound.PlaySoundEffect("叫び", 1.2f);
+
 	// ダメージアニメーション再生
 	for(int i = 0; i < 3; i++)
 	model[i]->PlayAnimation(Anim_Damage, false);
@@ -1180,6 +1190,8 @@ void Player::UpdateDeathState(float elapsedTime)
 {
 	angle.x += DirectX::XMConvertToRadians(180) * elapsedTime;
 	angle.z += DirectX::XMConvertToRadians(200) * elapsedTime;
+
+	velocity.y = 120.0f;
 }
 
 // プレイヤーとエネミーとの衝突処理
@@ -1231,10 +1243,6 @@ void Player::OnLanding()
 void Player::OnDamaged()
 {
 	hpShake = true;
-
-	SoundEffectManager& sound = SoundEffectManager::Instance();
-	sound.StopSoundEffect("叫び");
-	sound.PlaySoundEffect("叫び", 1.2f);
 
 	// ダメージステートへ遷移
 	TransitionDamageState();

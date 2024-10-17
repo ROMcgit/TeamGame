@@ -273,6 +273,8 @@ void SikaTentyo::DrawDebugGUI()
 {
 	if (ImGui::TreeNode("SikaTentyo"))
 	{
+		ImGui::InputFloat("Dist", &dist);
+
 		if (ImGui::CollapsingHeader("Hp", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			ImGui::InputInt("HP", &hp);
@@ -323,7 +325,7 @@ void SikaTentyo::CollisionEnemyVsPlayer()
 		outPosition
 	))
 	{
-		if (player.ApplyDamage(player.GetViewMoveSpeed() + 5, 1.0f))
+		if (player.ApplyDamage(player.GetViewMoveSpeed() + 15, 1.0f))
 		{
 			// ‘O•ûŒü
 			DirectX::XMFLOAT3 velocity;
@@ -472,15 +474,21 @@ void SikaTentyo::UpdateMoveState(float elapsedTime)
 		velocity.y = -3;
 
 		// ˆÚ“®ˆ—
-		Move(vx, vz, 20.0f);
+		Move(vx, vz, 15.0f);
 	}
 	else if (position.y <= 1.3f)
 	{
 		velocity.y = 0;
 		position.y = 1.3f;
 
-		// ˆÚ“®ˆ—
-		Move(vx, vz, 1.0f);
+		dist = vx * vx + vz * vz;
+		if(dist > 1000)
+			Move(vx, vz, 40.0f);
+		else
+			// ˆÚ“®ˆ—
+			Move(vx, vz, 3.0f);
+
+		Turn(elapsedTime, vx, vz, 50.0f);
 	}
 	
 	Turn(elapsedTime, vx, vz, 50.0f);

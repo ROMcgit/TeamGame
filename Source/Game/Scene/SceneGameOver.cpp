@@ -1,9 +1,11 @@
 #include "SceneGameOver.h"
+#include "SceneGame.h"
 #include "Graphics/Graphics.h"
 #include "SceneManager.h"
 #include "Game/Scene/SceneLoading.h"
 #include "Game/Scene/SceneTitle.h"
 #include "Input/Input.h"
+#include "Audio/SoundEffectManager.h"
 
 // 初期化
 void SceneGameOver::Initialize()
@@ -12,9 +14,16 @@ void SceneGameOver::Initialize()
 	ganban       = std::make_unique<Sprite>("Data/Sprite/背景/岩盤.png");
 	ganbanHekomi = std::make_unique<Sprite>("Data/Sprite/背景/岩盤凹み.png");
 	gameOver     = std::make_unique<Sprite>("Data/Sprite/背景/ゲームオーバー.png");
+	button       = std::make_unique<Sprite>("Data/Sprite/コンティニューするか.png");
 
 	//! フェード
 	fade = std::make_unique<Fade>();
+
+	SoundEffectManager& sound = SoundEffectManager::Instance();
+	sound.LoadSoundEffect("飛行機", "Data/Audio/飛行機.wav");
+	sound.PlaySoundEffect("飛行機");
+	sound.LoadSoundEffect("岩盤", "Data/Audio/岩盤.wav");
+	sound.LoadSoundEffect("決定", "Data/Audio/決定ボタン.wav");
 }
 
 // 終了化
@@ -25,7 +34,6 @@ void SceneGameOver::Finalize()
 // 更新処理
 void SceneGameOver::Update(float elapsedTime)
 {
-	
 	if (saruAngle < DirectX::XMConvertToRadians(180))
 		saruAngle -= DirectX::XMConvertToRadians(10000) * elapsedTime;
 
@@ -53,6 +61,12 @@ void SceneGameOver::Update(float elapsedTime)
 
 	if(hekomiTimer > 1.05f)
 	{
+		if (!soundPlay)
+		{
+			SoundEffectManager::Instance().PlaySoundEffect("岩盤");
+			soundPlay = true;
+		}
+
 		if (hekomiScale.x < 1280.0f)
 			hekomiScale.x += 1600 * elapsedTime;
 		else if(viewGameOverWaitTime < 0.5f)
@@ -77,24 +91,81 @@ void SceneGameOver::Update(float elapsedTime)
 	else if (viewGameOverWaitTime >= 1.0f)
 		operationAccept = true;
 
+	if (gameOverOpacity >= 1.0f)
+	{
+		if (!buttonOpacityDown)
+		{
+			buttonOpacity += buttonOpacitySpeed * elapsedTime;
+			if (buttonOpacity >= 1.0f)
+			{
+				buttonOpacity = 1.0f;
+				buttonOpacityDown = true;
+			}
+		}
+		else
+		{
+			buttonOpacity -= buttonOpacitySpeed * elapsedTime;
+			if (buttonOpacity <= 0.0f)
+			{
+				buttonOpacity = 0.0f;
+				buttonOpacityDown = false;
+			}
+		}
+	}
+
 	//! 操作を受け付けているなら
 	if (operationAccept)
 	{
 		GamePad& gamePad = Input::Instance().GetGamePad();
 
-		if (gamePad.GetButtonDown() & GamePad::BTN_A && !setFade)
+		if (!setFade)
 		{
-			setFade = true;
+			if (gamePad.GetButtonDown() & GamePad::BTN_A)
+			{
+				selectScene = SelectScene::Continue;
 
-			fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
-				0.0f, 1.0f,
-				3.0f);
+				fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+					0.0f, 1.0f,
+					3.0f);
+
+				SoundEffectManager::Instance().PlaySoundEffect("決定", 0.7f);
+
+				setFade = true;
+			}
+			else if (gamePad.GetButtonDown() & GamePad::BTN_B)
+			{
+				selectScene = SelectScene::Title;
+
+				fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+					0.0f, 1.0f,
+					3.0f);
+
+				SoundEffectManager::Instance().PlaySoundEffect("決定", 0.7f);
+
+				setFade = true;
+			}
 		}
 
 		if (setFade && !fade->Update(elapsedTime))
 		{
-			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneTitle>());
+			std::unique_ptr<SceneLoading> loadingScene;
 
+			switch (selectScene)
+			{
+			case SelectScene::Continue:
+			{
+				loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGame>());
+			}
+				break;
+			case SelectScene::Title:
+			{
+				loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneTitle>());
+			}
+				break;
+			default:
+				break;
+			}
+			
 			// シーンマネージャーにローディングシーンへの切り替えを指示
 			SceneManager::Instance().ChangeScene(std::move(loadingScene));
 		}
@@ -158,6 +229,17 @@ void SceneGameOver::Render()
 		textureWidth, textureHeight,
 		0,
 		1, 1, 1, gameOverOpacity);
+
+	textureWidth = static_cast<float>(button->GetTextureWidth());
+	textureHeight = static_cast<float>(button->GetTextureHeight());
+
+	button->Render(dc,
+		0, 0,
+		screenWidth, screenHeight,
+		0, 0,
+		textureWidth, textureHeight,
+		0,
+		1, 1, 1, buttonOpacity);
 
 	fade->Render(dc);
 }

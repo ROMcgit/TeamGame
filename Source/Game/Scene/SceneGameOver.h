@@ -42,4 +42,17 @@ private:
 	float gameOverOpacity = 0.0f;
 
 	bool operationAccept = false;
+
+	bool soundPlay = false;
+
+	std::unique_ptr<Sprite> button;
+	float buttonOpacity = 0.0f;
+	float buttonOpacitySpeed = 0.5f;
+	bool buttonOpacityDown = false;
+
+	enum class SelectScene
+	{
+		Continue,
+		Title,
+	}selectScene = SelectScene::Continue;
 };

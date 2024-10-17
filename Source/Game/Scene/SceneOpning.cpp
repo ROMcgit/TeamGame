@@ -234,7 +234,7 @@ void SceneOpning::Update(float elapsedTime)
 		{
 			if (!soundPlay[2])
 			{
-				sound.PlaySoundEffect("マジカルバナナ", 2.0f);
+				sound.PlaySoundEffect("マジカルバナナ", 1.6f);
 				soundPlay[2] = true;
 			}
 
@@ -261,7 +261,7 @@ void SceneOpning::Update(float elapsedTime)
 	{
 		if (!soundPlay[3])
 		{
-			sound.PlaySoundEffect("興奮");
+			sound.PlaySoundEffect("興奮", 1.3f);
 			soundPlay[3] = true;
 		}
 
@@ -352,7 +352,7 @@ void SceneOpning::Update(float elapsedTime)
 	{
 		if (!soundPlay[5])
 		{
-			sound.PlaySoundEffect("ぶっ殺してやる");
+			sound.PlaySoundEffect("ぶっ殺してやる", 0.9f);
 			soundPlay[5] = true;
 		}
 
@@ -370,7 +370,7 @@ void SceneOpning::Update(float elapsedTime)
 		{
 			if (!soundPlay[6])
 			{
-				sound.PlaySoundEffect("気弾");
+				sound.PlaySoundEffect("気弾", 0.6f);
 				soundPlay[6] = true;
 			}
 

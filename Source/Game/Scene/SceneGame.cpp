@@ -29,7 +29,7 @@ void SceneGame::Initialize()
 {
 	BgmManager& bgm = BgmManager::Instance();
 	bgm.LoadBgm("バトル", "Data/Audio/bgm/battle.wav");
-	bgm.PlayBgm("バトル", 0.75f);
+	bgm.PlayBgm("バトル", 0.55f);
 	bgm.LoadBgm("ボス", "Data/Audio/bgm/boss.wav");
 
 	SoundEffectManager::Instance().LoadSoundEffect("警告音", "Data/Audio/警告音.wav");
@@ -190,6 +190,9 @@ void SceneGame::Update(float elapsedTime)
 
 		if (!fade->GetFade())
 		{
+			BgmManager::Instance().UnloadBgm("バトル");
+			BgmManager::Instance().UnloadBgm("ボス");
+
 			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGameOver>());
 
 			// シーンマネージャーにローディングシーンへの切り替えを指示
@@ -545,7 +548,7 @@ void SceneGame::UpdateMovie(float elapsedTime)
 			std::unique_ptr<Enemy>& sikaTentyo = enemyManager.GetEnemy(0);
 
 			DirectX::XMFLOAT3 pos = sikaTentyo->GetPosition();
-			pos.y += 2;
+			pos.y += 5;
 
 			cameraTarget = { pos };
 

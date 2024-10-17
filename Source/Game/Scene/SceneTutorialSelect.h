@@ -32,6 +32,7 @@ private:
 	float viewSelectTimer = 0.0f;
 	bool viewSelect = false;
 	std::unique_ptr<Sprite> banana;
+	std::unique_ptr<Sprite> decide;
 
 	std::unique_ptr<Fade> fade;
 

@@ -22,11 +22,19 @@
 #include "SceneTitle.h"
 
 #include "Audio/BgmManager.h"
+#include "Audio/SoundEffectManager.h"
 
 // 初期化
 void SceneGame::Initialize()
 {
-	BgmManager::Instance().LoadBgm("ボス", "Data/Audio/bgm/boss.wav");
+	BgmManager& bgm = BgmManager::Instance();
+	bgm.LoadBgm("バトル", "Data/Audio/bgm/battle.wav");
+	bgm.PlayBgm("バトル", 0.75f);
+	bgm.LoadBgm("ボス", "Data/Audio/bgm/boss.wav");
+
+	SoundEffectManager::Instance().LoadSoundEffect("警告音", "Data/Audio/警告音.wav");
+	SoundEffectManager::Instance().LoadSoundEffect("着地", "Data/Audio/着地.wav");
+	SoundEffectManager::Instance().LoadSoundEffect("鳴き声", "Data/Audio/鳴き声.wav");
 
 	// ステージ初期化
 	StageManager& stageManager = StageManager::Instance();
@@ -199,7 +207,7 @@ void SceneGame::Render()
 	ID3D11DepthStencilView* dsv = graphics.GetDepthStencilView();
 
 	// 画面クリア＆レンダーターゲット設定
-	FLOAT color[] = { 0.0f, 0.0f, 0.5f, 1.0f };	// RGBA(0.0～1.0)
+	FLOAT color[] = { 1.0f, 0.0f, 0.0f, 1.0f };	// RGBA(0.0～1.0)
 	dc->ClearRenderTargetView(rtv, color);
 	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	dc->OMSetRenderTargets(1, &rtv, dsv);
@@ -226,7 +234,7 @@ void SceneGame::Render()
 		0, 0,
 		textureWidth, textureHeight,
 		0,
-		1, 1, 1, 1);
+		1, 1, 1, backGroundOpacity);
 
 	// 3Dモデル描画
 	{
@@ -547,7 +555,7 @@ void SceneGame::UpdateMovie(float elapsedTime)
 				DirectX::XMConvertToRadians(0),
 				DirectX::XMConvertToRadians(0)) };
 
-			cameraRange = 10.0f;
+			cameraRange = 20.0f;
 
 			player->SetMovieTime(20.0f);
 			cameraController->SetCameraMovieTime(20.0f);
@@ -586,8 +594,13 @@ void SceneGame::UpdateMovie(float elapsedTime)
 		}
 		else
 		{
+			if(backGroundOpacity > 0.4f)
+			backGroundOpacity -= 0.13f * elapsedTime;
+
 			if (!setMovieFade)
 			{
+				SoundEffectManager::Instance().PlaySoundEffect("警告音");
+
 				player->SetPosition(DirectX::XMFLOAT3(0, 1.3f, -100));
 
 				//! カメラのターゲット
@@ -632,10 +645,11 @@ void SceneGame::UpdateMovie(float elapsedTime)
 
 			if (doCameraMovieTimer > 6.5f && !setCameraShake[0])
 			{
+				SoundEffectManager::Instance().PlaySoundEffect("着地");
+
 				cameraController->SetCameraShake(0.4f, DirectX::XMINT3(0, 30, 0));
 				setCameraShake[0] = true;
 			}
-
 
 			if (doCameraMovieTimer > 9.0f && doCameraMovieTimer < 9.8f && cameraRange > 5.0f)
 				cameraRange -= 20 * elapsedTime;
@@ -645,6 +659,7 @@ void SceneGame::UpdateMovie(float elapsedTime)
 
 				if (!setCameraShake[1])
 				{
+					SoundEffectManager::Instance().PlaySoundEffect("鳴き声");
 					cameraController->SetCameraShake(2.0f, DirectX::XMINT3(0, 30, 0));
 					setCameraShake[1] = true;
 				}

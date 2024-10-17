@@ -4,6 +4,7 @@
 #include "Other/Mathf.h"
 #include "Game/Character/Player.h"
 #include "Other/Collision.h"
+#include "Audio/SoundEffectManager.h"
 
 // コンストラクタ
 Apple::Apple()
@@ -24,6 +25,8 @@ Apple::Apple()
 	// 幅、高さ設定
 	radius = 0.8f;
 	height = 1.5f;
+
+	SoundEffectManager::Instance().LoadSoundEffect("食べる", "Data/Audio/食べる.wav");
 
 	// 待機ステートへ遷移
 	TransitionInitState();
@@ -163,6 +166,10 @@ void Apple::CollisionItemVsPlayer()
 		DirectX::XMFLOAT3 e = player.GetPosition();
 		e.y += player.GetHeight() * 0.5f;
 		getEffect->Play(e, 0.6f);
+
+		SoundEffectManager& sound = SoundEffectManager::Instance();
+		sound.StopSoundEffect("食べる");
+		sound.PlaySoundEffect("食べる");
 
 		// 破棄する
 		Destroy();

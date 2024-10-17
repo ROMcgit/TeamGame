@@ -8,6 +8,7 @@
 #include "SceneLoading.h"
 #include "SceneOpning.h"
 #include "SceneManager.h"
+#include "Audio/SoundEffectManager.h"
 
 // 初期化
 void SceneTutorialSelect::Initialize()
@@ -16,6 +17,9 @@ void SceneTutorialSelect::Initialize()
 	yes = std::make_unique<Sprite>("Data/Sprite/チュートリアル/はい.png");
 	no = std::make_unique<Sprite>("Data/Sprite/チュートリアル/いいえ.png");
 	banana = std::make_unique<Sprite>("Data/Sprite/UI/バナナ.png");
+	decide = std::make_unique<Sprite>("Data/Sprite/背景/決定.png");
+
+	SoundEffectManager::Instance().LoadSoundEffect("決定", "Data/Audio/決定ボタン.wav");
 }
 
 // 終了化
@@ -53,6 +57,8 @@ void SceneTutorialSelect::Update(float elapsedTime)
 
 		if (gamePad.GetButtonDown() & GamePad::BTN_A)
 		{
+			SoundEffectManager::Instance().PlaySoundEffect("決定");
+
 			std::unique_ptr<SceneLoading> loadingScene;
 
 			switch (select)
@@ -120,8 +126,21 @@ void SceneTutorialSelect::Render()
 
 			// いいえ
 			no->Render(dc,
-				550, 500, 200, 80,
+				550, 480, 200, 80,
 				0, 0, textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+
+
+			textureWidth = static_cast<float>(decide->GetTextureWidth());
+			textureHeight = static_cast<float>(decide->GetTextureHeight());
+
+			// 決定
+			decide->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
 				0,
 				1, 1, 1, 1);
 
@@ -141,7 +160,7 @@ void SceneTutorialSelect::Render()
 				break;
 			case 2:
 				banana->Render(dc,
-					480, 520,
+					480, 500,
 					60, 48,
 					0, 0,
 					textureWidth, textureHeight,

@@ -391,7 +391,7 @@ void SceneOpning::Update(float elapsedTime)
 		{
 			if (!soundPlay[7])
 			{
-				sound.PlaySoundEffect("”š”­");
+				sound.PlaySoundEffect("”š”­", 2.0f);
 				soundPlay[7] = true;
 			}
 
@@ -419,7 +419,7 @@ void SceneOpning::Update(float elapsedTime)
 		break;
 	case SpriteScene::UnkoHit:
 	{
-		if (!soundPlay[8])
+		if (!soundPlay[8] && sceneChangeTimer > 0.5f)
 		{
 			sound.PlaySoundEffect("ƒfƒrƒ‹");
 			soundPlay[8] = true;

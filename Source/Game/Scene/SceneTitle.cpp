@@ -9,6 +9,7 @@
 #include "SceneOpning.h"
 #include "SceneManager.h"
 #include "Audio/BgmManager.h"
+#include "Audio/SoundEffectManager.h"
 
 // 初期化
 void SceneTitle::Initialize()
@@ -18,6 +19,8 @@ void SceneTitle::Initialize()
 
 	BgmManager::Instance().LoadBgm("タイトル", "Data/Audio/bgm/famipop3.wav");
 	BgmManager::Instance().PlayBgm("タイトル", 0.5f);
+
+	SoundEffectManager::Instance().LoadSoundEffect("決定", "Data/Audio/決定ボタン.wav");
 
 	title = std::make_unique<Sprite>("Data/Sprite/サル系MonTuber.png");
 	button = std::make_unique<Sprite>("Data/Sprite/サル系MonTuber(ボタン).png");
@@ -59,13 +62,11 @@ void SceneTitle::Update(float elapsedTime)
 	if (!fade->GetFade())
 	{
 		GamePad& gamePad = Input::Instance().GetGamePad();
-
-		// なにかボタンを押したらローディングシーンを挟んでゲームシーンへ切り替え
-		const GamePadButton anyButton =
-			GamePad::BTN_A |
-			GamePad::BTN_B;
-		if (gamePad.GetButtonDown() & anyButton)
+			
+		if (gamePad.GetButtonDown() & GamePad::BTN_A && !setFade)
 		{
+			SoundEffectManager::Instance().PlaySoundEffect("決定", 0.7f);
+
 			fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 				0.0f, 1.0f,
 				3.0f);

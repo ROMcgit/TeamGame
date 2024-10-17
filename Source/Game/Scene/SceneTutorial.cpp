@@ -8,6 +8,7 @@
 #include "SceneLoading.h"
 #include "SceneOpning.h"
 #include "SceneManager.h"
+#include "Audio/SoundEffectManager.h"
 
 // 初期化
 void SceneTutorial::Initialize()
@@ -17,6 +18,8 @@ void SceneTutorial::Initialize()
 		std::string filePath = "Data/Sprite/チュートリアル/チュートリアル" + std::to_string(i + 1) + ".png";
 		image[i] = std::make_unique<Sprite>(filePath.c_str());
 	}
+
+	SoundEffectManager::Instance().LoadSoundEffect("切り替え", "Data/Audio/チュートリアル切り替え.wav");
 }
 
 // 終了化
@@ -30,9 +33,18 @@ void SceneTutorial::Update(float elapsedTime)
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
 	if (gamePad.GetButtonDown() & GamePad::BTN_A && imageNum < 11)
+	{
+		SoundEffectManager::Instance().StopSoundEffect("切り替え");
+		SoundEffectManager::Instance().PlaySoundEffect("切り替え");
 		imageNum++;
+	}
+		
 	if(gamePad.GetButtonDown() & GamePad::BTN_B && imageNum > 1)
+	{
+		SoundEffectManager::Instance().StopSoundEffect("切り替え");
+		SoundEffectManager::Instance().PlaySoundEffect("切り替え");
 		imageNum--;
+	}
 
 	if (imageNum < 11)
 		sceneChangeTime = 0.1f;

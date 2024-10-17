@@ -8,7 +8,7 @@
 class SoundEffectManager
 {
 public:
-    static const int MAX_CACHE_SIZE = 20; // キャッシュする効果音の最大数
+    static const int MAX_CACHE_SIZE = 25; // キャッシュする効果音の最大数
 
     // シングルトンインスタンス取得
     static SoundEffectManager& Instance()

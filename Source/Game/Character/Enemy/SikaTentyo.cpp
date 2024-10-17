@@ -323,7 +323,7 @@ void SikaTentyo::CollisionEnemyVsPlayer()
 		outPosition
 	))
 	{
-		if (player.ApplyDamage(player.GetViewMoveSpeed(), 1.0f))
+		if (player.ApplyDamage(player.GetViewMoveSpeed() + 5, 1.0f))
 		{
 			// ‘O•ûŒü
 			DirectX::XMFLOAT3 velocity;
@@ -469,10 +469,10 @@ void SikaTentyo::UpdateMoveState(float elapsedTime)
 
 	if (position.y > 1.3f)
 	{
-		velocity.y = -5;
+		velocity.y = -3;
 
 		// ˆÚ“®ˆ—
-		Move(vx, vz, 10.0f);
+		Move(vx, vz, 20.0f);
 	}
 	else if (position.y <= 1.3f)
 	{
@@ -480,7 +480,7 @@ void SikaTentyo::UpdateMoveState(float elapsedTime)
 		position.y = 1.3f;
 
 		// ˆÚ“®ˆ—
-		Move(vx, vz, 3.0f);
+		Move(vx, vz, 1.0f);
 	}
 	
 	Turn(elapsedTime, vx, vz, 50.0f);

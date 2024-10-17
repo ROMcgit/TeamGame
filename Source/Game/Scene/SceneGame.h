@@ -45,6 +45,7 @@ private:
 	float doCameraMovieTimer = 0.0f;
 
 	std::unique_ptr<Sprite> backGround;
+	float backGroundOpacity = 1.0f;
 	std::unique_ptr<Fade> fade;
 	
 	int enemyMaxCount      = 0;

@@ -161,7 +161,7 @@ private:
 
 private:
 	std::unique_ptr<Model>  model[3];
-	std::unique_ptr<Sprite> ui[5];
+	std::unique_ptr<Sprite> ui[6];
 	std::unique_ptr<Sprite> hpSprite[4];
 	std::unique_ptr<Text>   text[4];
 	std::unique_ptr<Sprite> runAttack[3];
@@ -190,7 +190,7 @@ private:
 
 	bool  lunges            = false; // 突進するか
 	float lungesChargeTimer = 0.0f;  // 突進チャージ時間
-	float lungesTimer       = 0.0f;  // 突進時間
+	bool lungesSound = false;
 
 	float jumpSpeed = 13.0f;
 

@@ -33,6 +33,7 @@
 #include "Game/Stage/StageManager.h"
 
 #include "Audio/BgmManager.h"
+#include "Audio/SoundEffectManager.h"
 
 // 初期化
 void SceneTutorialAction::Initialize()
@@ -83,7 +84,9 @@ void SceneTutorialAction::Initialize()
 
 	//! 音楽読み込み
 	BgmManager::Instance().LoadBgm("トレーニング", "Data/Audio/bgm/training.wav");
-	BgmManager::Instance().PlayBgm("トレーニング", 0.5f);
+	BgmManager::Instance().PlayBgm("トレーニング", 0.23f);
+
+	SoundEffectManager::Instance().LoadSoundEffect("正解", "Data/Audio/正解.wav");
 }
 
 // 終了化
@@ -146,6 +149,7 @@ void SceneTutorialAction::Update(float elapsedTime)
 
 		if (inputTimer >= 3 && !messageFinish[1])
 		{
+			SoundEffectManager::Instance().PlaySoundEffect("正解");
 			answerTimer = 1.0f;
 			messageFinish[1] = true;
 		}
@@ -176,7 +180,7 @@ void SceneTutorialAction::Update(float elapsedTime)
 
 		if (inputCount >= 20 && !messageFinish[2])
 		{
-			
+			SoundEffectManager::Instance().PlaySoundEffect("正解");
 			answerTimer = 1.0f;
 			messageFinish[2] = true;
 		}
@@ -202,6 +206,7 @@ void SceneTutorialAction::Update(float elapsedTime)
 		if (messageOpacity >= 1.0f &&
 			player->GetLungesCount() >= 3 && !messageFinish[3])
 		{
+			SoundEffectManager::Instance().PlaySoundEffect("正解");
 			answerTimer = 1.0f;
 			messageFinish[3] = true;
 		}
@@ -251,6 +256,8 @@ void SceneTutorialAction::Update(float elapsedTime)
 				0.0f, 1.0f,
 				4.0f
 			);
+
+			setFade = true;
 		}
 
 		if (setFade && !fade->GetFade())

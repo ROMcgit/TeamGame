@@ -39,6 +39,7 @@ Player::Player()
 	ui[2] = std::make_unique<Sprite>("Data/Sprite/UI/cm.png");
 	ui[3] = std::make_unique<Sprite>("Data/Sprite/UI/ハテナ.png");
 	ui[4] = std::make_unique<Sprite>("Data/Sprite/UI/バナナ.png");
+	ui[5] = std::make_unique<Sprite>("Data/Sprite/UI/リンゴ最大数.png");
 
 	itemImage[0] = std::make_unique<Sprite>("Data/Sprite/UI/リンゴ.png");
 
@@ -94,6 +95,10 @@ Player::Player()
 	SoundEffectManager& sound = SoundEffectManager::Instance();
 	sound.LoadSoundEffect("うんこ", "Data/Audio/うんこ.wav");
 	sound.LoadSoundEffect("叫び", "Data/Audio/voice/叫び.wav");
+	sound.LoadSoundEffect("攻撃ヒット", "Data/Audio/攻撃ヒット.wav");
+	sound.LoadSoundEffect("突進チャージ", "Data/Audio/突進チャージ.wav");
+	sound.LoadSoundEffect("突進ゲージマックス", "Data/Audio/ゲージマックス.wav");
+	sound.LoadSoundEffect("突進", "Data/Audio/突進.wav");
 }
 
 // デストラクタ
@@ -375,6 +380,17 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 			295, 675,
 			6, 6,
 			0,
+			0,
+			1, 1, 1, 1);
+
+		textureWidth = static_cast<float>(ui[5]->GetTextureWidth());
+		textureHeight = static_cast<float>(ui[5]->GetTextureHeight());
+
+		ui[5]->Render(dc,
+			0, 0,
+			1280, 720,
+			0, 0,
+			textureWidth, textureHeight,
 			0,
 			1, 1, 1, 1);
 
@@ -708,13 +724,13 @@ void Player::InputProjectile()
 
 	const GamePadButton attackButton = GamePad::BTN_B | GamePad::BTN_X;
 
-	SoundEffectManager& sound = SoundEffectManager::Instance();
-	sound.StopSoundEffect("うんこ");
-	sound.PlaySoundEffect("うんこ");
-
 	// 直進弾丸発射
 	if (gamePad.GetButtonDown() & attackButton) //CキーとXキー
 	{
+		SoundEffectManager& sound = SoundEffectManager::Instance();
+		sound.StopSoundEffect("うんこ");
+		sound.PlaySoundEffect("うんこ");
+
 		//! 拡散攻撃
 		if (diffusionAttacks > 0)
 		{
@@ -925,8 +941,8 @@ void Player::UpdateMoveState(float elapsedTime)
 		}
 	}
 
-	if (bananaNum >= 6 && moveSpeed > 20.0f)
-		moveSpeed = 20.0f;
+	if (bananaNum >= 6 && moveSpeed > 25.0f && !lunges)
+		moveSpeed = 25.0f;
 
 	Move(dir.x, dir.z, moveSpeed);
 
@@ -982,6 +998,8 @@ void Player::TransitionLungesState()
 	lunges = false;            // 突進する
 
 	lungesChargeTimer = 0.0f; // 突進チャージ時間
+
+	SoundEffectManager::Instance().PlaySoundEffect("突進チャージ");
 
 	for (int i = 0; i < 3; i++)
 	model[i]->PlayAnimation(Anim_Stop, true);
@@ -1040,6 +1058,9 @@ void Player::UpdateLungesState(float elapsedTime)
 		if(lunges < 3)
 		lungesCount++;
 
+		lungesSound = false;
+		SoundEffectManager::Instance().PlaySoundEffect("突進");
+
 		// 移動ステートへ遷移
 		TransitionMoveState();
 	}
@@ -1050,6 +1071,14 @@ void Player::UpdateLungesState(float elapsedTime)
 
 		if (lungesChargeTimer >= 0.6f)
 		{
+			if (!lungesSound)
+			{
+				SoundEffectManager::Instance().StopSoundEffect("突進チャージ");
+				SoundEffectManager::Instance().PlaySoundEffect("突進ゲージマックス");
+
+				lungesSound = true;
+			}
+			
 			lungesChargeTimer = 0.6f; // 突進チャージ時間
 			lunges      = true;       // 突進する
 		}
@@ -1109,6 +1138,8 @@ void Player::TransitionDamageState()
 // ダメージステート更新処理
 void Player::UpdateDamageState(float elapsedTime)
 {
+	lungesChargeTimer -= elapsedTime;
+
 	if (moveSpeed > 0)
 		moveSpeed -= 30 * elapsedTime;
 
@@ -1169,6 +1200,9 @@ void Player::CollisionPlayerVsEnemies()
 			outPosition
 		))
 		{
+			SoundEffectManager& sound = SoundEffectManager::Instance();
+			sound.StopSoundEffect("攻撃ヒット");
+			sound.PlaySoundEffect("攻撃ヒット", 0.8f);
 		}
 
 	}
@@ -1319,6 +1353,7 @@ void Player::DrawDebugGUI()
 		
 		ImGui::InputInt("EXP", &exp);
 		ImGui::InputInt("Level", &level);
+		ImGui::InputInt("BananaNum", &bananaNum);
 		
 		ImGui::InputFloat("MoveSpeed", &moveSpeed);
 		ImGui::Checkbox("IsGround", &isGround);
@@ -1346,7 +1381,6 @@ void Player::DrawDebugGUI()
 		{
 			ImGui::Checkbox("Lunges", &lunges);
 			ImGui::InputFloat("LungesChargeTimer", &lungesChargeTimer);
-			ImGui::InputFloat("LungesTimer", &lungesTimer);
 		}
 		ImGui::TreePop();
 	}

@@ -86,6 +86,9 @@ void SikaTentyo::Update(float elapsedTime)
 	// 当たり判定の位置設定
 	CollisionPosSettings();
 
+	// HPシェイク
+	UpdateHpShake(elapsedTime);
+
 	// スケール変更更新処理
 	UpdateScaleChange(elapsedTime);
 
@@ -171,7 +174,7 @@ void SikaTentyo::SpriteRender(ID3D11DeviceContext* dc)
 
 		//! 名前
 		name->Render(dc,
-			hpImagePos.x + 350, hpImagePos.y - 45,
+			hpImagePos.x + 410, hpImagePos.y - 45,
 			232, 46,
 			0, 0,
 			textureWidth, textureHeight,
@@ -457,16 +460,6 @@ void SikaTentyo::TransitionMoveState()
 void SikaTentyo::UpdateMoveState(float elapsedTime)
 {
 	HpDirector(10, 50);
-
-	if (position.y > 1.3f)
-	{
-		velocity.y = -5;
-	}
-	else if(position.y <= 1.3f)
-	{
-		velocity.y = 0;
-		position.y = 1.3f;
-	}
 	
 	// プレイヤーのインスタンス取得
 	Player& player = Player::Instance();
@@ -474,8 +467,22 @@ void SikaTentyo::UpdateMoveState(float elapsedTime)
 	float vx = player.GetPosition().x - position.x;
 	float vz = player.GetPosition().z - position.z;
 
-	// 移動処理
-	Move(vx, vz, 3.0f);
+	if (position.y > 1.3f)
+	{
+		velocity.y = -5;
+
+		// 移動処理
+		Move(vx, vz, 10.0f);
+	}
+	else if (position.y <= 1.3f)
+	{
+		velocity.y = 0;
+		position.y = 1.3f;
+
+		// 移動処理
+		Move(vx, vz, 3.0f);
+	}
+	
 	Turn(elapsedTime, vx, vz, 50.0f);
 }
 

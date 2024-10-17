@@ -4,6 +4,9 @@
 #include "SceneLoading.h"
 #include "SceneTutorialSelect.h"
 #include "SceneManager.h"
+#include "SceneTitle.h"
+#include "Audio/BgmManager.h"
+#include "Audio/SoundEffectManager.h"
 
 // 初期化
 void SceneOpning::Initialize()
@@ -78,6 +81,25 @@ void SceneOpning::Initialize()
 
 	//! フェード
 	fade = std::make_unique<Fade>();
+
+	//! 音楽
+	BgmManager& bgm = BgmManager::Instance();
+	bgm.LoadBgm("オープニング", "Data/Audio/bgm/opning.wav");
+	bgm.PlayBgm("オープニング", 0.3f);
+	bgm.LoadBgm("シカ", "Data/Audio/bgm/boss.wav");
+
+	//! 効果音
+	SoundEffectManager& sound = SoundEffectManager::Instance();
+	sound.LoadSoundEffect("こうやってつけて", "Data/Audio/voice/こうやってつけて.wav");
+	sound.LoadSoundEffect("ファンファーレ", "Data/Audio/ラッパのファンファーレ.wav");
+	sound.LoadSoundEffect("マジカルバナナ", "Data/Audio/voice/マジカルバナナ.wav");
+	sound.LoadSoundEffect("興奮", "Data/Audio/voice/興奮.wav");
+	sound.LoadSoundEffect("ドア", "Data/Audio/ドア.wav");
+	sound.LoadSoundEffect("ぶっ殺してやる", "Data/Audio/voice/てめぇ、ぶっ殺してやる.wav");
+	sound.LoadSoundEffect("気弾", "Data/Audio/気弾.wav");
+	sound.LoadSoundEffect("爆発", "Data/Audio/爆発.wav");
+	sound.LoadSoundEffect("デビル", "Data/Audio/voice/デビル.wav");
+	sound.LoadSoundEffect("死ぬがよい", "Data/Audio/voice/死ぬがよい.wav");
 }
 
 // 終了化
@@ -88,8 +110,12 @@ void SceneOpning::Finalize()
 // 更新処理
 void SceneOpning::Update(float elapsedTime)
 {
+	BgmManager& bgm = BgmManager::Instance();
+	SoundEffectManager& sound = SoundEffectManager::Instance();
+
 	fade->Update(elapsedTime);
 
+#if 1
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
 	if (gamePad.GetButtonDown() & GamePad::BTN_A && viewSkipOpacity < 1.0f)
@@ -129,18 +155,28 @@ void SceneOpning::Update(float elapsedTime)
 	//! フェードが終わったらシーン遷移
 	if (setFade && !fade->GetFade())
 	{
+		bgm.UnloadBgm("オープニング");
+		bgm.UnloadBgm("シカ");
+
 		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneTutorialSelect>());
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示
 		SceneManager::Instance().ChangeScene(std::move(loadingScene));
 	}
+#endif
 
 	switch (spriteScene)
 	{
 	case SceneOpning::SpriteScene::Home:
 	{
+		if (!soundPlay[0])
+		{
+			sound.PlaySoundEffect("こうやってつけて");
+			soundPlay[0] = true;
+		}
+
 		spriteChangeTimer += elapsedTime;
-		sceneChangeTimer += elapsedTime;
+		sceneChangeTimer  += elapsedTime;
 
 		//! 画像シーンを切り替える
 		if (sceneChangeTimer > 2.0f)
@@ -163,6 +199,12 @@ void SceneOpning::Update(float elapsedTime)
 		break;
 	case SceneOpning::SpriteScene::Tv:
 	{
+		if (!soundPlay[1])
+		{
+			sound.PlaySoundEffect("ファンファーレ");
+			soundPlay[1] = true;
+		}
+
 		spriteChangeTimer += elapsedTime;
 		tvChangeTimer     += elapsedTime;
 		sceneChangeTimer += elapsedTime;
@@ -190,6 +232,12 @@ void SceneOpning::Update(float elapsedTime)
 		}
 		else
 		{
+			if (!soundPlay[2])
+			{
+				sound.PlaySoundEffect("マジカルバナナ");
+				soundPlay[2] = true;
+			}
+
 			if (!tvChangeSet)
 			{
 				viewSpriteNum = 2;
@@ -211,6 +259,12 @@ void SceneOpning::Update(float elapsedTime)
 		break;
 	case SceneOpning::SpriteScene::SaruKimaru:
 	{
+		if (!soundPlay[3])
+		{
+			sound.PlaySoundEffect("興奮");
+			soundPlay[3] = true;
+		}
+
 		spriteChangeTimer += elapsedTime;
 		sceneChangeTimer += elapsedTime;
 
@@ -247,6 +301,12 @@ void SceneOpning::Update(float elapsedTime)
 
 		if (saruScalePlusTimer > 1.0f)
 		{
+			if (!soundPlay[4])
+			{
+				sound.PlaySoundEffect("ドア");
+				soundPlay[4] = true;
+			}
+
 			saruScale.x += 500 * elapsedTime;
 			saruScale.y += 515 * elapsedTime;
 
@@ -282,11 +342,20 @@ void SceneOpning::Update(float elapsedTime)
 
 			if (sikaPosX < 300)
 				sikaPosX = 300;
+
+			if (sikaMoveTimer > 7.1f)
+				BgmManager::Instance().StopBgm();
 		}
 	}
 		break;
 	case SpriteScene::SaruKireru:
 	{
+		if (!soundPlay[5])
+		{
+			sound.PlaySoundEffect("ぶっ殺してやる");
+			soundPlay[5] = true;
+		}
+
 		sceneChangeTimer += elapsedTime;
 		unkoScaleTimer   += elapsedTime;
 
@@ -299,6 +368,12 @@ void SceneOpning::Update(float elapsedTime)
 		//! うんこを出す
 		if (unkoScaleTimer > 1.5f)
 		{
+			if (!soundPlay[6])
+			{
+				sound.PlaySoundEffect("気弾");
+				soundPlay[6] = true;
+			}
+
 			unkoPos.x -= 550 * elapsedTime;
 			unkoPos.y -= 650 * elapsedTime;
 
@@ -314,6 +389,12 @@ void SceneOpning::Update(float elapsedTime)
 
 		if (sceneChangeTimer > 1.6f)
 		{
+			if (!soundPlay[7])
+			{
+				sound.PlaySoundEffect("爆発");
+				soundPlay[7] = true;
+			}
+
 			//! フェードをセット
 			fade->SetFade(DirectX::XMFLOAT3(0.8f, 0.8f, 0.8f),
 				1.0f, 0.0f,
@@ -324,7 +405,6 @@ void SceneOpning::Update(float elapsedTime)
 
 			spriteScene = SpriteScene::UnkoHit;
 		}
-
 
 		unkoPos.x += 720 * elapsedTime;
 		unkoPos.y += 850 * elapsedTime;
@@ -339,6 +419,12 @@ void SceneOpning::Update(float elapsedTime)
 		break;
 	case SpriteScene::UnkoHit:
 	{
+		if (!soundPlay[8])
+		{
+			sound.PlaySoundEffect("デビル");
+			soundPlay[8] = true;
+		}
+
 		sceneChangeTimer += elapsedTime;
 
 		if(sceneChangeTimer > 3.0f)
@@ -361,6 +447,19 @@ void SceneOpning::Update(float elapsedTime)
 		break;
 	case SpriteScene::SikaRash:
 	{
+		if (!soundPlay[9])
+		{
+			sound.UnloadSoundEffect("デビル");
+			sound.PlaySoundEffect("死ぬがよい");
+			soundPlay[9] = true;
+		}
+
+		if (!bgmPlay)
+		{
+			bgm.PlayBgm("シカ", 0.7f);
+			bgmPlay = true;
+		}
+
 		sceneChangeTimer += elapsedTime;
 
 		if (sceneChangeTimer > 1.2f)
@@ -403,7 +502,7 @@ void SceneOpning::Render()
 	ID3D11DepthStencilView* dsv = graphics.GetDepthStencilView();
 
 	// 画面クリア＆レンダーターゲット設定
-	FLOAT color[] = { 0.0f, 0.0f, 1.0f, 1.0f };	// RGBA(0.0～1.0)
+	FLOAT color[] = { 0.0f, 0.0f, 0.8f, 1.0f };	// RGBA(0.0～1.0)
 	dc->ClearRenderTargetView(rtv, color);
 	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	dc->OMSetRenderTargets(1, &rtv, dsv);

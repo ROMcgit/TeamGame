@@ -10,6 +10,7 @@
 #include "Game/Character/Projectile/ProjectileYazirusi.h"
 #include "Game/Character/Item/ImportantItem.h"
 #include "Game/Character/Item/ImportantItemManager.h"
+#include "Audio/SoundEffectManager.h"
 
 static Player* instance = nullptr;
 
@@ -89,6 +90,10 @@ Player::Player()
 
 	for(int i = 0; i < 4; i++)
 		text[i] = std::make_unique<Text>();
+
+	SoundEffectManager& sound = SoundEffectManager::Instance();
+	sound.LoadSoundEffect("うんこ", "Data/Audio/うんこ.wav");
+	sound.LoadSoundEffect("叫び", "Data/Audio/voice/叫び.wav");
 }
 
 // デストラクタ
@@ -107,6 +112,9 @@ void Player::Update(float elapsedTime)
 
 	if (position.y < 1.3f)
 	{
+		SoundEffectManager& sound = SoundEffectManager::Instance();
+		sound.StopSoundEffect("叫び");
+
 		isGround   = true;
 		gravity    = 0.0f;
 		position.y = 1.3f;
@@ -700,6 +708,10 @@ void Player::InputProjectile()
 
 	const GamePadButton attackButton = GamePad::BTN_B | GamePad::BTN_X;
 
+	SoundEffectManager& sound = SoundEffectManager::Instance();
+	sound.StopSoundEffect("うんこ");
+	sound.PlaySoundEffect("うんこ");
+
 	// 直進弾丸発射
 	if (gamePad.GetButtonDown() & attackButton) //CキーとXキー
 	{
@@ -1183,6 +1195,10 @@ void Player::OnLanding()
 void Player::OnDamaged()
 {
 	hpShake = true;
+
+	SoundEffectManager& sound = SoundEffectManager::Instance();
+	sound.StopSoundEffect("叫び");
+	sound.PlaySoundEffect("叫び");
 
 	// ダメージステートへ遷移
 	TransitionDamageState();

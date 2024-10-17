@@ -83,7 +83,7 @@ void SceneTutorialAction::Initialize()
 
 	//! 音楽読み込み
 	BgmManager::Instance().LoadBgm("トレーニング", "Data/Audio/bgm/training.wav");
-	BgmManager::Instance().PlayBgm("トレーニング");
+	BgmManager::Instance().PlayBgm("トレーニング", 0.5f);
 }
 
 // 終了化

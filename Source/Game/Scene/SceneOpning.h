@@ -79,6 +79,8 @@ private:
 	float sceneChangeTimer  = 0.0f;
 	float tvChangeTimer     = 0.0f;
 	bool  tvChangeSet       = false;
+	bool bgmPlay = false;
+	bool soundPlay[10];
 
 	std::unique_ptr<Sprite> skip;
 	bool viewSkip       = false;

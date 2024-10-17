@@ -79,4 +79,9 @@ private:
 	float sceneChangeTimer  = 0.0f;
 	float tvChangeTimer     = 0.0f;
 	bool  tvChangeSet       = false;
+
+	std::unique_ptr<Sprite> skip;
+	bool viewSkip       = false;
+	float viewSkipTimer = 0.0f;
+	float viewSkipOpacity = 0.35f;
 };

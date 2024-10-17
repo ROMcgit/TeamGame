@@ -74,6 +74,8 @@ void SceneOpning::Initialize()
 		sikaPosPower[i] = { posPower.x, posPower.y };
 	}
 
+	skip = std::make_unique<Sprite>("Data/Sprite/背景/スキップ.png");
+
 	//! フェード
 	fade = std::make_unique<Fade>();
 }
@@ -90,8 +92,26 @@ void SceneOpning::Update(float elapsedTime)
 
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
-	if (gamePad.GetButtonDown() & GamePad::BTN_A && !setFade)
-		doFade = true;
+	if (gamePad.GetButtonDown() & GamePad::BTN_A && viewSkipOpacity < 1.0f)
+	{
+		viewSkipTimer = 2.0;
+		viewSkip = true;
+	}
+
+	if (viewSkip && viewSkipOpacity < 1.0f && viewSkipTimer > 0.0f)
+		viewSkipOpacity += 2.0f * elapsedTime;
+
+	if(viewSkipTimer <= 0.0f && viewSkipOpacity > 0.35f)
+		viewSkipOpacity -= 2.0f * elapsedTime;
+
+	if (viewSkipOpacity >= 1.0f)
+	{
+		viewSkipTimer -= elapsedTime;
+
+		if(gamePad.GetButtonDown() & GamePad::BTN_A && !doFade)
+			doFade = true;
+	}
+		
 
 	if (doFade)
 	{
@@ -752,6 +772,18 @@ void SceneOpning::Render()
 			break;
 		}
 	}
+
+	textureWidth = static_cast<float>(skip->GetTextureWidth());
+	textureHeight = static_cast<float>(skip->GetTextureHeight());
+
+	skip->Render(dc,
+		0, 0,
+		screenWidth, screenHeight,
+		0, 0,
+		textureWidth, textureHeight,
+		0,
+		1, 1, 1, viewSkipOpacity
+	);
 
 	//! フェード
 	{

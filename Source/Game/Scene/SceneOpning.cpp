@@ -2,7 +2,7 @@
 #include "Graphics/Graphics.h"
 #include "Input/Input.h"
 #include "SceneLoading.h"
-#include "SceneGame.h"
+#include "SceneTutorialSelect.h"
 #include "SceneManager.h"
 
 // 初期化
@@ -109,7 +109,7 @@ void SceneOpning::Update(float elapsedTime)
 	//! フェードが終わったらシーン遷移
 	if (setFade && !fade->GetFade())
 	{
-		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGame>());
+		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneTutorialSelect>());
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示
 		SceneManager::Instance().ChangeScene(std::move(loadingScene));

@@ -32,6 +32,8 @@
 #include "Game/Stage/StageMain.h"
 #include "Game/Stage/StageManager.h"
 
+#include "Audio/BgmManager.h"
+
 // 初期化
 void SceneTutorialAction::Initialize()
 {
@@ -78,6 +80,10 @@ void SceneTutorialAction::Initialize()
 	backGround = std::make_unique<Sprite>();
 
 	fade = std::make_unique<Fade>();
+
+	//! 音楽読み込み
+	BgmManager::Instance().LoadBgm("トレーニング", "Data/Audio/bgm/training.wav");
+	BgmManager::Instance().PlayBgm("トレーニング");
 }
 
 // 終了化

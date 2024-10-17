@@ -77,7 +77,7 @@ void SceneTitle::Update(float elapsedTime)
 		{
 			BgmManager::Instance().UnloadBgm("タイトル");
 
-			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneTutorialSelect>());
+			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneOpning>());
 
 			// シーンマネージャーにローディングシーンへの切り替えを指示
 			SceneManager::Instance().ChangeScene(std::move(loadingScene));

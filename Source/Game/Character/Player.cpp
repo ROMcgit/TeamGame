@@ -394,7 +394,7 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 				0,
 				0.0f, 0.0f, 0.0f, 1);
 
-			if (lungesChargeTimer < 0.5f)
+			if (lungesChargeTimer < 0.6f)
 			{
 				// ゲージの色(緑色)
 				runAttack[2]->Render(dc,

@@ -160,7 +160,7 @@ void SceneTutorialAction::Update(float elapsedTime)
 	{
 		messageNum = 3;
 
-		textPos = { 875, 637 };
+		textPos = { 845, 637 };
 
 		if (messageOpacity >= 1.0f &&
 			(gamePad.GetButtonDown() & GamePad::BTN_B || gamePad.GetButtonDown() & GamePad::BTN_X))
@@ -415,7 +415,7 @@ void SceneTutorialAction::Render()
 				textPos.x, textPos.y,
 				textScale.x, textScale.y,
 				0,
-				30,
+				42,
 				1, 1, 1, messageOpacity);
 			break;
 		case 4:

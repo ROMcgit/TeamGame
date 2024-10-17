@@ -57,7 +57,7 @@ void SceneGame::Initialize()
 		DirectX::XMConvertToRadians(18),
 		0, 0)
 	);
-	cameraController->SetRange(15.0f);
+	cameraController->SetRange(18.0f);
 
 	//! 空
 	backGround = std::make_unique<Sprite>("Data/Sprite/背景/空.png");
@@ -94,12 +94,24 @@ void SceneGame::Update(float elapsedTime)
 	UpdateMovie(elapsedTime);
 
 	// カメラコントローラー更新処理
-	if (!cameraController->GetCameraMovie())
+	if (!cameraController->GetCameraMovie() && !setMovie)
 	{
 		target = player->GetPosition();
 		target.y += 0.5f;
+	}
+	else if (!cameraController->GetCameraMovie() && setMovie)
+	{
+		target = player->GetPosition();
+		target.y += 0.4f;
 
-		if (setMovie && !bgmPlay)
+		cameraController->SetRange(16.0f);
+
+		cameraController->SetAngle(DirectX::XMFLOAT3(
+			DirectX::XMConvertToRadians(12),
+			0, 0)
+		);
+
+		if (!bgmPlay)
 		{
 			BgmManager::Instance().PlayBgm("ボス");
 			bgmPlay = true;

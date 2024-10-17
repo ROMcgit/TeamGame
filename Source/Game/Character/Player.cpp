@@ -1144,7 +1144,8 @@ void Player::TransitionDamageState()
 // ダメージステート更新処理
 void Player::UpdateDamageState(float elapsedTime)
 {
-	lungesChargeTimer -= elapsedTime;
+	if(lungesChargeTimer > 0.0f)
+		lungesChargeTimer -= elapsedTime;
 
 	if (moveSpeed > 0)
 		moveSpeed -= 30 * elapsedTime;

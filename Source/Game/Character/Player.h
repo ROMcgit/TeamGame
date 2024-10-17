@@ -70,6 +70,9 @@ public:
 	// 表示スピードを取得
 	int GetViewMoveSpeed() { return viewMoveSpeed; }
 
+	// 突進中かを取得
+	bool GetLunges() { return lunges; }
+
 	// 突進カウント設定
 	void SetLungesCount(int lungesCount)
 	{

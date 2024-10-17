@@ -28,6 +28,7 @@ private:
 	static void LoadingThread(SceneLoading* scene);
 
 private:
+	std::unique_ptr<Sprite> tips;
 	std::unique_ptr<Sprite> banana;
 	DirectX::XMFLOAT2 bananaPos = { 1350, 250 };
 	float moveSpeed = 400;

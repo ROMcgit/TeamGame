@@ -234,7 +234,7 @@ void SceneOpning::Update(float elapsedTime)
 		{
 			if (!soundPlay[2])
 			{
-				sound.PlaySoundEffect("マジカルバナナ");
+				sound.PlaySoundEffect("マジカルバナナ", 2.0f);
 				soundPlay[2] = true;
 			}
 

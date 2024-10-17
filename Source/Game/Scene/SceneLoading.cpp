@@ -6,6 +6,9 @@
 // ‰Šú‰»
 void SceneLoading::Initialize()
 {
+	// Tips
+	tips = std::make_unique<Sprite>("Data/Sprite/tips.png");
+
 	// ƒoƒiƒi
 	banana = std::make_unique<Sprite>("Data/Sprite/Banana.png");
 
@@ -106,6 +109,17 @@ void SceneLoading::Render()
 		loading[spriteNum]->Render(dc,
 			0, 0, screenWidth, screenHeight,
 			0, 0, textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1);
+
+		textureWidth = static_cast<float>(tips->GetTextureWidth());
+		textureHeight = static_cast<float>(tips->GetTextureHeight());
+
+		tips->Render(dc,
+			0, 0,
+			screenWidth, screenHeight,
+			0, 0,
+			textureWidth, textureHeight,
 			0,
 			1, 1, 1, 1);
 	}

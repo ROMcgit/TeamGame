@@ -5,6 +5,7 @@
 #include "Game/Character/Player.h"
 #include "Other/Collision.h"
 #include "Game/Scene/SceneTitle.h"
+#include "Audio/SoundEffectManager.h"
 
 // コンストラクタ
 EnemySika::EnemySika()
@@ -59,6 +60,8 @@ EnemySika::EnemySika()
 	default:
 		break;
 	}
+
+	SoundEffectManager::Instance().LoadSoundEffect("攻撃ヒット", "Data/Audio/攻撃ヒット.wav");
 
 	// 追跡ステート
 	TransitionPursuitState();
@@ -248,6 +251,9 @@ void EnemySika::CollisionEnemyVsPlayer()
 		}
 		else
 		{
+			SoundEffectManager::Instance().StopSoundEffect("攻撃ヒット");
+			SoundEffectManager::Instance().PlaySoundEffect("攻撃ヒット");
+
 			hp = 0;
 			TransitionDeathState(); // 死亡ステートへ遷移
 		}

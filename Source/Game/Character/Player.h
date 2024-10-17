@@ -4,6 +4,7 @@
 #include "Graphics/Model.h"
 #include "Game/Character/Character.h"
 #include "Game/Character/Projectile/ProjectileManager.h"
+#include "Game/Character/Yazirusi/YazirusiManager.h"
 #include "Game/Effect/Effect.h"
 #include "Graphics/Text.h"
 
@@ -199,6 +200,7 @@ private:
 	int jumpLimit = 2;
 
 	ProjectileManager projectileManager;
+	YazirusiManager yazirusiManager;
 
 	std::unique_ptr<Effect> hitEffect;
 

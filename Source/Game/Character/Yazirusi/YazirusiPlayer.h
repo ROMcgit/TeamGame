@@ -1,14 +1,14 @@
 #pragma once
 
 #include "Graphics/Model.h"
-#include "Projectile.h"
+#include "Yazirusi.h"
 
 // ’¼i’eŠÛ
-class ProjectileYazirusi : public Projectile
+class YazirusiPlayer : public Yazirusi
 {
 public:
-	ProjectileYazirusi(ProjectileManager* manage);
-	~ProjectileYazirusi() override;
+	YazirusiPlayer(YazirusiManager* manage);
+	~YazirusiPlayer() override;
 
 	// XVˆ—
 	void Update(float elapsedTime) override;

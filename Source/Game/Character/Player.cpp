@@ -7,7 +7,7 @@
 #include "Game/Character/Enemy/EnemyManager.h"
 #include "Game/Scene/SceneTitle.h"
 #include "Game/Character/Projectile/ProjectileUnko.h"
-#include "Game/Character/Projectile/ProjectileYazirusi.h"
+#include "Game/Character/Yazirusi/YazirusiPlayer.h"
 #include "Game/Character/Item/ImportantItem.h"
 #include "Game/Character/Item/ImportantItemManager.h"
 #include "Audio/SoundEffectManager.h"
@@ -29,7 +29,7 @@ Player::Player()
 	model[1] = std::make_unique <Model>("Data/Model/Monkey/0.mdl/Monkey_Leg_Left.mdl");
 	model[2] = std::make_unique <Model>("Data/Model/Monkey/0.mdl/Monkey_Leg_Right.mdl");
 
-	ProjectileYazirusi* projectile = new ProjectileYazirusi(&projectileManager);
+	YazirusiPlayer* yazirusi = new YazirusiPlayer(&yazirusiManager);
 
 	// ƒ‚ƒfƒ‹‚ª‘å‚«‚¢‚Ì‚ÅƒXƒP[ƒŠƒ“ƒO
 	scale.x = scale.y = scale.z = 0.03f;
@@ -262,6 +262,9 @@ void Player::Update(float elapsedTime)
 	// ’eŠÛXVˆ—
 	projectileManager.Update(elapsedTime);
 
+	// –îˆóXVˆ—
+	yazirusiManager.Update(elapsedTime);
+
 	// HPŠÇ—
 	HpControll(elapsedTime);
 
@@ -303,6 +306,9 @@ void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
 
 	// ’eŠÛ•`‰æˆ—
 	projectileManager.Render(dc, shader);
+
+	// –îˆó•`‰æˆ—
+	yazirusiManager.Render(dc, shader);
 }
 
 // HP‚È‚Ç‚ÌUI•`‰æ
@@ -1200,9 +1206,6 @@ void Player::CollisionPlayerVsEnemies()
 			outPosition
 		))
 		{
-			SoundEffectManager& sound = SoundEffectManager::Instance();
-			sound.StopSoundEffect("UŒ‚ƒqƒbƒg");
-			sound.PlaySoundEffect("UŒ‚ƒqƒbƒg", 0.8f);
 		}
 
 	}
@@ -1322,6 +1325,12 @@ void Player::CollisionProjectilesVsEnemies()
 						DirectX::XMFLOAT3 e = enemy->GetPosition();
 						e.y += enemy->GetHeight() * 0.5f;
 						hitEffect->Play(e, 0.9f);
+					}
+
+					{
+						SoundEffectManager& sound = SoundEffectManager::Instance();
+						sound.StopSoundEffect("UŒ‚ƒqƒbƒg");
+						sound.PlaySoundEffect("UŒ‚ƒqƒbƒg", 0.8f);
 					}
 
 					// ’eŠÛ”jŠü

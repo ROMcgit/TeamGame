@@ -1,5 +1,5 @@
-#include "Game/Character/Projectile/ProjectileYazirusi.h"
-#include "Game/Character/Projectile/ProjectileManager.h"
+#include "Game/Character/Yazirusi/YazirusiPlayer.h"
+#include "Game/Character/Yazirusi/YazirusiManager.h"
 #include "Game/Character/Player.h"
 #include "Game/Character/Item/ImportantItem.h"
 #include "Game/Character/Item/ImportantItemManager.h"
@@ -7,7 +7,7 @@
 #include "Game/Character/Enemy/Enemy.h"
 
 // コンストラクタ
-ProjectileYazirusi::ProjectileYazirusi(ProjectileManager* manager) : Projectile(manager)
+YazirusiPlayer::YazirusiPlayer(YazirusiManager* manager) : Yazirusi(manager)
 {
 	model = new Model("./Data/Model/Monkey/0.mdl/Yazirusi.mdl");
 
@@ -20,13 +20,13 @@ ProjectileYazirusi::ProjectileYazirusi(ProjectileManager* manager) : Projectile(
 }
 
 // デストラクタ
-ProjectileYazirusi::~ProjectileYazirusi()
+YazirusiPlayer::~YazirusiPlayer()
 {
 	delete model;
 }
 
 // 更新処理
-void ProjectileYazirusi::Update(float elapsedTime)
+void YazirusiPlayer::Update(float elapsedTime)
 {
 	// 当たり判定の位置設定
 	CollisionPosSettings();
@@ -72,7 +72,7 @@ void ProjectileYazirusi::Update(float elapsedTime)
 		// 結果を格納
 		DirectX::XMStoreFloat3(&direction, smoothVec);
 	}
-	else if(player.GetBananaNum() >= 6 && enemyCount > 0)
+	else if (player.GetBananaNum() >= 6 && enemyCount > 0)
 	{
 		std::unique_ptr<Enemy>& sikaTentyo = EnemyManager::Instance().GetEnemy(0);
 
@@ -108,13 +108,13 @@ void ProjectileYazirusi::Update(float elapsedTime)
 }
 
 // 描画処理
-void ProjectileYazirusi::Render(ID3D11DeviceContext* dc, Shader* shader)
+void YazirusiPlayer::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	shader->Draw(dc, model);
 }
 
 // 発射
-void ProjectileYazirusi::Launch(const DirectX::XMFLOAT3& direction,
+void YazirusiPlayer::Launch(const DirectX::XMFLOAT3& direction,
 	const DirectX::XMFLOAT3& position)
 {
 	this->direction = direction;

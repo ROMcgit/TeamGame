@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "Graphics/Graphics.h"
 #include "Other/Mathf.h"
+#include "Game/Effect/Effect.h"
 
 // ƒXƒ‰ƒCƒ€
 class SikaTentyo : public Enemy
@@ -110,6 +111,8 @@ private:
 
 private:
 	std::unique_ptr<Model> model;
+	std::unique_ptr<Effect> roarEffect;
+	bool effectPlay = false;
 
 	std::unique_ptr<Sprite> hpSprite[5];
 	std::unique_ptr<Sprite> name;

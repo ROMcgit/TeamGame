@@ -11,6 +11,8 @@ SikaTentyo::SikaTentyo()
 {
 	model = std::make_unique<Model>("Data/Model/SikaTentyo/SikaTentyo.mdl");
 
+	roarEffect = std::make_unique<Effect>("Data/Effect/Effect/Roar.efk");
+
 	scale.x = scale.y = scale.z = 0.04f;
 
 	gravity = 0.0f;
@@ -431,6 +433,10 @@ void SikaTentyo::TransitionStartState()
 	state = State::Start;
 
 	model->PlayAnimation(Anim_Start, false);
+
+	stateChangeWaitTimer = 0.0f;
+
+	actionTimer = 0.0f;
 }
 
 // 開始ステート更新処理
@@ -439,11 +445,22 @@ void SikaTentyo::UpdateStartState(float elapsedTime)
 	velocity.y = 0;
 	position.y = 1.3f;
 
-	if (!model->IsPlayAnimation())
+	if (actionTimer > 3.4f && !effectPlay)
 	{
+		DirectX::XMFLOAT3 pos = position;
+		pos.y += height * 0.5f;
+
+		roarEffect->Play(pos, 1.5f);
+		effectPlay = true;
+	}
+	else
 		actionTimer += elapsedTime;
 
-		if (actionTimer > 2.0f)
+	if (!model->IsPlayAnimation())
+	{
+		stateChangeWaitTimer += elapsedTime;
+
+		if (stateChangeWaitTimer > 2.0f)
 			TransitionMoveState();
 	}
 }

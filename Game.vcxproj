@@ -163,6 +163,7 @@
     <ClInclude Include="Source\Game\Character\Item\ImportantItemManager.h" />
     <ClInclude Include="Source\Game\Character\Item\Item.h" />
     <ClInclude Include="Source\Game\Character\Item\ItemManager.h" />
+    <ClInclude Include="Source\Game\Character\Item\Melon.h" />
     <ClInclude Include="Source\Game\Character\Yazirusi\Yazirusi.h" />
     <ClInclude Include="Source\Game\Character\Yazirusi\YazirusiManager.h" />
     <ClInclude Include="Source\Game\Character\Yazirusi\YazirusiPlayer.h" />
@@ -236,6 +237,7 @@
     <ClCompile Include="Source\Game\Character\Item\ImportantItemManager.cpp" />
     <ClCompile Include="Source\Game\Character\Item\Item.cpp" />
     <ClCompile Include="Source\Game\Character\Item\ItemManager.cpp" />
+    <ClCompile Include="Source\Game\Character\Item\Melon.cpp" />
     <ClCompile Include="Source\Game\Character\Yazirusi\Yazirusi.cpp" />
     <ClCompile Include="Source\Game\Character\Yazirusi\YazirusiManager.cpp" />
     <ClCompile Include="Source\Game\Character\Yazirusi\YazirusiPlayer.cpp" />

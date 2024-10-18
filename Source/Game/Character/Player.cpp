@@ -53,8 +53,10 @@ Player::Player()
 	height = 2.4f;
 	collisionOffset = { 0, -1.0f, 0 };
 
-	// ヒットエフェクト読み込み
-	hitEffect = std::make_unique <Effect>("Data/Effect/Effect/Hit.efk");
+	// エフェクト読み込み
+	hitEffect        = std::make_unique<Effect>("Data/Effect/Effect/Hit.efk");
+	sppedEffect      = std::make_unique<Effect>("Data/Effect/Effect/Speed.efk");
+	invincibleEffect = std::make_unique<Effect>("Data/Effect/Effect/Invincibility.efk");
 
 	// 移動ステートへ遷移
 	TransitionMoveState();
@@ -293,6 +295,30 @@ void Player::Update(float elapsedTime)
 	}
 
 	viewMoveSpeedPlusTimer += elapsedTime;
+
+	DirectX::XMFLOAT3 pos = position;
+	pos.y += height * 0.5f;
+	sppedEffect->SetPosition(speedHandle, pos);
+
+	if (invincibleState)
+	{
+		if (!invincibleEffectPlay)
+		{
+			invincibleHandle     = invincibleEffect->Play(pos, 0.5f);
+			invincibleEffectPlay = true;
+		}
+		
+		invincibleEffect->SetPosition(invincibleHandle, pos);
+
+		if (invincibleTimer <= 0.0f)
+		{
+			invincibleEffect->Stop(invincibleHandle);
+
+			invincibleState      = false;
+			invincibleEffectPlay = false;
+		}
+			
+	}
 }
 
 // 描画処理
@@ -1069,7 +1095,13 @@ void Player::UpdateLungesState(float elapsedTime)
 		{
 			SoundEffectManager::Instance().StopSoundEffect("突進");
 			SoundEffectManager::Instance().PlaySoundEffect("突進");
+
+			DirectX::XMFLOAT3 pos = position;
+			pos.y += height * 0.5f;
+
+			speedHandle = sppedEffect->Play(pos, 0.5f);
 		}
+		
 
 		// 移動ステートへ遷移
 		TransitionMoveState();

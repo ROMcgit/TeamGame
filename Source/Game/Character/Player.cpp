@@ -268,6 +268,9 @@ void Player::Update(float elapsedTime)
 	// HP管理
 	HpControll(elapsedTime);
 
+	// 無敵演出
+	UpdateInvincible(elapsedTime);
+
 	// 無敵時間更新
 	UpdateInvincibleTimer(elapsedTime);
 
@@ -276,6 +279,9 @@ void Player::Update(float elapsedTime)
 
 	// レベル更新処理
 	UpdateLevel();
+
+	// HPシェイク更新処理
+	UpdateHpShake(elapsedTime);
 
 	// 当たり判定の位置設定
 	CollisionPosSettings();
@@ -433,7 +439,10 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 			0, 0,
 			textureWidth, textureHeight,
 			0,
-			1, 1, 1, 1
+			hpSpriteColor.x,
+			hpSpriteColor.y,
+			hpSpriteColor.z,
+			1
 		);
 
 		{
@@ -649,6 +658,77 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 				viewMoveSpeedColor.z,
 				1);
 		}
+	}
+}
+
+// 無敵演出
+void Player::UpdateInvincible(float elapsedTime)
+{
+	if (invincibleState)
+	{
+		//! カラーX
+		if (!hpSpriteColorUp.x)
+		{
+			hpSpriteColor.x -= hpSpriteColorSpeed.x * elapsedTime;
+			if (hpSpriteColor.x <= 0.0f)
+			{
+				hpSpriteColor.x   = 0.0f;
+				hpSpriteColorUp.x = true;
+			}
+		}
+		else
+		{
+			hpSpriteColor.x += hpSpriteColorSpeed.x * elapsedTime;
+			if (hpSpriteColor.x >= 1.0f)
+			{
+				hpSpriteColor.x   = 1.0f;
+				hpSpriteColorUp.x = false;
+			}
+		}
+
+		//! カラーY
+		if (!hpSpriteColorUp.y)
+		{
+			hpSpriteColor.y -= hpSpriteColorSpeed.y * elapsedTime;
+			if (hpSpriteColor.y <= 0.0f)
+			{
+				hpSpriteColor.y   = 0.0f;
+				hpSpriteColorUp.y = true;
+			}
+		}
+		else
+		{
+			hpSpriteColor.y += hpSpriteColorSpeed.y * elapsedTime;
+			if (hpSpriteColor.y >= 1.0f)
+			{
+				hpSpriteColor.y   = 1.0f;
+				hpSpriteColorUp.y = false;
+			}
+		}
+
+		//! カラーZ
+		if (!hpSpriteColorUp.z)
+		{
+			hpSpriteColor.z -= hpSpriteColorSpeed.z * elapsedTime;
+			if (hpSpriteColor.z <= 0.0f)
+			{
+				hpSpriteColor.z   = 0.0f;
+				hpSpriteColorUp.z = true;
+			}
+		}
+		else
+		{
+			hpSpriteColor.z += hpSpriteColorSpeed.z * elapsedTime;
+			if (hpSpriteColor.z >= 1.0f)
+			{
+				hpSpriteColor.z   = 1.0f;
+				hpSpriteColorUp.z = false;
+			}
+		}
+	}
+	else if(!hpShake)
+	{
+		hpSpriteColor = { 1, 1, 1 };
 	}
 }
 

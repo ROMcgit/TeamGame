@@ -87,6 +87,8 @@ void Melon::Update(float elapsedTime)
 	lifeTimer -= elapsedTime;
 	if (lifeTimer < 0.0f)
 	{
+		radius = 0.0f;
+
 		SetScaleChange(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0.04f, 0.04f, 0.04f));
 
 		if (scale.x <= 0)

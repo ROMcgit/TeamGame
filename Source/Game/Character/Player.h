@@ -110,8 +110,8 @@ protected:
 
 private:
 
-	// ノードとエネミーの衝突処理
-	//void CollisionNodeVsEnemies(const char* nodeName, float nodeRadius);
+	// 無敵演出
+	void UpdateInvincible(float elapsedTime);
 
 	// レベル更新処理
 	void UpdateLevel();
@@ -183,6 +183,14 @@ private:
 	std::unique_ptr<Model>  model[3];
 	std::unique_ptr<Sprite> ui[6];
 	std::unique_ptr<Sprite> hpSprite[4];
+	DirectX::XMFLOAT3 hpSpriteColorSpeed = { 1.0f, 1.4f, 1.7f };
+	struct HpSpriteColorUp
+	{
+		bool x = false;
+		bool y = false;
+		bool z = false;
+	}hpSpriteColorUp;
+
 	std::unique_ptr<Text>   text[4];
 	std::unique_ptr<Sprite> runAttack[3];
 	std::unique_ptr<Sprite> itemImage[3];

@@ -643,8 +643,6 @@ void SikaTentyo::OnDamaged()
 // 死亡しと時に呼ばれる
 void SikaTentyo::OnDead()
 {
-	//Destroy();
-
 	// 死亡ステートへ遷移
 	TransitionDeathState();
 }

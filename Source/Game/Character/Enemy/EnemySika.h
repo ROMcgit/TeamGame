@@ -21,11 +21,6 @@ public:
 	// HPなどの描画
 	void SpriteRender(ID3D11DeviceContext* dc) override;
 
-	// HP表示
-	void RenderEnemyGauge(ID3D11DeviceContext* dc,
-		const DirectX::XMFLOAT4X4& view,
-		const DirectX::XMFLOAT4X4& projection);
-
 	// デバッグプリミティブ描画
 	void DrawDebugPrimitive() override;
 

@@ -340,7 +340,6 @@ void SceneGame::Render()
 	{
 		player->SpriteRender(dc);
 		EnemyManager::Instance().SpriteRender(dc);
-		EnemyManager::Instance().RenderEnemyGauge(dc, rc.view, rc.projection);
 
 		fade->Render(dc);
 	}

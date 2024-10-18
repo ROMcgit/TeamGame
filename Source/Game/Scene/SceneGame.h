@@ -40,6 +40,8 @@ private:
 
 private:
 	std::unique_ptr<Player> player;
+	std::unique_ptr<Effect> shockWaveEffect;
+	bool effectPlay = false;
 	std::unique_ptr<CameraController> cameraController;
 	DirectX::XMFLOAT3 target = { 0, 0, 0 };
 	float doCameraMovieTimer = 0.0f;

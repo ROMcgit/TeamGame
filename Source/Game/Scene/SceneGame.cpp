@@ -40,6 +40,9 @@ void SceneGame::Initialize()
 	SoundEffectManager::Instance().LoadSoundEffect("着地", "Data/Audio/着地.wav");
 	SoundEffectManager::Instance().LoadSoundEffect("鳴き声", "Data/Audio/鳴き声.wav");
 
+	// 衝撃波エフェクト
+	shockWaveEffect = std::make_unique<Effect>("Data/Effect/ShockWave.efc");
+
 	// ステージ初期化
 	StageManager& stageManager = StageManager::Instance();
 	StageMain* stageMain = new StageMain();
@@ -112,7 +115,7 @@ void SceneGame::Update(float elapsedTime)
 		BgmManager::Instance().StopBgm("無敵");
 		mutekiBgmPlay = false;
 
-		BgmManager::Instance().ChangeBgmStatus("バトル", 0.23f);
+		BgmManager::Instance().ChangeBgmStatus("バトル", 0.55f);
 		BgmManager::Instance().ChangeBgmStatus("ボス", 1.0f);
 	}
 
@@ -193,6 +196,9 @@ void SceneGame::Update(float elapsedTime)
 
 		if (!fade->GetFade())
 		{
+			BgmManager::Instance().UnloadBgm("バトル");
+			BgmManager::Instance().UnloadBgm("ボス");
+
 			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGameClear>());
 
 			// シーンマネージャーにローディングシーンへの切り替えを指示
@@ -608,7 +614,7 @@ void SceneGame::UpdateMovie(float elapsedTime)
 	SceneTitle& scene = SceneTitle::Instance();
 	if (scene.gameClear)
 	{
-		BgmManager::Instance().UnloadBgm("ボス");
+		BgmManager::Instance().StopBgm("ボス");
 
 		if (!setGameClearMovie)
 		{
@@ -645,7 +651,7 @@ void SceneGame::UpdateMovie(float elapsedTime)
 	}
 	else if (!setMovie && player->GetBananaNum() >= 6)
 	{
-		BgmManager::Instance().UnloadBgm("バトル");
+		BgmManager::Instance().StopBgm("バトル");
 
 		player->SetMovieTime(12.5f);
 		cameraController->SetCameraMovieTime(12.5f);
@@ -720,6 +726,10 @@ void SceneGame::UpdateMovie(float elapsedTime)
 
 			if (doCameraMovieTimer > 6.5f && !setCameraShake[0])
 			{
+				std::unique_ptr<Enemy>& sikaTentyo = EnemyManager::Instance().GetEnemy(0);
+
+				shockWaveEffect->Play(sikaTentyo->GetCollisionPos(), 0.8f);
+
 				SoundEffectManager::Instance().PlaySoundEffect("着地");
 
 				cameraController->SetCameraShake(0.4f, DirectX::XMINT3(0, 30, 0));

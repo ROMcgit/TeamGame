@@ -904,8 +904,9 @@ void Player::UpdateMoveState(float elapsedTime)
 	{
 		moveSpeed = 2000.0f;
 
-		invincibleTimer = 0.1f;
-		lungesChargeTimer -= elapsedTime;
+		if(!invincibleState)
+			invincibleTimer = 0.1f;
+			lungesChargeTimer -= elapsedTime;
 	}
 	else
 	{
@@ -1051,8 +1052,6 @@ void Player::UpdateLungesState(float elapsedTime)
 	DIR = DirectX::XMLoadFloat3(&dir);
 	DIR = DirectX::XMVector3Normalize(DIR);
 	DirectX::XMStoreFloat3(&dir, DIR);
-
-	//Move(dir.x, dir.z, 0.0f);
 
 	GamePad& gamePad = Input::Instance().GetGamePad();
 

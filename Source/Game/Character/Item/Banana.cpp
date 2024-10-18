@@ -35,15 +35,15 @@ Banana::Banana()
 
 	/// X座標制限
 	if (position.x > 1000.0f)
-		position.x = 800.0f;
+		position.x = 500.0f;
 	else if (position.x < -1000.0f)
-		position.x = -800.0f;
+		position.x = -500.0f;
 
 	// Z座標制限
 	if (position.z > 1000.0f)
-		position.z = 800.0f;
+		position.z = 500.0f;
 	else if (position.z < -1000.0f)
-		position.z = -800.0f;
+		position.z = -500.0f;
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.015f;

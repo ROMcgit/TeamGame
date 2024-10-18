@@ -27,7 +27,7 @@ SikaTentyo::SikaTentyo()
 
 	collisionOffset = { -0.1f, 0.5f, 0 };
 
-	radius = 2;
+	radius = 1.7f;
 	height = 6;
 
 	//! HPゲージの位置
@@ -198,7 +198,7 @@ void SikaTentyo::SpriteRender(ID3D11DeviceContext* dc)
 
 		//! 名前
 		name->Render(dc,
-			hpImagePos.x + 410, hpImagePos.y - 45,
+			hpImagePos.x + 440, hpImagePos.y - 45,
 			232, 46,
 			0, 0,
 			textureWidth, textureHeight,
@@ -217,7 +217,7 @@ void SikaTentyo::SpriteRender(ID3D11DeviceContext* dc)
 			0, 0,
 			textureWidth, textureHeight,
 			0,
-			1, 1, 1, noroiOpacity);
+			0.8f, 0, 0.8f, noroiOpacity);
 	}
 }
 
@@ -630,7 +630,7 @@ void SikaTentyo::OnDamaged()
 
 	hpShake = true;
 
-	hp -= 20;
+	hp -= 40;
 
 	if (hp <= 0)
 		// 死亡ステートへ遷移

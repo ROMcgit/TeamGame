@@ -1,17 +1,17 @@
 #pragma once
 
 #include "Graphics//Model.h"
-#include "ImportantItem.h"
+#include "Item.h"
 #include "Graphics/Graphics.h"
 #include "Game/Effect/Effect.h"
 #include "Other/Mathf.h"
 
-// バナナ
-class Banana : public ImportantItem
+// 桃
+class Mikan : public Item
 {
 public:
-	Banana();
-	~Banana() override;
+	Mikan();
+	~Mikan() override;
 
 	// 更新処理
 	void Update(float elapsedTime) override;
@@ -35,9 +35,9 @@ private:
 
 	/***********************************************************************************************/
 
-	/*! 行動制御 */
+		/*! 行動制御 */
 
-	// 待機ステートへ遷移
+		// 待機ステートへ遷移
 	void TransitionInitState();
 
 	// 待機ステート更新処理

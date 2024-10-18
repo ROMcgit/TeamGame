@@ -1,71 +1,46 @@
-#include "Banana.h"
+#include "Peach.h"
 #include <imgui.h>
 #include "Graphics/Graphics.h"
 #include "Other/Mathf.h"
 #include "Game/Character/Player.h"
 #include "Other/Collision.h"
+#include "Audio/SoundEffectManager.h"
 
 // コンストラクタ
-Banana::Banana()
+Peach::Peach()
 {
-	model = std::make_unique<Model>("Data/Model/Item/Banana/Banana.mdl");
+	model = std::make_unique<Model>("Data/Model/Item/Peach/Peach.mdl");
 
-	getEffect = std::make_unique <Effect>("Data/Effect/Effect/Banana.efk");
-
-	Player& player = Player::Instance();
-
-	if (player.GetBananaNum() < 3)
-	{
-		position.x = player.GetPosition().x + ((rand() % 100 + 200) * (rand() % 2 == -1 ? -1 : 1));
-		position.z = player.GetPosition().x + ((rand() % 100 + 200) * (rand() % 2 == -1 ? -1 : 1));
-	}
-	else if(player.GetBananaNum() >= 3 && player.GetBananaNum() < 5)
-	{
-		position.x = player.GetPosition().x + ((rand() % 100 + 400) * (rand() % 2 == -1 ? -1 : 1));
-		position.z = player.GetPosition().x + ((rand() % 100 + 400) * (rand() % 2 == -1 ? -1 : 1));
-	}
-	else if (player.GetBananaNum() >= 5)
-	{
-		position.x = player.GetPosition().x + ((rand() % 100 + 700) * (rand() % 2 == -1 ? -1 : 1));
-		position.z = player.GetPosition().x + ((rand() % 100 + 700) * (rand() % 2 == -1 ? -1 : 1));
-	}
-
-	/// X座標制限
-	if (position.x > 1000.0f)
-		position.x = 800.0f;
-	else if (position.x < -1000.0f)
-		position.x = -800.0f;
-
-	// Z座標制限
-	if (position.z > 1000.0f)
-		position.z = 800.0f;
-	else if (position.z < -1000.0f)
-		position.z = -800.0f;
+	getEffect = std::make_unique <Effect>("Data/Effect/Effect/Peach.efk");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.015f;
+	scale.x = scale.y = scale.z = 0.000f;
+
+	SetScaleChange(DirectX::XMFLOAT3(0.007f, 0.007f, 0.007f), DirectX::XMFLOAT3(0.04f, 0.04f, 0.04f));
 
 	gravity = 0.0f;
 
-	collisionOffset = { 0, -0.0f, 0 };
+	collisionOffset = { 0, -0.5f, 0 };
 
 	// 幅、高さ設定
-	radius = 1.2f;
-	height = 1.5f;
+	radius = 0.8f;
+	height = 1.8f;
+
+	SoundEffectManager::Instance().LoadSoundEffect("食べる", "Data/Audio/食べる.wav");
 
 	// 待機ステートへ遷移
 	TransitionInitState();
 }
 
 // デストラクタ
-Banana::~Banana()
+Peach::~Peach()
 {
 }
 
 // 更新処理
-void Banana::Update(float elapsedTime)
+void Peach::Update(float elapsedTime)
 {
-	position.y = 0.5f;
+	position.y = 0.8f;
 
 	// ステート毎の更新処理
 	switch (state)
@@ -99,24 +74,42 @@ void Banana::Update(float elapsedTime)
 	// モデル行列更新
 	model->UpdateTransform(transform);
 
+	// 一定の距離を離れたら破棄する
+	Player& player = Player::Instance();
+
+	float vx = player.GetPosition().x - position.x;
+	float vz = player.GetPosition().z - position.z;
+	dist = vx * vx + vz * vz;
+	if (dist > 3200)
+		Destroy();
+
+	// 自然消滅
+	lifeTimer -= elapsedTime;
+	if (lifeTimer < 0.0f)
+	{
+		SetScaleChange(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0.04f, 0.04f, 0.04f));
+
+		if (scale.x <= 0)
+			Destroy();
+	}
 }
 
 // 描画処理
-void Banana::Render(ID3D11DeviceContext* dc, Shader* shader)
+void Peach::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	shader->Draw(dc, model.get());
 }
 
 // HPなどの描画
-void Banana::SpriteRender(ID3D11DeviceContext* dc)
+void Peach::SpriteRender(ID3D11DeviceContext* dc)
 {
 
 }
 
 // デバッグ用GUI描画
-void Banana::DrawDebugGUI()
+void Peach::DrawDebugGUI()
 {
-	if (ImGui::TreeNode("Banana"))
+	if (ImGui::TreeNode("Peach"))
 	{
 		ImGui::InputFloat("Dist", &dist);
 
@@ -144,14 +137,14 @@ void Banana::DrawDebugGUI()
 }
 
 // デバッグプリミティブ描画
-void Banana::DrawDebugPrimitive()
+void Peach::DrawDebugPrimitive()
 {
 	// 基底クラスのデバッグプリミティブ描画
-	ImportantItem::DrawDebugPrimitive();
+	Item::DrawDebugPrimitive();
 }
 
 // プレイヤーとの接触処理
-void Banana::CollisionItemVsPlayer()
+void Peach::CollisionItemVsPlayer()
 {
 	Player& player = Player::Instance();
 
@@ -167,12 +160,16 @@ void Banana::CollisionItemVsPlayer()
 		outPosition
 	))
 	{
-		// プレイヤーを拡散攻撃できるようにする
-		player.SetBananaNum(1);
+		// プレイヤーを回復させる
+		player.SetExp(1);
 
 		DirectX::XMFLOAT3 e = player.GetPosition();
 		e.y += player.GetHeight() * 0.5f;
 		getEffect->Play(e, 0.6f);
+
+		SoundEffectManager& sound = SoundEffectManager::Instance();
+		sound.StopSoundEffect("食べる");
+		sound.PlaySoundEffect("食べる");
 
 		// 破棄する
 		Destroy();
@@ -180,7 +177,7 @@ void Banana::CollisionItemVsPlayer()
 }
 
 // 待機ステートへ遷移
-void Banana::TransitionInitState()
+void Peach::TransitionInitState()
 {
 	state = State::Init;
 
@@ -188,13 +185,6 @@ void Banana::TransitionInitState()
 }
 
 // 待機ステート更新処理
-void Banana::UpdateInitState(float elapsedTime)
+void Peach::UpdateInitState(float elapsedTime)
 {
-	Player& player = Player::Instance();
-
-	float vx = player.GetPosition().x - position.x;
-	float vz = player.GetPosition().z - position.z;
-	dist = vx * vx + vz * vz;
-
-	dist = (int)(dist + 0.5f);
 }

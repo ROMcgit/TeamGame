@@ -6,7 +6,7 @@
 #include "Game/Effect/Effect.h"
 #include "Other/Mathf.h"
 
-// ƒXƒ‰ƒCƒ€
+// ƒŠƒ“ƒS
 class Apple : public Item
 {
 public:

@@ -46,11 +46,17 @@ public:
 		this->diffusionAttacks += diffusionAttacks;
 	}
 
+	// HP‰ñ•œ
+	void SetHpUp(int hpUp)
+	{
+		this->hp += hpUp;
+	}
+
 	// –³“Gó‘Ôİ’è
 	void SetInvincibleState(bool invincibleState)
 	{
 		this->invincibleState = invincibleState;
-		invincibleTimer = 5.0f;
+		invincibleTimer = 10.0f;
 	}
 
 	// –³“Gó‘Ôæ“¾

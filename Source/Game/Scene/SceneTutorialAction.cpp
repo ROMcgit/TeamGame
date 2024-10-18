@@ -23,6 +23,8 @@
 #include "Game/Character/Item/ImportantItemManager.h"
 #include "Game/Character/Item/Apple.h"
 #include "Game/Character/Item/Melon.h"
+#include "Game/Character/Item/Peach.h"
+#include "Game/Character/Item/Mikan.h"
 #include "Game/Character/Item/Banana.h"
 
 #include "Game/Character/Installation/InstallationManager.h"
@@ -114,7 +116,7 @@ void SceneTutorialAction::Update(float elapsedTime)
 	{
 		if (!mutekiBgmPlay)
 		{
-			BgmManager::Instance().PlayBgm("ñ≥ìG", 0.5f);
+			BgmManager::Instance().PlayBgm("ñ≥ìG", 0.4f);
 			mutekiBgmPlay = true;
 		}
 
@@ -513,7 +515,7 @@ void SceneTutorialAction::Newestablishment(float elapsedTime)
 		int posX = player->GetPosition().x + distance * cos(randomAngle); // cosÇ≈Xç¿ïWÇåvéZ
 		int posZ = player->GetPosition().z + distance * sin(randomAngle); // sinÇ≈Zç¿ïWÇåvéZ
 
-		if (itemCount < 10 && newItemTimer > newItemMaxTimer && messageFinish[4])
+		if (itemCount < 15 && newItemTimer > newItemMaxTimer && messageFinish[4])
 		{
 			posX = player->GetPosition().x + distance * cos(randomAngle);
 			posZ = player->GetPosition().z + distance * sin(randomAngle);
@@ -530,21 +532,51 @@ void SceneTutorialAction::Newestablishment(float elapsedTime)
 			else if (posZ <= -990)
 				posZ = -950;
 
-			int ItemRand = rand() % 2 + 1;
+			int ItemRand = rand() % 20 + 1;
 			switch (ItemRand)
 			{
 			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 8:
 			{
 				std::unique_ptr<Apple> apple = std::make_unique<Apple>();
 				apple->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
 				itemManager.Register(std::move(apple));
 			}
 				break;
-			case 2:
+			case 9:
+			case 10:
 			{
 				std::unique_ptr<Melon> melon = std::make_unique<Melon>();
 				melon->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
 				itemManager.Register(std::move(melon));
+			}
+				break;
+			case 11:
+			case 12:
+			{
+				std::unique_ptr<Peach> peach = std::make_unique<Peach>();
+				peach->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
+				itemManager.Register(std::move(peach));
+			}
+				break;
+			case 13:
+			case 14:
+			case 15:
+			case 16:
+			case 17:
+			case 18:
+			case 19:
+			case 20:
+			{
+				std::unique_ptr<Mikan> mikan = std::make_unique<Mikan>();
+				mikan->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
+				itemManager.Register(std::move(mikan));
 			}
 			default:
 				break;

@@ -22,7 +22,7 @@ SikaTentyo::SikaTentyo()
 	hp = hpDamage = 0;
 	maxHp = 500;
 
-	collisionOffset = { -0.1f, 0, 0 };
+	collisionOffset = { -0.1f, 0.5f, 0 };
 
 	radius = 2;
 	height = 6;
@@ -344,9 +344,9 @@ void SikaTentyo::CollisionEnemyVsPlayer()
 
 			player.SetVelocity(DirectX::XMFLOAT3(velocity.x, 100.0f, velocity.z));
 		}
-		else if (player.GetLunges())
+		else if (player.GetLunges() && invincibleTimer <= 0.0f)
 		{
-			TransitionDamageState();
+			this->ApplyDamage(1, 1.0f);
 		}
 	}
 }
@@ -490,17 +490,17 @@ void SikaTentyo::UpdateMoveState(float elapsedTime)
 	float vx = player.GetPosition().x - position.x;
 	float vz = player.GetPosition().z - position.z;
 
-	if (position.y > 1.3f)
+	if (collisionPos.y > 0.0f)
 	{
-		velocity.y = -3;
+		velocity.y = -6;
 
 		// 移動処理
-		Move(vx, vz, 15.0f);
+		Move(vx, vz, 13.0f);
 	}
-	else if (position.y <= 1.3f)
+	else if (collisionPos.y <= 0.0f)
 	{
 		velocity.y = 0;
-		position.y = 1.3f;
+		position.y = -1.0f;
 
 		dist = vx * vx + vz * vz;
 		if(dist > 1000)
@@ -518,11 +518,7 @@ void SikaTentyo::UpdateMoveState(float elapsedTime)
 // ダメージステートへ遷移
 void SikaTentyo::TransitionDamageState()
 {
-	hpShake = true;
-
-	hp -= 20;
-
-	velocity.y = 5;
+	velocity.y = 10;
 
 	velocity.x = (rand() % 5 + 20) * (rand() % 2 == 1 ? -1 : 1);
 	velocity.z = (rand() % 5 + 20) * (rand() % 2 == 1 ? -1 : 1);
@@ -596,7 +592,9 @@ void SikaTentyo::OnDamaged()
 {
 	invincibleTimer = 1.0f;
 
-	
+	hpShake = true;
+
+	hp -= 20;
 
 	if (hp <= 0)
 		// 死亡ステートへ遷移

@@ -32,7 +32,7 @@ void SceneGame::Initialize()
 {
 	BgmManager& bgm = BgmManager::Instance();
 	bgm.LoadBgm("バトル", "Data/Audio/bgm/battle.wav");
-	bgm.PlayBgm("バトル", 0.55f);
+	bgm.PlayBgm("バトル", 0.48f);
 	bgm.LoadBgm("ボス", "Data/Audio/bgm/boss.wav");
 	bgm.LoadBgm("無敵", "Data/Audio/bgm/無敵.wav");
 
@@ -107,16 +107,23 @@ void SceneGame::Update(float elapsedTime)
 			mutekiBgmPlay = true;
 		}
 
-		BgmManager::Instance().ChangeBgmStatus("バトル", 0);
-		BgmManager::Instance().ChangeBgmStatus("ボス", 0);
+		if(!enemyDelete)
+			BgmManager::Instance().StopBgm("バトル");
+		else
+			BgmManager::Instance().StopBgm("ボス");
 	}
 	else
 	{
 		BgmManager::Instance().StopBgm("無敵");
-		mutekiBgmPlay = false;
+		if (mutekiBgmPlay)
+		{
+			mutekiBgmPlay = false;
 
-		BgmManager::Instance().ChangeBgmStatus("バトル", 0.55f);
-		BgmManager::Instance().ChangeBgmStatus("ボス", 1.0f);
+			if (!enemyDelete)
+				BgmManager::Instance().PlayBgm("バトル", 0.48f);
+			else
+				BgmManager::Instance().PlayBgm("ボス", 1.0f);
+		}
 	}
 
 	// 生成処理

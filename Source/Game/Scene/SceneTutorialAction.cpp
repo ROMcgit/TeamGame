@@ -87,7 +87,7 @@ void SceneTutorialAction::Initialize()
 
 	//! 音楽読み込み
 	BgmManager::Instance().LoadBgm("トレーニング", "Data/Audio/bgm/training.wav");
-	BgmManager::Instance().PlayBgm("トレーニング", 0.23f);
+	BgmManager::Instance().PlayBgm("トレーニング", 0.3f);
 	BgmManager::Instance().LoadBgm("無敵", "Data/Audio/bgm/無敵.wav");
 
 	SoundEffectManager::Instance().LoadSoundEffect("正解", "Data/Audio/正解.wav");
@@ -120,15 +120,16 @@ void SceneTutorialAction::Update(float elapsedTime)
 			mutekiBgmPlay = true;
 		}
 
-		BgmManager::Instance().ChangeBgmStatus("トレーニング",0);
+		BgmManager::Instance().StopBgm("トレーニング");
 	}
 	else
 	{
 		BgmManager::Instance().StopBgm("無敵");
-		mutekiBgmPlay = false;
-
-		BgmManager::Instance().ChangeBgmStatus("無敵", 0);
-		BgmManager::Instance().ChangeBgmStatus("トレーニング", 0.23f);
+		if (mutekiBgmPlay)
+		{
+			mutekiBgmPlay = false;
+			BgmManager::Instance().PlayBgm("トレーニング", 0.3f);
+		}
 	}
 
 	GamePad& gamePad = Input::Instance().GetGamePad();

@@ -14,6 +14,7 @@
 #include "Game/Character/Item/Apple.h"
 #include "Game/Character/Item/Melon.h"
 #include "Game/Character/Item/Peach.h"
+#include "Game/Character/Item/Mikan.h"
 #include "Game/Character/Item/Banana.h"
 
 #include "Game/Character/Installation/InstallationManager.h"
@@ -517,20 +518,26 @@ void SceneGame::Newestablishment(float elapsedTime)
 			case 6:
 			case 7:
 			case 8:
-			case 9:
-			case 10:
 			{
 				std::unique_ptr<Apple> apple = std::make_unique<Apple>();
 				apple->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
 				itemManager.Register(std::move(apple));
 			}
 			break;
-			case 11:
-			case 12:
+			case 9:
+			case 10:
 			{
 				std::unique_ptr<Melon> melon = std::make_unique<Melon>();
 				melon->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
 				itemManager.Register(std::move(melon));
+			}
+			break;
+			case 11:
+			case 12:
+			{
+				std::unique_ptr<Peach> peach = std::make_unique<Peach>();
+				peach->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
+				itemManager.Register(std::move(peach));
 			}
 			break;
 			case 13:
@@ -542,11 +549,10 @@ void SceneGame::Newestablishment(float elapsedTime)
 			case 19:
 			case 20:
 			{
-				std::unique_ptr<Peach> peach = std::make_unique<Peach>();
-				peach->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
-				itemManager.Register(std::move(peach));
+				std::unique_ptr<Mikan> mikan = std::make_unique<Mikan>();
+				mikan->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
+				itemManager.Register(std::move(mikan));
 			}
-			break;
 			default:
 				break;
 			}

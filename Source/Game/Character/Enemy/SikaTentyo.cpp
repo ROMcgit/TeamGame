@@ -327,7 +327,7 @@ void SikaTentyo::CollisionEnemyVsPlayer()
 		outPosition
 	))
 	{
-		if (player.ApplyDamage(player.GetViewMoveSpeed() + 20, 1.0f))
+		if (player.ApplyDamage(player.GetViewMoveSpeed() + 25, 1.0f))
 		{
 			// ‘O•ûŒü
 			DirectX::XMFLOAT3 velocity;

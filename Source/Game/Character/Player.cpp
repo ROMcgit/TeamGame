@@ -741,52 +741,52 @@ void Player::UpdateLevel()
 		expMax = 5;
 		break;
 	case 2:
-		expMax = 10;
+		expMax = 5;
 		break;
 	case 3:
-		expMax = 12;
+		expMax = 5;
 		break;
 	case 4:
-		expMax = 14;
+		expMax = 5;
 		break;
 	case 5:
-		expMax = 16;
+		expMax = 7;
 		break;
 	// “GHP = 2
 	case 6:
-		expMax = 20;
+		expMax = 9;
 		break;
 	case 7:
-		expMax = 22;
+		expMax = 13;
 		break;
 	case 8:
-		expMax = 25;
+		expMax = 15;
 		break;
 	case 9:
-		expMax = 26;
+		expMax = 15;
 		break;
 	case 10:
-		expMax = 30;
-		break;
-	// “GHP = 3
-	case 11:
-		expMax = 14;
-		break;
-	case 12:
-		expMax = 16;
-		break;
-	case 13:
-		expMax = 18;
-		break;
-	case 14:
 		expMax = 20;
 		break;
+	// “GHP = 2
+	case 11:
+		expMax = 12;
+		break;
+	case 12:
+		expMax = 14;
+		break;
+	case 13:
+		expMax = 16;
+		break;
+	case 14:
+		expMax = 18;
+		break;
 	case 15:
-		expMax = 22;
+		expMax = 20;
 		break;
 	// “GHP = 4
 	case 16:
-		expMax = 15;
+		expMax = 13;
 		break;
 	case 17:
 		expMax = 16;
@@ -798,7 +798,7 @@ void Player::UpdateLevel()
 		expMax = 18;
 		break;
 	case 20:
-		expMax = 19;
+		expMax = 18;
 		break;
 	default:
 		break;

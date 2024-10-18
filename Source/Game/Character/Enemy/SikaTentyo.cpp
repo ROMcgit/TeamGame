@@ -453,14 +453,14 @@ void SikaTentyo::TransitionEntryState()
 // 登場ステート更新処理
 void SikaTentyo::UpdateEntryState(float elapsedTime)
 {
-	if (position.y > 1.3f)
+	if (position.y > 1.2f)
 	{
 		velocity.y -= 15 * elapsedTime;
 	}
-	else if(position.y <= 1.3f)
+	else if(position.y <= 1.2f)
 	{
 		velocity.y = 0;
-		position.y = 1.3f;
+		position.y = 1.2f;
 
 		//! 開始ステートへ遷移
 		TransitionStartState();

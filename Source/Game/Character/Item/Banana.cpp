@@ -170,7 +170,7 @@ void Banana::CollisionItemVsPlayer()
 		outPosition
 	))
 	{
-		if (player.GetInvincibleTimer() <= 0.0f || player.GetInvincibleState())
+		if (player.GetInvincibleTimer() <= 0.0f || player.GetInvincibleState() || player.GetLunges())
 		{
 			SoundEffectManager::Instance().PlaySoundEffect("ƒoƒiƒi");
 

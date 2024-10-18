@@ -357,7 +357,7 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 			0,
 			0.0f, 0.0f, 0.0f, 1);
 
-		if (hp > 25)
+		if (hp > 90)
 		{
 			// ダメージ(赤色)
 			hpSprite[2]->Render(dc,
@@ -383,7 +383,7 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 			// ダメージ(白色)
 			hpSprite[2]->Render(dc,
 				hpSpritePos.x, hpSpritePos.y,
-				hpDamage * 1.34f, 25,
+				hpDamage * hpSpriteAdjust, 28,
 				0, 0, textureWidth, textureHeight,
 				0,
 				1, 1, 1, 1);
@@ -391,7 +391,7 @@ void Player::SpriteRender(ID3D11DeviceContext* dc)
 			// ダメージ(赤色)
 			hpSprite[3]->Render(dc,
 				hpSpritePos.x, hpSpritePos.y,
-				hp * 1.34f, 25,
+				hp * hpSpriteAdjust, 28,
 				0, 0, textureWidth, textureHeight,
 				0,
 				1, 0, 0, 1);

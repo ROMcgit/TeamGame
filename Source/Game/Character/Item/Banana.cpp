@@ -176,6 +176,7 @@ void Banana::CollisionItemVsPlayer()
 
 			// ƒvƒŒƒCƒ„[‚ğŠgUUŒ‚‚Å‚«‚é‚æ‚¤‚É‚·‚é
 			player.SetBananaNum(1);
+			player.SetHpUp(100);
 
 			DirectX::XMFLOAT3 e = player.GetPosition();
 			e.y += player.GetHeight() * 0.5f;

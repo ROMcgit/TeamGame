@@ -111,6 +111,10 @@ private:
 
 private:
 	std::unique_ptr<Model> model;
+	std::unique_ptr<Sprite> noroi;
+	bool noroiOpacityDown   = false;
+	float noroiOpacity      = 0.0f;
+	float noroiOpacitySpeed = 0.7f;
 	std::unique_ptr<Effect> roarEffect;
 	bool effectPlay = false;
 

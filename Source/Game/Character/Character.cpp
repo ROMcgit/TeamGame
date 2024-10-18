@@ -275,6 +275,7 @@ bool Character::UpdateHpShake(float elapsedTime)
 
 		hpSpritePos.y = hpSpriteShakePosY;
 		hpImagePos.y = hpImageShakePosY;
+		if(invincibleTimer <= 0.0f)
 		hpSpriteColor = { 1, 1, 1 };
 
 		return false;

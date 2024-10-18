@@ -167,15 +167,18 @@ void Banana::CollisionItemVsPlayer()
 		outPosition
 	))
 	{
-		// ƒvƒŒƒCƒ„[‚ğŠgUUŒ‚‚Å‚«‚é‚æ‚¤‚É‚·‚é
-		player.SetBananaNum(1);
+		if (player.GetInvincibleTimer() <= 0.0f)
+		{
+			// ƒvƒŒƒCƒ„[‚ğŠgUUŒ‚‚Å‚«‚é‚æ‚¤‚É‚·‚é
+			player.SetBananaNum(1);
 
-		DirectX::XMFLOAT3 e = player.GetPosition();
-		e.y += player.GetHeight() * 0.5f;
-		getEffect->Play(e, 0.6f);
+			DirectX::XMFLOAT3 e = player.GetPosition();
+			e.y += player.GetHeight() * 0.5f;
+			getEffect->Play(e, 0.6f);
 
-		// ”jŠü‚·‚é
-		Destroy();
+			// ”jŠü‚·‚é
+			Destroy();
+		}
 	}
 }
 

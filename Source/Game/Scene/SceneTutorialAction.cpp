@@ -286,6 +286,9 @@ void SceneTutorialAction::Update(float elapsedTime)
 
 		if (setFade && !fade->GetFade())
 		{
+			BgmManager::Instance().UnloadBgm("無敵");
+			BgmManager::Instance().UnloadBgm("トレーニング");
+
 			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGame>());
 			// シーンマネージャーにローディングシーンへの切り替えを指示
 			SceneManager::Instance().ChangeScene(std::move(loadingScene));
@@ -296,7 +299,7 @@ void SceneTutorialAction::Update(float elapsedTime)
 		break;
 	}
 
-	if (messageScene != MessageScene::Message4)
+	if (messageScene != MessageScene::Message4 && messageOpacity >= 1.0f)
 		player->SetLungesCount(0);
 
 	if (answerTimer > 0.0f)

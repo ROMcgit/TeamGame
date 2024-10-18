@@ -11,6 +11,8 @@ SikaTentyo::SikaTentyo()
 {
 	model = std::make_unique<Model>("Data/Model/SikaTentyo/SikaTentyo.mdl");
 
+	noroi = std::make_unique<Sprite>("Data/Sprite/“X’·‚ÌŽô‚¢.png");
+
 	roarEffect = std::make_unique<Effect>("Data/Effect/Effect/Roar.efk");
 
 	scale.x = scale.y = scale.z = 0.04f;
@@ -111,6 +113,25 @@ void SikaTentyo::Update(float elapsedTime)
 
 	// ƒ‚ƒfƒ‹s—ñXV
 	model->UpdateTransform(transform);
+
+	if (!noroiOpacityDown)
+	{
+		noroiOpacity += noroiOpacitySpeed * elapsedTime;
+		if (noroiOpacity >= 1.0f)
+		{
+			noroiOpacity = 1.0f;
+			noroiOpacityDown = true;
+		}
+	}
+	else
+	{
+		noroiOpacity -= noroiOpacitySpeed * elapsedTime;
+		if (noroiOpacity <= 0.0f)
+		{
+			noroiOpacity = 0.0f;
+			noroiOpacityDown = false;
+		}
+	}
 }
 
 // •`‰æˆ—
@@ -185,6 +206,17 @@ void SikaTentyo::SpriteRender(ID3D11DeviceContext* dc)
 			hpSpriteColor.y,
 			hpSpriteColor.z,
 			nameSpriteOpacity);
+
+		textureWidth = static_cast<float>(noroi->GetTextureWidth());
+		textureHeight = static_cast<float>(noroi->GetTextureHeight());
+
+		noroi->Render(dc,
+			10, -20,
+			1280, 720,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 1, 1, noroiOpacity);
 	}
 }
 

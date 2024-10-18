@@ -205,6 +205,7 @@ void SceneGame::Update(float elapsedTime)
 		{
 			BgmManager::Instance().UnloadBgm("バトル");
 			BgmManager::Instance().UnloadBgm("ボス");
+			BgmManager::Instance().UnloadBgm("無敵");
 
 			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGameClear>());
 
@@ -690,6 +691,7 @@ void SceneGame::UpdateMovie(float elapsedTime)
 				SoundEffectManager::Instance().PlaySoundEffect("警告音");
 
 				player->SetPosition(DirectX::XMFLOAT3(0, 1.3f, -100));
+				player->SetVelocity(DirectX::XMFLOAT3(0, 0, 0));
 
 				//! カメラのターゲット
 				cameraTarget = { 0, 6, 0 };

@@ -24,7 +24,7 @@ public:
     void ChangeBgmStatus(const std::string& name, float volume = 1.0f, float speed = 1.0f);
 
     // Bgm‚Ì’âŽ~
-    void StopBgm();
+    void StopBgm(const std::string& name);
     
     // Bgm‚Ì”jŠü
     void UnloadBgm(const std::string& name);

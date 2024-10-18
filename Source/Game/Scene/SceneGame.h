@@ -78,4 +78,6 @@ private:
 	bool setCameraShake[2];
 
 	bool setGameClearMovie = false;
+
+	bool mutekiBgmPlay = false;
 };

@@ -51,13 +51,28 @@ void BgmManager::ChangeBgmStatus(const std::string& name, float volume, float sp
 }
 
 // Bgm‚Ì’âŽ~
-void BgmManager::StopBgm()
+void BgmManager::StopBgm(const std::string& name)
 {
-    if (currentBgm)
+    auto it = bgmList.find(name);
+    if (it != bgmList.end())
     {
-        currentBgm->Stop();
-        currentBgm = nullptr;
-        currentBgmName.clear();
+        // Žw’è‚µ‚½BGM‚ªŒ»ÝÄ¶’†‚Å‚ ‚ê‚Î’âŽ~
+        if (it->second.get() == currentBgm)
+        {
+            currentBgm->Stop();
+            currentBgm = nullptr;
+            currentBgmName.clear();
+        }
+        else
+        {
+            // Žw’è‚µ‚½BGM‚ªÄ¶’†‚Å‚È‚¢ê‡ABGM‚ð’âŽ~‚·‚é‚¾‚¯
+            it->second->Stop();
+        }
+    }
+    else
+    {
+        // –¼‘O‚ªŠÔˆá‚Á‚Ä‚¢‚éê‡‚É—áŠO‚ð“Š‚°‚é
+        throw std::runtime_error("Bgm‚ð’âŽ~‚·‚éname‚ªŠÔˆá‚Á‚Ä‚¢‚Ü‚·II");
     }
 }
 
@@ -70,7 +85,7 @@ void BgmManager::UnloadBgm(const std::string& name)
         // BGM‚Ì’âŽ~‚Æ”jŠü
         if (it->second.get() == currentBgm)
         {
-            StopBgm();
+            StopBgm(name);
         }
         bgmList.erase(it);
     }

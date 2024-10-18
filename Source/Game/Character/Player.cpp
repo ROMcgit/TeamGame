@@ -1084,15 +1084,15 @@ void Player::UpdateLungesState(float elapsedTime)
 	// ボタンを離したら
 	if (!(gamePad.GetButtonHeld() & GamePad::BTN_A))
 	{
-		if(lunges < 3)
-		lungesCount++;
-
 		lungesSound = false;
 
 		SoundEffectManager::Instance().StopSoundEffect("突進チャージ");
 
 		if (lunges)
 		{
+			if (lunges < 3)
+				lungesCount++;
+
 			SoundEffectManager::Instance().StopSoundEffect("突進");
 			SoundEffectManager::Instance().PlaySoundEffect("突進");
 

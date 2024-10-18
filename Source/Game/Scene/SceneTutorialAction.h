@@ -68,4 +68,6 @@ private:
 
 	float newItemTimer = 0.0f;
 	float newItemMaxTimer = 0.5f;
+
+	bool mutekiBgmPlay = false;
 };

@@ -24,7 +24,7 @@ Apple::Apple()
 
 	// •A‚‚³İ’è
 	radius = 0.8f;
-	height = 1.5f;
+	height = 1.8f;
 
 	SoundEffectManager::Instance().LoadSoundEffect("H‚×‚é", "Data/Audio/H‚×‚é.wav");
 

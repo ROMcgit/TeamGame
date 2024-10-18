@@ -344,7 +344,7 @@ void SceneOpning::Update(float elapsedTime)
 				sikaPosX = 300;
 
 			if (sikaMoveTimer > 7.1f)
-				BgmManager::Instance().StopBgm();
+				BgmManager::Instance().StopBgm("オープニング");
 		}
 	}
 		break;

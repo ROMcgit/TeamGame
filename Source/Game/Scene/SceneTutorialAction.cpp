@@ -22,6 +22,7 @@
 #include "Game/Character/Item/ItemManager.h"
 #include "Game/Character/Item/ImportantItemManager.h"
 #include "Game/Character/Item/Apple.h"
+#include "Game/Character/Item/Melon.h"
 #include "Game/Character/Item/Banana.h"
 
 #include "Game/Character/Installation/InstallationManager.h"
@@ -85,6 +86,7 @@ void SceneTutorialAction::Initialize()
 	//! 音楽読み込み
 	BgmManager::Instance().LoadBgm("トレーニング", "Data/Audio/bgm/training.wav");
 	BgmManager::Instance().PlayBgm("トレーニング", 0.23f);
+	BgmManager::Instance().LoadBgm("無敵", "Data/Audio/bgm/無敵.wav");
 
 	SoundEffectManager::Instance().LoadSoundEffect("正解", "Data/Audio/正解.wav");
 }
@@ -108,6 +110,25 @@ void SceneTutorialAction::Finalize()
 // 更新処理
 void SceneTutorialAction::Update(float elapsedTime)
 {
+	if (player->GetInvincibleState())
+	{
+		if (!mutekiBgmPlay)
+		{
+			BgmManager::Instance().PlayBgm("無敵", 0.5f);
+			mutekiBgmPlay = true;
+		}
+
+		BgmManager::Instance().ChangeBgmStatus("トレーニング",0);
+	}
+	else
+	{
+		BgmManager::Instance().StopBgm("無敵");
+		mutekiBgmPlay = false;
+
+		BgmManager::Instance().ChangeBgmStatus("無敵", 0);
+		BgmManager::Instance().ChangeBgmStatus("トレーニング", 0.23f);
+	}
+
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
 	switch (messageScene)
@@ -509,9 +530,25 @@ void SceneTutorialAction::Newestablishment(float elapsedTime)
 			else if (posZ <= -990)
 				posZ = -950;
 
-			std::unique_ptr<Apple> apple = std::make_unique<Apple>();
-			apple->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
-			itemManager.Register(std::move(apple));
+			int ItemRand = rand() % 2 + 1;
+			switch (ItemRand)
+			{
+			case 1:
+			{
+				std::unique_ptr<Apple> apple = std::make_unique<Apple>();
+				apple->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
+				itemManager.Register(std::move(apple));
+			}
+				break;
+			case 2:
+			{
+				std::unique_ptr<Melon> melon = std::make_unique<Melon>();
+				melon->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
+				itemManager.Register(std::move(melon));
+			}
+			default:
+				break;
+			}
 
 			newItemTimer = 0.0f;
 		}

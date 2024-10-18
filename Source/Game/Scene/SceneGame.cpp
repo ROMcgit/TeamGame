@@ -12,6 +12,7 @@
 #include "Game/Character/Item/ItemManager.h"
 #include "Game/Character/Item/ImportantItemManager.h"
 #include "Game/Character/Item/Apple.h"
+#include "Game/Character/Item/Melon.h"
 #include "Game/Character/Item/Banana.h"
 
 #include "Game/Character/Installation/InstallationManager.h"
@@ -31,6 +32,7 @@ void SceneGame::Initialize()
 	bgm.LoadBgm("バトル", "Data/Audio/bgm/battle.wav");
 	bgm.PlayBgm("バトル", 0.55f);
 	bgm.LoadBgm("ボス", "Data/Audio/bgm/boss.wav");
+	bgm.LoadBgm("無敵", "Data/Audio/bgm/無敵.wav");
 
 	SoundEffectManager::Instance().LoadSoundEffect("警告音", "Data/Audio/警告音.wav");
 	SoundEffectManager::Instance().LoadSoundEffect("着地", "Data/Audio/着地.wav");
@@ -92,6 +94,26 @@ void SceneGame::Finalize()
 // 更新処理
 void SceneGame::Update(float elapsedTime)
 {
+	if (player->GetInvincibleState())
+	{
+		if (!mutekiBgmPlay)
+		{
+			BgmManager::Instance().PlayBgm("無敵", 0.5f);
+			mutekiBgmPlay = true;
+		}
+
+		BgmManager::Instance().ChangeBgmStatus("バトル", 0);
+		BgmManager::Instance().ChangeBgmStatus("ボス", 0);
+	}
+	else
+	{
+		BgmManager::Instance().StopBgm("無敵");
+		mutekiBgmPlay = false;
+
+		BgmManager::Instance().ChangeBgmStatus("バトル", 0.23f);
+		BgmManager::Instance().ChangeBgmStatus("ボス", 1.0f);
+	}
+
 	// 生成処理
 	Newestablishment(elapsedTime);
 
@@ -483,9 +505,25 @@ void SceneGame::Newestablishment(float elapsedTime)
 			else if (posZ <= -990)
 				posZ = -950;
 
-			std::unique_ptr<Apple> apple = std::make_unique<Apple>();
-			apple->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
-			itemManager.Register(std::move(apple));
+			int ItemRand = rand() % 2 + 1;
+			switch (ItemRand)
+			{
+			case 1:
+			{
+				std::unique_ptr<Apple> apple = std::make_unique<Apple>();
+				apple->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
+				itemManager.Register(std::move(apple));
+			}
+			break;
+			case 2:
+			{
+				std::unique_ptr<Melon> melon = std::make_unique<Melon>();
+				melon->SetPosition(DirectX::XMFLOAT3(posX, 1, posZ));
+				itemManager.Register(std::move(melon));
+			}
+			default:
+				break;
+			}
 
 			newItemTimer = 0.0f;
 		}

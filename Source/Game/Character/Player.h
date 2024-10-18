@@ -46,11 +46,15 @@ public:
 		this->diffusionAttacks += diffusionAttacks;
 	}
 
+	// –³“Gó‘Ôİ’è
 	void SetInvincibleState(bool invincibleState)
 	{
 		this->invincibleState = invincibleState;
 		invincibleTimer = 5.0f;
 	}
+
+	// –³“Gó‘Ôæ“¾
+	bool GetInvincibleState() { return invincibleState; }
 
 	// exp‚ğ—^‚¦‚é
 	void SetExp(int exp)
@@ -212,7 +216,6 @@ private:
 	YazirusiManager yazirusiManager;
 
 	std::unique_ptr<Effect> hitEffect;
-	std::unique_ptr<Effect> sppedEffect;
 	std::unique_ptr<Effect> sppedEffect;
 	Effekseer::Handle speedHandle;
 	std::unique_ptr<Effect> invincibleEffect;

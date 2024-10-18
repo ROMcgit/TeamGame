@@ -163,7 +163,7 @@ void Mikan::CollisionItemVsPlayer()
 	))
 	{
 		// ƒvƒŒƒCƒ„[‚ğ‰ñ•œ‚³‚¹‚é
-		player.SetHpUp(5);
+		player.SetHpUp(8);
 
 		DirectX::XMFLOAT3 e = player.GetPosition();
 		e.y += player.GetHeight() * 0.5f;

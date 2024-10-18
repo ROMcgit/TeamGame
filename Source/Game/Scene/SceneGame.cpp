@@ -427,9 +427,9 @@ void SceneGame::Newestablishment(float elapsedTime)
 
 	if (player->GetBananaNum() < 1)
 		enemyMaxCount = 10;
-	else if (player->GetBananaNum() >= 1 && player->GetBananaNum() <= 3)
+	else if (player->GetBananaNum() >= 1 && player->GetBananaNum() <= 4)
 		enemyMaxCount = 15;
-	else if ((player->GetBananaNum() >= 4 && player->GetBananaNum() < 6))
+	else if ((player->GetBananaNum() >= 5 && player->GetBananaNum() < 6))
 		enemyMaxCount = 20;
 	else if (player->GetBananaNum() >= 6)
 		enemyMaxCount = 8;
@@ -465,7 +465,7 @@ void SceneGame::Newestablishment(float elapsedTime)
 		// 生成する範囲の角度をランダムに決める
 		float randomAngle = angleY + (rand() % 360 - 180) * (3.14159f / 180.0f); // -180度から+180度までランダム
 
-		float distance = rand() % 20 + 20; // プレイヤーからの距離もランダム
+		float distance = rand() % 20 + 28; // プレイヤーからの距離もランダム
 
 		int posX = player->GetPosition().x + distance * cos(randomAngle); // cosでX座標を計算
 		int posZ = player->GetPosition().z + distance * sin(randomAngle); // sinでZ座標を計算
@@ -688,6 +688,7 @@ void SceneGame::UpdateMovie(float elapsedTime)
 
 			if (!setMovieFade)
 			{
+				BgmManager::Instance().StopBgm("無敵");
 				SoundEffectManager::Instance().PlaySoundEffect("警告音");
 
 				player->SetPosition(DirectX::XMFLOAT3(0, 1.3f, -100));

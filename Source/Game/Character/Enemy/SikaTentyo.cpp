@@ -5,6 +5,7 @@
 #include "Game/Character/Player.h"
 #include "Other/Collision.h"
 #include "Game/Scene/SceneTitle.h"
+#include "Audio/SoundEffectManager.h"
 
 // コンストラクタ
 SikaTentyo::SikaTentyo()
@@ -379,6 +380,9 @@ void SikaTentyo::CollisionEnemyVsPlayer()
 		else if (player.GetLunges() && invincibleTimer <= 0.0f)
 		{
 			this->ApplyDamage(1, 1.0f);
+
+			SoundEffectManager::Instance().StopSoundEffect("攻撃ヒット");
+			SoundEffectManager::Instance().PlaySoundEffect("攻撃ヒット");
 		}
 	}
 }

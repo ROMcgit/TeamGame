@@ -89,7 +89,7 @@ void Peach::Update(float elapsedTime)
 	{
 		radius = 0.0f;
 
-		SetScaleChange(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0.04f, 0.04f, 0.04f));
+		SetScaleChange(DirectX::XMFLOAT3(0, 0, 0), DirectX::XMFLOAT3(0.06f, 0.06f, 0.06f));
 
 		if (scale.x <= 0)
 			Destroy();

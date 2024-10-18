@@ -99,7 +99,7 @@ void SceneGame::Finalize()
 // 更新処理
 void SceneGame::Update(float elapsedTime)
 {
-	if (player->GetInvincibleState())
+	if (player->GetInvincibleState() && !cameraController->GetCameraMovie())
 	{
 		if (!mutekiBgmPlay)
 		{
@@ -112,7 +112,7 @@ void SceneGame::Update(float elapsedTime)
 		else
 			BgmManager::Instance().StopBgm("ボス");
 	}
-	else
+	else if(!cameraController->GetCameraMovie())
 	{
 		BgmManager::Instance().StopBgm("無敵");
 		if (mutekiBgmPlay)

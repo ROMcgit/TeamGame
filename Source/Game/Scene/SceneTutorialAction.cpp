@@ -86,8 +86,6 @@ void SceneTutorialAction::Initialize()
 	fade = std::make_unique<Fade>();
 
 	//! 音楽読み込み
-	BgmManager::Instance().LoadBgm("トレーニング", "Data/Audio/bgm/training.wav");
-	BgmManager::Instance().PlayBgm("トレーニング", 0.3f);
 	BgmManager::Instance().LoadBgm("無敵", "Data/Audio/bgm/無敵.wav");
 
 	SoundEffectManager::Instance().LoadSoundEffect("正解", "Data/Audio/正解.wav");

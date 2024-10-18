@@ -9,6 +9,7 @@
 #include "SceneOpning.h"
 #include "SceneManager.h"
 #include "Audio/SoundEffectManager.h"
+#include "Audio/BgmManager.h"
 
 // 初期化
 void SceneTutorial::Initialize()
@@ -20,6 +21,9 @@ void SceneTutorial::Initialize()
 	}
 
 	SoundEffectManager::Instance().LoadSoundEffect("切り替え", "Data/Audio/チュートリアル切り替え.wav");
+
+	BgmManager::Instance().LoadBgm("トレーニング", "Data/Audio/bgm/training.wav");
+	BgmManager::Instance().PlayBgm("トレーニング", 0.2f);
 }
 
 // 終了化

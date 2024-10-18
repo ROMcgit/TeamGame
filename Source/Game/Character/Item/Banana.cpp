@@ -4,11 +4,14 @@
 #include "Other/Mathf.h"
 #include "Game/Character/Player.h"
 #include "Other/Collision.h"
+#include "Audio/SoundEffectManager.h"
 
 // コンストラクタ
 Banana::Banana()
 {
 	model = std::make_unique<Model>("Data/Model/Item/Banana/Banana.mdl");
+
+	SoundEffectManager::Instance().LoadSoundEffect("バナナ", "Data/Audio/バナナ.wav");
 
 	getEffect = std::make_unique <Effect>("Data/Effect/Effect/Banana.efk");
 
@@ -169,6 +172,8 @@ void Banana::CollisionItemVsPlayer()
 	{
 		if (player.GetInvincibleTimer() <= 0.0f)
 		{
+			SoundEffectManager::Instance().PlaySoundEffect("バナナ");
+
 			// プレイヤーを拡散攻撃できるようにする
 			player.SetBananaNum(1);
 

@@ -52,7 +52,6 @@ private:
 
 private:
 	std::unique_ptr<Model> model;
-	std::unique_ptr<Sprite> enemyHp;
 	std::unique_ptr<Effect> getEffect;
 
 	State state = State::Init;

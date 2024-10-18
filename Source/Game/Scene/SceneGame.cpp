@@ -41,7 +41,7 @@ void SceneGame::Initialize()
 	SoundEffectManager::Instance().LoadSoundEffect("鳴き声", "Data/Audio/鳴き声.wav");
 
 	// 衝撃波エフェクト
-	shockWaveEffect = std::make_unique<Effect>("Data/Effect/ShockWave.efc");
+	shockWaveEffect = std::make_unique<Effect>("Data/Effect/Effect/ShockWave.efk");
 
 	// ステージ初期化
 	StageManager& stageManager = StageManager::Instance();

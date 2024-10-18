@@ -101,6 +101,7 @@ Player::Player()
 	sound.LoadSoundEffect("突進チャージ", "Data/Audio/突進チャージ.wav");
 	sound.LoadSoundEffect("突進ゲージマックス", "Data/Audio/ゲージマックス.wav");
 	sound.LoadSoundEffect("突進", "Data/Audio/突進.wav");
+	sound.LoadSoundEffect("被弾", "Data/Audio/被弾.wav");
 }
 
 // デストラクタ
@@ -1172,6 +1173,9 @@ void Player::TransitionDamageState()
 	state = State::Damage;
 
 	SoundEffectManager& sound = SoundEffectManager::Instance();
+	sound.StopSoundEffect("突進チャージ");
+	sound.StopSoundEffect("被弾");
+	sound.PlaySoundEffect("被弾");
 	sound.StopSoundEffect("叫び");
 	sound.PlaySoundEffect("叫び", 1.2f);
 

@@ -16,15 +16,15 @@ Melon::Melon()
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.000f;
 
-	SetScaleChange(DirectX::XMFLOAT3(0.01f, 0.01f, 0.01f), DirectX::XMFLOAT3(0.04f, 0.04f, 0.04f));
+	SetScaleChange(DirectX::XMFLOAT3(0.02f, 0.02f, 0.02f), DirectX::XMFLOAT3(0.04f, 0.04f, 0.04f));
 
 	gravity = 0.0f;
 
-	collisionOffset = { 0, -0.5f, 0 };
+	collisionOffset = { 0, -1.8f, 0 };
 
 	// 幅、高さ設定
-	radius = 1.1f;
-	height = 1.8f;
+	radius = 2.1f;
+	height = 3.2f;
 
 	SoundEffectManager::Instance().LoadSoundEffect("食べる", "Data/Audio/食べる.wav");
 
@@ -40,7 +40,7 @@ Melon::~Melon()
 // 更新処理
 void Melon::Update(float elapsedTime)
 {
-	position.y = 0.8f;
+	position.y = 1.5f;
 
 	// ステート毎の更新処理
 	switch (state)

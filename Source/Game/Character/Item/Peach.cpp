@@ -16,15 +16,15 @@ Peach::Peach()
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.000f;
 
-	SetScaleChange(DirectX::XMFLOAT3(0.007f, 0.007f, 0.007f), DirectX::XMFLOAT3(0.04f, 0.04f, 0.04f));
+	SetScaleChange(DirectX::XMFLOAT3(0.012f, 0.012f, 0.012f), DirectX::XMFLOAT3(0.04f, 0.04f, 0.04f));
 
 	gravity = 0.0f;
 
-	collisionOffset = { 0, -0.5f, 0 };
+	collisionOffset = { 0, -1.0f, 0 };
 
 	// 幅、高さ設定
-	radius = 0.8f;
-	height = 1.8f;
+	radius = 1.7f;
+	height = 2.0f;
 
 	SoundEffectManager::Instance().LoadSoundEffect("食べる", "Data/Audio/食べる.wav");
 

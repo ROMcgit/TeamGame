@@ -204,7 +204,21 @@ void EnemySika::TransitionPursuitState()
 // 追跡ステート更新処理
 void EnemySika::UpdatePursuitState(float elapsedTime)
 {
-	position.y = 1;
+	if (position.y > 1.1)
+	{
+		velocity.y = -3;
+	}
+	else if (position.y < 0.9)
+	{
+		velocity.y = 3;
+	}
+	else if (position.y <= 1.05f && position.y >= 0.95f)
+	{
+		velocity.y = 0;
+		position.y = 1;
+	}
+	
+	
 
 	SceneTitle& scene = SceneTitle::Instance();
 	if (scene.gameClear)

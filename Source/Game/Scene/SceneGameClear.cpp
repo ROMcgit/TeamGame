@@ -119,7 +119,7 @@ void SceneGameClear::Update(float elapsedTime)
 		{
 			sceneChangeTimer = 0.0f;
 
-			sound.PlaySoundEffect("Œx@‚É˜A—‚³‚¹‚Ä‚à‚ç‚¤‚Ë", 2.0f);
+			sound.PlaySoundEffect("Œx@‚É˜A—‚³‚¹‚Ä‚à‚ç‚¤‚Ë", 3.0f);
 
 			spriteScene = SpriteScene::MonTube2;
 		}

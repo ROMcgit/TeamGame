@@ -58,7 +58,7 @@ Graphics::Graphics(HWND hWnd)
 
 			// TODO:ウインドウモードか、フルスクリーンにするか
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 			// ウインドウモード
 			swapchainDesc.Windowed = TRUE;
 			swapchainDesc.Flags = 0;

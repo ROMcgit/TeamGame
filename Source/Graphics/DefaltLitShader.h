@@ -22,8 +22,25 @@ private:
 	struct CbScene
 	{
 		DirectX::XMFLOAT4X4	viewProjection;
-		DirectX::XMFLOAT4	lightDirection; // ライトの向き
-		DirectX::XMFLOAT4   lightColor;     // ライトの色
+		DirectX::XMFLOAT4	lightDirection;   // ライトの向き
+		DirectX::XMFLOAT4   lightColor;       // ライトの色
+		DirectX::XMFLOAT3   lightPosition;    // ライトの位置
+		float               lightRange;       // ライトの範囲
+
+		float               ambientStrength;  // 環境光
+		float               diffuseStrength;  // 拡散光
+		float               specularStrength; // スペキュラー光
+		float               lightPadding;     // ライトのパディング
+
+		DirectX::XMFLOAT4   fogColor;         // フォグの色
+		float               fogStart;         // フォグの開始
+		float               fogEnd;           // フォグの終了
+		DirectX::XMFLOAT2   fogPadding;       // フォグのパディング
+
+		float               focusDistance;    // フォーカス距離
+		float               focusRange;       // フォーカス範囲
+		float               blurStrength;     // ぼかし強度
+		float               focusPadding;     // フォーカスのパディング
 	};
 
 	struct CbMesh

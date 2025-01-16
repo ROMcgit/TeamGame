@@ -102,24 +102,8 @@ void SceneGame::Update(float elapsedTime)
 void SceneGame::Render()
 {
 	Graphics& graphics = Graphics::Instance();
-	ID3D11DeviceContext* dc = graphics.GetDeviceContext();
-	ID3D11RenderTargetView* rtv = graphics.GetRenderTargetView();
-	ID3D11DepthStencilView* dsv = graphics.GetDepthStencilView();
-
-	// 画面クリア＆レンダーターゲット設定
-	FLOAT color[] = { 0.0f, 0.0f, 0.5f, 1.0f };	// RGBA(0.0～1.0)
-	dc->ClearRenderTargetView(rtv, color);
-	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-	dc->OMSetRenderTargets(1, &rtv, dsv);
-
-	// 描画処理
-	RenderContext rc;
-	rc.lightDirection = { 0.0f, -1.0f, 0.0f, 0.0f };	// ライト方向（下方向）
-
-	// カメラパラメータ設定
-	Camera& camera = Camera::Instance();
-	rc.view = camera.GetView();
-	rc.projection = camera.GetProjection();
+	
+	DrawingSettings(graphics);
 
 	//// ビュー行列
 	//{
@@ -145,7 +129,7 @@ void SceneGame::Render()
 
 	// 3Dモデル描画
 	{
-		Shader* shader = graphics.GetShader();
+		Shader* shader = graphics.GetDefaltLitShader();
 		shader->Begin(dc, rc);
 		// ステージ描画
 		//stage->Render(dc, shader);
@@ -199,7 +183,7 @@ void SceneGame::Render()
 				ImGui::Separator(); // セクションの間に区切り線を表示
 				ImGui::Spacing(); // 一行空ける
 				//-------------------------------------------------------------------------------------------------------
-				camera.DrawDebugGUI(); // ! カメラ
+				Camera::Instance().DrawDebugGUI(); // ! カメラ
 
 				ImGui::Spacing(); // 一行空ける
 				ImGui::Separator(); // セクションの間に区切り線を表示

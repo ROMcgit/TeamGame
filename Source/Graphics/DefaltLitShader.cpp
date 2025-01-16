@@ -1,5 +1,6 @@
 #include "Other/Misc.h"
 #include "Graphics/DefaltLitShader.h"
+#include "Game/Camera/CameraController.h"
 
 DefaltLitShader::DefaltLitShader(ID3D11Device* device)
 {
@@ -196,8 +197,21 @@ void DefaltLitShader::Begin(ID3D11DeviceContext* dc, const RenderContext& rc)
 	DirectX::XMMATRIX P = DirectX::XMLoadFloat4x4(&rc.projection);
 	DirectX::XMStoreFloat4x4(&cbScene.viewProjection, V * P);
 
-	cbScene.lightDirection = rc.lightDirection;
-	cbScene.lightColor = rc.lightColor;
+	cbScene.lightDirection = rc.lightDirection;   // ライトの向き
+	cbScene.lightColor = rc.lightColor;       // ライトの色
+	cbScene.lightPosition = rc.lightPosition;    // ライトの位置
+	cbScene.lightRange = rc.lightRange;       // ライトの範囲
+
+	cbScene.ambientStrength = rc.ambientStrength;  // 環境光
+	cbScene.diffuseStrength = rc.diffuseStrength;  // 拡散光
+	cbScene.specularStrength = rc.specularStrength; // スペキュラー光
+	cbScene.lightPadding = 0.0f;                // ライトのパディング
+
+	cbScene.fogColor = rc.fogColor;         // フォグの色
+	cbScene.fogStart = rc.fogStart;         // フォグの開始
+	cbScene.fogEnd = rc.fogEnd;           // フォグの終了
+	cbScene.fogPadding = { 0.0f, 0.0f };      // フォグのパディング
+
 	dc->UpdateSubresource(sceneConstantBuffer.Get(), 0, 0, &cbScene, 0, 0);
 }
 

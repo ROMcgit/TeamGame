@@ -214,6 +214,7 @@
     <ClCompile Include="Source\Game\Camera\Camera.cpp" />
     <ClCompile Include="Source\Game\Camera\CameraController.cpp" />
     <ClCompile Include="Source\Game\Character\Character.cpp" />
+    <ClCompile Include="Source\Game\Scene\Scene.cpp" />
     <ClCompile Include="Source\Graphics\HDRTexture.cpp" />
     <ClCompile Include="Source\Graphics\ShaderSetting.cpp" />
     <ClCompile Include="Source\Other\Collision.cpp" />

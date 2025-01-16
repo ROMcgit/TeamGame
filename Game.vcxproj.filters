@@ -407,6 +407,9 @@
     <ClCompile Include="Source\Graphics\HDRTexture.cpp">
       <Filter>Source\Graphics\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Game\Scene\Scene.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Debug.hlsli">

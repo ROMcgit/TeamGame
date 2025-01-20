@@ -1,5 +1,5 @@
 #include "Graphics/Graphics.h"
-#include "SceneGame.h"
+#include "G3_SoratobuHusen.h"
 #include "Game/Camera/Camera.h"
 #include "Game/Character/Enemy/EnemyManager.h"
 #include "Game/Character/Enemy/EnemySlime.h"
@@ -10,18 +10,21 @@
 #include "Game/Stage/StageMoveFloor.h"
 
 // 初期化
-void SceneGame::Initialize()
+void G3_SoratobuHusen::Initialize()
 {
-	// ステージ初期化
-	//stage = new Stage();
+	ID3D11Device* device = Graphics::Instance().GetDevice();
+	float screenWidth = Graphics::Instance().GetScreenWidth();
+	float screenHeight = Graphics::Instance().GetScreenHeight();
+
+	// レンダーターゲット
+	renderTarget = std::make_unique<RenderTarget>(device, screenWidth, screenHeight, DXGI_FORMAT_R8G8B8A8_UNORM);
+
+	/********************************************************************************/
+
+		// ステージ初期化
 	StageManager& stageManager = StageManager::Instance();
 	StageMain* stageMain = new StageMain();
 	stageManager.Register(stageMain);
-	StageMoveFloor* stageMoveFloor = new StageMoveFloor();
-	stageMoveFloor->SetStartPoint(DirectX::XMFLOAT3(0, 1, 3));
-	stageMoveFloor->SetGoalPoint(DirectX::XMFLOAT3(10, 2, 3));
-	stageMoveFloor->SetTorque(DirectX::XMFLOAT3(0, 1.0f, 0));
-	stageManager.Register(stageMoveFloor);
 
 	// プレイヤー初期化
 	player = std::make_unique<Player>();
@@ -44,26 +47,12 @@ void SceneGame::Initialize()
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
 
-	// エネミー初期化
-	EnemyManager& enemyManager = EnemyManager::Instance();
-	//Enemy* enemy = new EnemySlime;
-	// slime->SetPosition(DirectX::XMFLOAT3(0,0,5))
-	//enemyManager.Register(enemy);
-
-	for (int i = 0; i < 2; ++i)
-	{
-		std::unique_ptr<EnemySlime> slime = std::make_unique <EnemySlime>();
-		slime->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 5));
-		slime->SetTerritory(slime->GetPosition(), 10.0f);
-		enemyManager.Register(std::move(slime));
-	}
-	
-	enemyHp = std::make_unique <Sprite>();
-
+	// 背景
+	backGround = std::make_unique<Sprite>();
 }
 
 // 終了化
-void SceneGame::Finalize()
+void G3_SoratobuHusen::Finalize()
 {
 	//! ステージを破棄する
 	StageManager::Instance().Clear();
@@ -76,7 +65,7 @@ void SceneGame::Finalize()
 }
 
 // 更新処理
-void SceneGame::Update(float elapsedTime)
+void G3_SoratobuHusen::Update(float elapsedTime)
 {
 	// カメラコントローラー更新処理
 	DirectX::XMFLOAT3 target = player->GetPosition();
@@ -85,7 +74,6 @@ void SceneGame::Update(float elapsedTime)
 	cameraController->Update(elapsedTime);
 
 	// ステージ更新処理
-	//stage->Update(elapsedTime);
 	StageManager::Instance().Update(elapsedTime);
 
 	// プレイヤー更新処理
@@ -99,47 +87,45 @@ void SceneGame::Update(float elapsedTime)
 }
 
 // 描画処理
-void SceneGame::Render()
+void G3_SoratobuHusen::Render()
 {
 	Graphics& graphics = Graphics::Instance();
-	
+
 	DrawingSettings(graphics);
 
-	//// ビュー行列
-	//{
-	//	DirectX::XMFLOAT3 eye = { 0, 10, -10 };	// カメラの視点（位置）
-	//	DirectX::XMFLOAT3 focus = { 0, 0, 0 };	// カメラの注視点（ターゲット）
-	//	DirectX::XMFLOAT3 up = { 0, 1, 0 };		// カメラの上方向
+	//! レンダーターゲット
+	{
+		//! レンダーターゲットに描画開始
+		renderTarget->Begin();
+	}
 
-	//	DirectX::XMVECTOR Eye = DirectX::XMLoadFloat3(&eye);
-	//	DirectX::XMVECTOR Focus = DirectX::XMLoadFloat3(&focus);
-	//	DirectX::XMVECTOR Up = DirectX::XMLoadFloat3(&up);
-	//	DirectX::XMMATRIX View = DirectX::XMMatrixLookAtLH(Eye, Focus, Up);
-	//	DirectX::XMStoreFloat4x4(&rc.view, View);
-	//}
-	//// プロジェクション行列
-	//{
-	//	float fovY = DirectX::XMConvertToRadians(45);	// 視野角
-	//	float aspectRatio = graphics.GetScreenWidth() / graphics.GetScreenHeight();	// 画面縦横比率
-	//	float nearZ = 0.1f;	// カメラが映し出すの最近距離
-	//	float farZ = 1000.0f;	// カメラが映し出すの最遠距離
-	//	DirectX::XMMATRIX Projection = DirectX::XMMatrixPerspectiveFovLH(fovY, aspectRatio, nearZ, farZ);
-	//	DirectX::XMStoreFloat4x4(&rc.projection, Projection);
-	//}
+	//! 2Dスプライト
+	{
+		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
+		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
+		float textureWidth = static_cast<float>(backGround->GetTextureWidth());
+		float textureHeight = static_cast<float>(backGround->GetTextureHeight());
+
+		//! 背景描画
+		backGround->Render(dc,
+			0, 0, screenWidth, screenHeight * 0.8f,
+			0, 0, textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1);
+	}
 
 	// 3Dモデル描画
 	{
 		Shader* shader = graphics.GetDefaltLitShader();
 		shader->Begin(dc, rc);
 		// ステージ描画
-		//stage->Render(dc, shader);
 		StageManager::Instance().Render(dc, shader);
 
 		// プレイヤー描画
 		player->Render(dc, shader);
 
 		//エネミー描画
-		EnemyManager::Instance().Render(dc,shader);
+		EnemyManager::Instance().Render(dc, shader);
 		shader->End(dc);
 
 	}
@@ -147,6 +133,19 @@ void SceneGame::Render()
 	// 3Dエフェクト描画
 	{
 		EffectManager::Instance().Render(rc.view, rc.projection);
+	}
+
+	//! シェーダーを出す
+	{
+		//! レンダーターゲットへ描画終了
+		renderTarget->End();
+		//! スクリーンをポストエフェクトシェーダーで描画
+		Camera::Instance().CreatePostEffect();
+		Camera::Instance().SetPostEffectStatus(
+			1.0f, 0.8f,
+			DirectX::XMFLOAT3(1.2f, 1.3f, 1.35f), 0);
+		//! スクリーンをポストエフェクトシェーダーで描画
+		renderTarget->Render();
 	}
 
 	// 3Dデバッグ描画
@@ -170,12 +169,12 @@ void SceneGame::Render()
 		{
 			// プレイヤーデバッグ描画
 			player->DrawDebugGUI();
-//-----------------------------------------------------------------------------------------------------//
+			//-----------------------------------------------------------------------------------------------------//
 			ImGui::Spacing(); // 一行空ける
 			ImGui::Separator(); // セクションの間に区切り線を表示
 			ImGui::Spacing(); // 一行空ける
-//-----------------------------------------------------------------------------------------------------//
-			// !カメラのデバッグ描画
+			//-----------------------------------------------------------------------------------------------------//
+						// !カメラのデバッグ描画
 			if (ImGui::TreeNode("Cameras"))
 			{
 				//-------------------------------------------------------------------------------------------------------
@@ -192,11 +191,11 @@ void SceneGame::Render()
 				cameraController->DrawDebugGUI(); // !カメラコントローラー
 				ImGui::TreePop();
 			}
-//-----------------------------------------------------------------------------------------------------//
+			//-----------------------------------------------------------------------------------------------------//
 			ImGui::Spacing(); // 一行空ける
 			ImGui::Separator(); // セクションの間に区切り線を表示
 			ImGui::Spacing(); // 一行空ける
-//-----------------------------------------------------------------------------------------------------//
+			//-----------------------------------------------------------------------------------------------------//
 			EnemyManager::Instance().DrawDebugGUI();
 		}
 		ImGui::End();

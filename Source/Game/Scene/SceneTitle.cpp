@@ -1,6 +1,6 @@
 #include "Graphics/Graphics.h"
 #include "Game/Scene/SceneTitle.h"
-#include "SceneGame.h"
+#include "SceneGameSelect.h"
 #include "Game/Scene/SceneManager.h"
 #include "Input/Input.h"
 #include "SceneLoading.h"
@@ -15,12 +15,6 @@ void SceneTitle::Initialize()
 // 終了化
 void SceneTitle::Finalize()
 {
-	// スプライト終了化
-	//if (sprite != nullptr)
-	//{
-	//	delete sprite;
-	//	sprite = nullptr;
-	//}
 }
 
 // 更新処理
@@ -34,7 +28,7 @@ void SceneTitle::Update(float elapsedTime)
 		GamePad::BTN_B;
 	if (gamePad.GetButtonDown() & anyButton)
 	{
-		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGame>());
+		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGameSelect>());
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示
 		SceneManager::Instance().ChangeScene(std::move(loadingScene));

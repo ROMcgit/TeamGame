@@ -8,9 +8,9 @@
 #include "Game/Effect/EffectManager.h"
 #include "Game/Scene/SceneManager.h"
 #include "Game/Scene/SceneTitle.h"
-#include "Game/Scene/SceneGame.h"
+#include "Game/Scene/SceneGameSelect.h"
 
-//static SceneGame sceneGame;
+//static SceneGameSelect sceneGame;
 
 // 垂直同期間隔設定
 static const int syncInterval = 1;
@@ -105,7 +105,7 @@ void Framework::SceneSelectGUI()
 	{
 		ChangeSceneButtonGUI<SceneTitle>(u8"00.タイトル画面");
 
-		ChangeSceneButtonGUI<SceneGame>(u8"01.ゲーム画面");
+		ChangeSceneButtonGUI<SceneGameSelect>(u8"01.ゲーム画面");
 	}
 	ImGui::End();
 

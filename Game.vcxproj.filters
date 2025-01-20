@@ -76,6 +76,27 @@
     <Filter Include="HLSL\DefaltLit">
       <UniqueIdentifier>{5c90581e-8740-45a4-a6e2-89463d9db18e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Scene\GameScene">
+      <UniqueIdentifier>{df8e8d8b-3c47-449d-9ca7-b2d976e0d22c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\GameScene\0.おにごっこ">
+      <UniqueIdentifier>{c51e90c0-8dcd-4b5c-bc1e-5766f7c85d8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\GameScene\1.だるまさんが転んだ">
+      <UniqueIdentifier>{84f86738-c6c4-4ced-a8ea-4aab95ac6ad4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\GameScene\2.寸止め">
+      <UniqueIdentifier>{733b4247-8dbd-4ea2-9101-6a52852e777a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\GameScene\3.空飛ぶ風船">
+      <UniqueIdentifier>{ea44a145-8f79-44a4-b071-eb892cdddb4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\GameScene\4.おっさん叩き">
+      <UniqueIdentifier>{c26c3a82-0ab9-40da-ac3b-1a2bb627a17a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\GameScene\5.足場渡り">
+      <UniqueIdentifier>{1cb23151-c0c0-49a9-a926-17217e6c86e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -174,7 +195,7 @@
     <ClInclude Include="Source\Game\Effect\Effect.h">
       <Filter>Source\Effekseer</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Scene\SceneGame.h">
+    <ClInclude Include="Source\Game\Scene\SceneGameSelect.h">
       <Filter>Source\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Scene\Scene.h">
@@ -251,6 +272,24 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\HDRTexture.h">
       <Filter>Source\Graphics\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\RenderTarget.h">
+      <Filter>Source\Graphics\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G1_DarumasangaKoronda.h">
+      <Filter>Source\Scene\GameScene\1.だるまさんが転んだ</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G2_Sundome.h">
+      <Filter>Source\Scene\GameScene\2.寸止め</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G3_SoratobuHusen.h">
+      <Filter>Source\Scene\GameScene\3.空飛ぶ風船</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G4_OssanTataki.h">
+      <Filter>Source\Scene\GameScene\4.おっさん叩き</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G5_Asibawatari.h">
+      <Filter>Source\Scene\GameScene\5.足場渡り</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -341,7 +380,7 @@
     <ClCompile Include="Source\Game\Effect\Effect.cpp">
       <Filter>Source\Effekseer</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Scene\SceneGame.cpp">
+    <ClCompile Include="Source\Game\Scene\SceneGameSelect.cpp">
       <Filter>Source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Scene\SceneTitle.cpp">
@@ -410,6 +449,27 @@
     <ClCompile Include="Source\Game\Scene\Scene.cpp">
       <Filter>Source\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\RenderTarget.cpp">
+      <Filter>Source\Graphics\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G0_Onigokko.cpp">
+      <Filter>Source\Scene\GameScene\0.おにごっこ</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G1_DarumasangaKoronda.cpp">
+      <Filter>Source\Scene\GameScene\1.だるまさんが転んだ</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G2_Sundome.cpp">
+      <Filter>Source\Scene\GameScene\2.寸止め</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G3_SoratobuHusen.cpp">
+      <Filter>Source\Scene\GameScene\3.空飛ぶ風船</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G4_OssanTataki.cpp">
+      <Filter>Source\Scene\GameScene\4.おっさん叩き</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G5_Asibawatari.cpp">
+      <Filter>Source\Scene\GameScene\5.足場渡り</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Debug.hlsli">
@@ -426,6 +486,9 @@
     </None>
     <None Include="HLSL\Sprite.hlsli">
       <Filter>HLSL\Sprite</Filter>
+    </None>
+    <None Include="Source\Game\Scene\G0_Onigokko.h">
+      <Filter>Source\Scene\GameScene\0.おにごっこ</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -458,6 +521,12 @@
     </FxCompile>
     <FxCompile Include="HLSL\SpriteVS.hlsl">
       <Filter>HLSL\Sprite</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\PostEffectPS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\PostEffectVS.hlsl">
+      <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

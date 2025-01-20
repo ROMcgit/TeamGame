@@ -156,7 +156,13 @@
     <ClInclude Include="Source\Game\Camera\Camera.h" />
     <ClInclude Include="Source\Game\Camera\CameraController.h" />
     <ClInclude Include="Source\Game\Character\Character.h" />
+    <ClInclude Include="Source\Game\Scene\G1_DarumasangaKoronda.h" />
+    <ClInclude Include="Source\Game\Scene\G2_Sundome.h" />
+    <ClInclude Include="Source\Game\Scene\G3_SoratobuHusen.h" />
+    <ClInclude Include="Source\Game\Scene\G4_OssanTataki.h" />
+    <ClInclude Include="Source\Game\Scene\G5_Asibawatari.h" />
     <ClInclude Include="Source\Graphics\HDRTexture.h" />
+    <ClInclude Include="Source\Graphics\RenderTarget.h" />
     <ClInclude Include="Source\Graphics\ShaderSetting.h" />
     <ClInclude Include="Source\Other\Collision.h" />
     <ClInclude Include="Source\Game\Effect\Effect.h" />
@@ -191,7 +197,7 @@
     <ClInclude Include="Source\Game\Character\Projectile\ProjectileStraight.h" />
     <ClInclude Include="Source\Graphics\ResourceManager.h" />
     <ClInclude Include="Source\Game\Scene\Scene.h" />
-    <ClInclude Include="Source\Game\Scene\SceneGame.h" />
+    <ClInclude Include="Source\Game\Scene\SceneGameSelect.h" />
     <ClInclude Include="Source\Game\Scene\SceneLoading.h" />
     <ClInclude Include="Source\Game\Scene\SceneManager.h" />
     <ClInclude Include="Source\Game\Scene\SceneTitle.h" />
@@ -214,8 +220,15 @@
     <ClCompile Include="Source\Game\Camera\Camera.cpp" />
     <ClCompile Include="Source\Game\Camera\CameraController.cpp" />
     <ClCompile Include="Source\Game\Character\Character.cpp" />
+    <ClCompile Include="Source\Game\Scene\G0_Onigokko.cpp" />
+    <ClCompile Include="Source\Game\Scene\G1_DarumasangaKoronda.cpp" />
+    <ClCompile Include="Source\Game\Scene\G2_Sundome.cpp" />
+    <ClCompile Include="Source\Game\Scene\G3_SoratobuHusen.cpp" />
+    <ClCompile Include="Source\Game\Scene\G4_OssanTataki.cpp" />
+    <ClCompile Include="Source\Game\Scene\G5_Asibawatari.cpp" />
     <ClCompile Include="Source\Game\Scene\Scene.cpp" />
     <ClCompile Include="Source\Graphics\HDRTexture.cpp" />
+    <ClCompile Include="Source\Graphics\RenderTarget.cpp" />
     <ClCompile Include="Source\Graphics\ShaderSetting.cpp" />
     <ClCompile Include="Source\Other\Collision.cpp" />
     <ClCompile Include="Source\Game\Effect\Effect.cpp" />
@@ -246,7 +259,7 @@
     <ClCompile Include="Source\Game\Character\Projectile\ProjectileManager.cpp" />
     <ClCompile Include="Source\Game\Character\Projectile\ProjectileStraight.cpp" />
     <ClCompile Include="Source\Graphics\ResourceManager.cpp" />
-    <ClCompile Include="Source\Game\Scene\SceneGame.cpp" />
+    <ClCompile Include="Source\Game\Scene\SceneGameSelect.cpp" />
     <ClCompile Include="Source\Game\Scene\SceneLoading.cpp" />
     <ClCompile Include="Source\Game\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\Game\Scene\SceneTitle.cpp" />
@@ -260,6 +273,7 @@
     <None Include="HLSL\DefaltLit.hlsli" />
     <None Include="HLSL\Line.hlsli" />
     <None Include="HLSL\Sprite.hlsli" />
+    <None Include="Source\Game\Scene\G0_Onigokko.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="HLSL\DebugPS.hlsl">
@@ -364,6 +378,18 @@
     </FxCompile>
     <FxCompile Include="HLSL\SpriteVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\PostEffectPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\PostEffectVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
   </ItemGroup>

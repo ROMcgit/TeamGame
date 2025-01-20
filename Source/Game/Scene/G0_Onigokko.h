@@ -5,14 +5,14 @@
 #include "Game/Character/Enemy/EnemySlime.h"
 #include "Scene.h"
 #include "Graphics/Sprite.h"
+#include "Graphics/RenderTarget.h"
 
 // ゲームシーン
-//class SceneGame
-class SceneGame: public Scene
+class G0_Onigokko : public Scene
 {
 public:
-	SceneGame() {}
-	~SceneGame() override {}
+	G0_Onigokko() {}
+	~G0_Onigokko() override {}
 
 	// 初期化
 	void Initialize() override;
@@ -27,8 +27,9 @@ public:
 	void Render() override;
 
 private:
-	//Stage* stage = nullptr;
 	std::unique_ptr <Player> player;
 	std::unique_ptr <CameraController> cameraController;
-	std::unique_ptr<Sprite> enemyHp;
+
+	std::unique_ptr<RenderTarget>    renderTarget; //! レンダーターゲット
+	std::unique_ptr<Sprite> backGround;
 };

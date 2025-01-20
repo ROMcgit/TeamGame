@@ -2,17 +2,17 @@
 
 #include "Game/Character/Player/Player3_SoratobuHusenWari.h"
 #include "Game/Camera/CameraController.h"
-#include "Game/Character/Enemy/EnemySlime.h"
+#include "Game/Character/Enemy/EnemyOni.h"
 #include "Scene.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/RenderTarget.h"
 
 // ƒQ[ƒ€ƒV[ƒ“
-class G3_SoratobuHusenWariWari : public Scene
+class G3_SoratobuHusenWari : public Scene
 {
 public:
-	G3_SoratobuHusenWariWari() {}
-	~G3_SoratobuHusenWariWari() override {}
+	G3_SoratobuHusenWari() {}
+	~G3_SoratobuHusenWari() override {}
 
 	// ‰Šú‰»
 	void Initialize() override;

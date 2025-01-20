@@ -6,11 +6,11 @@
 #include "Other/Mathf.h"
 
 // スライム
-class EnemySlime : public Enemy
+class EnemyOni : public Enemy
 {
 public:
-	EnemySlime();
-	~EnemySlime() override;
+	EnemyOni();
+	~EnemyOni() override;
 
 	// 更新処理
 	void Update(float elapsedTime) override;
@@ -41,26 +41,17 @@ private:
 	// 目標地点へ移動
 	void MoveToTarget(float elapsedTime, float speedRate);
 
-	// 徘徊ステートへ遷移
-	void TransitionWanderState();
-
-	// 徘徊ステート更新処理
-	void UpdateWanderState(float elapsedTime);
-
 	// 待機ステートへ遷移
 	void TransitionWaitState();
 
 	// 待機ステート更新処理
 	void UpdateWaitState(float elapsedTime);
 
-	// プレイヤー索敵
-	bool SearchPlayer();
+	// 移動ステートへ遷移
+	void TransitionMoveState();
 
-	// 追跡ステートへ遷移
-	void TransitionPursuitState();
-
-	// 追跡ステート更新処理
-	void UpdatePursuitState(float elapsedTime);
+	// 移動ステート更新処理
+	void UpdateMoveState(float elapsedTime);
 
 	// ノードとプレイヤーの衝突処理
 	void CollisionNodeVsPlayer(const char* nodeName, float nodeRadius);
@@ -70,12 +61,6 @@ private:
 
 	// 攻撃ステート更新処理
 	void UpdateAttackState(float elapsedTime);
-
-	// 戦闘待機ステートへ遷移
-	void TransitionWaitBattleState();
-
-	// 戦闘待機ステート更新処理
-	void UpdateWaitBattleState(float elapsedTime);
 
 	// ダメージステートへ遷移
 	void TransitionDamageState();
@@ -93,11 +78,9 @@ private:
 	// ステート
 	enum class State
 	{
-		Wander,
 		Wait,
-		Pursuit,
+		Move,
 		Attack,
-		WaitBattle,
 		Damage,
 		Death
 	};
@@ -105,28 +88,17 @@ private:
 	// アニメーション
 	enum Animation
 	{
-		Anim_WaitNormal,
-		Anim_WaitBattle,
-		Anim_Attack1,
-		Anim_Attack2,
-		Anim_WalkFWD,
-		Anim_WalkBWD,
-		Anim_WalkLeft,
-		Anim_WalkRight,
-		Anim_RunFWD,
-		Anim_SenseSomthingST,
-		Anim_SenseSomthingPRT,
-		Anim_Taunt,
-		Anim_Victory,
-		Anim_GetHit,
-		Anim_Dizzy,
-		Anim_Die
+		Anim_Wait,
+		Anim_Move,
+		Anim_Attack,
+		Anim_Damage,
+		Anim_Death
 	};
 
 private:
 	std::unique_ptr<Model> model;
 
-	State state = State::Wander;
+	State state = State::Wait;
 	DirectX::XMFLOAT3 targetPosition = { 0,0,0 };
 	DirectX::XMFLOAT3 territoryOrigin = { 0,0,0 };
 	float territoryRange = 10.0f;

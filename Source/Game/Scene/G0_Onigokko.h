@@ -2,7 +2,7 @@
 
 #include "Game/Character/Player/Player0_Onigokko.h"
 #include "Game/Camera/CameraController.h"
-#include "Game/Character/Enemy/EnemySlime.h"
+#include "Game/Character/Enemy/EnemyOni.h"
 #include "Scene.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/RenderTarget.h"

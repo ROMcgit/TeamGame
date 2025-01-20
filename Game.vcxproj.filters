@@ -186,7 +186,7 @@
     <ClInclude Include="Source\Game\Camera\CameraController.h">
       <Filter>Source\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Character\Enemy\EnemySlime.h">
+    <ClInclude Include="Source\Game\Character\Enemy\EnemyOni.h">
       <Filter>Source\Character\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Character\Projectile\Projectile.h">
@@ -309,7 +309,7 @@
     <ClInclude Include="Source\Game\Scene\G2_Sundome.h">
       <Filter>Source\Scene\GameScene\2.寸止め</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Scene\G3_SoratobuHusen.h">
+    <ClInclude Include="Source\Game\Scene\G3_SoratobuHusenWari.h">
       <Filter>Source\Scene\GameScene\3.空飛ぶ風船割り</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Scene\G4_OssanTataki.h">
@@ -401,7 +401,7 @@
     <ClCompile Include="Source\Game\Camera\CameraController.cpp">
       <Filter>Source\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Character\Enemy\EnemySlime.cpp">
+    <ClCompile Include="Source\Game\Character\Enemy\EnemyOni.cpp">
       <Filter>Source\Character\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Projectile\Projectile.cpp">
@@ -515,7 +515,7 @@
     <ClCompile Include="Source\Game\Scene\G2_Sundome.cpp">
       <Filter>Source\Scene\GameScene\2.寸止め</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Scene\G3_SoratobuHusen.cpp">
+    <ClCompile Include="Source\Game\Scene\G3_SoratobuHusenWari.cpp">
       <Filter>Source\Scene\GameScene\3.空飛ぶ風船割り</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Scene\G4_OssanTataki.cpp">

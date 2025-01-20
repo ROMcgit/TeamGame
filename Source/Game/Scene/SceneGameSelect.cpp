@@ -2,7 +2,7 @@
 #include "SceneGameSelect.h"
 #include "Game/Camera/Camera.h"
 #include "Game/Character/Enemy/EnemyManager.h"
-#include "Game/Character/Enemy/EnemySlime.h"
+#include "Game/Character/Enemy/EnemyOni.h"
 #include "Game/Effect/EffectManager.h"
 #include "Input/Input.h"
 #include "Game/Stage/StageManager.h"
@@ -27,7 +27,7 @@ void SceneGameSelect::Initialize()
 	stageManager.Register(stageMain);
 
 	// プレイヤー初期化
-	player = std::make_unique<Player>();
+	player = std::make_unique<Player0_Onigokko>();
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();

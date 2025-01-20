@@ -2,7 +2,7 @@
 
 #include "Game/Character/Player/Player0_Onigokko.h"
 #include "Game/Camera/CameraController.h"
-#include "Game/Character/Enemy/EnemySlime.h"
+#include "Game/Character/Enemy/EnemyOni.h"
 #include "Scene.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/RenderTarget.h"
@@ -27,7 +27,7 @@ public:
 	void Render() override;
 
 private:
-	std::unique_ptr <Player> player;
+	std::unique_ptr <Player0_Onigokko> player;
 	std::unique_ptr <CameraController> cameraController;
 
 	std::unique_ptr<RenderTarget>    renderTarget; //! レンダーターゲット

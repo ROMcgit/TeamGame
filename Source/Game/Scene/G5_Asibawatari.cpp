@@ -2,7 +2,7 @@
 #include "G5_Asibawatari.h"
 #include "Game/Camera/Camera.h"
 #include "Game/Character/Enemy/EnemyManager.h"
-#include "Game/Character/Enemy/EnemySlime.h"
+#include "Game/Character/Enemy/EnemyOni.h"
 #include "Game/Effect/EffectManager.h"
 #include "Input/Input.h"
 #include "Game/Stage/StageManager.h"

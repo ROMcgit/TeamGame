@@ -44,9 +44,6 @@ void ObstacleManager::Update(float elapsedTime)
 	}
 
 	removes.clear();
-
-	// “G“¯m‚ÌÕ“Ëˆ—
-	CollisionObstacleVsEnemies();
 }
 
 // •`‰æˆ—

@@ -58,8 +58,6 @@ public:
 	void Clear();
 
 private:
-	// エネミー同士の衝突処理
-	void CollisionObstacleVsEnemies();
 
 	std::vector<std::unique_ptr<Obstacle>> enemies;
 	std::vector<Obstacle*> removes;

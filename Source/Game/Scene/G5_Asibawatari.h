@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Game/Character/Player/Player0_Onigokko.h"
+#include "Game/Character/Player/Player5_AsibaWatari.h"
 #include "Game/Camera/CameraController.h"
 #include "Game/Character/Enemy/EnemySlime.h"
 #include "Scene.h"
@@ -27,7 +27,7 @@ public:
 	void Render() override;
 
 private:
-	std::unique_ptr <Player> player;
+	std::unique_ptr <Player5_AsibaWatari> player;
 	std::unique_ptr <CameraController> cameraController;
 
 	std::unique_ptr<RenderTarget>    renderTarget; //! レンダーターゲット

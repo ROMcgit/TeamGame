@@ -27,7 +27,7 @@ void G0_Onigokko::Initialize()
 	stageManager.Register(stageMain);
 
 	// プレイヤー初期化
-	player = std::make_unique<Player>();
+	player = std::make_unique<Player0_Onigokko>();
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();

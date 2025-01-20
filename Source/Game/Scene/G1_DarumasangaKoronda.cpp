@@ -27,7 +27,7 @@ void G1_DarumasangaKoronda::Initialize()
 	stageManager.Register(stageMain);
 
 	// プレイヤー初期化
-	player = std::make_unique<Player>();
+	player = std::make_unique<Player1_DarumasangaKoronda>();
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();

@@ -27,7 +27,7 @@ void G4_OssanTataki::Initialize()
 	stageManager.Register(stageMain);
 
 	// プレイヤー初期化
-	player = std::make_unique<Player>();
+	player = std::make_unique<Player4_OssanTataki>();
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();

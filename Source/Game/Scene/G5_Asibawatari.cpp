@@ -27,7 +27,7 @@ void G5_Asibawatari::Initialize()
 	stageManager.Register(stageMain);
 
 	// プレイヤー初期化
-	player = std::make_unique<Player>();
+	player = std::make_unique<Player5_AsibaWatari>();
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();

@@ -97,6 +97,21 @@
     <Filter Include="Source\Scene\GameScene\5.足場渡り">
       <UniqueIdentifier>{1cb23151-c0c0-49a9-a926-17217e6c86e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Character\Obstacle">
+      <UniqueIdentifier>{2e918a64-2176-47ee-857b-704646bd8610}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Character\Enemy\Setting">
+      <UniqueIdentifier>{cf5527fa-61dc-4736-95c6-0e9645d078c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Character\Item">
+      <UniqueIdentifier>{1b2311f6-fc94-4b2a-ac8a-ee04d0d46da8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Character\Obstacle\Setting">
+      <UniqueIdentifier>{1b8f79b5-51e9-4a0c-b09e-63c07dd1aa19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Character\Item\Setting">
+      <UniqueIdentifier>{1199c946-84c6-4bba-9beb-b99ffadcf151}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -149,12 +164,6 @@
     </ClInclude>
     <ClInclude Include="Source\Game\Camera\CameraController.h">
       <Filter>Source\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Character\Enemy\Enemy.h">
-      <Filter>Source\Character\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Character\Enemy\EnemyManager.h">
-      <Filter>Source\Character\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Character\Enemy\EnemySlime.h">
       <Filter>Source\Character\Enemy</Filter>
@@ -291,6 +300,24 @@
     <ClInclude Include="Source\Game\Scene\G5_Asibawatari.h">
       <Filter>Source\Scene\GameScene\5.足場渡り</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Character\Enemy\Enemy.h">
+      <Filter>Source\Character\Enemy\Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Enemy\EnemyManager.h">
+      <Filter>Source\Character\Enemy\Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Obstacle\Obstacle.h">
+      <Filter>Source\Character\Obstacle\Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Obstacle\ObstacleManager.h">
+      <Filter>Source\Character\Obstacle\Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Item\Item.h">
+      <Filter>Source\Character\Item\Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Item\ItemManager.h">
+      <Filter>Source\Character\Item\Setting</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -337,12 +364,6 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Camera\CameraController.cpp">
       <Filter>Source\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Character\Enemy\Enemy.cpp">
-      <Filter>Source\Character\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Character\Enemy\EnemyManager.cpp">
-      <Filter>Source\Character\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Enemy\EnemySlime.cpp">
       <Filter>Source\Character\Enemy</Filter>
@@ -469,6 +490,24 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Scene\G5_Asibawatari.cpp">
       <Filter>Source\Scene\GameScene\5.足場渡り</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Enemy\Enemy.cpp">
+      <Filter>Source\Character\Enemy\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Enemy\EnemyManager.cpp">
+      <Filter>Source\Character\Enemy\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Obstacle\Obstacle.cpp">
+      <Filter>Source\Character\Obstacle\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Obstacle\ObstacleManager.cpp">
+      <Filter>Source\Character\Obstacle\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Item\Item.cpp">
+      <Filter>Source\Character\Item\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Item\ItemManager.cpp">
+      <Filter>Source\Character\Item\Setting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

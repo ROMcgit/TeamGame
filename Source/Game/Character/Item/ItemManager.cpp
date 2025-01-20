@@ -1,27 +1,27 @@
-#include "Game/Character/Enemy/EnemyManager.h"
+#include "Game/Character/Item/ItemManager.h"
 #include "Other/Collision.h"
 
-EnemyManager::EnemyManager()
+ItemManager::ItemManager()
 {
 }
 
-EnemyManager::~EnemyManager()
+ItemManager::~ItemManager()
 {
 	Clear();
 }
 
 // 更新処理
-void EnemyManager::Update(float elapsedTime)
+void ItemManager::Update(float elapsedTime)
 {
 	for (auto& enemy : enemies)
 	{
 		enemy->Update(elapsedTime);
 	}
 
-	//for (Enemy* enemy : removes)
+	//for (Item* enemy : removes)
 	//{
 	//	// std::vectorから要素を削除する場合はイテレーターで削除しなければならない
-	//	std::vector<Enemy*>::iterator it = std::find(enemies.begin(),
+	//	std::vector<Item*>::iterator it = std::find(enemies.begin(),
 	//		enemies.end(), enemy);
 
 	//	if (it != enemies.end())
@@ -32,10 +32,10 @@ void EnemyManager::Update(float elapsedTime)
 	//	delete enemy;
 	//}
 
-	for (Enemy* enemy : removes)
+	for (Item* enemy : removes)
 	{
 		auto it = std::remove_if(enemies.begin(), enemies.end(),
-			[enemy](const std::unique_ptr<Enemy>& ptr) { return ptr.get() == enemy; });
+			[enemy](const std::unique_ptr<Item>& ptr) { return ptr.get() == enemy; });
 
 		if (it != enemies.end())
 		{
@@ -47,7 +47,7 @@ void EnemyManager::Update(float elapsedTime)
 }
 
 // 描画処理
-void EnemyManager::Render(ID3D11DeviceContext* context, Shader* shader)
+void ItemManager::Render(ID3D11DeviceContext* context, Shader* shader)
 {
 	for (auto& enemy : enemies)
 	{
@@ -56,7 +56,7 @@ void EnemyManager::Render(ID3D11DeviceContext* context, Shader* shader)
 }
 
 // 2Dスプライトの描画処理
-void EnemyManager::SpriteRender(ID3D11DeviceContext* dc, Graphics& graphics)
+void ItemManager::SpriteRender(ID3D11DeviceContext* dc, Graphics& graphics)
 {
 	for (auto& enemy : enemies)
 	{
@@ -65,7 +65,7 @@ void EnemyManager::SpriteRender(ID3D11DeviceContext* dc, Graphics& graphics)
 }
 
 // デバッグプリミティブ描画
-void EnemyManager::DrawDebugPrimitive()
+void ItemManager::DrawDebugPrimitive()
 {
 	for (auto& enemy : enemies)
 	{
@@ -74,25 +74,25 @@ void EnemyManager::DrawDebugPrimitive()
 }
 
 // エネミー登録
-void EnemyManager::Register(std::unique_ptr<Enemy> enemy)
+void ItemManager::Register(std::unique_ptr<Item> enemy)
 {
 	enemies.emplace_back(std::move(enemy));
 }
 
 // エネミー全削除
-void EnemyManager::Clear()
+void ItemManager::Clear()
 {
 	enemies.clear();
 }
 
-void EnemyManager::Remove(Enemy* enemy)
+void ItemManager::Remove(Item* enemy)
 {
 	// 破棄リストに追加
 	removes.push_back(enemy);
 }
 
 // デバッグ用GUI描画
-void EnemyManager::DrawDebugGUI()
+void ItemManager::DrawDebugGUI()
 {
 	for (auto& enemy : enemies)
 	{

@@ -1,34 +1,34 @@
 #pragma once
 
 #include <vector>
-#include"Enemy.h"
+#include"Obstacle.h"
 #include <set>
 #include <stdexcept>
 #include "Graphics/Graphics.h"
 
-// エネミーマネージャー
-class EnemyManager
+// 障害物マネージャー
+class ObstacleManager
 {
 private:
-	EnemyManager();
-	~EnemyManager();
+	ObstacleManager();
+	~ObstacleManager();
 
 public:
 	// 唯一のインスタンス取得
-	static EnemyManager& Instance()
+	static ObstacleManager& Instance()
 	{
-		static EnemyManager instance;
+		static ObstacleManager instance;
 		return instance;
 	}
 
 	// エネミー数取得
-	int GetEnemyCount() const { return static_cast<int>(enemies.size()); }
+	int GetObstacleCount() const { return static_cast<int>(enemies.size()); }
 
 	// エネミー取得
-	std::unique_ptr<Enemy>& GetEnemy(int index) {
+	std::unique_ptr<Obstacle>& GetObstacle(int index) {
 		if (index < 0 || index >= static_cast<int>(enemies.size()))
 		{
-			throw std::out_of_range("Enemy index is out of range");
+			throw std::out_of_range("Obstacle index is out of range");
 		}
 		return enemies[index];
 	}
@@ -37,10 +37,10 @@ public:
 	void Update(float elapsedTime);
 
 	// エネミーの登録
-	void Register(std::unique_ptr<Enemy> enemy);
+	void Register(std::unique_ptr<Obstacle> enemy);
 
 	// エネミー削除
-	void Remove(Enemy* enemy);
+	void Remove(Obstacle* enemy);
 
 	// デバッグ用GUI描画
 	void DrawDebugGUI();
@@ -58,7 +58,9 @@ public:
 	void Clear();
 
 private:
+	// エネミー同士の衝突処理
+	void CollisionObstacleVsEnemies();
 
-	std::vector<std::unique_ptr<Enemy>> enemies;
-	std::vector<Enemy*> removes;
+	std::vector<std::unique_ptr<Obstacle>> enemies;
+	std::vector<Obstacle*> removes;
 };

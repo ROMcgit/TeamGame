@@ -9,6 +9,12 @@
 #include "Game/Scene/SceneManager.h"
 #include "Game/Scene/SceneTitle.h"
 #include "Game/Scene/SceneGameSelect.h"
+#include "Game/Scene/G0_Onigokko.h"
+#include "Game/Scene/G1_DarumasangaKoronda.h"
+#include "Game/Scene/G2_Sundome.h"
+#include "Game/Scene/G3_SoratobuHusenWari.h"
+#include "Game/Scene/G4_OssanTataki.h"
+#include "Game/Scene/G5_Asibawatari.h"
 
 //static SceneGameSelect sceneGame;
 
@@ -106,6 +112,18 @@ void Framework::SceneSelectGUI()
 		ChangeSceneButtonGUI<SceneTitle>(u8"00.タイトル画面");
 
 		ChangeSceneButtonGUI<SceneGameSelect>(u8"01.ゲーム画面");
+
+		if (ImGui::TreeNode(u8"ゲームシーン"))
+		{
+			ChangeSceneButtonGUI<G0_Onigokko>          (u8"00.おにごっこ");
+			ChangeSceneButtonGUI<G1_DarumasangaKoronda>(u8"01.だるまさんが転んだ");
+			ChangeSceneButtonGUI<G2_Sundome>           (u8"02.寸止め");
+			ChangeSceneButtonGUI<G3_SoratobuHusenWari> (u8"03.空飛ぶ風船割り");
+			ChangeSceneButtonGUI<G4_OssanTataki>       (u8"04.おにごっこ");
+			ChangeSceneButtonGUI<G5_Asibawatari>       (u8"05.おにごっこ");
+
+			ImGui::TreePop();
+		}
 	}
 	ImGui::End();
 

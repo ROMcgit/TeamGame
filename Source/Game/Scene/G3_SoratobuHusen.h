@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Game/Character/Player.h"
+#include "Game/Character/Player/Player0_Onigokko/Player0_Onigokko.h"
 #include "Game/Camera/CameraController.h"
 #include "Game/Character/Enemy/EnemySlime.h"
 #include "Scene.h"
@@ -8,11 +8,11 @@
 #include "Graphics/RenderTarget.h"
 
 // ƒQ[ƒ€ƒV[ƒ“
-class G3_SoratobuHusen : public Scene
+class G3_SoratobuHusenWariWari : public Scene
 {
 public:
-	G3_SoratobuHusen() {}
-	~G3_SoratobuHusen() override {}
+	G3_SoratobuHusenWariWari() {}
+	~G3_SoratobuHusenWariWari() override {}
 
 	// ‰Šú‰»
 	void Initialize() override;

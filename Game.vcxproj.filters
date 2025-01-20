@@ -88,9 +88,6 @@
     <Filter Include="Source\Scene\GameScene\2.寸止め">
       <UniqueIdentifier>{733b4247-8dbd-4ea2-9101-6a52852e777a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Scene\GameScene\3.空飛ぶ風船">
-      <UniqueIdentifier>{ea44a145-8f79-44a4-b071-eb892cdddb4e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Scene\GameScene\4.おっさん叩き">
       <UniqueIdentifier>{c26c3a82-0ab9-40da-ac3b-1a2bb627a17a}</UniqueIdentifier>
     </Filter>
@@ -111,6 +108,30 @@
     </Filter>
     <Filter Include="Source\Character\Item\Setting">
       <UniqueIdentifier>{1199c946-84c6-4bba-9beb-b99ffadcf151}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Character\Player">
+      <UniqueIdentifier>{c9c54b5d-3e9a-4afa-9cdb-384c83fdaced}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Character\Player\0_おにごっこ">
+      <UniqueIdentifier>{af8b831d-2027-4081-bca5-6bafc0c2b31d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Character\Player\1_だるまさんが転んだ">
+      <UniqueIdentifier>{1a6ecf51-7525-4bd9-be3a-58289b08ef1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Character\Player\2_寸止め">
+      <UniqueIdentifier>{885b70c1-afcb-4689-82f4-105f902f2438}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Character\Player\3_空飛ぶ風船割り">
+      <UniqueIdentifier>{bfaca576-6d02-4839-8a5d-c71b66c6f685}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\GameScene\3.空飛ぶ風船割り">
+      <UniqueIdentifier>{ea44a145-8f79-44a4-b071-eb892cdddb4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Character\Player\4_おっさんたたき">
+      <UniqueIdentifier>{e9534b39-e7db-4471-b85c-4e7dc19920ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Character\Player\5_足場渡り">
+      <UniqueIdentifier>{3fa1a2e2-4c08-4d05-8f47-1dcb7ba377ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -181,9 +202,6 @@
       <Filter>Source\Projectile</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Character\Character.h">
-      <Filter>Source\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Character\Player.h">
       <Filter>Source\Character</Filter>
     </ClInclude>
     <ClInclude Include="Source\Other\Misc.h">
@@ -292,7 +310,7 @@
       <Filter>Source\Scene\GameScene\2.寸止め</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Scene\G3_SoratobuHusen.h">
-      <Filter>Source\Scene\GameScene\3.空飛ぶ風船</Filter>
+      <Filter>Source\Scene\GameScene\3.空飛ぶ風船割り</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Scene\G4_OssanTataki.h">
       <Filter>Source\Scene\GameScene\4.おっさん叩き</Filter>
@@ -317,6 +335,24 @@
     </ClInclude>
     <ClInclude Include="Source\Game\Character\Item\ItemManager.h">
       <Filter>Source\Character\Item\Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Player\Player0_Onigokko.h">
+      <Filter>Source\Character\Player\0_おにごっこ</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Player\Player1_DarumasangaKoronda.h">
+      <Filter>Source\Character\Player\1_だるまさんが転んだ</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Player\Player2_Sundome.h">
+      <Filter>Source\Character\Player\2_寸止め</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Player\Player3_SoratobuHusenWari.h">
+      <Filter>Source\Character\Player\3_空飛ぶ風船割り</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Player\Player4_OssanTataki.h">
+      <Filter>Source\Character\Player\4_おっさんたたき</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Player\Player5_AsibaWatari.h">
+      <Filter>Source\Character\Player\5_足場渡り</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -381,9 +417,6 @@
       <Filter>Source\Projectile</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Character.cpp">
-      <Filter>Source\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Character\Player.cpp">
       <Filter>Source\Character</Filter>
     </ClCompile>
     <ClCompile Include="Source\Other\Main.cpp">
@@ -483,7 +516,7 @@
       <Filter>Source\Scene\GameScene\2.寸止め</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Scene\G3_SoratobuHusen.cpp">
-      <Filter>Source\Scene\GameScene\3.空飛ぶ風船</Filter>
+      <Filter>Source\Scene\GameScene\3.空飛ぶ風船割り</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Scene\G4_OssanTataki.cpp">
       <Filter>Source\Scene\GameScene\4.おっさん叩き</Filter>
@@ -508,6 +541,24 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Item\ItemManager.cpp">
       <Filter>Source\Character\Item\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Player\Player0_Onigokko.cpp">
+      <Filter>Source\Character\Player\0_おにごっこ</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Player\Player1_DarumasangaKoronda.cpp">
+      <Filter>Source\Character\Player\1_だるまさんが転んだ</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Player\Player2_Sundome.cpp">
+      <Filter>Source\Character\Player\2_寸止め</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Player\Player3_SoratobuHusenWari.cpp">
+      <Filter>Source\Character\Player\3_空飛ぶ風船割り</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Player\Player4_OssanTataki.cpp">
+      <Filter>Source\Character\Player\4_おっさんたたき</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Player\Player5_AsibaWatari.cpp">
+      <Filter>Source\Character\Player\5_足場渡り</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

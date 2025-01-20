@@ -7,14 +7,14 @@
 #include "Game/Effect/Effect.h"
 
 // プレイヤー
-class Player : public Character
+class Player2_Sundome : public Character
 {
 public:
-	Player();
-	~Player() override;
+	Player2_Sundome();
+	~Player2_Sundome() override;
 
 	// インスタンス取得
-	static Player& Instance();
+	static Player2_Sundome& Instance();
 
 	// 更新処理
 	void Update(float elapsedTime);
@@ -46,35 +46,20 @@ private:
 	// 移動入力処理
 	bool InputMove(float elapsedTime);
 
-	// ジャンプ入力処理
-	bool InputJump();
-
-	// 弾丸入力処理
-	void InputProjectile();
-
-	// 攻撃入力処理
-	bool InputAttack();
-
 	/*! 当たり判定処理 */
 
 	// プレイヤーとエネミーとの衝突処理
-	void CollisionPlayerVsEnemies();
-
-	// ノードとエネミーの衝突処理
-	void CollisionNodeVsEnemies(const char* nodeName, float nodeRadius);
-
-	// 弾丸と敵の衝突処理
-	void CollisionProjectilesVsEnemies();
+	void CollisionPlayer2_SundomeVsEnemies();
 
 /******************************************************************************************/
 
 	/*! 行動制御 */
 
 	// 待機ステートへ遷移
-	void TransitionIdleState();
+	void TransitionWaitState();
 
 	// 待機ステート更新処理
-	void UpdateIdleState(float elapsedTime);
+	void UpdateWaitState(float elapsedTime);
 
 //-----------------------------------------------------------------//
 
@@ -83,30 +68,6 @@ private:
 
 	// 移動ステート更新処理
 	void UpdateMoveState(float elapsedTime);
-
-//-----------------------------------------------------------------//
-
-	// ジャンプステートへ遷移
-	void TransitionJumpState();
-
-	// ジャンプステート更新処理
-	void UpdateJumpState(float elapsedTime);
-
-//-----------------------------------------------------------------//
-
-	// 着地ステートへ遷移
-	void TransitionLandState();
-
-	// 着地ステート更新処理
-	void UpdateLandState(float elapsedTime);
-
-//-----------------------------------------------------------------//
-
-	// 攻撃ステートへ遷移
-	void TransitionAttackState();
-
-	// 攻撃ステート更新処理
-	void UpdateAttackState(float elapsedTime);
 
 //-----------------------------------------------------------------//
 
@@ -124,48 +85,30 @@ private:
 	// 死亡ステート更新処理
 	void UpdateDeathState(float elapsedTimae);
 
-//-----------------------------------------------------------------//
-
-	// 復活ステートへ遷移
-	void TransitionReviveState();
-
-	// 復活ステート更新処理
-	void UpdateReviveState(float elapsedTime);
-
 private:
 
 	enum class State
 	{
-		Idle,
+		Wait,
 		Move,
 		Jump,
-		Land,
-		Attack,
 		Damage,
-		Death,
-		Revive
+		Death
 	};
 
 	// アニメーション
 	enum Animation
 	{
-		Anim_Attack,
-		Anim_Death,
-		Anim_Falling,
-		Anim_GetHit1,
-		Anim_GetHit2,
-		Anim_Idle,
+		Anim_Wait,
+		Anim_Move,
 		Anim_Jump,
-		Anim_Jump_Flip,
-		Anim_Landing,
-		Anim_Reving,
-		Anim_Running,
-		Anim_Walking
+		Anim_Damage,
+		Anim_Death,
 	};
 
 private:
 	std::unique_ptr<Model> model;
-	
+
 	float moveSpeed = 5.5f;
 	float turnSpeed = DirectX::XMConvertToRadians(720);
 
@@ -179,7 +122,7 @@ private:
 
 	std::unique_ptr<Effect> hitEffect;
 
-	State state = State::Idle;
+	State state = State::Wait;
 
 	float playerAnimeCount = 0.0f;
 

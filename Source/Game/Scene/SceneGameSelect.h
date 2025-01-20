@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Game/Character/Player.h"
+#include "Game/Character/Player/Player0_Onigokko.h"
 #include "Game/Camera/CameraController.h"
 #include "Game/Character/Enemy/EnemySlime.h"
 #include "Scene.h"

@@ -48,10 +48,10 @@ private:
 	void UpdateWanderState(float elapsedTime);
 
 	// 待機ステートへ遷移
-	void TransitionIdleState();
+	void TransitionWaitState();
 
 	// 待機ステート更新処理
-	void UpdateIdleState(float elapsedTime);
+	void UpdateWaitState(float elapsedTime);
 
 	// プレイヤー索敵
 	bool SearchPlayer();
@@ -72,10 +72,10 @@ private:
 	void UpdateAttackState(float elapsedTime);
 
 	// 戦闘待機ステートへ遷移
-	void TransitionIdleBattleState();
+	void TransitionWaitBattleState();
 
 	// 戦闘待機ステート更新処理
-	void UpdateIdleBattleState(float elapsedTime);
+	void UpdateWaitBattleState(float elapsedTime);
 
 	// ダメージステートへ遷移
 	void TransitionDamageState();
@@ -94,10 +94,10 @@ private:
 	enum class State
 	{
 		Wander,
-		Idle,
+		Wait,
 		Pursuit,
 		Attack,
-		IdleBattle,
+		WaitBattle,
 		Damage,
 		Death
 	};
@@ -105,8 +105,8 @@ private:
 	// アニメーション
 	enum Animation
 	{
-		Anim_IdleNormal,
-		Anim_IdleBattle,
+		Anim_WaitNormal,
+		Anim_WaitBattle,
 		Anim_Attack1,
 		Anim_Attack2,
 		Anim_WalkFWD,

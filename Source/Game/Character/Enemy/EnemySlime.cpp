@@ -2,7 +2,7 @@
 #include <imgui.h>
 #include "Graphics/Graphics.h"
 #include "Other/Mathf.h"
-#include "Game/Character/Player.h"
+#include "Game/Character/Player/Player0_Onigokko.h"
 #include "Other/Collision.h"
 
 // コンストラクタ
@@ -36,8 +36,8 @@ void EnemySlime::Update(float elapsedTime)
 	case State::Wander:
 		UpdateWanderState(elapsedTime);
 		break;
-	case State::Idle:
-		UpdateIdleState(elapsedTime);
+	case State::Wait:
+		UpdateWaitState(elapsedTime);
 		break;
 	case State::Pursuit:
 		UpdatePursuitState(elapsedTime);
@@ -45,8 +45,8 @@ void EnemySlime::Update(float elapsedTime)
 	case State::Attack:
 		UpdateAttackState(elapsedTime);
 		break;
-	case State::IdleBattle:
-		UpdateIdleBattleState(elapsedTime);
+	case State::WaitBattle:
+		UpdateWaitBattleState(elapsedTime);
 		break;
 	case State::Damage:
 		UpdateDamageState(elapsedTime);
@@ -171,7 +171,7 @@ void EnemySlime::UpdateWanderState(float elapsedTime)
 		//SetRandomTargetPosition();
 
 		// 待機ステートへ遷移
-		TransitionIdleState();
+		TransitionWaitState();
 	}
 
 	// 目標地点へ移動
@@ -186,19 +186,19 @@ void EnemySlime::UpdateWanderState(float elapsedTime)
 }
 
 // 待機ステートへ遷移
-void EnemySlime::TransitionIdleState()
+void EnemySlime::TransitionWaitState()
 {
-	state = State::Idle;
+	state = State::Wait;
 
 	// タイマーをランダム設定
 	stateTimer = Mathf::RandomRange(3.0f, 5.0f);
 
 	// 待機アニメーション再生
-	model->PlayAnimation(Anim_IdleNormal, true);
+	model->PlayAnimation(Anim_WaitNormal, true);
 }
 
 // 待機ステート更新処理
-void EnemySlime::UpdateIdleState(float elapsedTime)
+void EnemySlime::UpdateWaitState(float elapsedTime)
 {
 	// タイマー処理
 	stateTimer -= elapsedTime;
@@ -272,7 +272,7 @@ void EnemySlime::UpdatePursuitState(float elapsedTime)
 	if (stateTimer < 0.0f)
 	{
 		// 待機ステートへ遷移
-		TransitionIdleState();
+		TransitionWaitState();
 	}
 
 	// プレイヤーが近づくと攻撃ステートへ遷移
@@ -344,24 +344,24 @@ void EnemySlime::UpdateAttackState(float elapsedTime)
 	// 攻撃アニメーションが終わったら戦闘待機ステートへ遷移
 	if (!model->IsPlayAnimation())
 	{
-		TransitionIdleBattleState();
+		TransitionWaitBattleState();
 	}
 }
 
 // 戦闘待機ステートへ遷移
-void EnemySlime::TransitionIdleBattleState()
+void EnemySlime::TransitionWaitBattleState()
 {
-	state = State::IdleBattle;
+	state = State::WaitBattle;
 
 	// 数秒間待機するタイマーをランダム設定
 	stateTimer = Mathf::RandomRange(2.0f, 3.0f);
 
 	// 戦闘待機アニメーション再生
-	model->PlayAnimation(Anim_IdleBattle, true);
+	model->PlayAnimation(Anim_WaitBattle, true);
 }
 
 // 戦闘待機ステート更新処理
-void EnemySlime::UpdateIdleBattleState(float elapsedTime)
+void EnemySlime::UpdateWaitBattleState(float elapsedTime)
 {
 	// 目標地点をプレイヤー位置に設定
 	targetPosition = Player::Instance().GetPosition();
@@ -405,7 +405,7 @@ void EnemySlime::UpdateDamageState(float elapsedTime)
 	// ダメージアニメーションが終わったら戦闘待機ステートへ遷移
 	if (!model->IsPlayAnimation())
 	{
-		TransitionIdleBattleState();
+		TransitionWaitBattleState();
 	}
 }
 

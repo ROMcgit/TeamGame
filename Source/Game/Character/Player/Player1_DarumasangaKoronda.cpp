@@ -1,5 +1,5 @@
 #include <imgui.h>
-#include "Game/Character/Player.h"
+#include "Player1_DarumasangaKoronda.h"
 #include "Input/Input.h"
 #include "Game/Camera/Camera.h"
 #include "Graphics/Graphics.h"
@@ -8,15 +8,15 @@
 #include "Game/Character/Projectile/ProjectileStraight.h"
 #include "Game/Character/Projectile/ProjectileHoming.h"
 
-static Player* instance = nullptr;
+static Player1_DarumasangaKoronda* instance = nullptr;
 
 // インスタンス取得
-Player& Player::Instance()
+Player1_DarumasangaKoronda& Player1_DarumasangaKoronda::Instance()
 {
 	return *instance;
 }
 
-Player::Player()
+Player1_DarumasangaKoronda::Player1_DarumasangaKoronda()
 {
 	// インスタンスポインタ設定
 	instance = this;
@@ -31,16 +31,16 @@ Player::Player()
 	hitEffect = std::make_unique <Effect>("Data/Effect/Hit.efk");
 
 	// 待機ステートへ遷移
-	TransitionIdleState();
+	TransitionWaitState();
 }
 
 // デストラクタ
-Player::~Player()
+Player1_DarumasangaKoronda::~Player1_DarumasangaKoronda()
 {
 }
 
 // 更新処理
-void Player::Update(float elapsedTime)
+void Player1_DarumasangaKoronda::Update(float elapsedTime)
 {
 	// ムービー中なら待機ステートへ遷移
 	if (movieScene)
@@ -58,7 +58,7 @@ void Player::Update(float elapsedTime)
 		// ムービー中のアニメーション
 		if (!movieAnimation)
 		{
-			state = State::Idle; // ステートを待機に変更
+			state = State::Wait; // ステートを待機に変更
 			model->PlayAnimation(movieAnimNum, movieAnimLoop);
 			movieAnimation = true;
 		}
@@ -72,8 +72,8 @@ void Player::Update(float elapsedTime)
 		// ステート毎の処理
 		switch (state)
 		{
-		case State::Idle:
-			UpdateIdleState(elapsedTime);
+		case State::Wait:
+			UpdateWaitState(elapsedTime);
 			break;
 		case State::Move:
 			UpdateMoveState(elapsedTime);
@@ -81,20 +81,11 @@ void Player::Update(float elapsedTime)
 		case State::Jump:
 			UpdateJumpState(elapsedTime);
 			break;
-		case State::Land:
-			UpdateLandState(elapsedTime);
-			break;
-		case State::Attack:
-			UpdateAttackState(elapsedTime);
-			break;
 		case State::Damage:
 			UpdateDamageState(elapsedTime);
 			break;
 		case State::Death:
 			UpdateDeathState(elapsedTime);
-			break;
-		case State::Revive:
-			UpdateReviveState(elapsedTime);
 			break;
 		}
 	}
@@ -106,7 +97,7 @@ void Player::Update(float elapsedTime)
 	projectileManager.Update(elapsedTime);
 
 	// プレイヤーと敵との衝突処理
-	CollisionPlayerVsEnemies();
+	CollisionPlayer1_DarumasangaKorondaVsEnemies();
 
 	// 無敵時間更新
 	UpdateInvincibleTimer(elapsedTime);
@@ -128,7 +119,7 @@ void Player::Update(float elapsedTime)
 }
 
 // 描画処理
-void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
+void Player1_DarumasangaKoronda::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	shader->Draw(dc, model.get());
 
@@ -137,12 +128,12 @@ void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
 }
 
 // HPなどのUI描画
-void Player::SpriteRender(ID3D11DeviceContext* dc)
+void Player1_DarumasangaKoronda::SpriteRender(ID3D11DeviceContext* dc)
 {
 }
 
 // 移動入力処理
-bool Player::InputMove(float elapsedTime)
+bool Player1_DarumasangaKoronda::InputMove(float elapsedTime)
 {
 	// 進行ベクトル取得
 	DirectX::XMFLOAT3 moveVec = GetMoveVec();
@@ -157,72 +148,8 @@ bool Player::InputMove(float elapsedTime)
 	return !(moveVec.x == 0.0f && moveVec.z == 0.0f);
 }
 
-// 弾丸入力処理
-void Player::InputProjectile()
-{
-	GamePad& gamePad = Input::Instance().GetGamePad();
-
-	// 直進弾丸発射
-	if (gamePad.GetButtonDown() & GamePad::BTN_X) //Cキー
-	{
-		// 前方向
-		DirectX::XMFLOAT3 dir;
-
-		dir.x = transform._31;
-		dir.y = transform._32;
-		dir.z = transform._33;
-		
-		DirectX::XMVECTOR DIR;
-		DIR = DirectX::XMLoadFloat3(&dir);
-		DIR = DirectX::XMVector3Normalize(DIR);
-		DirectX::XMStoreFloat3(&dir, DIR);
-
-		// 発射位置(プレイヤーの腰あたり)
-		DirectX::XMFLOAT3 pos;
-		pos.x = position.x;
-		pos.y = position.y + (height / 2);
-		pos.z = position.z;
-
-		// ターゲット(デフォルトではプレイヤーの前方)
-		DirectX::XMFLOAT3 target;
-		target.x = pos.x + dir.x * 10.0f; // 10.0f は任意の距離
-		target.y = pos.y + dir.y * 10.0f;
-		target.z = pos.z + dir.z * 10.0f;
-
-		// 一番近くの敵をターゲット
-		float dist = FLT_MAX;
-		EnemyManager& enemyManager = EnemyManager::Instance();
-		int enemyCount = enemyManager.GetEnemyCount();
-		for (int i = 0; i < enemyCount; ++i)
-		{
-			// 敵との距離判定
-			std::unique_ptr<Enemy>& enemy = EnemyManager::Instance().GetEnemy(i);
-			DirectX::XMVECTOR P = DirectX::XMLoadFloat3(&position);
-			DirectX::XMVECTOR E = DirectX::XMLoadFloat3(&enemy->GetPosition());
-			DirectX::XMVECTOR V = DirectX::XMVectorSubtract(E, P);
-			DirectX::XMVECTOR D = DirectX::XMVector3LengthSq(V);
-			float d;
-			DirectX::XMStoreFloat(&d, D);
-			if (d < dist)
-			{
-				dist = d;
-				target = enemy->GetPosition();
-				target.y += enemy->GetHeight() * 0.5f;
-			}
-		}
-
-		//発射
-		//ProjectileStraight * projectile = new ProjectileStraight(&projectileManager);
-		//projectile->Launch(dir, pos);
-		ProjectileHoming* projectile = new ProjectileHoming(&projectileManager);
-		projectile->Launch(dir, pos, target);
-		
-		//projectileManager.Register(projectile);
-	}
-}
-
 // 攻撃入力処理
-bool Player::InputAttack()
+bool Player1_DarumasangaKoronda::InputAttack()
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
@@ -235,16 +162,16 @@ bool Player::InputAttack()
 }
 
 // 待機ステートへ遷移
-void Player::TransitionIdleState()
+void Player1_DarumasangaKoronda::TransitionWaitState()
 {
-	state = State::Idle;
+	state = State::Wait;
 
 	// 待機アニメーション再生
-	model->PlayAnimation(Anim_Idle, true);
+	model->PlayAnimation(Anim_Wait, true);
 }
 
 // 待機ステート更新処理
-void Player::UpdateIdleState(float elapsedTime)
+void Player1_DarumasangaKoronda::UpdateWaitState(float elapsedTime)
 {
 	// 移動入力処理
 	// 移動入力されたら移動ステートへ遷移
@@ -272,29 +199,19 @@ void Player::UpdateIdleState(float elapsedTime)
 	}
 
 	InputJump();
-
-	// 弾丸入力処理
-	InputProjectile();
-
-	// 攻撃入力処理
-	if (gamePad.GetButtonDown() & GamePad::BTN_B)
-	{
-		// 攻撃ステートへ遷移
-		TransitionAttackState();
-	}
 }
 
 // 移動ステートへ遷移
-void Player::TransitionMoveState()
+void Player1_DarumasangaKoronda::TransitionMoveState()
 {
 	state = State::Move;
 
 	// 走りアニメーション再生
-	model->PlayAnimation(Anim_Running, true);
+	model->PlayAnimation(Anim_Move, true);
 }
 
 // 移動ステート更新処理
-void Player::UpdateMoveState(float elapsedTime)
+void Player1_DarumasangaKoronda::UpdateMoveState(float elapsedTime)
 {
 	// 移動入力処理
 	const GamePadButton ArrowButton =
@@ -308,7 +225,7 @@ void Player::UpdateMoveState(float elapsedTime)
 	if(gamePad.GetAxisLX() == 0 && gamePad.GetAxisLY() == 0)
 	{
 		// 待機ステートへ遷移
-		TransitionIdleState();
+		TransitionWaitState();
 	}
 
 	InputMove(elapsedTime);
@@ -321,20 +238,10 @@ void Player::UpdateMoveState(float elapsedTime)
 	}
 
 	InputJump();
-
-	// 弾丸入力処理
-	InputProjectile();
-
-	// 攻撃入力処理
-	if (gamePad.GetButtonDown() & GamePad::BTN_B)
-	{
-		// 攻撃ステートへ遷移
-		TransitionAttackState();
-	}
 }
 
 // ジャンプステートへ遷移
-void Player::TransitionJumpState()
+void Player1_DarumasangaKoronda::TransitionJumpState()
 {
 	state = State::Jump;
 
@@ -343,145 +250,36 @@ void Player::TransitionJumpState()
 }
 
 // ジャンプステート更新処理
-void Player::UpdateJumpState(float elapsedTime)
+void Player1_DarumasangaKoronda::UpdateJumpState(float elapsedTime)
 {
-	if (jumpCount == 2 && jumpFlipAnimation == false)
-	{
-		model->PlayAnimation(Anim_Jump_Flip, false);
-		jumpFlipAnimation = true;
-	}
-
 	// ジャンプ入力処理
 	InputMove(elapsedTime);
 
 	// ジャンプ入力処理
 	InputJump();
-
-	// 弾丸入力処理
-	InputProjectile();
-}
-
-// 着地ステートへ遷移
-void Player::TransitionLandState()
-{
-	state = State::Land;
-
-	jumpFlipAnimation = false;
-
-	// 着地アニメーション再生
-	model->PlayAnimation(Anim_Landing, false);
-}
-
-// 着地ステート更新処理
-void Player::UpdateLandState(float elapsedTime)
-{
-	if (!model->IsPlayAnimation())
-	{
-		// 待機ステートへ遷移
-		TransitionIdleState();
-	}
-}
-
-// 攻撃ステートへ遷移
-void Player::TransitionAttackState()
-{
-	state = State::Attack;
-
-	// 着地アニメーション再生
-	model->PlayAnimation(Anim_Attack, false, 0.2f);
-
-	playerAnimeCount = 0.0f;
-}
-
-// 攻撃ステート更新処理
-void Player::UpdateAttackState(float elapsedTime)
-{
-	if (!model->IsPlayAnimation())
-	{
-		// 待機ステートへ遷移
-		TransitionIdleState();
-	}
-
-	playerAnimeCount += elapsedTime;
-
-	// 任意のアニメーション再生区間でのみ衝突処理判定をする
-	float animationTime = static_cast<float>(playerAnimeCount) / 45.0f;
-	if (animationTime >= 0.001f && animationTime <= 0.01f)
-		attackCollisionFlag = true;
-	else 
-		attackCollisionFlag = false;
-
-	// 衝突判定フラグが立っている場合、左手ノードとエネミーの衝突処理を行う
-	if (attackCollisionFlag)
-	{
-		// 左手ノードとエネミーの衝突処理
-		CollisionNodeVsEnemies("mixamorig:LeftHand", leftHandRadius);
-	}
-}
-
-// ノードと敵の衝突処理
-void Player::CollisionNodeVsEnemies(const char* nodeName, float nodeRadius)
-{
-	// ノード取得
-	Model::Node* node = model->FindNode(nodeName);
-
-	// ノードが存在しない場合は処理を終了
-	if (!node) return;
-
-	// ノード位置取得
-	DirectX::XMMATRIX nodeTransform = DirectX::XMLoadFloat4x4(&node->worldTransform);
-	DirectX::XMVECTOR nodePosVector = nodeTransform.r[3];
-	DirectX::XMFLOAT3 nodePosition;
-	DirectX::XMStoreFloat3(&nodePosition, nodePosVector);
-
-	// 敵マネージャーのインスタンスを取得
-	EnemyManager& enemyManager = EnemyManager::Instance();
-
-	// 指定のノードと全ての敵を総当たりで衝突処理
-	int enemyCount = enemyManager.GetEnemyCount();
-	for (int i = 0; i < enemyCount; ++i)
-	{
-		std::unique_ptr<Enemy>& enemy = enemyManager.GetEnemy(i);
-
-		// 衝突処理
-		DirectX::XMFLOAT3 outPosition;
-		if (Collision::IntersectSphereVsSphere(
-			nodePosition,
-			nodeRadius,
-			enemy->GetPosition(),
-			enemy->GetRadius(),
-			outPosition
-		))
-		{
-			// 押し出しの後の位置設定
-			enemy->SetPosition(outPosition);
-
-			enemy->ApplyDamage(1, 4.5f, 0);
-		}
-	}
 }
 
 // ダメージステートへ遷移
-void Player::TransitionDamageState()
+void Player1_DarumasangaKoronda::TransitionDamageState()
 {
 	state = State::Damage;
 
 	// ダメージアニメーション再生
-	model->PlayAnimation(Anim_GetHit1, false);
+	model->PlayAnimation(Anim_Damage, false);
 }
 
 // ダメージステート更新処理
-void Player::UpdateDamageState(float elapsedTime)
+void Player1_DarumasangaKoronda::UpdateDamageState(float elapsedTime)
 {
 	// ダメージアニメーションが終わったら待機ステートへ遷移
 	if (!model->IsPlayAnimation())
 	{
-		TransitionIdleState();
+		TransitionWaitState();
 	}
 }
 
 // 死亡ステートへ遷移
-void Player::TransitionDeathState()
+void Player1_DarumasangaKoronda::TransitionDeathState()
 {
 	state = State::Death;
 
@@ -490,43 +288,12 @@ void Player::TransitionDeathState()
 }
 
 // 死亡ステート更新処理
-void Player::UpdateDeathState(float elapsedTimae)
+void Player1_DarumasangaKoronda::UpdateDeathState(float elapsedTimae)
 {
-	if (!model->IsPlayAnimation())
-	{
-		// ボタンを押したら復活ステートへ遷移
-		GamePad& gamePad = Input::Instance().GetGamePad();
-		if (gamePad.GetButtonDown() & GamePad::BTN_A)
-		{
-			TransitionReviveState();
-		}
-	}
-}
-
-// 復活ステートへ遷移
-void Player::TransitionReviveState()
-{
-	state = State::Revive;
-
-	// 体力回復
-	hp = maxHp;
-
-	// 復活アニメーション再生
-	model->PlayAnimation(Anim_Reving, false);
-}
-
-// 復活ステート更新処理
-void Player::UpdateReviveState(float elapsedTime)
-{
-	// 復活アニメーション終了後に待機ステートへ遷移
-	if (!model->IsPlayAnimation())
-	{
-		TransitionIdleState();
-	}
 }
 
 // プレイヤーとエネミーとの衝突処理
-void Player::CollisionPlayerVsEnemies()
+void Player1_DarumasangaKoronda::CollisionPlayer1_DarumasangaKorondaVsEnemies()
 {
 	EnemyManager& enemyManager = EnemyManager::Instance();
 
@@ -539,8 +306,8 @@ void Player::CollisionPlayerVsEnemies()
 		// 衝突処理
 		DirectX::XMFLOAT3 outPosition;
 		//if (Collision::IntersectSphereVsSphere(
-		//	Player::GetPosition(),
-		//	Player::GetRadius(),
+		//	Player1_DarumasangaKoronda::GetPosition(),
+		//	Player1_DarumasangaKoronda::GetRadius(),
 		//	enemy->GetPosition(),
 		//	enemy->GetRadius(),
 		//	outPosition
@@ -562,10 +329,10 @@ void Player::CollisionPlayerVsEnemies()
 		))
 		{
 			//// プレイヤーが敵の上にいるかを判定する
-			//float diff = Player::GetPosition().y - ( enemy->GetPosition().y + enemy->GetHeight());
+			//float diff = Player1_DarumasangaKoronda::GetPosition().y - ( enemy->GetPosition().y + enemy->GetHeight());
 			//if (diff < -0.2f)
 			//{
-			//	Player::Jump(10);
+			//	Player1_DarumasangaKoronda::Jump(10);
 			//	// 小ジャンプさせるためにY方向の速度を設定する
 			//}
 
@@ -596,7 +363,7 @@ void Player::CollisionPlayerVsEnemies()
 }
 
 //デバッグプリミティブ描画
-void Player::DrawDebugPrimitive()
+void Player1_DarumasangaKoronda::DrawDebugPrimitive()
 {
 	DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
 
@@ -633,39 +400,26 @@ void Player::DrawDebugPrimitive()
 }
 
 // 着地した時に呼ばれる
-void Player::OnLanding()
+void Player1_DarumasangaKoronda::OnLanding()
 {
-	// 下方向の速力が一定以上なら着地ステートへ
-	//if (velocity.y <= -5)
-	//{
-	//	TransitionLandState();
-	//}
-
-	// ダメージ、死亡ステート時は着地した時にステート遷移しないようにする
-	if (velocity.y <= -5 && state != State::Damage && state != State::Death)
-	{
-		TransitionLandState();
-	}
-
-	jumpCount = 0;
 }
 
 // ダメージを受けた時に呼ばれる
-void Player::OnDamaged()
+void Player1_DarumasangaKoronda::OnDamaged()
 {
 	// ダメージステートへ遷移
 	TransitionDamageState();
 }
 
 // 死亡した時に呼ばれる
-void Player::OnDead()
+void Player1_DarumasangaKoronda::OnDead()
 {
 	// 死亡ステートへ遷移
 	TransitionDeathState();
 }
 
 // ジャンプ入力処理
-bool Player::InputJump()
+bool Player1_DarumasangaKoronda::InputJump()
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
 	{
@@ -687,7 +441,7 @@ bool Player::InputJump()
 }
 
 // 弾丸と敵の衝突処理
-void Player::CollisionProjectilesVsEnemies()
+void Player1_DarumasangaKoronda::CollisionProjectilesVsEnemies()
 {
 	EnemyManager& enemyManager = EnemyManager::Instance();
 
@@ -731,9 +485,9 @@ void Player::CollisionProjectilesVsEnemies()
 }
 
 // 当たり判定描画
-void Player::DrawDebugGUI()
+void Player1_DarumasangaKoronda::DrawDebugGUI()
 {
-	if (ImGui::TreeNode("Player"))
+	if (ImGui::TreeNode("Player1_DarumasangaKoronda"))
 	{
 		ImGui::InputFloat3("Velocity", &velocity.x);
 

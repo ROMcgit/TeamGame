@@ -1,5 +1,5 @@
 #include "Graphics/Graphics.h"
-#include "G3_SoratobuHusen.h"
+#include "G3_SoratobuHusenWari.h"
 #include "Game/Camera/Camera.h"
 #include "Game/Character/Enemy/EnemyManager.h"
 #include "Game/Character/Enemy/EnemySlime.h"
@@ -10,7 +10,7 @@
 #include "Game/Stage/StageMoveFloor.h"
 
 // 初期化
-void G3_SoratobuHusen::Initialize()
+void G3_SoratobuHusenWari::Initialize()
 {
 	ID3D11Device* device = Graphics::Instance().GetDevice();
 	float screenWidth = Graphics::Instance().GetScreenWidth();
@@ -52,7 +52,7 @@ void G3_SoratobuHusen::Initialize()
 }
 
 // 終了化
-void G3_SoratobuHusen::Finalize()
+void G3_SoratobuHusenWari::Finalize()
 {
 	//! ステージを破棄する
 	StageManager::Instance().Clear();
@@ -65,7 +65,7 @@ void G3_SoratobuHusen::Finalize()
 }
 
 // 更新処理
-void G3_SoratobuHusen::Update(float elapsedTime)
+void G3_SoratobuHusenWari::Update(float elapsedTime)
 {
 	// カメラコントローラー更新処理
 	DirectX::XMFLOAT3 target = player->GetPosition();
@@ -87,7 +87,7 @@ void G3_SoratobuHusen::Update(float elapsedTime)
 }
 
 // 描画処理
-void G3_SoratobuHusen::Render()
+void G3_SoratobuHusenWari::Render()
 {
 	Graphics& graphics = Graphics::Instance();
 

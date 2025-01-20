@@ -3,7 +3,7 @@
 #include <DirectXMath.h>
 #include <memory>
 #include "Camera.h"
-#include "Game/Character/Player.h"
+#include "Game/Character/Player/Player0_Onigokko.h"
 #include <Graphics\Graphics.h>
 
 // ‘O•ûéŒ¾

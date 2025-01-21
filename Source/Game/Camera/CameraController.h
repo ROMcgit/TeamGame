@@ -4,7 +4,6 @@
 #include <memory>
 #include "Graphics/Graphics.h"
 #include "Camera.h"
-#include "Game/Character/Director/SettingsDirector/DirectorManager.h"
 
 // 前方宣言
 class Fade;
@@ -308,8 +307,6 @@ private:
 
 	float targetMoveSpeed = 8; // ターゲットの移動速度(ボタン移動の場合)
 	float targetUpSpeed = 8;  // ターゲットの上昇速度(ボタン移動の場合)
-
-	DirectorManager directorManager; // 演出マネージャー
 
 	//-----------------------------------------------------------------//
 

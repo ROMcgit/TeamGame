@@ -42,116 +42,26 @@
 // SV_TARGET                0   xyzw        0   TARGET   float   xyzw
 //
 ps_5_0
-dcl_globalFlags refactoringAllowed | skipOptimization
+dcl_globalFlags refactoringAllowed
 dcl_constantbuffer CB5[2], immediateIndexed
 dcl_sampler s0, mode_default
 dcl_resource_texture2d (float,float,float,float) t0
 dcl_input_ps linear v1.xy
 dcl_output o0.xyzw
-dcl_temps 3
-//
-// Initial variable locations:
-//   v0.x <- pin.position.x; v0.y <- pin.position.y; v0.z <- pin.position.z; v0.w <- pin.position.w; 
-//   v1.x <- pin.texcoord.x; v1.y <- pin.texcoord.y; 
-//   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
-//
-#line 76 "C:\Users\2230018\Desktop\授業\2年\チE燂制作\3回目\チE"
-nop 
-mov r0.xy, v1.xyxx
-
-#line 64
-mov r0.zw, -r0.xxxy
-add r0.zw, r0.zzzw, l(0.000000, 0.000000, 0.500000, 0.500000)
-mul r0.zw, r0.zzzw, cb5[0].zzzz  // r0.z <- v.x; r0.w <- v.y
-
-#line 65
-sample_indexable(texture2d)(float,float,float,float) r1.x, v1.xyxx, t0.xyzw, s0
-mov r1.x, r1.x  // r1.x <- r
-
-#line 66
-add r2.xy, r0.zwzz, r0.xyxx
-sample_indexable(texture2d)(float,float,float,float) r1.y, r2.xyxx, t0.xyzw, s0
-mov r1.y, r1.y  // r1.y <- g
-
-#line 67
-mul r0.zw, r0.zzzw, l(0.000000, 0.000000, 2.000000, 2.000000)
-add r0.xy, r0.zwzz, r0.xyxx
-sample_indexable(texture2d)(float,float,float,float) r1.z, r0.xyxx, t0.xyzw, s0
-mov r1.z, r1.z  // r1.z <- b
-
-#line 69
-mov r1.x, r1.x  // r1.x <- <ChromaticAberration return value>.x
-mov r1.y, r1.y  // r1.y <- <ChromaticAberration return value>.y
-mov r1.z, r1.z  // r1.z <- <ChromaticAberration return value>.z
-
-#line 76
-mov r1.xyz, r1.xyzx  // r1.x <- tex.x; r1.y <- tex.y; r1.z <- tex.z
-
-#line 79
-mov r1.xyz, r1.xyzx  // r1.x <- color.x; r1.y <- color.y; r1.z <- color.z
-
-#line 80
-nop 
-mov r1.xyz, r1.xyzx
-
-#line 28
-mov r0.xyz, l(-0.500000,-0.500000,-0.500000,-0.000000)
-add r0.xyz, r0.xyzx, r1.xyzx  // r0.x <- color.x; r0.y <- color.y; r0.z <- color.z
-
-#line 29
-mul r0.xyz, r0.xyzx, cb5[0].xxxx
-
-#line 31
-add r0.xyz, r0.xyzx, l(0.500000, 0.500000, 0.500000, 0.000000)
-
-#line 32
-mov r0.xyz, r0.xyzx  // r0.x <- <Contrast return value>.x; r0.y <- <Contrast return value>.y; r0.z <- <Contrast return value>.z
-
-#line 80
-mov r0.xyz, r0.xyzx  // r0.x <- color.x; r0.y <- color.y; r0.z <- color.z
-
-#line 81
-nop 
-mov r0.xyz, r0.xyzx
-
-#line 39
-mul r0.w, r0.x, l(0.299000)
-mul r1.x, r0.y, l(0.587000)
-add r0.w, r0.w, r1.x
-mul r1.x, r0.z, l(0.114000)
-add r0.w, r0.w, r1.x  // r0.w <- gray
-
-#line 43
-mov r1.xyz, -r0.wwww
-add r0.xyz, r0.xyzx, r1.xyzx
-
-#line 44
-mul r0.xyz, r0.xyzx, cb5[0].yyyy
-
-#line 45
-add r0.xyz, r0.wwww, r0.xyzx
-
-#line 47
-mov r0.xyz, r0.xyzx  // r0.x <- <Saturation return value>.x; r0.y <- <Saturation return value>.y; r0.z <- <Saturation return value>.z
-
-#line 81
-mov r0.xyz, r0.xyzx  // r0.x <- color.x; r0.y <- color.y; r0.z <- color.z
-
-#line 82
-nop 
-mov r0.xyz, r0.xyzx
-
-#line 54
-mul r0.xyz, r0.xyzx, cb5[1].xyzx
-
-#line 55
-mov r0.xyz, r0.xyzx  // r0.x <- <ColorFilter return value>.x; r0.y <- <ColorFilter return value>.y; r0.z <- <ColorFilter return value>.z
-
-#line 82
-mov r0.xyz, r0.xyzx  // r0.x <- color.x; r0.y <- color.y; r0.z <- color.z
-
-#line 84
-mov o0.xyz, r0.xyzx
+dcl_temps 2
+sample_indexable(texture2d)(float,float,float,float) r0.x, v1.xyxx, t0.xyzw, s0
+add r1.xy, -v1.xyxx, l(0.500000, 0.500000, 0.000000, 0.000000)
+mul r1.zw, r1.xxxy, cb5[0].zzzz
+mad r1.xy, r1.xyxx, cb5[0].zzzz, v1.xyxx
+sample_indexable(texture2d)(float,float,float,float) r0.y, r1.xyxx, t0.xyzw, s0
+mad r1.xy, r1.zwzz, l(2.000000, 2.000000, 0.000000, 0.000000), v1.xyxx
+sample_indexable(texture2d)(float,float,float,float) r0.z, r1.xyxx, t0.xyzw, s0
+add r0.xyz, r0.xyzx, l(-0.500000, -0.500000, -0.500000, 0.000000)
+mad r0.xyz, r0.xyzx, cb5[0].xxxx, l(0.500000, 0.500000, 0.500000, 0.000000)
+dp3 r0.w, r0.xyzx, l(0.299000, 0.587000, 0.114000, 0.000000)
+add r0.xyz, -r0.wwww, r0.xyzx
+mad r0.xyz, r0.xyzx, cb5[0].yyyy, r0.wwww
+mul o0.xyz, r0.xyzx, cb5[1].xyzx
 mov o0.w, l(1.000000)
 ret 
-// Approximately 48 instruction slots used
+// Approximately 15 instruction slots used

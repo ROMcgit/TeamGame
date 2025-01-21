@@ -27,8 +27,8 @@ public:
 	// 破棄
 	void Destroy();
 
-/*****************************************************************************************************************************/
-	/*! セッター */
+	/*****************************************************************************************************************************/
+		/*! セッター */
 
 #if 1
 	// スケール変更の設定
@@ -112,9 +112,9 @@ public:
 		}
 	}
 
-//-----------------------------------------------------------------------------//
+	//-----------------------------------------------------------------------------//
 
-	// エミッシブの色の設定
+		// エミッシブの色の設定
 	void SetEmissiveColor(const DirectX::XMFLOAT3 emissiveColor) { this->emissiveColor = emissiveColor; }
 
 	// エミッシブの色変更の設定
@@ -169,8 +169,8 @@ public:
 
 #endif
 
-/*****************************************************************************************************************************/
-	/*! ゲッター */
+	/*****************************************************************************************************************************/
+		/*! ゲッター */
 
 #if 1
 	// 位置取得
@@ -188,9 +188,9 @@ public:
 	// 半径取得
 	float GetRadius() const { return radius; }
 
-//-----------------------------------------------------------------------------//
+	//-----------------------------------------------------------------------------//
 
-	// 不透明度を変えているかを取得
+		// 不透明度を変えているかを取得
 	bool GetOpacityChange() { return opacityChange; }
 
 	// エミッシブの色を変えているかを取得
@@ -214,25 +214,25 @@ protected:
 	// ターゲットを向く更新処理
 	void UpdateDirectionTarget(float elapsedTime, bool rotation, float rotationSpeed);
 
-//----------------------------------------------------------------------------------------------------//
+	//----------------------------------------------------------------------------------------------------//
 
-	// 角度制限処理
+		// 角度制限処理
 	void LimitAngle();
 
 	// 回転変更更新処理
 	bool UpdateAngleChange(float elapsedTime);
 
-//----------------------------------------------------------------------------------------------------//
+	//----------------------------------------------------------------------------------------------------//
 
-	// スケール変更更新処理
+		// スケール変更更新処理
 	bool UpdateScaleChange(float elapsedTime);
 
 	// 単一軸のスケール変更更新処理
 	float UpdateScaleAxis(float scale, float speed, bool scaleChangeUp, float toScaleChange, float elapsedTime);
 
-//----------------------------------------------------------------------------------------------------//
+	//----------------------------------------------------------------------------------------------------//
 
-	// マテリアルの色変更更新処理
+		// マテリアルの色変更更新処理
 	bool UpdateMaterialColorChange(float elapsedTime);
 
 	// 単一軸のマテリアルの色変更更新処理
@@ -251,27 +251,27 @@ protected:
 	bool UpdateEmissiveStrengthChange(float elapsedTime);
 
 protected:
-	DirectX::XMFLOAT3 position       = { 0, 0, 0 };
-	DirectX::XMFLOAT3 direction      = { 0, 0, 1 };
+	DirectX::XMFLOAT3 position = { 0, 0, 0 };
+	DirectX::XMFLOAT3 direction = { 0, 0, 1 };
 	DirectX::XMFLOAT3 targetPosition = { 0, 0, 0 };
-	DirectX::XMFLOAT3 scale          = { 1, 1, 1 };
-	DirectX::XMFLOAT4X4 transform    = { 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1 };
-	DirectorManager* manager         = nullptr;
-	float radius                     = 1.0f;
+	DirectX::XMFLOAT3 scale = { 1, 1, 1 };
+	DirectX::XMFLOAT4X4 transform = { 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1 };
+	DirectorManager* manager = nullptr;
+	float radius = 1.0f;
 
-	DirectX::XMFLOAT3 collisionPos    = { 0, 0, 0 }; // 当たり判定の位置
+	DirectX::XMFLOAT3 collisionPos = { 0, 0, 0 }; // 当たり判定の位置
 	DirectX::XMFLOAT3 collisionOffset = { 0, 0, 0 }; // 判定位置ずらし用のオフセット
 
-	float moveSpeed     = 20.0f; // 移動速度
+	float moveSpeed = 20.0f; // 移動速度
 	float rotationSpeed = DirectX::XMConvertToRadians(360); // 回転速度
 
 	float lifeTimer = 3.0f; // 生存時間
 
-	float angle    = 0; // 回転用
+	float angle = 0; // 回転用
 	float distance = 2; // 距離
 
-/***************************************************************************************/
-	/*! スケール */
+	/***************************************************************************************/
+		/*! スケール */
 	bool scaleChange = false;// スケールを変更するか
 	// スケールを大きくするか
 	struct ScaleChangeUp
@@ -281,11 +281,11 @@ protected:
 		bool z = false;
 	}scaleChangeUp;
 
-	DirectX::XMFLOAT3 toScaleChange    = { 0, 0, 0 }; // ここまで大きさを変える
+	DirectX::XMFLOAT3 toScaleChange = { 0, 0, 0 }; // ここまで大きさを変える
 	DirectX::XMFLOAT3 scaleChangeSpeed = { 0, 0, 0 }; // スケールを変える大きさ
 
-/***************************************************************************************/
-	/*! マテリアル */
+	/***************************************************************************************/
+		/*! マテリアル */
 	DirectX::XMFLOAT3 materialColor = { 1,1,1 }; // マテリアルの色
 	bool materialColorChange = false;            // マテリアルの色を変更するか
 	//マテリアルの色を増やすか
@@ -296,20 +296,20 @@ protected:
 		bool z = false;
 	}materialColorChangeUp;  // マテリアルの色を増やすか
 
-	DirectX::XMFLOAT3 toMaterialColorChange    = { 0, 0, 0 }; // ここまでマテリアルの色を変える
+	DirectX::XMFLOAT3 toMaterialColorChange = { 0, 0, 0 }; // ここまでマテリアルの色を変える
 	DirectX::XMFLOAT3 materialColorChangeSpeed = { 0, 0, 0 }; // マテリアルの色を変える速さ
 
 	//! 不透明度
-	float opacity            = 1.0f;  // 不透明度
-	bool  opacityChange      = false; // 不透明度を変更するか
-	bool  opacityChangeUp    = false; // 不透明度を増やすか
-	float toOpacityChange    = 0.0f;  // ここまで不透明度を変える 
+	float opacity = 1.0f;  // 不透明度
+	bool  opacityChange = false; // 不透明度を変更するか
+	bool  opacityChangeUp = false; // 不透明度を増やすか
+	float toOpacityChange = 0.0f;  // ここまで不透明度を変える 
 	float opacityChangeSpeed = 0.0f;  // 不透明度を変える速度
 
-/***************************************************************************************/
-	/*!エミッシブ */
+	/***************************************************************************************/
+		/*!エミッシブ */
 	DirectX::XMFLOAT3 emissiveColor = { 0.0f, 0.0f, 0.0f }; //エミッシブカラー
-	bool emissiveColorChange        = false; //エミッシブの色を変えるか
+	bool emissiveColorChange = false; //エミッシブの色を変えるか
 	//エミッシブの色を増やすか
 	struct EmissiveColorChangeUp
 	{
@@ -318,14 +318,14 @@ protected:
 		bool z = false;
 	}emissiveColorChangeUp;  //エミッシブの色を増やすか
 
-	DirectX::XMFLOAT3 toEmissiveColorChange    = { 0, 0, 0 }; // ここまでエミシッブの色を変える
+	DirectX::XMFLOAT3 toEmissiveColorChange = { 0, 0, 0 }; // ここまでエミシッブの色を変える
 	DirectX::XMFLOAT3 emissiveColorChangeSpeed = { 0, 0, 0 }; //エミッシブの色を変える速さ
 
 	//!エミッシブの強さ
-	float emissiveStrength         = 0.0f;  //エミッシブの強さ
-	bool  emissiveStrengthChange   = false; //エミッシブの強さを変えるか
+	float emissiveStrength = 0.0f;  //エミッシブの強さ
+	bool  emissiveStrengthChange = false; //エミッシブの強さを変えるか
 	bool  emissiveStrengthChangeUp = false; //エミッシブの強さを増やすか
 
-	float toEmissiveStrengthChange    = 0.0f;  //　ここまでエミシッブの強さを変える
+	float toEmissiveStrengthChange = 0.0f;  //　ここまでエミシッブの強さを変える
 	float emissiveStrengthChangeSpeed = 0.0f;  //　エミシッブの強さを変える速さ
 };

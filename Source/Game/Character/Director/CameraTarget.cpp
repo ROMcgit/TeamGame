@@ -13,9 +13,6 @@ CameraTarget::CameraTarget(DirectorManager* manager)
 
 	// 当たり判定
 	radius = 0.0f;
-
-	// アニメーション
-	model->PlayAnimation(0, true);
 }
 
 // デストラクタ
@@ -38,9 +35,6 @@ void CameraTarget::Update(float elapsedTime)
 
 	// モデル行列更新
 	model->UpdateTransform(transform);
-
-	// モデルアニメーション更新処理
-	model->UpdateAnimation(elapsedTime);
 }
 
 // 描画処理
@@ -66,6 +60,8 @@ void CameraTarget::DrawDebugGUI()
 			ImGui::DragFloat3("Direction", &direction.x, 0.01f);
 			// スケール
 			ImGui::DragFloat3("Scale", &scale.x, 0.01f);
+			// 不透明度
+			ImGui::DragFloat("Opacity", &opacity, 0.01f, 0.0f, 1.0f);
 		}
 
 		ImGui::TreePop();

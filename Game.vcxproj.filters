@@ -133,9 +133,6 @@
     <Filter Include="Source\Character\Player\5_足場渡り">
       <UniqueIdentifier>{3fa1a2e2-4c08-4d05-8f47-1dcb7ba377ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Character\Director">
-      <UniqueIdentifier>{07752d07-a94f-48af-9424-527e189ee1c7}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -357,15 +354,6 @@
     <ClInclude Include="Source\Game\Character\Player\Player5_AsibaWatari.h">
       <Filter>Source\Character\Player\5_足場渡り</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Character\Director\CameraTarget.h">
-      <Filter>Source\Character\Director</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Character\Director\SettingsDirector\Director.h">
-      <Filter>Source\Character\Director</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Character\Director\SettingsDirector\DirectorManager.h">
-      <Filter>Source\Character\Director</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -571,15 +559,6 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Player\Player5_AsibaWatari.cpp">
       <Filter>Source\Character\Player\5_足場渡り</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Character\Director\CameraTarget.cpp">
-      <Filter>Source\Character\Director</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Character\Director\SettingsDirector\Director.cpp">
-      <Filter>Source\Character\Director</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Character\Director\SettingsDirector\DirectorManager.cpp">
-      <Filter>Source\Character\Director</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

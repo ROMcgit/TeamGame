@@ -4,6 +4,7 @@
 #include "Input/Input.h"
 #include "Game/Character/Director/CameraTarget.h"
 #include <imgui.h>
+#include <cmath>
 
 //! ターゲット
 DirectX::XMFLOAT3 CameraController::target = { 0, 0, 0 };
@@ -78,10 +79,6 @@ CameraController::CameraController()
 
 	// フェードを生成
 	fade = std::make_unique<Fade>();
-
-	//! カメラのターゲットを生成
-	std::unique_ptr<CameraTarget> cameraTarget = std::make_unique<CameraTarget>(&directorManager);
-	directorManager.Register(std::move(cameraTarget));
 }
 
 // デストラクタ
@@ -94,9 +91,6 @@ void CameraController::Update(float elapsedTime)
 {
 	// フェード更新処理
 	fade->Update(elapsedTime);
-
-	// 演出マネージャーの更新処理
-	directorManager.Update(elapsedTime);
 
 #if 1
 	// カメラの回転値を回転行列に変換
@@ -126,8 +120,6 @@ void CameraController::Update(float elapsedTime)
 // 描画処理
 void CameraController::RenderTarget(ID3D11DeviceContext* dc, Shader* shader)
 {
-	//! デバッグカメラ中に表示
-	directorManager.Render(dc, shader);
 }
 
 // フェードを描画
@@ -231,7 +223,7 @@ void CameraController::CameraLimit()
 // カメラをデバッグ
 bool CameraController::UpdateDebugCamera(float elapsedTime)
 {
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	Mouse& mouse = Input::Instance().GetMouse();
 	//! ImGuiを操作中は処理をしない

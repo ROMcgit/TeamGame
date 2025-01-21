@@ -71,6 +71,7 @@ void G1_DarumasangaKoronda::Update(float elapsedTime)
 	DirectX::XMFLOAT3 target = player->GetPosition();
 	target.y += 0.5f;
 	cameraController->SetTarget(target);
+	Camera::Instance().Update(elapsedTime);
 	cameraController->Update(elapsedTime);
 
 	// ステージ更新処理
@@ -120,6 +121,9 @@ void G1_DarumasangaKoronda::Render()
 		shader->Begin(dc, rc);
 		// ステージ描画
 		StageManager::Instance().Render(dc, shader);
+
+		// カメラの位置を描画
+		CameraController::Instance().RenderTarget(dc, shader);
 
 		// プレイヤー描画
 		player->Render(dc, shader);

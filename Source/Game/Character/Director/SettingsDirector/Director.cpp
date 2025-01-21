@@ -34,7 +34,7 @@ void Director::UpdateDirectorState(float elapsedTime, bool updateDirectionTarget
 	// 当たり判定の位置を設定
 	CollisionPosSettings();
 
-	if(updateDirectionTarget)
+	if (updateDirectionTarget)
 		// ターゲットを向く更新処理
 		UpdateDirectionTarget(elapsedTime, rotation, rotationSpeed);
 
@@ -139,7 +139,7 @@ void Director::UpdateDirectionTarget(float elapsedTime, bool rotation, float rot
 	DirectX::XMStoreFloat3(&direction, newDirVec);
 
 	//! 回転するなら
-	if(rotation)
+	if (rotation)
 	{
 		// 角度を回転速度で更新
 		angle += rotationSpeed * elapsedTime;

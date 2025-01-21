@@ -1,8 +1,8 @@
 #include "CameraController.h"
 #include "Camera.h"
-#include "Input/Input.h"
-#include "Audio/SoundManager.h"
 #include "Graphics/Fade.h"
+#include "Input/Input.h"
+#include "Game/Character/Director/CameraTarget.h"
 #include <imgui.h>
 
 //! ターゲット
@@ -54,6 +54,12 @@ float CameraController::cameraShakeTimer = 0.0f;
 //! 揺らす大きさ
 DirectX::XMINT3 CameraController::cameraShakePower = { 0, 0, 0 };
 
+/********************************************************************/
+
+//! デバッグカメラ
+bool CameraController::debugCamera = false;
+//! デバッグカメラ中に移動しないようにするか
+bool CameraController::noMoveDebugCamera = false;
 
 // コンストラクタ
 CameraController::CameraController()
@@ -67,10 +73,15 @@ CameraController::CameraController()
 	cameraShakeTimer = 0.0f;        // カメラを揺らす時間
 	cameraShakePower = { 0, 0, 0 }; // 揺らす大きさ
 
+	debugCamera = false; // デバッグカメラ
+	noMoveDebugCamera = false; // デバッグカメラ中に移動しないようにするか
+
 	// フェードを生成
 	fade = std::make_unique<Fade>();
 
-	//SoundManager::Instance().LoadSound("ボス撃破", "Data/Audio/Sound/Enemy/Defeat.wav");
+	//! カメラのターゲットを生成
+	std::unique_ptr<CameraTarget> cameraTarget = std::make_unique<CameraTarget>(&directorManager);
+	directorManager.Register(std::move(cameraTarget));
 }
 
 // デストラクタ
@@ -83,6 +94,9 @@ void CameraController::Update(float elapsedTime)
 {
 	// フェード更新処理
 	fade->Update(elapsedTime);
+
+	// 演出マネージャーの更新処理
+	directorManager.Update(elapsedTime);
 
 #if 1
 	// カメラの回転値を回転行列に変換
@@ -109,6 +123,13 @@ void CameraController::Update(float elapsedTime)
 	UpdateCameraTarget(elapsedTime);
 }
 
+// 描画処理
+void CameraController::RenderTarget(ID3D11DeviceContext* dc, Shader* shader)
+{
+	//! デバッグカメラ中に表示
+	directorManager.Render(dc, shader);
+}
+
 // フェードを描画
 void CameraController::FadeRender(ID3D11DeviceContext* dc, Graphics& graphics)
 {
@@ -121,6 +142,8 @@ void CameraController::DrawDebugGUI()
 {
 	if (ImGui::TreeNode("CameraController"))
 	{
+		// デバッグカメラか
+		ImGui::Checkbox("DebugCamera", &debugCamera);
 		// デバッグカメラの動きを止めるか
 		ImGui::Checkbox("NoMoveDebugCamera", &noMoveDebugCamera);
 		// 注目するか
@@ -208,7 +231,7 @@ void CameraController::CameraLimit()
 // カメラをデバッグ
 bool CameraController::UpdateDebugCamera(float elapsedTime)
 {
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	Mouse& mouse = Input::Instance().GetMouse();
 	//! ImGuiを操作中は処理をしない
@@ -235,6 +258,89 @@ bool CameraController::UpdateDebugCamera(float elapsedTime)
 	//! デバッグカメラを動かさないなら、ここで処理を止める
 	if (noMoveDebugCamera) return false;
 
+	//! ボタンでターゲットの移動
+	{
+		Camera& camera = Camera::Instance();
+
+		// カメラの前方向、右方向、上方向を取得
+		DirectX::XMFLOAT3 front = camera.GetFront();
+		DirectX::XMFLOAT3 right = camera.GetRight();
+		DirectX::XMFLOAT3 up = camera.GetUp();
+
+		// 移動方向のベクトルを初期化
+		DirectX::XMFLOAT3 moveDirection = { 0.0f, 0.0f, 0.0f };
+
+		// キー入力で移動方向を決定
+		GamePad& gamePad = Input::Instance().GetGamePad();
+
+		//! Shiftキーを押しているなら
+		if (GetAsyncKeyState(VK_SHIFT) & 0x8000)
+		{
+			// 移動速度            // 上昇速度
+			targetMoveSpeed = targetUpSpeed = 15.0f;
+		}
+		else
+		{
+			// 移動速度            // 上昇速度
+			targetMoveSpeed = targetUpSpeed = 8.0f;
+		}
+
+		//! 上昇
+		if (gamePad.GetButtonHeld() & GamePad::BTN_UP && GetAsyncKeyState(VK_CONTROL) & 0x8000 && !(gamePad.GetButtonHeld() & GamePad::BTN_DOWN))
+		{
+			// そのままY座標を移動させる
+			target.y += targetUpSpeed * elapsedTime;
+		}
+		//! 前進
+		else if (gamePad.GetButtonHeld() & GamePad::BTN_UP && !(gamePad.GetButtonHeld() & GamePad::BTN_DOWN))
+		{
+			moveDirection.x += front.x;
+			moveDirection.y += front.y;
+			moveDirection.z += front.z;
+		}
+
+		//! 下降
+		if (gamePad.GetButtonHeld() & GamePad::BTN_DOWN && GetAsyncKeyState(VK_CONTROL) & 0x8000 && !(gamePad.GetButtonHeld() & GamePad::BTN_UP))
+		{
+			// そのままY座標を移動させる
+			target.y -= targetUpSpeed * elapsedTime;
+		}
+		// 後退
+		else if (gamePad.GetButtonHeld() & GamePad::BTN_DOWN && !(gamePad.GetButtonHeld() & GamePad::BTN_UP))
+		{
+			moveDirection.x -= front.x;
+			moveDirection.z -= front.z;
+		}
+
+		// 左に移動
+		if (gamePad.GetButtonHeld() & GamePad::BTN_LEFT && !(gamePad.GetButtonHeld() & GamePad::BTN_RIGHT))
+		{
+			moveDirection.x -= right.x;
+			moveDirection.z -= right.z;
+		}
+		// 右に移動
+		else if (gamePad.GetButtonHeld() & GamePad::BTN_RIGHT && !(gamePad.GetButtonHeld() & GamePad::BTN_LEFT))
+		{
+			moveDirection.x += right.x;
+			moveDirection.z += right.z;
+		}
+
+		// 移動方向がゼロでない場合に処理(↑↓だけで、斜め移動になるのを防ぐため、UPは除外)
+		//! 長さの二乗
+		float lengthSquared = moveDirection.x * moveDirection.x +
+			moveDirection.z * moveDirection.z;
+
+		if (lengthSquared > 0.0f)
+		{
+			// 正規化して速度を適用
+			float length = std::sqrt(lengthSquared);
+			moveDirection.x /= length;
+			moveDirection.z /= length;
+
+			target.x += moveDirection.x * targetMoveSpeed * elapsedTime;
+			target.z += moveDirection.z * targetMoveSpeed * elapsedTime;
+		}
+	}
 
 	//! マウス左クリック長押し
 #if 1
@@ -293,9 +399,13 @@ bool CameraController::UpdateDebugCamera(float elapsedTime)
 	//! マウスの更新処理
 	mouse.Update();
 
-#endif // !_DEBUG
-
 	return true;
+
+#else
+
+	return false;
+
+#endif // !_DEBUG
 }
 
 // カメラの位置の変更更新処理
@@ -448,9 +558,6 @@ bool CameraController::UpdateBossFinish(float elapsedTime)
 
 			// カメラシェイク
 			SetCameraShake(0.8f, DirectX::XMINT3(100, 100, 0));
-
-			// 効果音
-			SoundManager::Instance().PlaySound("ボス撃破", 0.5f);
 
 			bossFinishSettings = true;
 		}

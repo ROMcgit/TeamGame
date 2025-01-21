@@ -22,7 +22,7 @@ Player4_OssanTataki::Player4_OssanTataki()
 	instance = this;
 
 	// モデル読み込み
-	model = std::make_unique <Model>("Data/Model/Jammo/Jammo.mdl");
+	model = std::make_unique <Model>("Data/Model/Ai/Ai.mdl");
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.01f;

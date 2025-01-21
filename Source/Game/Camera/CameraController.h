@@ -2,9 +2,9 @@
 
 #include <DirectXMath.h>
 #include <memory>
+#include "Graphics/Graphics.h"
 #include "Camera.h"
-#include "Game/Character/Player/Player0_Onigokko.h"
-#include <Graphics\Graphics.h>
+#include "Game/Character/Director/SettingsDirector/DirectorManager.h"
 
 // 前方宣言
 class Fade;
@@ -16,8 +16,18 @@ public:
 	CameraController();
 	~CameraController();
 
+	// 唯一のインスタンス取得
+	static CameraController& Instance()
+	{
+		static CameraController cameraController;
+		return cameraController;
+	}
+
 	// 更新処理
 	void Update(float elapsedTime);
+
+	// 描画処理
+	void RenderTarget(ID3D11DeviceContext* dc, Shader* shader);
 
 	// フェードを描画
 	void FadeRender(ID3D11DeviceContext* dc, Graphics& graphics);
@@ -28,7 +38,8 @@ public:
 	/************************************************************************************************/
 		/*! セッター */
 
-		// ターゲットの位置設定
+#if 1
+	// ターゲットの位置設定
 	void SetTarget(const DirectX::XMFLOAT3& target)
 	{
 		//! デバッグカメラじゃないなら
@@ -144,12 +155,9 @@ public:
 	void SetCameraShake(float shakeTime, DirectX::XMINT3 shakePower)
 	{
 		// カメラシェイクじゃ無いなら設定する
-		if (!this->cameraShake)
-		{
-			this->cameraShake = true;       // カメラシェイクをする
-			this->cameraShakeTimer = shakeTime;  // 揺らす時間
-			this->cameraShakePower = shakePower; // 揺らす大きさ
-		}
+		this->cameraShake = true;       // カメラシェイクをする
+		this->cameraShakeTimer = shakeTime;  // 揺らす時間
+		this->cameraShakePower = shakePower; // 揺らす大きさ
 	}
 
 	// 他の更新処理を止める設定
@@ -160,19 +168,12 @@ public:
 		this->bossFinishTimer = 1.2f;  // 他の更新処理を止める時間
 	}
 
+#endif
+
 	/************************************************************************************************/
 		/*! ゲッター */
 
-		// カメラのターゲットの取得
-	const DirectX::XMFLOAT3& GetTarget() { return target; }
-
-	// カメラの角度の取得
-	const DirectX::XMFLOAT3& GetAngle() { return angle; }
-
-	// カメラの範囲の取得
-	float GetRange() { return range; }
-
-	// カメラがムービー中かの取得
+		// カメラがムービー中かの取得
 	bool GetCameraMovie() { return cameraMovie; }
 
 	// 他の更新処理を止めるかの取得
@@ -297,13 +298,20 @@ public:
 	static DirectX::XMINT3 cameraShakePower; // 揺らす大きさ
 
 	/**********************************************************************************************/
+public:
+	static bool debugCamera; // デバッグカメラ
+	static bool noMoveDebugCamera; // デバッグカメラの動きを止めるか
 private:
-	bool debugCamera = false; // デバッグカメラ
-	bool noMoveDebugCamera = false; // デバッグカメラの動きを止めるか
-	float mouseMoveSpeed = 1.5f;  // マウスの進む速さ
-	float mouseZoomSpeed = 0.1f;  // マウスの拡大速度
-	float mouseSensitivity = 1.0f;  // マウス感度
+	float mouseMoveSpeed = 1.5f; // マウスの進む速さ
+	float mouseZoomSpeed = 0.1f; // マウスの拡大速度
+	float mouseSensitivity = 1.0f; // マウス感度
 
+	float targetMoveSpeed = 8; // ターゲットの移動速度(ボタン移動の場合)
+	float targetUpSpeed = 8;  // ターゲットの上昇速度(ボタン移動の場合)
+
+	DirectorManager directorManager; // 演出マネージャー
+
+	//-----------------------------------------------------------------//
 
 	bool cameraTargetPlayer_3D = false; // カメラのターゲットをプレイヤーにするか
 

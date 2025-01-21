@@ -9,6 +9,11 @@ Microsoft::WRL::ComPtr<ID3D11Buffer> Camera::CBPostEffect;
 
 //----------------------------------------------------------//
 
+//! ポストエフェクトの数値をいじれるようにする
+bool Camera::postEffectControll = false;
+//! ポストエフェクトのステータスを元に戻す
+bool Camera::postEffectReset = false;
+
 //! ポストエフェクトのステータスを変更するか
 bool Camera::postEffectChange = false;
 

@@ -102,18 +102,154 @@ void Framework::SceneSelectGUI()
 {
 #ifdef _DEBUG
 
-	ImVec2 displaySize = ImGui::GetIO().DisplaySize;
+	//! 位置設定
+	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
+	//! 大きさ設定
+	ImGui::SetNextWindowSize(ImVec2(320, 720), ImGuiCond_Always);
 
-	ImGui::SetNextWindowPos(ImVec2(1000, 10), ImGuiCond_Once);
-	ImGui::SetNextWindowSize(ImVec2(250, 200), ImGuiCond_Once);
+	/*! ImGui設定 */
+#if 1
+	//! 不透明度
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.5f, 0.0f, 0.0f, 0.8f));
+
+	/*! ヘッダー */
+	// 背景色
+	ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.2f, 0.4f, 0.6f, 1.0f));
+	// ホバー時の色
+	ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(0.3f, 0.6f, 0.8f, 1.0f));
+	// クリック時の色
+	ImGui::PushStyleColor(ImGuiCol_HeaderActive, ImVec4(0.5f, 0.8f, 1.0f, 1.0f));
+
+	/*! ボタン */
+	// 背景色
+	ImGui::PushStyleColor(ImGuiCol_Button,
+		ImVec4(0.2f, 0.4f, 0.6f, 1.0f));
+	// ホバー時の色
+	ImGui::PushStyleColor(ImGuiCol_ButtonHovered,
+		ImVec4(0.3f, 0.6f, 0.8f, 1.0f));
+	// クリック時の色
+	ImGui::PushStyleColor(ImGuiCol_ButtonActive,
+		ImVec4(0.9f, 0.7f, 0.2f, 1.0f));
+
+	/*! フレーム */
+	// 背景色
+	ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.2f, 0.4f, 0.6f, 1.0f));
+	// ホバー時の色
+	ImGui::PushStyleColor(ImGuiCol_FrameBgHovered,
+		ImVec4(0.3f, 0.6f, 0.8f, 1.0f));
+	// クリック時の色
+	ImGui::PushStyleColor(ImGuiCol_FrameBgActive,
+		ImVec4(0.5f, 0.8f, 1.0f, 1.0f));
+
+	/*! チェックマークの色 */
+	ImGui::PushStyleColor(ImGuiCol_CheckMark, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
+
+	//! 縁の色
+	ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(1.0f, 1.0f, 1.0f, 0.5f));
+	//! 線の太さを2.0に設定
+	ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 2.0f);
+
+
+	//! ボタンの角丸の度合い
+	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
+	//! ボタンの内側の余白
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f, 5.0f));
+
+#endif
+
+	if (ImGui::Begin("GameDebug"))
+	{
+		/*! カメラなどの処理 */
+#if 1
+		//! カメラコントローラー
+		if (ImGui::CollapsingHeader("CameraController"))
+#if 1
+		{
+			// デバッグカメラ
+			ImGui::Checkbox(u8"デバッグカメラ", &CameraController::debugCamera);
+			ImGui::Checkbox(u8"デバッグカメラの移動停止", &CameraController::noMoveDebugCamera);
+
+			// ターゲット
+			ImGui::DragFloat3(u8"ターゲット", &CameraController::target.x, 0.1f);
+
+			// 回転
+			DirectX::XMFLOAT3 a;
+			a.x = DirectX::XMConvertToDegrees(CameraController::angle.x);
+			a.y = DirectX::XMConvertToDegrees(CameraController::angle.y);
+			a.z = DirectX::XMConvertToDegrees(CameraController::angle.z);
+			ImGui::DragFloat3(u8"角度", &a.x, 0.1f);
+			CameraController::angle.x = DirectX::XMConvertToRadians(a.x);
+			CameraController::angle.y = DirectX::XMConvertToRadians(a.y);
+			CameraController::angle.z = DirectX::XMConvertToRadians(a.z);
+
+			// カメラの範囲
+			ImGui::DragFloat(u8"範囲", &CameraController::range, 0.1f);
+		}
+
+#endif
+		//! ライト
+		if (ImGui::CollapsingHeader("Light"))
+#if 1
+		{
+			ImGui::Checkbox(u8"数値を変える", &Scene::debugControll);
+			ImGui::DragFloat4(u8"ライトの向き", &Scene::debugLightDirection.x, 0.01f);
+			ImGui::ColorEdit4(u8"ライトの色", &Scene::debugLightColor.x);
+			ImGui::DragFloat3(u8"ライトの位置", &Scene::debugLightPosition.x, 0.1f);
+			ImGui::DragFloat(u8"ライトの範囲", &Scene::debugLightRange, 0.01f);
+			//-----------------------------------------------------------------------------------------------------//
+			ImGui::Spacing(); // 一行空ける
+			ImGui::Separator(); // セクションの間に区切り線を表示
+			ImGui::Spacing(); // 一行空ける
+			//-----------------------------------------------------------------------------------------------------//
+			ImGui::DragFloat(u8"環境光", &Scene::debugAmbientStrength, 0.01f);
+			ImGui::DragFloat(u8"拡散光", &Scene::debugDiffuseStrength, 0.01f);
+			ImGui::DragFloat(u8"スペキュラー光", &Scene::debugSpecularStrength, 0.01f);
+			//-----------------------------------------------------------------------------------------------------//
+			ImGui::Spacing(); // 一行空ける
+			ImGui::Separator(); // セクションの間に区切り線を表示
+			ImGui::Spacing(); // 一行空ける
+			//-----------------------------------------------------------------------------------------------------//
+			ImGui::ColorEdit3(u8"フォグの色", &Scene::debugFogColor.x);
+			ImGui::DragFloat(u8"フォグの開始", &Scene::debugFogStart);
+			ImGui::DragFloat(u8"フォグの終了", &Scene::debugFogEnd);
+		}
+#endif
+		//! ポストエフェクト
+		if (ImGui::CollapsingHeader("PostEffect"))
+#if 1
+		{
+			//! ゲーム中に数値をいじれるようにする
+			ImGui::Checkbox("PostEffectControll", &Camera::postEffectControll);
+			//! 数値をリセットする
+			ImGui::Checkbox("PostEffectReset", &Camera::postEffectReset);
+
+			// コンストラクト(数値が大きいほど、明るい部分はより明るく、暗い部分はより暗くなる)
+			ImGui::DragFloat(u8"コンストラクト", &Camera::postEffect.contrast, 0.01f);
+			// サチュレーション(色の彩度)
+			ImGui::DragFloat(u8"彩度", &Camera::postEffect.saturation, 0.01f);
+			// カラーフィルター(色フィルター)
+			ImGui::DragFloat3(u8"色フィルター", &Camera::postEffect.colorFilter.x, 0.01f);
+			// クロマティックアベレーション(色収差(色ズレ))
+			ImGui::DragFloat(u8"色ズレ", &Camera::postEffect.chromaticAberration, 0.01f);
+		}
+#endif
+
+#endif
+	}
+	// 終了
+	ImGui::End();
+
+	//! 位置設定
+	ImGui::SetNextWindowPos(ImVec2(1050, 0), ImGuiCond_Always);
+	//! 大きさ設定
+	ImGui::SetNextWindowSize(ImVec2(230, 500), ImGuiCond_Always);
 
 	if (ImGui::Begin("Scene"))
 	{
 		ChangeSceneButtonGUI<SceneTitle>(u8"00.タイトル画面");
-
 		ChangeSceneButtonGUI<SceneGameSelect>(u8"01.ゲーム画面");
 
-		if (ImGui::TreeNode(u8"ゲームシーン"), ImGuiTreeNodeFlags_DefaultOpen)
+		if (ImGui::TreeNode(u8"ゲームシーン"))
 		{
 			ChangeSceneButtonGUI<G0_Onigokko>          (u8"00.おにごっこ");
 			ChangeSceneButtonGUI<G1_DarumasangaKoronda>(u8"01.だるまさんが転んだ");
@@ -125,6 +261,9 @@ void Framework::SceneSelectGUI()
 			ImGui::TreePop();
 		}
 	}
+	ImGui::PopStyleVar(3);    // PushStyleVarで指定した数だけPopする
+	ImGui::PopStyleColor(12); // PushStyleColorで指定した数だけPopする
+
 	ImGui::End();
 
 #endif // !_DEBUG

@@ -269,11 +269,11 @@ void DefaltLitShader::Draw(ID3D11DeviceContext* dc, const Model* model, DirectX:
 		for (const ModelResource::Subset& subset : mesh.subsets)
 		{
 			CbSubset cbSubset;
-			cbSubset.materialColor.x = materialColor.x;   //! マテリアルカラーX
-			cbSubset.materialColor.y = materialColor.y;   //! マテリアルカラーY
-			cbSubset.materialColor.z = materialColor.z;   //! マテリアルカラーZ
-			cbSubset.materialColor.w = opacity;          //! 不透明度
-			cbSubset.emissiveColor = emissiveColor;    //! エミッシブカラー
+			cbSubset.materialColor.x  = materialColor.x;   //! マテリアルカラーX
+			cbSubset.materialColor.y  = materialColor.y;   //! マテリアルカラーY
+			cbSubset.materialColor.z  = materialColor.z;   //! マテリアルカラーZ
+			cbSubset.materialColor.w  = opacity;          //! 不透明度
+			cbSubset.emissiveColor    = emissiveColor;    //! エミッシブカラー
 			cbSubset.emissiveStrength = emissiveStrength; //! エミッシブの強さ
 
 			dc->UpdateSubresource(subsetConstantBuffer.Get(), 0, 0, &cbSubset, 0, 0);

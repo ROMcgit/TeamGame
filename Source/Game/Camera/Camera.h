@@ -103,13 +103,13 @@ private:
 	DirectX::XMFLOAT3 front; // カメラの正面方向
 	DirectX::XMFLOAT3 right; // カメラの右方向
 
-	/*! ポストエフェクト */
-
-	bool postEffectControll = false; //! ゲーム中に数値をいじれるようにする(ImGui用)
-	bool postEffectReset = false; //! ポストエフェクトのステータスを元に戻す
+private:
 	bool postEffectInitialization = false; //! ポストエフェクトのステータスの初期化
 
 public:
+	static bool postEffectControll;        //! ゲーム中に数値をいじれるようにする(ImGui用)
+	static bool postEffectReset;           //! ポストエフェクトのステータスを元に戻す
+
 	static bool postEffectChange; // ポストエフェクトのステータスを変更するか
 
 	static float toContrastChange;    // ここまでコンストラクトを変える

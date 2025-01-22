@@ -80,10 +80,12 @@ CameraController::CameraController()
 	// フェードを生成
 	fade = std::make_unique<Fade>();
 
+#ifdef _DEBUG
 	DirectorManager& directorManager = DirectorManager::Instance();
 
 	std::unique_ptr<CameraTarget> cameraTarget = std::make_unique<CameraTarget>();
 	directorManager.Register(std::move(cameraTarget));
+#endif
 }
 
 // デストラクタ

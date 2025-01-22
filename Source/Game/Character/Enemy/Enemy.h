@@ -27,4 +27,15 @@ public:
 	virtual void DrawDebugPrimitive();
 
 	void Destroy();
+
+	// ターゲットの方を向く
+	void DirectionToTarget(float elapsedTime, float speedRate);
+
+	// 目標地点向きながら移動
+	void MoveToTarget(float elapsedTime, float speedRate);
+
+protected:
+	DirectX::XMFLOAT3 targetPosition = { 0, 0, 0 };     // ターゲットの位置
+	float moveSpeed = 1.0f;                             // 移動速度
+	float turnSpeed = DirectX::XMConvertToRadians(360); // 回転速度
 };

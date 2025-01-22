@@ -24,9 +24,6 @@ public:
 	// デバッグプリミティブ描画
 	void DrawDebugPrimitive() override;
 
-	// 縄張り設定
-	void SetTerritory(const DirectX::XMFLOAT3& origin, float range);
-
 protected:
 	//ダメージを受けた時に呼ばれる
 	void OnDamaged() override;
@@ -35,11 +32,9 @@ protected:
 	void OnDead() override;
 
 private:
-	// ターゲット位置をランダム設定
-	void SetRandomTargetPosition();
 
-	// 目標地点へ移動
-	void MoveToTarget(float elapsedTime, float speedRate);
+	// ノードとプレイヤーの衝突処理
+	void CollisionNodeVsPlayer(const char* nodeName, float nodeRadius);
 
 	// 待機ステートへ遷移
 	void TransitionWaitState();
@@ -53,8 +48,17 @@ private:
 	// 移動ステート更新処理
 	void UpdateMoveState(float elapsedTime);
 
-	// ノードとプレイヤーの衝突処理
-	void CollisionNodeVsPlayer(const char* nodeName, float nodeRadius);
+	// 威嚇ステートへ遷移
+	void TransitionThreatState();
+
+	// 威嚇ステート更新処理
+	void UpdateThreatState(float elapsedTime);
+
+	// 追跡ステートへ遷移
+	void TransitionTrackingState();
+
+	// 追跡ステート更新処理
+	void UpdateTrackingState(float elapsedTime);
 
 	// 攻撃ステートへ遷移
 	void TransitionAttackState();
@@ -80,6 +84,8 @@ private:
 	{
 		Wait,
 		Move,
+		Threat,
+		Tracking,
 		Attack,
 		Damage,
 		Death
@@ -99,10 +105,7 @@ private:
 	std::unique_ptr<Model> model;
 
 	State state = State::Wait;
-	DirectX::XMFLOAT3 targetPosition = { 0,0,0 };
-	DirectX::XMFLOAT3 territoryOrigin = { 0,0,0 };
 	float territoryRange = 10.0f;
-	float moveSpeed = 2.0f;
 	float turnSpeed = DirectX::XMConvertToRadians(360);
 	float stateTimer = 0.0f;
 	float searchRange = 5.0f;

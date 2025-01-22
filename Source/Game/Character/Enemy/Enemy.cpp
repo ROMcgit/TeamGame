@@ -17,3 +17,32 @@ void Enemy::Destroy()
 	EnemyManager::Instance().Remove(this);
 	//enemyManager->Remove(this);
 }
+
+// ターゲットの方を向く
+void Enemy::DirectionToTarget(float elapsedTime, float speedRate)
+{
+	// ターゲット方向への進行ベクトルを算出
+	float vx = targetPosition.x - position.x;
+	float vz = targetPosition.z - position.z;
+	float dist = sqrtf(vx * vx + vz * vz);
+	vx /= dist;
+	vz /= dist;
+
+	// 向きの処理
+	Turn3DNotCancel(elapsedTime, vx, vz, turnSpeed * speedRate);
+}
+
+// 目標地点向きながら移動
+void Enemy::MoveToTarget(float elapsedTime, float speedRate)
+{
+	// ターゲット方向への進行ベクトルを算出
+	float vx = targetPosition.x - position.x;
+	float vz = targetPosition.z - position.z;
+	float dist = sqrtf(vx * vx + vz * vz);
+	vx /= dist;
+	vz /= dist;
+
+	// 移動処理
+	Move3D(vx, vz, moveSpeed * speedRate);
+	Turn3DNotCancel(elapsedTime, vx, vz, turnSpeed * speedRate);
+}

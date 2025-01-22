@@ -133,6 +133,15 @@
     <Filter Include="Source\Character\Player\5_足場渡り">
       <UniqueIdentifier>{3fa1a2e2-4c08-4d05-8f47-1dcb7ba377ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Stage\StageGame">
+      <UniqueIdentifier>{a1a77253-e021-4416-9cf8-767ff1e7adc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Stage\0.Setting">
+      <UniqueIdentifier>{89b76415-65c2-4962-bb7d-8d4b66855553}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\OtherScene">
+      <UniqueIdentifier>{2c919b1c-2241-4d6b-827c-cc9f6fe8a01d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -221,33 +230,6 @@
     </ClInclude>
     <ClInclude Include="Source\Game\Effect\Effect.h">
       <Filter>Source\Effekseer</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Scene\SceneGameSelect.h">
-      <Filter>Source\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Scene\Scene.h">
-      <Filter>Source\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Scene\SceneTitle.h">
-      <Filter>Source\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Scene\SceneManager.h">
-      <Filter>Source\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Scene\SceneLoading.h">
-      <Filter>Source\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Stage\Stage.h">
-      <Filter>Source\Stage</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Stage\StageMain.h">
-      <Filter>Source\Stage</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Stage\StageManager.h">
-      <Filter>Source\Stage</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Stage\StageMoveFloor.h">
-      <Filter>Source\Stage</Filter>
     </ClInclude>
     <ClInclude Include="Source\Other\Mathf.h">
       <Filter>Source\Other</Filter>
@@ -354,6 +336,39 @@
     <ClInclude Include="Source\Game\Character\Player\Player5_AsibaWatari.h">
       <Filter>Source\Character\Player\5_足場渡り</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Stage\Stage.h">
+      <Filter>Source\Stage\0.Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Stage\StageManager.h">
+      <Filter>Source\Stage\0.Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Stage\StageMoveFloor.h">
+      <Filter>Source\Stage\0.Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Stage\StageGameSelect.h">
+      <Filter>Source\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Stage\G0_StageOnigokko.h">
+      <Filter>Source\Stage\StageGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\Scene.h">
+      <Filter>Source\Scene\OtherScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\SceneGameSelect.h">
+      <Filter>Source\Scene\OtherScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\SceneLoading.h">
+      <Filter>Source\Scene\OtherScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\SceneManager.h">
+      <Filter>Source\Scene\OtherScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\SceneTitle.h">
+      <Filter>Source\Scene\OtherScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Stage\G1_StageDarumasangaKoronda.h">
+      <Filter>Source\Stage\StageGame</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -434,27 +449,6 @@
     <ClCompile Include="Source\Game\Effect\Effect.cpp">
       <Filter>Source\Effekseer</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Scene\SceneGameSelect.cpp">
-      <Filter>Source\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Scene\SceneTitle.cpp">
-      <Filter>Source\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Scene\SceneManager.cpp">
-      <Filter>Source\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Scene\SceneLoading.cpp">
-      <Filter>Source\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Stage\StageMain.cpp">
-      <Filter>Source\Stage</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Stage\StageManager.cpp">
-      <Filter>Source\Stage</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Stage\StageMoveFloor.cpp">
-      <Filter>Source\Stage</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Other\Mathf.cpp">
       <Filter>Source\Other</Filter>
     </ClCompile>
@@ -499,9 +493,6 @@
     </ClCompile>
     <ClCompile Include="Source\Graphics\HDRTexture.cpp">
       <Filter>Source\Graphics\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Scene\Scene.cpp">
-      <Filter>Source\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\RenderTarget.cpp">
       <Filter>Source\Graphics\Render</Filter>
@@ -559,6 +550,39 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Player\Player5_AsibaWatari.cpp">
       <Filter>Source\Character\Player\5_足場渡り</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Stage\StageManager.cpp">
+      <Filter>Source\Stage\0.Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Stage\StageMoveFloor.cpp">
+      <Filter>Source\Stage\0.Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Stage\Stage.cpp">
+      <Filter>Source\Stage\0.Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Stage\StageGameSelect.cpp">
+      <Filter>Source\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Stage\G0_StageOnigokko.cpp">
+      <Filter>Source\Stage\StageGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\Scene.cpp">
+      <Filter>Source\Scene\OtherScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\SceneGameSelect.cpp">
+      <Filter>Source\Scene\OtherScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\SceneLoading.cpp">
+      <Filter>Source\Scene\OtherScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\SceneManager.cpp">
+      <Filter>Source\Scene\OtherScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\SceneTitle.cpp">
+      <Filter>Source\Scene\OtherScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Stage\G1_StageDarumasangaKoronda.cpp">
+      <Filter>Source\Stage\StageGame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

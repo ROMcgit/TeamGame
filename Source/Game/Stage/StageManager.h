@@ -24,9 +24,12 @@ public:
 	void Render(ID3D11DeviceContext* dc, Shader* shader);
 
 	// ステージ登録
-	void Register(Stage* stage);
+	void Register(std::unique_ptr<Stage> stage);
 
-	// ステージ全削除
+	// ステージを破棄
+	void Unregister(Stage* stage);
+
+	// ステージを全削除
 	void Clear();
 
 	// レイキャスト
@@ -36,5 +39,5 @@ public:
 	void DrawDebugGUI();
 
 private:
-	std::vector<Stage*> stages;
+	std::vector<std::unique_ptr<Stage>> stages;
 };

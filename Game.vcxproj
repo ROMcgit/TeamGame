@@ -170,6 +170,8 @@
     <ClInclude Include="Source\Game\Scene\G3_SoratobuHusenWari.h" />
     <ClInclude Include="Source\Game\Scene\G4_OssanTataki.h" />
     <ClInclude Include="Source\Game\Scene\G5_Asibawatari.h" />
+    <ClInclude Include="Source\Game\Stage\G1_StageDarumasangaKoronda.h" />
+    <ClInclude Include="Source\Game\Stage\StageGameSelect.h" />
     <ClInclude Include="Source\Graphics\HDRTexture.h" />
     <ClInclude Include="Source\Graphics\RenderTarget.h" />
     <ClInclude Include="Source\Graphics\ShaderSetting.h" />
@@ -211,7 +213,7 @@
     <ClInclude Include="Source\Game\Scene\SceneManager.h" />
     <ClInclude Include="Source\Game\Scene\SceneTitle.h" />
     <ClInclude Include="Source\Game\Stage\Stage.h" />
-    <ClInclude Include="Source\Game\Stage\StageMain.h" />
+    <ClInclude Include="Source\Game\Stage\G0_StageOnigokko.h" />
     <ClInclude Include="Source\Game\Stage\StageManager.h" />
     <ClInclude Include="Source\Game\Stage\StageMoveFloor.h" />
   </ItemGroup>
@@ -245,6 +247,9 @@
     <ClCompile Include="Source\Game\Scene\G4_OssanTataki.cpp" />
     <ClCompile Include="Source\Game\Scene\G5_Asibawatari.cpp" />
     <ClCompile Include="Source\Game\Scene\Scene.cpp" />
+    <ClCompile Include="Source\Game\Stage\G1_StageDarumasangaKoronda.cpp" />
+    <ClCompile Include="Source\Game\Stage\Stage.cpp" />
+    <ClCompile Include="Source\Game\Stage\StageGameSelect.cpp" />
     <ClCompile Include="Source\Graphics\HDRTexture.cpp" />
     <ClCompile Include="Source\Graphics\RenderTarget.cpp" />
     <ClCompile Include="Source\Graphics\ShaderSetting.cpp" />
@@ -281,7 +286,7 @@
     <ClCompile Include="Source\Game\Scene\SceneLoading.cpp" />
     <ClCompile Include="Source\Game\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\Game\Scene\SceneTitle.cpp" />
-    <ClCompile Include="Source\Game\Stage\StageMain.cpp" />
+    <ClCompile Include="Source\Game\Stage\G0_StageOnigokko.cpp" />
     <ClCompile Include="Source\Game\Stage\StageManager.cpp" />
     <ClCompile Include="Source\Game\Stage\StageMoveFloor.cpp" />
   </ItemGroup>

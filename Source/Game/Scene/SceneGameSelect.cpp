@@ -6,7 +6,7 @@
 #include "Game/Effect/EffectManager.h"
 #include "Input/Input.h"
 #include "Game/Stage/StageManager.h"
-#include "Game/Stage/StageMain.h"
+#include "Game/Stage/G0_StageOnigokko.h"
 #include "Game/Stage/StageMoveFloor.h"
 
 // 初期化
@@ -23,11 +23,12 @@ void SceneGameSelect::Initialize()
 
 	// ステージ初期化
 	StageManager& stageManager = StageManager::Instance();
-	StageMain* stageMain = new StageMain();
-	stageManager.Register(stageMain);
+	std::unique_ptr<G0_StageOnigokko> stageMain = std::make_unique<G0_StageOnigokko>();
+	stageManager.Register(std::move(stageMain));
 
 	// プレイヤー初期化
 	player = std::make_unique<Player0_Onigokko>();
+	player->SetPosition(DirectX::XMFLOAT3(0, 100.0f, 0));
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();

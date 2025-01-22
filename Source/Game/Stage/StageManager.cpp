@@ -1,50 +1,54 @@
-#include "Game/Stage/StageManager.h"
+#include "StageManager.h"
 #include <limits>
 
 StageManager::StageManager()
 {
 }
 
+// デストラクタで全てのステージをクリアする
 StageManager::~StageManager()
 {
-	Clear();
 }
 
 // 更新処理
 void StageManager::Update(float elapsedTime)
 {
-	for (Stage* stage : stages)
+	for (const auto& stage : stages)
 	{
 		stage->Update(elapsedTime);
 	}
+
 }
 
 // 描画処理
 void StageManager::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	for (Stage* stage : stages)
+	for (const auto& stage : stages)
 	{
 		stage->Render(dc, shader);
 	}
 }
 
 // ステージ登録
-void StageManager::Register(Stage* stage)
+void StageManager::Register(std::unique_ptr<Stage> stage)
 {
-	stages.emplace_back(stage);
+	stages.emplace_back(std::move(stage));
 }
 
-// ステージ全削除
+// ステージを破棄
+void StageManager::Unregister(Stage* stage)
+{
+	// std::remove_ifを使ってステージを削除
+	stages.erase(std::remove_if(stages.begin(), stages.end(),
+		[&stage](const std::unique_ptr<Stage>& s) {
+			return s.get() == stage;
+		}), stages.end());
+}
+
+// ステージを全削除
 void StageManager::Clear()
 {
-	for (Stage* stage : stages)
-	{
-		if (stage != nullptr)
-		{
-			delete stage;
-		}
-		stages.clear();
-	}
+	stages.clear();
 }
 
 // レイキャスト
@@ -54,7 +58,7 @@ bool StageManager::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOA
 	HitResult tempHit;
 	bool firstHit = true;
 
-	for (Stage* stage : stages)
+	for (const auto& stage : stages)
 	{
 		if (stage->RayCast(start, end, tempHit))
 		{

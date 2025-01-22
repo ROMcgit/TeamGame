@@ -1,9 +1,9 @@
-#include "Item.h"
+#include "Director.h"
 #include "Graphics/Graphics.h"
-#include "Game/Character/Item/ItemManager.h"
+#include "Game/Character/Director/DirectorManager.h"
 
 // デバッグプリミティブ描画
-void Item::DrawDebugPrimitive()
+void Director::DrawDebugPrimitive()
 {
 	DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
 
@@ -12,8 +12,8 @@ void Item::DrawDebugPrimitive()
 	debugRenderer->DrawCylinder(collisionPos, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
 }
 
-void Item::Destroy()
+void Director::Destroy()
 {
-	ItemManager::Instance().Remove(this);
+	DirectorManager::Instance().Remove(this);
 	//enemyManager->Remove(this);
 }

@@ -4,12 +4,12 @@
 #include "Game/Character/Character.h"
 #include "Graphics/Graphics.h"
 
-// アイテム
-class Item : public Character
+// エネミー
+class Director : public Character
 {
 public:
-	Item() {}
-	~Item() override {}
+	Director() {}
+	~Director() override {}
 
 	// 更新処理
 	virtual void Update(float elapsedTime) = 0;

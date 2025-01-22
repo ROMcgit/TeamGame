@@ -4,7 +4,7 @@
 #include <memory>
 #include "Graphics/Graphics.h"
 #include "Camera.h"
-#include "Game/Character/Director/SettingsDirector/DirectorManager.h"
+#include "Game/Character/Director/DirectorManager.h"
 
 // 前方宣言
 class Fade;
@@ -228,7 +228,6 @@ public:
 	bool UpdateBossFinish(float elapsedTime);
 
 private:
-	DirectorManager directorManager;
 
 	float rollSpeed = DirectX::XMConvertToRadians(90);
 	float minAngleX = DirectX::XMConvertToRadians(-90);
@@ -307,8 +306,8 @@ private:
 	float mouseZoomSpeed = 0.1f; // マウスの拡大速度
 	float mouseSensitivity = 1.0f; // マウス感度
 
-	float targetMoveSpeed = 8; // ターゲットの移動速度(ボタン移動の場合)
-	float targetUpSpeed = 8;  // ターゲットの上昇速度(ボタン移動の場合)
+	float targetMoveSpeed = 80; // ターゲットの移動速度(ボタン移動の場合)
+	float targetUpSpeed = 80;  // ターゲットの上昇速度(ボタン移動の場合)
 
 	//-----------------------------------------------------------------//
 

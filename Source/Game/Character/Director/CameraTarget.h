@@ -1,16 +1,16 @@
 #pragma once
 
 #include "Graphics//Model.h"
-#include "Enemy.h"
+#include "Director.h"
 #include "Graphics/Graphics.h"
 #include "Other/Mathf.h"
 
 // 鬼
-class EnemyOni : public Enemy
+class CameraTarget : public Director
 {
 public:
-	EnemyOni();
-	~EnemyOni() override;
+	CameraTarget();
+	~CameraTarget() override;
 
 	// 更新処理
 	void Update(float elapsedTime) override;
@@ -27,13 +27,6 @@ public:
 	// 縄張り設定
 	void SetTerritory(const DirectX::XMFLOAT3& origin, float range);
 
-protected:
-	//ダメージを受けた時に呼ばれる
-	void OnDamaged() override;
-
-	// 死亡した時に呼ばれる
-	void OnDead() override;
-
 private:
 	// ターゲット位置をランダム設定
 	void SetRandomTargetPosition();
@@ -47,52 +40,17 @@ private:
 	// 待機ステート更新処理
 	void UpdateWaitState(float elapsedTime);
 
-	// 移動ステートへ遷移
-	void TransitionMoveState();
-
-	// 移動ステート更新処理
-	void UpdateMoveState(float elapsedTime);
-
-	// ノードとプレイヤーの衝突処理
-	void CollisionNodeVsPlayer(const char* nodeName, float nodeRadius);
-
-	// 攻撃ステートへ遷移
-	void TransitionAttackState();
-
-	// 攻撃ステート更新処理
-	void UpdateAttackState(float elapsedTime);
-
-	// ダメージステートへ遷移
-	void TransitionDamageState();
-
-	// ダメージステート更新処理
-	void UpdateDamageState(float elapsedTime);
-
-	// 死亡ステートへ遷移
-	void TransitionDeathState();
-
-	// 死亡ステート更新処理
-	void UpdateDeathState(float elapsedTime);
-
 private:
 	// ステート
 	enum class State
 	{
 		Wait,
-		Move,
-		Attack,
-		Damage,
-		Death
 	};
 
 	// アニメーション
 	enum Animation
 	{
 		Anim_Wait,
-		Anim_Move,
-		Anim_Attack,
-		Anim_Damage,
-		Anim_Death
 	};
 
 private:

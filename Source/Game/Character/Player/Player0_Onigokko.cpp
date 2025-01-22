@@ -25,7 +25,7 @@ Player0_Onigokko::Player0_Onigokko()
 	model = std::make_unique <Model>("Data/Model/Ai/Ai.mdl");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.01f;
+	scale.x = scale.y = scale.z = 0.1f;
 
 	// ヒットエフェクト読み込み
 	hitEffect = std::make_unique <Effect>("Data/Effect/Hit.efk");
@@ -42,6 +42,12 @@ Player0_Onigokko::~Player0_Onigokko()
 // 更新処理
 void Player0_Onigokko::Update(float elapsedTime)
 {
+	GamePad& gamePad = Input::Instance().GetGamePad();
+
+	// 移動した事が証明されているなら、待機ステートへ遷移する
+	if ((gamePad.GetAxisLX() == 0 && gamePad.GetAxisLY() == 0))
+		velocity.x = velocity.z = 0;
+
 	// ムービー中なら待機ステートへ遷移
 	if (movieScene)
 	{

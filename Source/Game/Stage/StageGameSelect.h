@@ -19,6 +19,9 @@ public:
 	// レイキャスト
 	bool RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit) override;
 
+	// デバッグ用GUI描画
+	void DrawDebugGUI();
+
 private:
 	// 行列更新処理
 	void UpdateTransform();

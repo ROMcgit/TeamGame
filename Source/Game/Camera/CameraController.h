@@ -4,6 +4,7 @@
 #include <memory>
 #include "Graphics/Graphics.h"
 #include "Camera.h"
+#include "Game/Character/Director/SettingsDirector/DirectorManager.h"
 
 // ‘O•ûéŒ¾
 class Fade;
@@ -227,6 +228,7 @@ public:
 	bool UpdateBossFinish(float elapsedTime);
 
 private:
+	DirectorManager directorManager;
 
 	float rollSpeed = DirectX::XMConvertToRadians(90);
 	float minAngleX = DirectX::XMConvertToRadians(-90);

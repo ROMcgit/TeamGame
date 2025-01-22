@@ -39,8 +39,6 @@ public:
 	void UpdateAnimation(float elapsedTime);
 
 	// アニメーション再生
-	//void PlayAnimation(int index);
-	//void PlayAnimation(int index, bool loop);
 	void PlayAnimation(int index, bool loop, float blendSeconds = 0.2f);
 
 	// アニメーション再生中か

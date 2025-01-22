@@ -18,19 +18,6 @@ void ItemManager::Update(float elapsedTime)
 		enemy->Update(elapsedTime);
 	}
 
-	//for (Item* enemy : removes)
-	//{
-	//	// std::vectorから要素を削除する場合はイテレーターで削除しなければならない
-	//	std::vector<Item*>::iterator it = std::find(enemies.begin(),
-	//		enemies.end(), enemy);
-
-	//	if (it != enemies.end())
-	//	{
-	//		enemies.erase(it);
-	//	}
-
-	//	delete enemy;
-	//}
 
 	for (Item* enemy : removes)
 	{
@@ -60,7 +47,7 @@ void ItemManager::SpriteRender(ID3D11DeviceContext* dc, Graphics& graphics)
 {
 	for (auto& enemy : enemies)
 	{
-		enemy->SpriteRender(dc, graphics);
+		
 	}
 }
 

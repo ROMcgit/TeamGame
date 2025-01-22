@@ -79,6 +79,10 @@ CameraController::CameraController()
 
 	// フェードを生成
 	fade = std::make_unique<Fade>();
+
+	std::unique_ptr<CameraTarget> cameraTarget = std::make_unique<CameraTarget>(&directorManager);
+	cameraTarget->SetState(DirectX::XMFLOAT3(0, 0, 1), target, 0);
+	directorManager.Register(std::move(cameraTarget));
 }
 
 // デストラクタ
@@ -92,6 +96,7 @@ void CameraController::Update(float elapsedTime)
 	// フェード更新処理
 	fade->Update(elapsedTime);
 
+	directorManager.Update(elapsedTime);
 #if 1
 	// カメラの回転値を回転行列に変換
 	DirectX::XMMATRIX Transform = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
@@ -120,6 +125,7 @@ void CameraController::Update(float elapsedTime)
 // 描画処理
 void CameraController::RenderTarget(ID3D11DeviceContext* dc, Shader* shader)
 {
+	directorManager.Render(dc, shader);
 }
 
 // フェードを描画
@@ -134,6 +140,7 @@ void CameraController::DrawDebugGUI()
 {
 	if (ImGui::TreeNode("CameraController"))
 	{
+		directorManager.DrawDebugGUI();
 		// デバッグカメラか
 		ImGui::Checkbox("DebugCamera", &debugCamera);
 		// デバッグカメラの動きを止めるか

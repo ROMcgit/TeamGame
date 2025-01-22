@@ -142,6 +142,9 @@
     <Filter Include="Source\Scene\OtherScene">
       <UniqueIdentifier>{2c919b1c-2241-4d6b-827c-cc9f6fe8a01d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Character\Director">
+      <UniqueIdentifier>{ad0e3991-b74f-423e-980b-835daf93e107}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">

@@ -6,7 +6,7 @@
 #include "Game/Effect/EffectManager.h"
 #include "Input/Input.h"
 #include "Game/Stage/StageManager.h"
-#include "Game/Stage/G0_StageOnigokko.h"
+#include "Game/Stage/StageGameSelect.h"
 #include "Game/Stage/StageMoveFloor.h"
 
 // 初期化
@@ -15,7 +15,7 @@ void SceneGameSelect::Initialize()
 	ID3D11Device* device = Graphics::Instance().GetDevice();
 	float screenWidth = Graphics::Instance().GetScreenWidth();
 	float screenHeight = Graphics::Instance().GetScreenHeight();
-
+	
 	// レンダーターゲット
 	renderTarget = std::make_unique<RenderTarget>(device, screenWidth, screenHeight, DXGI_FORMAT_R8G8B8A8_UNORM);
 
@@ -23,7 +23,7 @@ void SceneGameSelect::Initialize()
 
 	// ステージ初期化
 	StageManager& stageManager = StageManager::Instance();
-	std::unique_ptr<G0_StageOnigokko> stageMain = std::make_unique<G0_StageOnigokko>();
+	std::unique_ptr<StageGameSelect> stageMain = std::make_unique<StageGameSelect>();
 	stageManager.Register(std::move(stageMain));
 
 	// プレイヤー初期化
@@ -47,6 +47,7 @@ void SceneGameSelect::Initialize()
 
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
+	cameraController->SetRange(110);
 
 	// 背景
 	backGround = std::make_unique<Sprite>();
@@ -91,6 +92,9 @@ void SceneGameSelect::Update(float elapsedTime)
 // 描画処理
 void SceneGameSelect::Render()
 {
+	lightPosition = CameraController::target;
+	lightPosition.y += 0.5f;
+
 	Graphics& graphics = Graphics::Instance();
 	
 	DrawingSettings(graphics);
@@ -172,6 +176,8 @@ void SceneGameSelect::Render()
 	{
 		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
 		{
+			StageManager::Instance().DrawDebugGUI();
+
 			// プレイヤーデバッグ描画
 			player->DrawDebugGUI();
 //-----------------------------------------------------------------------------------------------------//

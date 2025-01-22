@@ -126,7 +126,6 @@ private:
 private:
 	std::unique_ptr<Model> model;
 	
-	float moveSpeed = 5.5f;
 	float turnSpeed = DirectX::XMConvertToRadians(720);
 
 	float jumpSpeed = 13.0f;

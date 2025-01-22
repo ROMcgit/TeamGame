@@ -1,14 +1,15 @@
 #include "Game/Stage/StageGameSelect.h"
+#include <imgui.h>
 
 // コンストラクタ
 StageGameSelect::StageGameSelect()
 {
 	// ステージモデルを読み込み
-	model = std::make_unique <Model>("Data/Model/Stage/StageOnigokko/StageOnigokko.mdl");
+	model = std::make_unique <Model>("Data/Model/Stage/StageGameSelect/StageGameSelect.mdl");
 
-	scale.x = scale.z = 0.2f;
-	scale.y = 0.1f;
+	position.y = -13.5f;
 
+	scale.x = scale.y =  scale.z = 0.3f;
 }
 
 StageGameSelect::~StageGameSelect()
@@ -102,4 +103,32 @@ void StageGameSelect::UpdateTransform()
 	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
 	DirectX::XMMATRIX W = S * R * T;
 	DirectX::XMStoreFloat4x4(&transform, W);
+}
+
+
+// デバッグ用GUI描画
+void StageGameSelect::DrawDebugGUI()
+{
+	if (ImGui::TreeNode("StageGameSelect"))
+	{
+		// トランスフォーム
+		if (ImGui::CollapsingHeader("Transform"))
+		{
+			// 位置
+			ImGui::DragFloat3("Position", &position.x, 0.01f);
+
+			// 回転
+			DirectX::XMFLOAT3 a;
+			a.x = DirectX::XMConvertToDegrees(angle.x);
+			a.y = DirectX::XMConvertToDegrees(angle.y);
+			a.z = DirectX::XMConvertToDegrees(angle.z);
+			ImGui::InputFloat3("Angle", &a.x);
+			angle.x = DirectX::XMConvertToRadians(a.x);
+			angle.y = DirectX::XMConvertToRadians(a.y);
+			angle.z = DirectX::XMConvertToRadians(a.z);
+			// スケール
+			ImGui::DragFloat3("Scale", &scale.x, 0.001f);
+		}
+		ImGui::TreePop();
+	}
 }

@@ -8,7 +8,7 @@
 // コンストラクタ
 EnemyOni::EnemyOni()
 {
-	model = std::make_unique<Model>("Data/Model/Slime/Slime.mdl");
+	model = std::make_unique<Model>("Data/Model/Oni/Oni.mdl");
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.01f;
@@ -30,14 +30,27 @@ void EnemyOni::Update(float elapsedTime)
 	// ステート毎の更新処理
 	switch (state)
 	{
+	// 待機
 	case State::Wait:
 		UpdateWaitState(elapsedTime);
 		break;
+	// 移動
 	case State::Move:
 		UpdateMoveState(elapsedTime);
+		break;
+	// 笑う
+	case State::Laugh:
+		UpdateLaughState(elapsedTime);
+		break;
+	// 追跡
+	case State::Tracking:
+		UpdateTrackingState(elapsedTime);
+		break;
+	// ダメージ
 	case State::Damage:
 		UpdateDamageState(elapsedTime);
 		break;
+	// 死亡
 	case State::Death:
 		UpdateDeathState(elapsedTime);
 		break;
@@ -158,15 +171,15 @@ void EnemyOni::UpdateMoveState(float elapsedTime)
 }
 
 // 威嚇ステートへ遷移
-void EnemyOni::TransitionThreatState()
+void EnemyOni::TransitionLaughState()
 {
-	state = State::Threat;
+	state = State::Laugh;
 
 	stateChangeWaitTimer = 0.5f;
 }
 
 // 威嚇ステート更新処理
-void EnemyOni::UpdateThreatState(float elapsedTime)
+void EnemyOni::UpdateLaughState(float elapsedTime)
 {
 	stateChangeWaitTimer -= elapsedTime;
 }

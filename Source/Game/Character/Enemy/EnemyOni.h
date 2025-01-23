@@ -49,10 +49,10 @@ private:
 	void UpdateMoveState(float elapsedTime);
 
 	// 威嚇ステートへ遷移
-	void TransitionThreatState();
+	void TransitionLaughState();
 
 	// 威嚇ステート更新処理
-	void UpdateThreatState(float elapsedTime);
+	void UpdateLaughState(float elapsedTime);
 
 	// 追跡ステートへ遷移
 	void TransitionTrackingState();
@@ -82,9 +82,10 @@ private:
 	// ステート
 	enum class State
 	{
+		Enrry,
 		Wait,
 		Move,
-		Threat,
+		Laugh,
 		Tracking,
 		Attack,
 		Damage,
@@ -94,8 +95,11 @@ private:
 	// アニメーション
 	enum Animation
 	{
+		Anim_Entry,
 		Anim_Wait,
 		Anim_Move,
+		Anim_Laugh,
+		Anim_Dash,
 		Anim_Attack,
 		Anim_Damage,
 		Anim_Death

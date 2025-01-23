@@ -14,6 +14,8 @@ CameraTarget::CameraTarget()
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.05f;
 
+	opacity = 0;
+
 	// 幅、高さ設定
 	radius = 0.5f;
 	height = 1.0f;
@@ -29,6 +31,8 @@ CameraTarget::~CameraTarget()
 void CameraTarget::Update(float elapsedTime)
 {
 	position = CameraController::target;
+	if(!CameraController::debugCamera)
+		position.y = CameraController::target.y + 17.0f;
 
 	// ステート毎の更新処理
 	switch (state)

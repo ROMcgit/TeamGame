@@ -49,6 +49,8 @@ void G0_Onigokko::Initialize()
 
 	// 背景
 	backGround = std::make_unique<Sprite>();
+
+	timer = std::make_unique<Timer>(false, 99, 50);
 }
 
 // 終了化
@@ -73,6 +75,8 @@ void G0_Onigokko::Update(float elapsedTime)
 	cameraController->SetTarget(target);
 	Camera::Instance().Update(elapsedTime);
 	cameraController->Update(elapsedTime);
+
+	timer->Update(elapsedTime);
 
 	// ステージ更新処理
 	StageManager::Instance().Update(elapsedTime);
@@ -165,6 +169,10 @@ void G0_Onigokko::Render()
 
 		// デバッグレンダラ描画実行
 		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
+	}
+
+	{
+		timer->Render(dc, graphics, DirectX::XMFLOAT2(30, 0));
 	}
 
 	// 2DデバッグGUI描画

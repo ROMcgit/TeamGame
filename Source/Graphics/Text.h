@@ -16,18 +16,18 @@ public:
 	// 「measure」を【false】にする。
 	// それぞれの位に数値を割り当てる。
 	// 「0～9」まで対応。「0未満」または「10以上」だとエラーが出ます。
-	void Render(ID3D11DeviceContext* dc,
-		bool measure,					    // 関数を測定に使うか
-		bool AlignLeft,                     // 左揃えにするか
-		bool zeroViewTho,				    // 0でも表示するか(千の位)
-		bool zeroViewHun, bool zeroViewTen, // 0でも表示するか(百の位、十の位)
-		int thousand,					    // 数値(千)
-		int hundred, int ten, int oneNum,   // 数値(百以降)
-		float dx, float dy,				    // 位置
-		float dw, float dh,				    // 大きさ
-		float angle,					    // 角度
-		float space,					    // 文字の間隔
-		float r, float g, float b, float a  // 色
+	void RenderThousand(ID3D11DeviceContext* dc,
+		bool AlignLeft,                                     // 左揃えにするか
+		int oneNum,                                         // 変数を割り当てる
+		bool zeroViewTho,				                    // 0でも表示するか(千の位)
+		bool zeroViewHun, bool zeroViewTen,                 // 0でも表示するか(百の位、十の位)
+		float dx, float dy,				                    // 位置
+		float dw = 8, float dh = 8,		                    // 大きさ
+		float angle = 0,					                // 角度
+		float space = 28,					                // 文字の間隔
+		float r = 1, float g = 1, float b = 1, float a = 1, // 色
+		int thousand = 0,					                // 数値(千)
+		int hundred = 0, int ten = 0                        // 数値(百以降)
 	) const;
 
 	// 描画処理(億の位まで対応(スコア用))
@@ -38,18 +38,18 @@ public:
 	// 「measure」を【false】にする。
 	// それぞれの位に数値を割り当てる。
 	// 「0～9」まで対応。「0未満」または「10以上」だとエラーが出ます。
-	void Render(ID3D11DeviceContext* dc,
-		bool measure,									// 関数を測定に使うか
-		bool AlignLeft,                                 // 左揃えにするか
-		bool zeroView,									// 0の時表示するか
-		int oku,										// 数値(億)
-		int thoMan, int hunMan, int tenMan, int man,	// 数値(万)
-		int thousand, int hundred, int ten, int oneNum,	// 数値(千以降)
-		float dx, float dy,								// 位置
-		float dw, float dh,								// 大きさ
-		float angle,									// 角度
-		float space,									// 文字の間隔
-		float r, float g, float b, float a				// 色
+	void RenderOku(ID3D11DeviceContext* dc,
+		bool AlignLeft,                                              // 左揃えにするか
+		int oneNum,                                                  // 変数を割り当てる
+		bool zeroView,							                     // 0の時表示するか
+		float dx, float dy,								             // 位置
+		float dw = 8, float dh = 8,								     // 大きさ
+		float angle = 0,									         // 角度
+		float space = 28,									         // 文字の間隔
+		float r = 1, float g = 1, float b = 1, float a = 1,	         // 色
+		int oku = 0,										         // 数値(億)
+		int thoMan = 0, int hunMan = 0, int tenMan = 0, int man = 0, // 数値(万)
+		int thousand = 0, int hundred = 0, int ten = 0               // 数値(千以降)
 	) const;
 
 private:

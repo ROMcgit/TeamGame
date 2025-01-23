@@ -179,6 +179,7 @@
     <ClInclude Include="Source\Graphics\HDRTexture.h" />
     <ClInclude Include="Source\Graphics\RenderTarget.h" />
     <ClInclude Include="Source\Graphics\ShaderSetting.h" />
+    <ClInclude Include="Source\Graphics\Timer.h" />
     <ClInclude Include="Source\Other\Collision.h" />
     <ClInclude Include="Source\Game\Effect\Effect.h" />
     <ClInclude Include="Source\Game\Effect\EffectManager.h" />
@@ -261,6 +262,7 @@
     <ClCompile Include="Source\Graphics\HDRTexture.cpp" />
     <ClCompile Include="Source\Graphics\RenderTarget.cpp" />
     <ClCompile Include="Source\Graphics\ShaderSetting.cpp" />
+    <ClCompile Include="Source\Graphics\Timer.cpp" />
     <ClCompile Include="Source\Other\Collision.cpp" />
     <ClCompile Include="Source\Game\Effect\Effect.cpp" />
     <ClCompile Include="Source\Game\Effect\EffectManager.cpp" />

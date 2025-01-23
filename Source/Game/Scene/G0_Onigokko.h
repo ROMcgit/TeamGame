@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/RenderTarget.h"
+#include "Graphics/Timer.h"
 
 // ゲームシーン
 class G0_Onigokko : public Scene
@@ -32,4 +33,5 @@ private:
 
 	std::unique_ptr<RenderTarget>    renderTarget; //! レンダーターゲット
 	std::unique_ptr<Sprite> backGround;
+	std::unique_ptr<Timer> timer;
 };

@@ -384,6 +384,9 @@
     <ClInclude Include="Source\Game\Character\Obstacle\Togemaru.h">
       <Filter>Source\Character\Obstacle</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Graphics\Timer.h">
+      <Filter>Source\Graphics\Polygon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -610,6 +613,9 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Obstacle\Togemaru.cpp">
       <Filter>Source\Character\Obstacle</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Timer.cpp">
+      <Filter>Source\Graphics\Polygon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

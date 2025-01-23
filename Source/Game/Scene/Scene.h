@@ -31,25 +31,14 @@ public:
 	void SetReady() { ready = true; }
 
 	// 描画設定
-	void DrawingSettings(Graphics& graphics,
-		DirectX::XMFLOAT3 clearColor = { 0.5f, 0.5f, 0.5f },
-		float ambientStrength = 1.3f,
-		float diffuseStrength = 0.5f,
-		float specularStrength = 0.5f,
-		float lightRange = 100.0f,
-		DirectX::XMFLOAT3 fogColor = { 0.7f, 0.8f, 0.9f },
-		float fogStart = 80.0f, float fogEnd = 200.0f);
+	void DrawingSettings(Graphics& graphics);
 
 public:
-	DirectX::XMFLOAT4 lightDirection = { 0.0f, -1.0f, 0.0f, 0.0f }; // ライトの向き
-	DirectX::XMFLOAT4 lightColor = { 0.8f, 0.8f, 0.8f, 1 };     // ライトの色
-	DirectX::XMFLOAT3 lightPosition = { 0, 0, 0 };                 // ライトの位置
-
 	/*! デバッグ用 */
-	static bool debugControll;                    // デバッグ用に数値を変更できるようにするか
+	static bool debugControll; // デバッグ用に数値を変更できるようにするか
 
-	static DirectX::XMFLOAT4 debugLightDirection; // ライトの向き
 	static DirectX::XMFLOAT4 debugLightColor;     // ライトの色
+	static DirectX::XMFLOAT4 debugLightDirection; // ライトの向き
 	static DirectX::XMFLOAT3 debugLightPosition;  // ライトの位置
 
 	static float debugAmbientStrength; // 環境光
@@ -68,16 +57,26 @@ protected:
 	RenderContext rc;
 
 protected:
-	DirectX::XMFLOAT3 clearColorConst = { 0.5f, 0.5f, 0.5f }; // クリアカラー(数値固定)
 
-	const float ambientStrengthConst = 1.3f; // 環境光(数値固定)
-	const float diffuseStrengthConst = 0.5f; // 拡散光(数値固定)
-	const float specularStrengthConst = 0.5f; // スペキュラー光(数値固定)
-	const float lightRangeConst = 1.0f; // ライトの範囲(数値固定)
+	DirectX::XMFLOAT3 lightColor = { 0.8f, 0.8f, 0.8f };  // ライトの色
+	DirectX::XMFLOAT3 lightDirection = { 0.0f, -1.0f, 0.0f }; // ライトの向き
+	DirectX::XMFLOAT3 lightPosition = { 0, 0, 0 };           // ライトの位置
+	float lightRange = 100.0f;
 
-	DirectX::XMFLOAT3 fogColorConst = { 0.7f, 0.8f, 0.9f }; // フォグの色(数値固定)
-	float             fogStartConst = 80.0f;                // フォグの開始(数値固定)
-	float             fogEndConst = 200.0f;               // フォグの終了(数値固定)
+	DirectX::XMFLOAT3 clearColor = { 0.5f, 0.5f, 0.5f }; // クリアカラー
+
+	float ambientStrength = 1.3f; // 環境光
+	float diffuseStrength = 0.5f; // 拡散光
+	float specularStrength = 0.5f; // スペキュラー光
+
+	DirectX::XMFLOAT3 fogColor = { 0.7f, 0.8f, 0.9f }; // フォグの色
+	float             fogStart = 80.0f;                // フォグの開始
+	float             fogEnd = 200.0f;               // フォグの終了
+
+	const float contrastConst = 1.0f;                  // コントラスト(数値固定)
+	const float saturationConst = 0.8f;                  // 色の彩度(数値固定)
+	const DirectX::XMFLOAT3 colorFilterConst = { 1.2f, 1.3f, 1.35f }; // カラーフィルター(数値固定)
+	const float chromaticAberrationConst = 0.0f;                  // 色収差(数値固定)
 
 private:
 	bool ready = false;

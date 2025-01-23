@@ -19,14 +19,7 @@ float             Scene::debugFogStart = 80.0f;                // フォグの開始
 float             Scene::debugFogEnd = 200.0f;               // フォグの終了
 
 // 描画設定
-void Scene::DrawingSettings(Graphics& graphics,
-	DirectX::XMFLOAT3 clearColor,
-	float ambientStrength,
-	float diffuseStrength,
-	float specularStrength,
-	float lightRange,
-	DirectX::XMFLOAT3 fogColor,
-	float fogStart, float fogEnd)
+void Scene::DrawingSettings(Graphics& graphics)
 {
 	dc = graphics.GetDeviceContext();
 	rtv = graphics.GetRenderTargetView();
@@ -42,28 +35,28 @@ void Scene::DrawingSettings(Graphics& graphics,
 	{
 		/*! ライトの設定 */
 		// ライトの色
-		rc.lightColor = this->debugLightColor = { this->lightColor.x, this->lightColor.y, this->lightColor.z, this->lightColor.w };
+		rc.lightColor = this->debugLightColor = { lightColor.x, lightColor.y, lightColor.z, 1.0f };
 		// ライトの向き
-		rc.lightDirection = this->debugLightDirection = { this->lightDirection.x, this->lightDirection.y, this->lightDirection.z, this->lightDirection.w };
+		rc.lightDirection = this->debugLightDirection = { lightDirection.x, lightDirection.y, lightDirection.z, 1.0f };
 		// ライトの位置
 		rc.lightPosition = this->debugLightPosition = this->lightPosition;
 		// ライトの範囲
-		rc.lightRange = this->debugLightRange = lightRange;
+		rc.lightRange = this->debugLightRange = this->lightRange;
 
 		// 環境光、拡散光、 スペキュラー光の設定
-		rc.ambientStrength = this->debugAmbientStrength = ambientStrength;  // 環境光
-		rc.diffuseStrength = this->debugDiffuseStrength = diffuseStrength;  // 拡散光
-		rc.specularStrength = this->debugSpecularStrength = specularStrength; // スペキュラー光
+		rc.ambientStrength = this->debugAmbientStrength = this->ambientStrength;  // 環境光
+		rc.diffuseStrength = this->debugDiffuseStrength = this->diffuseStrength;  // 拡散光
+		rc.specularStrength = this->debugSpecularStrength = this->specularStrength; // スペキュラー光
 
 		/*! フォグの設定 */
 		// フォグの色
-		rc.fogColor = { fogColor.x, fogColor.y, fogColor.z, 1.0f };
+		rc.fogColor = { this->fogColor.x, this->fogColor.y, this->fogColor.z, 1.0f };
 		// フォグの色(デバッグ)
-		this->debugFogColor = { fogColor.x, fogColor.y, fogColor.z };
+		this->debugFogColor = { this->fogColor.x, this->fogColor.y, this->fogColor.z };
 		// フォグの開始
-		rc.fogStart = this->debugFogStart = fogStart;
+		rc.fogStart = this->debugFogStart = this->fogStart;
 		// フォグの終了
-		rc.fogEnd = this->debugFogEnd = fogEnd;
+		rc.fogEnd = this->debugFogEnd = this->fogEnd;
 	}
 	else
 	{

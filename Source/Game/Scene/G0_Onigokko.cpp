@@ -50,7 +50,7 @@ void G0_Onigokko::Initialize()
 	// îwåi
 	backGround = std::make_unique<Sprite>();
 
-	timer = std::make_unique<Timer>(false, 99, 50);
+	timer = std::make_unique<Timer>(true, 3);
 }
 
 // èIóπâª

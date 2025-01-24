@@ -17,7 +17,6 @@ void StageManager::Update(float elapsedTime)
 	{
 		stage->Update(elapsedTime);
 	}
-
 }
 
 // •`‰æˆ—

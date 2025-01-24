@@ -33,5 +33,5 @@ private:
 
 	std::unique_ptr<RenderTarget>    renderTarget; //! レンダーターゲット
 	std::unique_ptr<Sprite> backGround;
-	std::unique_ptr<Timer> timer;
+	std::unique_ptr<Timer>  timer;
 };

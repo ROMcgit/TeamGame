@@ -33,8 +33,8 @@ void Timer::Update(float elapsedTime)
 			//! カウントダウンなら分を減らす、じゃないなら増やす
 			countdown ? timeM-- : timeM++;
 
-			//! カウントダウンなら59、じゃないなら0にする
-			countdown ? timeS = 59 : timeS = 0;
+			//! カウントダウンなら60、じゃないなら0にする
+			countdown ? timeS = 60 : timeS = 0;
 		}
 		//! カウントを止める
 		else

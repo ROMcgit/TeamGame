@@ -6,6 +6,7 @@
 
 // 前方宣言
 class Graphics;
+class Shader;
 class Fade;
 
 // カメラコントローラー

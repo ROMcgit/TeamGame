@@ -15,7 +15,7 @@ void SceneTitle::Initialize()
 	fade = std::make_unique<Fade>();
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 		1.0f, 0.0f,
-		10.0f, 0.2f);
+		0.5f, 0.2f);
 }
 
 // I—¹‰»
@@ -38,7 +38,7 @@ void SceneTitle::Update(float elapsedTime)
 	{
 		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 			0.0f, 1.0f,
-			2.5f, 0.2f);
+			0.5f, 0.2f);
 
 		setFade = true;
 	}

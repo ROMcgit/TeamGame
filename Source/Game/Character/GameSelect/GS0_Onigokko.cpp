@@ -15,13 +15,13 @@ GS0_OniGokko::GS0_OniGokko()
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.05f;
 
-	opacity = 0;
+	angle.y = DirectX::XMConvertToRadians(180);
 
 	// 幅、高さ設定
 	radius = 5.0f;
 	height = 1.0f;
 
-	collisionOffset.y = -1.5f;
+	gravity = 0.0f;
 }
 
 // デストラクタ
@@ -33,10 +33,6 @@ GS0_OniGokko::~GS0_OniGokko()
 // 更新処理
 void GS0_OniGokko::Update(float elapsedTime)
 {
-	position = CameraController::target;
-	if (!CameraController::debugCamera)
-		position.y = CameraController::target.y + 17.0f;
-
 	// ステート毎の更新処理
 	switch (state)
 	{
@@ -75,6 +71,8 @@ void GS0_OniGokko::SpriteRender(ID3D11DeviceContext* dc, Graphics& graphics)
 {
 }
 
+
+
 // デバッグプリミティブ描画
 void GS0_OniGokko::DrawDebugPrimitive()
 {
@@ -95,6 +93,34 @@ void GS0_OniGokko::DrawDebugPrimitive()
 
 	//// 攻撃範囲をデバッグ円柱描画
 	//debugRender->DrawCylinder(position, attackRange, 1.0f, DirectX::XMFLOAT4(1, 0, 0, 1));
+}
+
+// デバッグGUI
+void GS0_OniGokko::DrawDebugGUI()
+{
+	if (ImGui::TreeNode("GS0_Onigokko"))
+	{
+		ImGui::InputFloat3("Velocity", &velocity.x);
+
+		// トランスフォーム
+		if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			// 位置
+			ImGui::DragFloat3("Position", &position.x, 0.01f);
+			// 回転
+			DirectX::XMFLOAT3 a;
+			a.x = DirectX::XMConvertToDegrees(angle.x);
+			a.y = DirectX::XMConvertToDegrees(angle.y);
+			a.z = DirectX::XMConvertToDegrees(angle.z);
+			ImGui::DragFloat3("Angle", &a.x, 0.01f);
+			angle.x = DirectX::XMConvertToRadians(a.x);
+			angle.y = DirectX::XMConvertToRadians(a.y);
+			angle.z = DirectX::XMConvertToRadians(a.z);
+			// スケール
+			ImGui::DragFloat3("Scale", &scale.x, 0.01f);
+		}
+		ImGui::TreePop();
+	}
 }
 
 // 縄張り設定
@@ -150,21 +176,6 @@ void GS0_OniGokko::TransitionWaitState()
 // 待機ステート更新処理
 void GS0_OniGokko::UpdateWaitState(float elapsedTime)
 {
-	if (CameraController::debugCamera)
-	{
-		if (!CameraController::noMoveDebugCamera)
-		{
-			angle.y += DirectX::XMConvertToRadians(300) * elapsedTime;
-			SetOpacityChange(1.0f, 2.0f);
-		}
-		else
-		{
-			SetOpacityChange(0.5f, 1.0f);
-			SetEmissiveStrengthChange(DirectX::XMFLOAT3(1, 0, 1), 0.5f, 1.0f);
-		}
-	}
-	else
-		SetOpacityChange(0.0f, 2.0f);
 }
 
 // プレイヤーとの接触処理

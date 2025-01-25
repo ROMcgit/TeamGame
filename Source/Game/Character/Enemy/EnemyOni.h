@@ -24,6 +24,9 @@ public:
 	// デバッグプリミティブ描画
 	void DrawDebugPrimitive() override;
 
+	// デバッグGUI
+	void DrawDebugGUI() override;
+
 protected:
 	//ダメージを受けた時に呼ばれる
 	void OnDamaged() override;

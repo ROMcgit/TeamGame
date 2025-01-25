@@ -154,14 +154,15 @@ void CameraTarget::UpdateWaitState(float elapsedTime)
 		if (!CameraController::noMoveDebugCamera)
 		{
 			angle.y += DirectX::XMConvertToRadians(300) * elapsedTime;
-			SetOpacityChange(1.0f, 2.0f);
+			SetOpacityChange(1.0f, 0.5f);
+			SetEmissiveStrengthChange(DirectX::XMFLOAT3(1, 0, 1), 0.0f, 0.5f);
 		}
 		else
 		{
 			SetOpacityChange(0.5f, 1.0f);
-			SetEmissiveStrengthChange(DirectX::XMFLOAT3(1, 0, 1), 0.5f, 1.0f);
+			SetEmissiveStrengthChange(DirectX::XMFLOAT3(1, 0, 1), 0.5f, 0.5f);
 		}
 	}
 	else
-		SetOpacityChange(0.0f, 2.0f);
+		SetOpacityChange(0.0f, 0.5f);
 }

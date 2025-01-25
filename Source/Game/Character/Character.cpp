@@ -1,6 +1,6 @@
 #include "Game/Character/Character.h"
 #include "Input/Input.h"
-#include "Game/Stage/SettingsStage/StageManager.h"
+#include "Game/Stage/StageManager.h"
 #include "Game/Camera/Camera.h"
 #include "Game/Camera/CameraController.h"
 #include "Audio/SoundManager.h"

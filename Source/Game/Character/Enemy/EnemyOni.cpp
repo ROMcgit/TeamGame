@@ -118,6 +118,33 @@ void EnemyOni::DrawDebugPrimitive()
 	//debugRender->DrawCylinder(position, attackRange, 1.0f, DirectX::XMFLOAT4(1, 0, 0, 1));
 }
 
+void EnemyOni::DrawDebugGUI()
+{
+	if (ImGui::TreeNode("EnemyOni"))
+	{
+		ImGui::InputFloat3("Velocity", &velocity.x);
+
+		// トランスフォーム
+		if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			// 位置
+			ImGui::DragFloat3("Position", &position.x, 0.01f);
+			// 回転
+			DirectX::XMFLOAT3 a;
+			a.x = DirectX::XMConvertToDegrees(angle.x);
+			a.y = DirectX::XMConvertToDegrees(angle.y);
+			a.z = DirectX::XMConvertToDegrees(angle.z);
+			ImGui::DragFloat3("Angle", &a.x, 0.01f);
+			angle.x = DirectX::XMConvertToRadians(a.x);
+			angle.y = DirectX::XMConvertToRadians(a.y);
+			angle.z = DirectX::XMConvertToRadians(a.z);
+			// スケール
+			ImGui::DragFloat3("Scale", &scale.x, 0.01f);
+		}
+		ImGui::TreePop();
+	}
+}
+
 // ノードとプレイヤーの衝突処理
 //void EnemyOni::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
 //{

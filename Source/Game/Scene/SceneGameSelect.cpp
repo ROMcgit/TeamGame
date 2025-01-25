@@ -73,6 +73,7 @@ void SceneGameSelect::Initialize()
 		1.5f, 0.2f);
 
 	std::unique_ptr<GS0_OniGokko> onigokko = std::make_unique<GS0_OniGokko>();
+	onigokko->SetPosition(DirectX::XMFLOAT3(0, 1, 80));
 	GameSelectManager::Instance().Register(std::move(onigokko));
 }
 

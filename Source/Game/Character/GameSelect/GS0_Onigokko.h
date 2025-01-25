@@ -24,6 +24,9 @@ public:
 	// デバッグプリミティブ描画
 	void DrawDebugPrimitive() override;
 
+	// デバッグGUI
+	void DrawDebugGUI() override;
+
 	// 縄張り設定
 	void SetTerritory(const DirectX::XMFLOAT3& origin, float range);
 

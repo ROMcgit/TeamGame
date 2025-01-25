@@ -4,6 +4,8 @@
 #include "Other/Mathf.h"
 #include "Game/Character/Player/Player0_Onigokko.h"
 #include "Other/Collision.h"
+#include "Game/Scene/G0_Onigokko.h"
+#include "Game/Camera/Camera.h"
 
 // コンストラクタ
 EnemyOni::EnemyOni()
@@ -11,7 +13,7 @@ EnemyOni::EnemyOni()
 	model = std::make_unique<Model>("Data/Model/Oni/Oni.mdl");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.01f;
+	scale.x = scale.y = scale.z = 0.05f;
 
 	// 幅、高さ設定
 	radius = 0.5f;
@@ -30,6 +32,10 @@ void EnemyOni::Update(float elapsedTime)
 	// ステート毎の更新処理
 	switch (state)
 	{
+	// 登場
+	case State::Entry:
+		UpdateEntryState(elapsedTime);
+		break;
 	// 待機
 	case State::Wait:
 		UpdateWaitState(elapsedTime);
@@ -45,6 +51,10 @@ void EnemyOni::Update(float elapsedTime)
 	// 追跡
 	case State::Tracking:
 		UpdateTrackingState(elapsedTime);
+		break;
+	// 疲れる
+	case State::Tired:
+		UpdateTiredState(elapsedTime);
 		break;
 	// ダメージ
 	case State::Damage:
@@ -109,37 +119,57 @@ void EnemyOni::DrawDebugPrimitive()
 }
 
 // ノードとプレイヤーの衝突処理
-void EnemyOni::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
+//void EnemyOni::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
+//{
+//	// ノードの位置と当たり判定を行う
+//	Model::Node* node = model->FindNode(nodeName);
+//	if (node != nullptr)
+//	{
+//		// ノードのワールド座標
+//		DirectX::XMFLOAT3 nodePosition(
+//			node->worldTransform._41,
+//			node->worldTransform._42,
+//			node->worldTransform._43
+//		);
+//
+//		// 当たり判定表示
+//		Graphics::Instance().GetDebugRenderer()->DrawSphere(
+//			nodePosition, nodeRadius, DirectX::XMFLOAT4(0, 0, 1, 1)
+//		);
+//
+//		// プレイヤーと当たり判定
+//		Player0_Onigokko& player = Player0_Onigokko::Instance();
+//		DirectX::XMFLOAT3 outPosition;
+//		if (Collision::IntersectSphereVsCylinder(
+//			nodePosition,
+//			nodeRadius,
+//			player.GetPosition(),
+//			player.GetRadius(),
+//			player.GetHeight(),
+//			outPosition))
+//		{
+//		}
+//	}
+//}
+
+// 登場ステートへ遷移
+void EnemyOni::TransitionEntryState()
 {
-	// ノードの位置と当たり判定を行う
-	Model::Node* node = model->FindNode(nodeName);
-	if (node != nullptr)
-	{
-		// ノードのワールド座標
-		DirectX::XMFLOAT3 nodePosition(
-			node->worldTransform._41,
-			node->worldTransform._42,
-			node->worldTransform._43
-		);
+	state = State::Entry;
 
-		// 当たり判定表示
-		Graphics::Instance().GetDebugRenderer()->DrawSphere(
-			nodePosition, nodeRadius, DirectX::XMFLOAT4(0, 0, 1, 1)
-		);
+	stateChangeWaitTimer = 3.0f;
 
-		// プレイヤーと当たり判定
-		Player0_Onigokko& player = Player0_Onigokko::Instance();
-		DirectX::XMFLOAT3 outPosition;
-		if (Collision::IntersectSphereVsCylinder(
-			nodePosition,
-			nodeRadius,
-			player.GetPosition(),
-			player.GetRadius(),
-			player.GetHeight(),
-			outPosition))
-		{
-		}
-	}
+	model->PlayAnimation(Anim_Entry, false);
+}
+
+// 登場ステート更新処理
+void EnemyOni::UpdateEntryState(float elapsedTime)
+{
+	if(!model->IsPlayAnimation())
+		stateChangeWaitTimer -= elapsedTime;
+
+	if (stateChangeWaitTimer <= 0.0f)
+		TransitionWaitState();
 }
 
 // 待機ステートへ遷移
@@ -147,7 +177,7 @@ void EnemyOni::TransitionWaitState()
 {
 	state = State::Wait;
 
-	stateChangeWaitTimer = 0.5f;
+	stateChangeWaitTimer = 1.0f;
 
 	// 待機アニメーション再生
 	model->PlayAnimation(Anim_Wait, true);
@@ -156,18 +186,46 @@ void EnemyOni::TransitionWaitState()
 // 待機ステート更新処理
 void EnemyOni::UpdateWaitState(float elapsedTime)
 {
-	stateChangeWaitTimer -= elapsedTime;
+	Player0_Onigokko& player = Player0_Onigokko::Instance();
+
+	//! ムービーシーンでないなら、待ち時間を減らす
+	if(!G0_Onigokko::Instance().GetMovieScene())
+		stateChangeWaitTimer -= elapsedTime;
+
+	float vx = targetPosition.x - player.GetCollisionPos().x;
+	float vz = targetPosition.z - player.GetCollisionPos().z;
+	dist = vx * vx + vz * vz;
+	if (dist < 100)
+		//! 威嚇ステートへ遷移
+		TransitionLaughState();
+	else if (stateChangeWaitTimer <= 0.0f)
+		TransitionMoveState();
 }
 
 // 移動ステートへ遷移
 void EnemyOni::TransitionMoveState()
 {
 	state = State::Move;
+
+	stateChangeWaitTimer = 10.0f;
+
+	model->PlayAnimation(Anim_Move, true);
 }
 
 // 移動ステート更新処理
 void EnemyOni::UpdateMoveState(float elapsedTime)
 {
+	Player0_Onigokko& player = Player0_Onigokko::Instance();
+
+	float vx = targetPosition.x - player.GetCollisionPos().x;
+	float vz = targetPosition.z - player.GetCollisionPos().z;
+	dist = vx * vx + vz * vz;
+	if (dist < 100)
+		//! 威嚇ステートへ遷移
+		TransitionLaughState();
+	else if (stateChangeWaitTimer <= 0.0f)
+		//! 待機ステートへ遷移
+		TransitionWaitState();
 }
 
 // 威嚇ステートへ遷移
@@ -176,18 +234,40 @@ void EnemyOni::TransitionLaughState()
 	state = State::Laugh;
 
 	stateChangeWaitTimer = 0.5f;
+
+	//! コントラストの
+	SetContrastChange(1.5f, 2.0f);
+
+	//! サチュレーション
+	SetSaturationChange(1.0f, 2.0f);
+
+	//! カラーフィルター
+	SetColorFilterChange(DirectX::XMFLOAT3(2.0f, 1.3f, 1.35f), 2.0f);
+
+	//! クロマティックアベレーション
+	SetChromaticAberrationChange(0, 0);
+
+	model->PlayAnimation(Anim_Laugh, false);
 }
 
 // 威嚇ステート更新処理
 void EnemyOni::UpdateLaughState(float elapsedTime)
 {
-	stateChangeWaitTimer -= elapsedTime;
+	if(!model->IsPlayAnimation())
+		stateChangeWaitTimer -= elapsedTime;
+
+	if (stateChangeWaitTimer <= 0.0f)
+		TransitionTrackingState();
 }
 
 // 追跡ステートへ遷移
 void EnemyOni::TransitionTrackingState()
 {
 	state = State::Tracking;
+
+	stateChangeWaitTimer = 5.0f;
+
+	model->PlayAnimation(Anim_Tracking, true);
 }
 
 // 追跡ステート更新処理
@@ -197,6 +277,30 @@ void EnemyOni::UpdateTrackingState(float elapsedTime)
 
 	//! プレイヤーに向かって移動する
 	MoveToTarget(elapsedTime, 100);
+
+	stateChangeWaitTimer -= elapsedTime;
+
+	if (stateChangeWaitTimer <= 0.0f)
+		TransitionTiredState();
+}
+
+// 疲れるステート遷移
+void EnemyOni::TransitionTiredState()
+{
+	state = State::Tired;
+
+	//! ポストエフェクトを元に戻す
+	SetPostEffectStatusResetChange();
+
+	model->PlayAnimation(Anim_Tired, false);
+}
+
+// 疲れるステート更新処理
+void EnemyOni::UpdateTiredState(float elapsedTime)
+{
+	if (!model->IsPlayAnimation())
+		//! 待機ステートへ遷移
+		TransitionWaitState();
 }
 
 // 攻撃ステートへ遷移

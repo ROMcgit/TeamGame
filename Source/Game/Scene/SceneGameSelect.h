@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/RenderTarget.h"
+#include "Graphics/Fade.h"
 
 // ゲームシーン
 class SceneGameSelect: public Scene
@@ -13,6 +14,13 @@ class SceneGameSelect: public Scene
 public:
 	SceneGameSelect() {}
 	~SceneGameSelect() override {}
+
+	// インスタンス取得
+	static SceneGameSelect& Instance()
+	{
+		static SceneGameSelect instance;
+		return instance;
+	}
 
 	// 初期化
 	void Initialize() override;
@@ -26,10 +34,31 @@ public:
 	// 描画処理
 	void Render() override;
 
+	// シーン変更を設定
+	void SetSceneChange() { this->sceneChange = true; }
+
+public:
+	enum class GameSelect
+	{
+		Onigokko,           // おにごっこ
+		DarumasangaKoronda, // だるまさんが転んだ
+		Sundome,            // 寸止め
+		SoratobuHusenWari,  // 空飛ぶ風船割り
+		OssanTataki,        // おっさん叩き
+		Asibawatari,        // 足場渡り
+	};
+
+	static GameSelect gameSelect; // ゲーム選択
+
 private:
 	std::unique_ptr <Player0_Onigokko> player;
 	std::unique_ptr <CameraController> cameraController;
 
 	std::unique_ptr<RenderTarget>    renderTarget; //! レンダーターゲット
 	std::unique_ptr<Sprite> backGround;
+
+	bool sceneChange = false; // シーン切り替え
+
+	std::unique_ptr<Fade> fade;
+	bool setFade = false;
 };

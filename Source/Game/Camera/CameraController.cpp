@@ -1,22 +1,36 @@
 #include "CameraController.h"
 #include "Camera.h"
 #include "Graphics/Fade.h"
-#include "Input/Input.h"
 #include "Game/Character/Director/CameraTarget.h"
+#include "Game/Character/Director/DirectorManager.h"
+#include "Input/Input.h"
+#include "Audio/SoundManager.h"
+#include "Other/Easing.h"
 #include <imgui.h>
-#include <cmath>
+
+/*! どのイージングにするか */
+
+//! ターゲット
+CameraController::TargetChangeEasing CameraController::targetChangeEasing = CameraController::TargetChangeEasing::Linear;
+//! 角度
+CameraController::AngleChangeEasing CameraController::angleChangeEasing = CameraController::AngleChangeEasing::Linear;
+//! 範囲
+CameraController::RangeChangeEasing CameraController::rangeChangeEasing = CameraController::RangeChangeEasing::Linear;
+
+//! 経過時間
+float CameraController::currentTime = 0.0f;
 
 //! ターゲット
 DirectX::XMFLOAT3 CameraController::target = { 0, 0, 0 };
 
 //! ターゲットの位置を変変えるか
 bool CameraController::targetChange = false;
+//! ターゲットの変更の開始の値
+DirectX::XMFLOAT3 CameraController::startTargetChange = { 0, 0, 0 };
 //! ここまでターゲットの位置を変える
-DirectX::XMFLOAT3 CameraController::toTargetChange = { 0, 0, 0 };
-//! ターゲットの位置を変える速さ
-DirectX::XMFLOAT3 CameraController::targetChangeSpeed = { 0, 0, 0 };
-//! ターゲットの位置を増やすか
-CameraController::TargetChangeUp CameraController::targetChangeUp = { false, false, false };
+DirectX::XMFLOAT3 CameraController::endTargetChange = { 0, 0, 0 };
+//! ターゲットの位置を変える時間
+float CameraController::targetChangeTime = 0;
 
 /********************************************************************/
 
@@ -25,12 +39,12 @@ DirectX::XMFLOAT3 CameraController::angle = { DirectX::XMConvertToRadians(26),0,
 
 //! 角度を変えるか
 bool CameraController::angleChange = false;
+//! 角度の変更の開始の値
+DirectX::XMFLOAT3 CameraController::startAngleChange = { 0, 0, 0 };
 //! ここまで角度を変える
-DirectX::XMFLOAT3 CameraController::toAngleChange = { 0, 0, 0 };
-//! 角度を変える速さ
-DirectX::XMFLOAT3 CameraController::angleChangeSpeed = { 0, 0, 0 };
-//! 角度を増やすか
-CameraController::AngleChangeUp CameraController::angleChangeUp = { false, false, false };
+DirectX::XMFLOAT3 CameraController::endAngleChange = { 0, 0, 0 };
+//! 角度を変える時間
+float CameraController::angleChangeTime = 0;
 
 /********************************************************************/
 
@@ -39,12 +53,12 @@ float CameraController::range = 16.0f;
 
 //! カメラの範囲を変えるか
 bool CameraController::rangeChange = false;
+//! カメラの範囲の変更の開始の値
+float CameraController::startRangeChange = 0.0f;
 //! ここまでカメラの範囲を変える
-float CameraController::toRangeChange = 0.0f;
-//! カメラの範囲を変える速さ
-float CameraController::rangeChangeSpeed = 0.0f;
-//! カメラの範囲を増やすか
-bool CameraController::rangeChangeUp = false;
+float CameraController::endRangeChange = 0.0f;
+//! カメラの範囲を変える時間
+float CameraController::rangeChangeTime = 0.0f;
 
 /********************************************************************/
 
@@ -77,14 +91,16 @@ CameraController::CameraController()
 	debugCamera = false; // デバッグカメラ
 	noMoveDebugCamera = false; // デバッグカメラ中に移動しないようにするか
 
+
 	// フェードを生成
 	fade = std::make_unique<Fade>();
 
-#ifdef _DEBUG
-	DirectorManager& directorManager = DirectorManager::Instance();
+	SoundManager::Instance().LoadSound("ボス撃破", "Data/Audio/Sound/Enemy/Defeat.wav");
 
+#ifndef _DEBUG
+	//! カメラのターゲットを生成
 	std::unique_ptr<CameraTarget> cameraTarget = std::make_unique<CameraTarget>();
-	directorManager.Register(std::move(cameraTarget));
+	DirectorManager::Instance().Register(std::move(cameraTarget));
 #endif
 }
 
@@ -99,7 +115,9 @@ void CameraController::Update(float elapsedTime)
 	// フェード更新処理
 	fade->Update(elapsedTime);
 
+	// 演出マネージャーの更新処理
 	DirectorManager::Instance().Update(elapsedTime);
+
 #if 1
 	// カメラの回転値を回転行列に変換
 	DirectX::XMMATRIX Transform = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
@@ -122,12 +140,13 @@ void CameraController::Update(float elapsedTime)
 	Camera::Instance().SetLookAt(eye, target, DirectX::XMFLOAT3(0, 1, 0));
 #endif
 	// カメラのターゲット更新処理
-	UpdateCameraTarget(elapsedTime);
+	UpdateCameraTargetTracking(elapsedTime);
 }
 
 // 描画処理
-void CameraController::RenderTarget(ID3D11DeviceContext* dc, Shader* shader)
+void CameraController::RenderCameraTarget(ID3D11DeviceContext* dc, Shader* shader)
 {
+	//! デバッグカメラ中に表示
 	DirectorManager::Instance().Render(dc, shader);
 }
 
@@ -181,9 +200,10 @@ void CameraController::DrawDebugGUI()
 	}
 }
 
-// カメラのターゲット更新処理
-void CameraController::UpdateCameraTarget(float elapsedTime)
+// カメラの注目更新処理
+void CameraController::UpdateCameraTargetTracking(float elapsedTime)
 {
+
 }
 
 // カメラの状態更新処理
@@ -229,10 +249,10 @@ void CameraController::CameraLimit()
 	if (angle.y > DirectX::XM_PI)  angle.y -= DirectX::XM_2PI;
 }
 
-// カメラをデバッグ
+// デバッグカメラ
 bool CameraController::UpdateDebugCamera(float elapsedTime)
 {
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	Mouse& mouse = Input::Instance().GetMouse();
 	//! ImGuiを操作中は処理をしない
@@ -416,30 +436,47 @@ bool CameraController::UpdateTargetChange(float elapsedTime)
 	if (!targetChange)
 		return false;
 
-	//! ターゲットの位置を変える
-	angle.x = UpdateAngleAxis(target.x, targetChangeSpeed.x, targetChangeUp.x, toTargetChange.x, elapsedTime);
-	angle.y = UpdateAngleAxis(target.y, targetChangeSpeed.y, targetChangeUp.y, toTargetChange.y, elapsedTime);
-	angle.z = UpdateAngleAxis(target.z, targetChangeSpeed.z, targetChangeUp.z, toTargetChange.z, elapsedTime);
+	//! 経過時間を計測
+	currentTime += elapsedTime;
 
-	//! 値が同じなら処理を終わる
-	if (target.x == toTargetChange.x && target.y == toTargetChange.y && target.z == toTargetChange.z)
+	//! イージングタイム
+	float t = currentTime / targetChangeTime;
+
+	switch (targetChangeEasing)
+	{
+	case TargetChangeEasing::Linear:
+	{
+		//! ターゲット変更
+		target.x = Easing::Linear(startTargetChange.x, endTargetChange.x, t);
+		target.y = Easing::Linear(startTargetChange.y, endTargetChange.y, t);
+		target.z = Easing::Linear(startTargetChange.z, endTargetChange.z, t);
+	}
+	break;
+	case TargetChangeEasing::EaseIn:
+	{
+		//! ターゲット変更
+		target.x = Easing::EaseIn(startTargetChange.x, endTargetChange.x, t);
+		target.y = Easing::EaseIn(startTargetChange.y, endTargetChange.y, t);
+		target.z = Easing::EaseIn(startTargetChange.z, endTargetChange.z, t);
+	}
+	break;
+	case TargetChangeEasing::EaseOut:
+	{
+		//! ターゲット変更
+		target.x = Easing::EaseOut(startTargetChange.x, endTargetChange.x, t);
+		target.y = Easing::EaseOut(startTargetChange.y, endTargetChange.y, t);
+		target.z = Easing::EaseOut(startTargetChange.z, endTargetChange.z, t);
+	}
+	break;
+	default:
+		break;
+	}
+
+	//! 処理を止める
+	if (t >= 1.0f)
 		targetChange = false;
 
 	return true;
-}
-
-// 単一軸のターゲット位置変更処理
-float CameraController::UpdateTargetAxis(float target, float speed, bool targetChangeUp, float toTargetChangeChange, float elapsedTime)
-{
-	// ターゲット
-	target += (targetChangeUp ? 1 : -1) * (speed * elapsedTime);
-
-	// 目指す値を超えた場合、目標値にする
-	if ((targetChangeUp && target > toTargetChangeChange) || (!targetChangeUp && target < toTargetChangeChange))
-		target = toTargetChangeChange;
-
-	// 角度を返す
-	return target;
 }
 
 //------------------------------------------------------------------------------------------//
@@ -451,30 +488,48 @@ bool CameraController::UpdateAngleChange(float elapsedTime)
 	if (!angleChange)
 		return false;
 
-	//! 角度を変える
-	angle.x = UpdateAngleAxis(angle.x, angleChangeSpeed.x, angleChangeUp.x, toAngleChange.x, elapsedTime);
-	angle.y = UpdateAngleAxis(angle.y, angleChangeSpeed.y, angleChangeUp.y, toAngleChange.y, elapsedTime);
-	angle.z = UpdateAngleAxis(angle.z, angleChangeSpeed.z, angleChangeUp.z, toAngleChange.z, elapsedTime);
 
-	//! 値が同じなら処理を終わる
-	if (angle.x == toAngleChange.x && angle.y == toAngleChange.y && angle.z == toAngleChange.z)
+	//! 経過時間を計測
+	currentTime += elapsedTime;
+
+	//! イージングタイム
+	float t = currentTime / angleChangeTime;
+
+	switch (angleChangeEasing)
+	{
+	case AngleChangeEasing::Linear:
+	{
+		//! 角度変更
+		angle.x = Easing::Linear(startAngleChange.x, endAngleChange.x, t);
+		angle.y = Easing::Linear(startAngleChange.y, endAngleChange.y, t);
+		angle.z = Easing::Linear(startAngleChange.z, endAngleChange.z, t);
+	}
+	break;
+	case AngleChangeEasing::EaseIn:
+	{
+		//! 角度変更
+		angle.x = Easing::EaseIn(startAngleChange.x, endAngleChange.x, t);
+		angle.y = Easing::EaseIn(startAngleChange.y, endAngleChange.y, t);
+		angle.z = Easing::EaseIn(startAngleChange.z, endAngleChange.z, t);
+	}
+	break;
+	case AngleChangeEasing::EaseOut:
+	{
+		//! 角度変更
+		angle.x = Easing::EaseOut(startAngleChange.x, endAngleChange.x, t);
+		angle.y = Easing::EaseOut(startAngleChange.y, endAngleChange.y, t);
+		angle.z = Easing::EaseOut(startAngleChange.z, endAngleChange.z, t);
+	}
+	break;
+	default:
+		break;
+	}
+
+	//! 処理を止める
+	if (t >= 1.0f)
 		angleChange = false;
 
 	return true;
-}
-
-// 単一軸の回転変更処理
-float CameraController::UpdateAngleAxis(float angle, float speed, bool angleChangeUp, float toAngleChange, float elapsedTime)
-{
-	// 角度を変更
-	angle += (angleChangeUp ? 1 : -1) * (speed * elapsedTime);
-
-	// 目指す値を超えた場合、目標値にする
-	if ((angleChangeUp && angle > toAngleChange) || (!angleChangeUp && angle < toAngleChange))
-		angle = toAngleChange;
-
-	// 角度を返す
-	return angle;
 }
 
 //------------------------------------------------------------------------------------------//
@@ -486,15 +541,39 @@ bool CameraController::UpdateRangeChange(float elapsedTime)
 	if (!rangeChange)
 		return false;
 
-	//! カメラの範囲を変える
-	range += (rangeChangeUp ? 1 : -1) * rangeChangeSpeed * elapsedTime;
 
-	// 目標値を超えた場合、目標値にする
-	if ((rangeChangeUp && range > toRangeChange) || (!rangeChangeUp && range < toRangeChange))
-		range = toRangeChange;
+	//! 経過時間を計測
+	currentTime += elapsedTime;
+
+	//! イージングタイム
+	float t = currentTime / rangeChangeTime;
+
+	switch (rangeChangeEasing)
+	{
+	case RangeChangeEasing::Linear:
+	{
+		//! 範囲変更
+		range = Easing::Linear(startRangeChange, endRangeChange, t);
+	}
+	break;
+	case RangeChangeEasing::EaseIn:
+	{
+		//! 範囲変更
+		range = Easing::EaseIn(startRangeChange, endRangeChange, t);
+	}
+	break;
+	case RangeChangeEasing::EaseOut:
+	{
+		//! 範囲変更
+		range = Easing::EaseOut(startRangeChange, endRangeChange, t);
+	}
+	break;
+	default:
+		break;
+	}
 
 	// 値が同じなら処理をとめる
-	if (range == toRangeChange)
+	if (t >= 1.0f)
 		rangeChange = false;
 
 	return true;
@@ -552,10 +631,11 @@ bool CameraController::UpdateBossFinish(float elapsedTime)
 		// 設定をする
 		if (!bossFinishSettings)
 		{
+			//! フェードを設定
 			fade->SetFade(
 				DirectX::XMFLOAT3(1, 0, 0),
 				0.9f, 0.0f,
-				2.0f, 0.2f);
+				3.0f, 0.2f);
 
 			// カメラシェイク
 			SetCameraShake(0.8f, DirectX::XMINT3(100, 100, 0));

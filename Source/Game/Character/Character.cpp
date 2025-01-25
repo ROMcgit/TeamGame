@@ -1,9 +1,10 @@
 #include "Game/Character/Character.h"
 #include "Input/Input.h"
+#include "Game/Stage/SettingsStage/StageManager.h"
 #include "Game/Camera/Camera.h"
-#include "Game/Stage/StageManager.h"
 #include "Game/Camera/CameraController.h"
 #include "Audio/SoundManager.h"
+#include "Other/Easing.h"
 #include <imgui.h>
 #include <random>
 
@@ -23,10 +24,11 @@ void Character::UpdateTransform()
 	// スケール行列を作成
 	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
 
-	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
-
 	// 回転行列を作成
 	DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
+
+	// 位置行列を作成
+	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
 
 	// ３つの行列を組み合わせ、ワールド行列を作成
 	DirectX::XMMATRIX W = S * R * T;
@@ -761,89 +763,53 @@ void Character::Turn2D(float elapsedTime, float vx, float speed)
 /*! セッター */
 
 // カメラのターゲットの位置の設定
-void Character::SetCameraTargetChange(DirectX::XMFLOAT3 toCameraTarget, DirectX::XMFLOAT3 cameraTargetChangeSpeed)
+void Character::SetCameraTargetChange(DirectX::XMFLOAT3 endCameraTarget, float cameraTargetChangeTime, int targetChangeEasing)
 {
 	if (!CameraController::targetChange)
 	{
-		CameraController::targetChange = true;                    // カメラのターゲットの位置を変える
-		CameraController::toTargetChange = toCameraTarget;          // ここまでターゲットの位置を変える
-		CameraController::targetChangeSpeed = cameraTargetChangeSpeed; // ターゲットの位置を変える速さ
-
-		// ターゲットXが目指す位置より小さい時
-		if (CameraController::target.x < toCameraTarget.x)
-			CameraController::targetChangeUp.x = true;
-		else
-			CameraController::targetChangeUp.x = false;
-
-		// ターゲットYが目指す位置より小さい時
-		if (CameraController::target.y < toCameraTarget.y)
-			CameraController::targetChangeUp.y = true;
-		else
-			CameraController::targetChangeUp.y = false;
-
-		// ターゲットZが目指す位置より小さい時
-		if (CameraController::target.z < toCameraTarget.z)
-			CameraController::targetChangeUp.z = true;
-		else
-			CameraController::targetChangeUp.z = false;
+		CameraController::targetChange = true;                                                                  // カメラのターゲットの位置を変える
+		CameraController::startTargetChange = CameraController::target;											  // カメラのターゲットの変更の開始の値
+		CameraController::endTargetChange = endCameraTarget;                                                       // ここまでターゲットの位置を変える
+		CameraController::targetChangeTime = cameraTargetChangeTime;                                                // ターゲットの位置を変える時間
+		CameraController::targetChangeEasing = static_cast<CameraController::TargetChangeEasing>(targetChangeEasing); // どのイージングにするか
+		CameraController::currentTime = 0.0f;                                                                  // 経過時間をリセット
 	}
 }
 
-// カメラの角度の設定
-void Character::SetCameraAngleChange(DirectX::XMFLOAT3 toCameraAngle, DirectX::XMFLOAT3 cameraAngleChangeSpeed)
+// カメラの角度変更の設定
+void Character::SetCameraAngleChange(DirectX::XMFLOAT3 endCameraAngle, float cameraAngleChangeTime, int angleChangeEasing)
 {
 	if (!CameraController::angleChange)
 	{
-		CameraController::angleChange = true;                   // カメラの範囲を変える
-		CameraController::toAngleChange = toCameraAngle;          // ここまで角度を変える
-		CameraController::angleChangeSpeed = cameraAngleChangeSpeed; // 角度を変える速さ
-
-		// 角度Xが目指す位置より小さい時
-		if (CameraController::angle.x < toCameraAngle.x)
-			CameraController::angleChangeUp.x = true;
-		else
-			CameraController::angleChangeUp.x = false;
-
-		// 角度Yが目指す位置より小さい時
-		if (CameraController::angle.y < toCameraAngle.y)
-			CameraController::angleChangeUp.y = true;
-		else
-			CameraController::angleChangeUp.y = false;
-
-		// 角度Zが目指す位置より小さい時
-		if (CameraController::angle.z < toCameraAngle.z)
-			CameraController::angleChangeUp.z = true;
-		else
-			CameraController::angleChangeUp.z = false;
+		CameraController::angleChange = true;                                                                // カメラの角度を変える
+		CameraController::startAngleChange = CameraController::angle;											   // カメラの角度の変更の開始の値
+		CameraController::endAngleChange = endCameraAngle;                                                      // ここまで角度を変える
+		CameraController::angleChangeTime = cameraAngleChangeTime;                                               // 角度を変える時間
+		CameraController::angleChangeEasing = static_cast<CameraController::AngleChangeEasing>(angleChangeEasing); // どのイージングにするか
+		CameraController::currentTime = 0.0f;                                                                // 経過時間をリセット
 	}
 }
 
 // カメラの範囲の変更の設定
-void Character::SetCameraRangeChange(float toCameraRange, float cameraRangeChangeSpeed)
+void Character::SetCameraRangeChange(float endCameraRange, float cameraRangeChangeTime, int rangeChangeEasing)
 {
 	if (!CameraController::rangeChange)
 	{
-		CameraController::rangeChange = true;                   // カメラの範囲を変える
-		CameraController::toRangeChange = toCameraRange;          // ここまでカメラの範囲を変える
-		CameraController::rangeChangeSpeed = cameraRangeChangeSpeed; // カメラの範囲を変える速さ
-
-		// カメラの範囲が目指す大きさより小さい時
-		if (CameraController::range < toCameraRange)
-			CameraController::rangeChangeUp = true;
-		else
-			CameraController::rangeChangeUp = false;
+		CameraController::rangeChange = true;                                                                // カメラの範囲を変える
+		CameraController::startRangeChange = CameraController::range;											   // カメラの範囲の変更の開始の値
+		CameraController::endRangeChange = endCameraRange;                                                      // ここまでカメラの範囲を変える
+		CameraController::rangeChangeTime = cameraRangeChangeTime;                                               // カメラの範囲を変える時間
+		CameraController::rangeChangeEasing = static_cast<CameraController::RangeChangeEasing>(rangeChangeEasing); // どのイージングにするか
+		CameraController::currentTime = 0.0f;                                                                // 経過時間をリセット
 	}
 }
 
 // カメラシェイク設定
 void Character::SetCameraShake(float cameraShakeTimer, const DirectX::XMINT3& cameraShakePower)
 {
-	if (!CameraController::cameraShake)
-	{
-		CameraController::cameraShake = true;             // カメラシェイクするか
-		CameraController::cameraShakeTimer = cameraShakeTimer; // カメラシェイクを行う時間
-		CameraController::cameraShakePower = cameraShakePower; // カメラシェイクの強さ
-	}
+	CameraController::cameraShake = true;             // カメラシェイクするか
+	CameraController::cameraShakeTimer = cameraShakeTimer; // カメラシェイクを行う時間
+	CameraController::cameraShakePower = cameraShakePower; // カメラシェイクの強さ
 }
 
 /*****************************************************************************************************************/
@@ -857,67 +823,91 @@ void Character::SetPostEffectStatus(float contrast, float saturation, const Dire
 	Camera::postEffect.chromaticAberration = chromaticAberration; // クロマティックアベレーション
 }
 
-//! ポストエフェクトの変更の設定
-void Character::SetPostEffectStatusChange(
-	float toContrastChange,
-	float contrastChangeSpeed,
-	float toSaturationChange,
-	float saturationChangeSpeed,
-	const DirectX::XMFLOAT3 toColorFilterChange,
-	const DirectX::XMFLOAT3 colorFilterChangeSpeed,
-	float toChromaticAberrationChange,
-	float chromaticAberrationChangeSpeed)
+// ポストエフェクトのステータスを設定
+void Character::SetPostEffectStatusResetChange(float endContrastChange, float contrastChangeTime, float endSaturationChange, float saturationChangeTime, const DirectX::XMFLOAT3 endColorFilterChange, float colorFilterChangeTime, float endChromaticAberrationChange, float chromaticAberrationChangeTime)
 {
-	Camera::postEffectChange = true; // ポストエフェクトのステータスを変える
+	//! 変更処理を一旦止める
+	Camera::contrastChange = false; // コントラスト
+	Camera::saturationChange = false; // サチュレーション
+	Camera::colorFilterChange = false; // カラーフィルター
+	Camera::chromaticAberrationChange = false; // クロマティックアベレーション
+	Camera::currentTime = 0.0f;  // 経過時間をリセット
 
-	// コンストラクトの値を変えるように代入する
-	Camera::contrastChangeSpeed = contrastChangeSpeed;
-	Camera::toContrastChange = toContrastChange;
-	// コンストラクトの値が目指す値より小さいなら
-	if (Camera::postEffect.contrast < Camera::toContrastChange)
-		Camera::contrastUp = true;
-	else
-		Camera::contrastUp = false;
+	//! コントラスト
+	Camera::contrastChange = true;                        // コントラストの値を変える
+	Camera::startContrastChange = Camera::postEffect.contrast; // コントラストの変更の開始の値
+	Camera::endContrastChange = endContrastChange;           // ここまでコントラストの値を変える
+	Camera::contrastChangeTime = contrastChangeTime;          // コントラストの値を変える時間
 
-	// サチュレーションの値を変えるように代入する
-	Camera::saturationChangeSpeed = saturationChangeSpeed;
-	Camera::toSaturationChange = toSaturationChange;
-	// サチュレーションの値が目指す値より小さいなら
-	if (Camera::postEffect.saturation < Camera::toSaturationChange)
-		Camera::saturationUp = true;
-	else
-		Camera::saturationUp = false;
+	//! サチュレーション
+	Camera::saturationChange = true;                          // サチュレーションの値を変える
+	Camera::startSaturationChange = Camera::postEffect.saturation; // サチュレーションの変更の開始の値
+	Camera::endSaturationChange = endSaturationChange;           // ここまでサチュレーションの値を変える
+	Camera::saturationChangeTime = saturationChangeTime;          // サチュレーションの値を変える時間
 
-	// カラーフィルターの値を変えるように代入する
-	Camera::colorFilterChangeSpeed.x = colorFilterChangeSpeed.x;
-	Camera::colorFilterChangeSpeed.y = colorFilterChangeSpeed.y;
-	Camera::colorFilterChangeSpeed.z = colorFilterChangeSpeed.z;
-	Camera::toColorFilterChange.x = toColorFilterChange.x;
-	Camera::toColorFilterChange.y = toColorFilterChange.y;
-	Camera::toColorFilterChange.z = toColorFilterChange.z;
-	// カラーフィルターの値を上昇させるか
-	IncreaseColorFilterComponent(Camera::postEffect.colorFilter.x, Camera::toColorFilterChange.x, Camera::colorFilterUp.x);
-	IncreaseColorFilterComponent(Camera::postEffect.colorFilter.y, Camera::toColorFilterChange.y, Camera::colorFilterUp.y);
-	IncreaseColorFilterComponent(Camera::postEffect.colorFilter.z, Camera::toColorFilterChange.z, Camera::colorFilterUp.z);
+	//! カラーフィルターの値を変更していないなら
+	Camera::colorFilterChange = true;                           // カラーフィルターの値を変える
+	Camera::startColorFilterChange = Camera::postEffect.colorFilter; // カラーフィルターの変更の開始の値
+	Camera::endColorFilterChange = endColorFilterChange;           // ここまでカラーフィルターの値を変える
+	Camera::colorFilterChangeTime = colorFilterChangeTime;          // カラーフィルターの値を変える時間
 
-	// クロマティックアベレーションの値を変えるように代入する
-	Camera::chromaticAberrationChangeSpeed = chromaticAberrationChangeSpeed;
-	Camera::toChromaticAberrationChange = toChromaticAberrationChange;
-	// クロマティックアベレーションの値が目指す値より小さいなら
-	if (Camera::postEffect.chromaticAberration < Camera::toChromaticAberrationChange)
-		Camera::chromaticAberrationUp = true;
-	else
-		Camera::chromaticAberrationUp = false;
+	//! クロマティックアベレーション
+	Camera::chromaticAberrationChange = true;                                   // クロマティックアベレーションの値を変える
+	Camera::startChromaticAberrationChange = Camera::postEffect.chromaticAberration; // クロマティックアベレーションの変更の開始の値
+	Camera::endChromaticAberrationChange = endChromaticAberrationChange;           // ここまでクロマティックアベレーションの値を変える
+	Camera::chromaticAberrationChangeTime = chromaticAberrationChangeTime;          // クロマティックアベレーションの値を変える時間
 }
 
-// カラーフィルターを上昇させるかの設定
-void Character::IncreaseColorFilterComponent(float colorFilter, float toColorFilterChange, bool& colorFilterUp)
+// コントラスト変更の設定
+void Character::SetContrastChange(float endContrastChange, float contrastChangeTime)
 {
-	// 目指す値より小さいなら
-	if (colorFilter < toColorFilterChange)
-		colorFilterUp = true;
-	else
-		colorFilterUp = false;
+	if (!Camera::contrastChange)
+	{
+		Camera::contrastChange = true;                        // コントラストの値を変える
+		Camera::startContrastChange = Camera::postEffect.contrast; // コントラストの変更の開始の値
+		Camera::endContrastChange = endContrastChange;           // ここまでコントラストの値を変える
+		Camera::contrastChangeTime = contrastChangeTime;          // コントラストの値を変える時間
+		Camera::currentTime = 0.0f;                        // 経過時間をリセット
+	}
+}
+
+// サチュレーション(色の彩度)変更の設定
+void Character::SetSaturationChange(float endSaturationChange, float saturationChangeTime)
+{
+	if (!Camera::saturationChange)
+	{
+		Camera::saturationChange = true;                          // サチュレーションの値を変える
+		Camera::startSaturationChange = Camera::postEffect.saturation; // サチュレーションの変更の開始の値
+		Camera::endSaturationChange = endSaturationChange;           // ここまでサチュレーションの値を変える
+		Camera::saturationChangeTime = saturationChangeTime;          // サチュレーションの値を変える時間
+		Camera::currentTime = 0.0f;                          // 経過時間をリセット
+	}
+}
+
+// カラーフィルター変更の設定
+void Character::SetColorFilterChange(DirectX::XMFLOAT3& endColorFilterChange, float colorFilterChangeTime)
+{
+	if (!Camera::colorFilterChange)
+	{
+		Camera::colorFilterChange = true;                           // カラーフィルターの値を変える
+		Camera::startColorFilterChange = Camera::postEffect.colorFilter; // カラーフィルターの変更の開始の値
+		Camera::endColorFilterChange = endColorFilterChange;           // ここまでカラーフィルターの値を変える
+		Camera::colorFilterChangeTime = colorFilterChangeTime;          // カラーフィルターの値を変える時間
+		Camera::currentTime = 0.0f;                           // 経過時間をリセット
+	}
+}
+
+// クロマティックアベレーション(色収差(色ズレ))変更の設定
+void Character::SetChromaticAberrationChange(float endChromaticAberrationChange, float chromaticAberrationChangeTime)
+{
+	if (!Camera::chromaticAberrationChange)
+	{
+		Camera::chromaticAberrationChange = true;                                   // クロマティックアベレーションの値を変える
+		Camera::startChromaticAberrationChange = Camera::postEffect.chromaticAberration; // クロマティックアベレーションの変更の開始の値
+		Camera::endChromaticAberrationChange = endChromaticAberrationChange;           // ここまでクロマティックアベレーションの値を変える
+		Camera::chromaticAberrationChangeTime = chromaticAberrationChangeTime;          // クロマティックアベレーションの値を変える時間
+		Camera::currentTime = 0.0f;                                   // 経過時間をリセット
+	}
 }
 
 //! ジャンプ処理
@@ -951,7 +941,7 @@ void Character::UpdateCharacterState(float elapsedTime)
 	UpdateMaterialColorChange(elapsedTime);
 
 	// 不透明度変更処理
-	UpdateOpacityChange(elapsedTime);
+	UpdateEffectOpacityChange(elapsedTime);
 
 	//エミッシブの色変更更新処理
 	UpdateEmissiveColorChange(elapsedTime);
@@ -998,53 +988,46 @@ bool Character::UpdateMaterialColorChange(float elapsedTime)
 		return false;
 
 
+	//! 経過時間を計測
+	currentTime += elapsedTime;
+
+	//! イージングタイム
+	float tX = currentTime / materialColorChangeTime.x;
+	float tY = currentTime / materialColorChangeTime.y;
+	float tZ = currentTime / materialColorChangeTime.z;
+
 	//! マテリアルの色を変更
-	materialColor.x = UpdateMaterialColorAxis(materialColor.x, materialColorChangeSpeed.x, materialColorChangeUp.x, toMaterialColorChange.x, elapsedTime);
-	materialColor.y = UpdateMaterialColorAxis(materialColor.y, materialColorChangeSpeed.y, materialColorChangeUp.y, toMaterialColorChange.y, elapsedTime);
-	materialColor.z = UpdateMaterialColorAxis(materialColor.z, materialColorChangeSpeed.z, materialColorChangeUp.z, toMaterialColorChange.z, elapsedTime);
+	materialColor.x = Easing::Linear(materialColor.x, endMaterialColorChange.x, tX);
+	materialColor.y = Easing::Linear(materialColor.y, endMaterialColorChange.y, tY);
+	materialColor.z = Easing::Linear(materialColor.z, endMaterialColorChange.z, tZ);
 
 	//! マテリアルの色変更が終わったら、処理を止める
-	if (materialColor.x == toMaterialColorChange.x
-		&& materialColor.y == toMaterialColorChange.y
-		&& materialColor.z == toMaterialColorChange.z)
+	if (materialColor.x == endMaterialColorChange.x
+		&& materialColor.y == endMaterialColorChange.y
+		&& materialColor.z == endMaterialColorChange.z)
 		materialColorChange = false;
 
 	return true;
 }
 
-// 単一軸のマテリアルの色変更更新処理
-float Character::UpdateMaterialColorAxis(float materialColor, float speed, bool materialColorChangeUp, float toMaterialColorChange, float elapsedTime)
-{
-	// マテリアルの色変更
-	materialColor += (materialColorChangeUp ? 1 : -1) * (speed * elapsedTime);
-
-	// 目指す値を超えた場合、目標値にする
-	if ((materialColorChangeUp && materialColor > toMaterialColorChange) || (!materialColorChangeUp && materialColor < toMaterialColorChange))
-	{
-		materialColor = toMaterialColorChange;
-	}
-
-	// マテリアルの色を返す
-	return materialColor;
-}
-
 //! 不透明度変更更新処理
-bool Character::UpdateOpacityChange(float elapsedTime)
+bool Character::UpdateEffectOpacityChange(float elapsedTime)
 {
 	//! 不透明度を変更しないなら、処理を止める
 	if (!opacityChange)
 		return false;
 
+	//! 経過時間を計測
+	currentTime += elapsedTime;
+
+	//! イージングタイム
+	float t = currentTime / opacityChangeTime;
 
 	//! 不透明度を変更
-	opacity += (opacityChangeUp ? 1 : -1) * opacityChangeSpeed * elapsedTime;
-
-	//! 目指す値を超えた場合、目標値にする
-	if ((opacityChangeUp && opacity > toOpacityChange) || (!opacityChangeUp && opacity < toOpacityChange))
-		opacity = toOpacityChange;
+	opacity = Easing::Linear(startOpacityChange, endOpacityChange, t);
 
 	//! 不透明度の変更が終わったら
-	if (opacity == toOpacityChange)
+	if (t >= 1.0f)
 		opacityChange = false;
 
 	return true;
@@ -1057,53 +1040,44 @@ bool Character::UpdateEmissiveColorChange(float elapsedTime)
 	if (!emissiveColorChange)
 		return false;
 
+	//! 経過時間を計測
+	currentTime += elapsedTime;
+
+	//! イージングタイム
+	float tX = currentTime / emissiveColorChangeTime.x;
+	float tY = currentTime / emissiveColorChangeTime.y;
+	float tZ = currentTime / emissiveColorChangeTime.z;
 
 	//!エミッシブの色を変更
-	emissiveColor.x = UpdateEmissiveColorAxis(emissiveColor.x, emissiveColorChangeSpeed.x, emissiveColorChangeUp.x, toEmissiveColorChange.x, elapsedTime);
-	emissiveColor.y = UpdateEmissiveColorAxis(emissiveColor.y, emissiveColorChangeSpeed.y, emissiveColorChangeUp.y, toEmissiveColorChange.y, elapsedTime);
-	emissiveColor.z = UpdateEmissiveColorAxis(emissiveColor.z, emissiveColorChangeSpeed.z, emissiveColorChangeUp.z, toEmissiveColorChange.z, elapsedTime);
+	emissiveColor.x = Easing::Linear(startEmissiveColorChange.x, endEmissiveColorChange.x, tX);
+	emissiveColor.y = Easing::Linear(startEmissiveColorChange.y, endEmissiveColorChange.y, tY);
+	emissiveColor.z = Easing::Linear(startEmissiveColorChange.z, endEmissiveColorChange.z, tZ);
 
-	//!エミッシブの色変更が終わったら、処理を止める
-	if (emissiveColor.x == toEmissiveColorChange.x
-		&& emissiveColor.y == toEmissiveColorChange.y
-		&& emissiveColor.z == toEmissiveColorChange.z)
-		emissiveColorChange = false;
+	//! 処理を止める
+	if (tX >= 1.0f && tY >= 1.0f, tZ >= 1.0f);
+	emissiveColorChange = false;
 
 	return true;
 }
 
-// 単一軸のエミシッブの色変更更新処理
-float Character::UpdateEmissiveColorAxis(float emissiveColor, float speed, bool emissiveColorChangeUp, float toEmissiveColorChange, float elapsedTime)
-{
-	//エミッシブの色変更
-	emissiveColor += (emissiveColorChangeUp ? 1 : -1) * (speed * elapsedTime);
-
-	// 目指す値を超えた場合、目標値にする
-	if ((emissiveColorChangeUp && emissiveColor > toEmissiveColorChange) || (!emissiveColorChangeUp && emissiveColor < toEmissiveColorChange))
-	{
-		emissiveColor = toEmissiveColorChange;
-	}
-
-	//エミッシブの色を返す
-	return emissiveColor;
-}
-
-//!エミッシブの強さ変更更新処理
+// !エミッシブの強さ変更更新処理
 bool Character::UpdateEmissiveStrengthChange(float elapsedTime)
 {
 	//!エミッシブの強さを変えないなら、処理を止める
 	if (!emissiveStrengthChange)
 		return false;
 
-	//!エミッシブの強さを変更
-	emissiveStrength += (emissiveStrengthChangeUp ? 1 : -1) * emissiveStrengthChangeSpeed * elapsedTime;
+	//! 経過時間を計測
+	currentTime += elapsedTime;
 
-	//! 目指す値を超えた場合、目標値にする
-	if ((emissiveStrengthChangeUp && emissiveStrength > toEmissiveStrengthChange) || (!emissiveStrengthChangeUp && emissiveStrength < toEmissiveStrengthChange))
-		emissiveStrength = toEmissiveStrengthChange;
+	//! イージングタイム
+	float t = currentTime / emissiveStrengthChangeTime;
 
-	//!エミッシブの強さの変更が終わったら、処理を止める
-	if (emissiveStrength == toEmissiveStrengthChange)
+	//! エミッシブの強さを変更
+	emissiveStrength = Easing::Linear(startEmissiveStrengthChange, endEmissiveStrengthChange, t);
+
+	//! 処理を止める
+	if (t >= 1.0f)
 		emissiveStrengthChange = false;
 
 	return true;
@@ -1162,42 +1136,58 @@ bool Character::UpdatePositionChange(float elapsedTime)
 	if (!positionChange)
 		return false;
 
+	//! 経過時間を計測
+	currentTime += elapsedTime;
 
-	//! 位置変更(加速度が	ないなら)
-	if (velocity.x == 0)
-		position.x = UpdatePositionAxis(position.x, positionChangeSpeed.x, positionChangeSpeedIncrease.x, positionChangeUp.x, toPositionChange.x, elapsedTime);
-	if (velocity.y == 0)
-		position.y = UpdatePositionAxis(position.y, positionChangeSpeed.y, positionChangeSpeedIncrease.y, positionChangeUp.y, toPositionChange.y, elapsedTime);
-	if (velocity.z == 0)
-		position.z = UpdatePositionAxis(position.z, positionChangeSpeed.z, positionChangeSpeedIncrease.z, positionChangeUp.z, toPositionChange.z, elapsedTime);
+	//! イージングタイム
+	float tX = currentTime / positionChangeTime.x;
+	float tY = currentTime / positionChangeTime.y;
+	float tZ = currentTime / positionChangeTime.z;
 
-	//! 目的の位置に来たら、または加速度が0じゃないなら
-	if ((position.x == toPositionChange.x || velocity.x != 0)
-		&& (position.y == toPositionChange.y || velocity.y != 0)
-		&& (position.z == toPositionChange.z || velocity.z != 0))
+	switch (positionChangeEasing)
+	{
+	case PositionChangeEasing::Linear:
+	{
+		//! 位置変更(加速度が	ないなら)
+		if (velocity.x == 0)
+			position.x = Easing::Linear(startPositionChange.x, endPositionChange.x, tX);
+		if (velocity.y == 0)
+			position.y = Easing::Linear(startPositionChange.y, endPositionChange.y, tY);
+		if (velocity.z == 0)
+			position.z = Easing::Linear(startPositionChange.z, endPositionChange.z, tZ);
+	}
+	break;
+	case PositionChangeEasing::EaseIn:
+	{
+		//! 位置変更(加速度が	ないなら)
+		if (velocity.x == 0)
+			position.x = Easing::EaseIn(startPositionChange.x, endPositionChange.x, tX);
+		if (velocity.y == 0)
+			position.y = Easing::EaseIn(startPositionChange.y, endPositionChange.y, tY);
+		if (velocity.z == 0)
+			position.z = Easing::EaseIn(startPositionChange.z, endPositionChange.z, tZ);
+	}
+	break;
+	case PositionChangeEasing::EaseOut:
+	{
+		//! 位置変更(加速度が	ないなら)
+		if (velocity.x == 0)
+			position.x = Easing::EaseOut(startPositionChange.x, endPositionChange.x, tX);
+		if (velocity.y == 0)
+			position.y = Easing::EaseOut(startPositionChange.y, endPositionChange.y, tY);
+		if (velocity.z == 0)
+			position.z = Easing::EaseOut(startPositionChange.z, endPositionChange.z, tZ);
+	}
+	break;
+	default:
+		break;
+	}
+
+	//! 処理を止める
+	if (tX >= 1.0f && tY >= 1.0f && tZ >= 1.0f)
 		positionChange = false;
 
 	return true;
-}
-
-// 単一軸の位置変更更新処理
-float Character::UpdatePositionAxis(float position, float& speed, float positionChangeSpeedIncrease, bool positionChangeUp, float toPositionChange, float elapsedTime)
-{
-	// 位置変更
-	position += (positionChangeUp ? 1 : -1) * (speed * elapsedTime);
-
-	//! 増え続けるなら、速度を増やし続ける
-	if (positionChangeSpeedContinuingToIncrease)
-		speed += positionChangeSpeedIncrease * elapsedTime;
-
-	// 目指す値を超えた場合、目標値にする
-	if ((positionChangeUp && position > toPositionChange) || (!positionChangeUp && position < toPositionChange))
-	{
-		position = toPositionChange;
-	}
-
-	// 位置を返す
-	return position;
 }
 
 //------------------------------------------------------------------------------------------//
@@ -1220,40 +1210,56 @@ void Character::LimitAngle()
 
 //------------------------------------------------------------------------------------------//
 
-//! 回転変更更新処理
+//! 角度変更更新処理
 bool Character::UpdateAngleChange(float elapsedTime)
 {
 	//! 角度を変えないなら、処理を止める
 	if (!angleChange)
 		return false;
 
+	//! 経過時間を計測
+	currentTime += elapsedTime;
 
-	//! 角度変更
-	angle.x = UpdateAngleAxis(angle.x, angleChangeSpeed.x, angleChangeUp.x, toAngleChange.x, elapsedTime);
-	angle.y = UpdateAngleAxis(angle.y, angleChangeSpeed.y, angleChangeUp.y, toAngleChange.y, elapsedTime);
-	angle.z = UpdateAngleAxis(angle.z, angleChangeSpeed.z, angleChangeUp.z, toAngleChange.z, elapsedTime);
+	//! イージングタイム
+	float tX = currentTime / angleChangeTime.x;
+	float tY = currentTime / angleChangeTime.y;
+	float tZ = currentTime / angleChangeTime.z;
 
-	//! 角度変更が終わったら処理を止める
-	if (angle.x == toAngleChange.x
-		&& angle.y == toAngleChange.y
-		&& angle.z == toAngleChange.z)
+	switch (angleChangeEasing)
+	{
+	case AngleChangeEasing::Linear:
+	{
+		//! 角度変更
+		angle.x = Easing::Linear(startAngleChange.x, endAngleChange.x, tX);
+		angle.y = Easing::Linear(startAngleChange.y, endAngleChange.y, tY);
+		angle.z = Easing::Linear(startAngleChange.z, endAngleChange.z, tZ);
+	}
+	break;
+	case AngleChangeEasing::EaseIn:
+	{
+		//! 角度変更
+		angle.x = Easing::EaseIn(startAngleChange.x, endAngleChange.x, tX);
+		angle.y = Easing::EaseIn(startAngleChange.y, endAngleChange.y, tY);
+		angle.z = Easing::EaseIn(startAngleChange.z, endAngleChange.z, tZ);
+	}
+	break;
+	case AngleChangeEasing::EaseOut:
+	{
+		//! 角度変更
+		angle.x = Easing::EaseOut(startAngleChange.x, endAngleChange.x, tX);
+		angle.y = Easing::EaseOut(startAngleChange.y, endAngleChange.y, tY);
+		angle.z = Easing::EaseOut(startAngleChange.z, endAngleChange.z, tZ);
+	}
+	break;
+	default:
+		break;
+	}
+
+	//! 処理を止める
+	if (tX >= 1.0f, tY >= 1.0f, tZ >= 1.0f)
 		angleChange = false;
 
 	return true;
-}
-
-// 単一軸の角度変更更新処理
-float Character::UpdateAngleAxis(float angle, float speed, bool angleChangeUp, float toAngleChange, float elapsedTime)
-{
-	// 角度変更
-	angle += (angleChangeUp ? 1 : -1) * (speed * elapsedTime);
-
-	// 目指す値を超えた場合、目標値にする
-	if ((angleChangeUp && angle > toAngleChange) || (!angleChangeUp && angle < toAngleChange))
-		angle = toAngleChange;
-
-	// 角度を返す
-	return angle;
 }
 
 //! 角度の回転の更新処理(特定の値は目指さず、指定された時間中に回転する)
@@ -1288,33 +1294,49 @@ bool Character::UpdateScaleChange(float elapsedTime)
 		return false;
 
 
-	//! 大きさ変更
-	scale.x = UpdateScaleAxis(scale.x, scaleChangeSpeed.x, scaleChangeUp.x, toScaleChange.x, elapsedTime);
-	scale.y = UpdateScaleAxis(scale.y, scaleChangeSpeed.y, scaleChangeUp.y, toScaleChange.y, elapsedTime);
-	scale.z = UpdateScaleAxis(scale.z, scaleChangeSpeed.z, scaleChangeUp.z, toScaleChange.z, elapsedTime);
+	//! 経過時間を計測
+	currentTime += elapsedTime;
 
+	//! イージングタイム
+	float tX = currentTime / scaleChangeTime.x;
+	float tY = currentTime / scaleChangeTime.y;
+	float tZ = currentTime / scaleChangeTime.z;
 
-	// 大きさ変更が終わったら処理を止める
-	if (scale.x == toScaleChange.x
-		&& scale.y == toScaleChange.y
-		&& scale.z == toScaleChange.z)
+	switch (scaleChangeEasing)
+	{
+	case ScaleChangeEasing::Linear:
+	{
+		//! 大きさ変更
+		scale.x = Easing::Linear(startScaleChange.x, endScaleChange.x, tX);
+		scale.y = Easing::Linear(startScaleChange.y, endScaleChange.y, tY);
+		scale.z = Easing::Linear(startScaleChange.z, endScaleChange.z, tZ);
+	}
+	break;
+	case ScaleChangeEasing::EaseIn:
+	{
+		//! 大きさ変更
+		scale.x = Easing::EaseIn(startScaleChange.x, endScaleChange.x, tX);
+		scale.y = Easing::EaseIn(startScaleChange.y, endScaleChange.y, tY);
+		scale.z = Easing::EaseIn(startScaleChange.z, endScaleChange.z, tZ);
+	}
+	break;
+	case ScaleChangeEasing::EaseOut:
+	{
+		//! 大きさ変更
+		scale.x = Easing::EaseOut(startScaleChange.x, endScaleChange.x, tX);
+		scale.y = Easing::EaseOut(startScaleChange.y, endScaleChange.y, tY);
+		scale.z = Easing::EaseOut(startScaleChange.z, endScaleChange.z, tZ);
+	}
+	break;
+	default:
+		break;
+	}
+
+	//! 処理を止める
+	if (tX >= 1.0f && tY >= 1.0f, tZ >= 1.0f)
 		scaleChange = false;
 
 	return true;
-}
-
-// 単一軸のスケール変更更新処理
-float Character::UpdateScaleAxis(float scale, float speed, bool scaleChangeUp, float toScaleChange, float elapsedTime)
-{
-	// 大きさ変更
-	scale += (scaleChangeUp ? 1 : -1) * (speed * elapsedTime);
-
-	// 目標値を超えた場合、目標値にする
-	if ((scaleChangeUp && scale > toScaleChange) || (!scaleChangeUp && scale < toScaleChange))
-		scale = toScaleChange;
-
-	// 大きさを返す
-	return scale;
 }
 
 //------------------------------------------------------------------------------------------//

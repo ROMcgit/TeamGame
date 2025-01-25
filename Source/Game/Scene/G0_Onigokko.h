@@ -7,6 +7,7 @@
 #include "Graphics/Sprite.h"
 #include "Graphics/RenderTarget.h"
 #include "Graphics/Timer.h"
+#include "Graphics/Fade.h"
 
 // ゲームシーン
 class G0_Onigokko : public Scene
@@ -14,6 +15,13 @@ class G0_Onigokko : public Scene
 public:
 	G0_Onigokko() {}
 	~G0_Onigokko() override {}
+
+	// 唯一のインスタンス取得
+	static G0_Onigokko& Instance()
+	{
+		static G0_Onigokko instance;
+		return instance;
+	}
 
 	// 初期化
 	void Initialize() override;
@@ -27,6 +35,16 @@ public:
 	// 描画処理
 	void Render() override;
 
+	// ムービーシーンを設定
+	void SetMovieScene(bool movieScene) { this->movieScene = movieScene; }
+
+	// ムービーシーンかを取得
+	bool GetMovieScene() { return movieScene; }
+
+private:
+	// カメラのムービー更新処理
+	void UpdateCameraMovie(float elapsedTime);
+
 private:
 	std::unique_ptr <Player0_Onigokko> player;
 	std::unique_ptr <CameraController> cameraController;
@@ -34,4 +52,15 @@ private:
 	std::unique_ptr<RenderTarget>    renderTarget; //! レンダーターゲット
 	std::unique_ptr<Sprite> backGround;
 	std::unique_ptr<Timer>  timer;
+
+	bool  movieScene = false; // ムービーシーンか
+	float cameraMovieTime = 0.0f; // カメラのムービー時間
+
+	std::unique_ptr<Fade> fade;
+
+	enum class CameraMovieScene
+	{
+		OniEntry, // 鬼登場
+		OniDeath, // 鬼死亡
+	}cameraMovieScene;
 };

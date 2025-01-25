@@ -1,5 +1,15 @@
 #include "Graphics/Graphics.h"
 #include "SceneGameSelect.h"
+#include "Game/Scene/SceneLoading.h"
+#include "Game/Scene/SceneManager.h"
+
+#include "Game/Scene/G0_Onigokko.h"
+#include "Game/Scene/G1_DarumasangaKoronda.h"
+#include "Game/Scene/G2_Sundome.h"
+#include "Game/Scene/G3_SoratobuHusenWari.h"
+#include "Game/Scene/G4_OssanTataki.h"
+#include "Game/Scene/G5_Asibawatari.h"
+
 #include "Game/Camera/Camera.h"
 #include "Game/Character/Enemy/EnemyManager.h"
 #include "Game/Character/Enemy/EnemyOni.h"
@@ -8,6 +18,11 @@
 #include "Game/Stage/StageManager.h"
 #include "Game/Stage/StageGameSelect.h"
 #include "Game/Stage/StageMoveFloor.h"
+
+#include "Game/Character/GameSelect/GameSelectManager.h"
+#include "Game/Character/GameSelect/GS0_Onigokko.h"
+
+SceneGameSelect::GameSelect SceneGameSelect::gameSelect = SceneGameSelect::GameSelect::Onigokko;
 
 // 初期化
 void SceneGameSelect::Initialize()
@@ -28,7 +43,7 @@ void SceneGameSelect::Initialize()
 
 	// プレイヤー初期化
 	player = std::make_unique<Player0_Onigokko>();
-	player->SetPosition(DirectX::XMFLOAT3(0, 100.0f, 0));
+	player->SetPosition(DirectX::XMFLOAT3(0, -5.35f, 0));
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
@@ -51,6 +66,14 @@ void SceneGameSelect::Initialize()
 
 	// 背景
 	backGround = std::make_unique<Sprite>();
+
+	fade = std::make_unique<Fade>();
+	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+		1.0f, 0.0f,
+		1.5f, 0.2f);
+
+	std::unique_ptr<GS0_OniGokko> onigokko = std::make_unique<GS0_OniGokko>();
+	GameSelectManager::Instance().Register(std::move(onigokko));
 }
 
 // 終了化
@@ -87,6 +110,52 @@ void SceneGameSelect::Update(float elapsedTime)
 
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
+
+	GameSelectManager::Instance().Update(elapsedTime);
+
+	if (sceneChange)
+	{
+		if (!setFade)
+		{
+			fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+				0.0f, 1.0f,
+				1.5f, 0.2f);
+
+			setFade = true;
+		}
+
+		if (setFade && !fade->GetFade())
+		{
+			std::unique_ptr<SceneLoading> loadingScene;
+
+			switch (gameSelect)
+			{
+			case GameSelect::Onigokko:
+				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G0_Onigokko>());
+				break;
+			case GameSelect::DarumasangaKoronda:
+				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G1_DarumasangaKoronda>());
+				break;
+			case GameSelect::Sundome:
+				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G2_Sundome>());
+				break;
+			case GameSelect::SoratobuHusenWari:
+				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G3_SoratobuHusenWari>());
+				break;
+			case GameSelect::OssanTataki:
+				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G4_OssanTataki>());
+				break;
+			case GameSelect::Asibawatari:
+				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G5_Asibawatari>());
+				break;
+			default:
+				break;
+			}
+
+			// シーンマネージャーにローディングシーンへの切り替えを指示
+			SceneManager::Instance().ChangeScene(std::move(loadingScene));
+		}
+	}
 }
 
 // 描画処理
@@ -128,7 +197,9 @@ void SceneGameSelect::Render()
 		StageManager::Instance().Render(dc, shader);
 
 		// カメラの位置を描画
-		CameraController::Instance().RenderTarget(dc, shader);
+		CameraController::Instance().RenderCameraTarget(dc, shader);
+
+		GameSelectManager::Instance().Render(dc, shader);
 
 		// プレイヤー描画
 		player->Render(dc, shader);
@@ -164,6 +235,8 @@ void SceneGameSelect::Render()
 
 		// エネミーデバッグプリミティブ描画
 		EnemyManager::Instance().DrawDebugPrimitive();
+
+		GameSelectManager::Instance().DrawDebugPrimitive();
 
 		// ラインレンダラ描画実行
 		graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);

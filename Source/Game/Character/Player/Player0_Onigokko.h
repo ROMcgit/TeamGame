@@ -31,6 +31,28 @@ public:
 	// デバッグプリミティブ描画
 	void DrawDebugPrimitive();
 
+	/*! 加速度 */
+
+	// 加速度Xを設定
+	void SetVelocityX(float velocityX) { this->velocity.x = velocityX; }
+
+	// 加速度Yを設定
+	void SetVelocityY(float velocityY) { this->velocity.y = velocityY; }
+
+	// 加速度Zを設定
+	void SetVelocityZ(float velocityZ) { this->velocity.z = velocityZ; }
+
+	/*! 位置 */
+
+	// 位置Xを設定
+	void SetPositionX(float positionX) { this->position.x = positionX; }
+
+	// 位置Yを設定
+	void SetPositionY(float positionY) { this->position.y = positionY; }
+
+	// 位置Zを設定
+	void SetPositionZ(float positionZ) { this->position.z = positionZ; }
+
 protected:
 	// 着地した時に呼ばれる
 	void OnLanding() override;
@@ -51,11 +73,11 @@ private:
 	// プレイヤーとエネミーとの衝突処理
 	void CollisionPlayer0_OnigokkoVsEnemies();
 
-	/******************************************************************************************/
+/******************************************************************************************/
 
-		/*! 行動制御 */
+	/*! 行動制御 */
 
-		// 待機ステートへ遷移
+	// 待機ステートへ遷移
 	void TransitionWaitState();
 
 	// 待機ステート更新処理

@@ -2,11 +2,10 @@
 
 #include <DirectXMath.h>
 #include <memory>
-#include "Graphics/Graphics.h"
 #include "Camera.h"
-#include "Game/Character/Director/DirectorManager.h"
 
 // 前方宣言
+class Graphics;
 class Fade;
 
 // カメラコントローラー
@@ -27,13 +26,46 @@ public:
 	void Update(float elapsedTime);
 
 	// 描画処理
-	void RenderTarget(ID3D11DeviceContext* dc, Shader* shader);
+	void RenderCameraTarget(ID3D11DeviceContext* dc, Shader* shader);
 
 	// フェードを描画
 	void FadeRender(ID3D11DeviceContext* dc, Graphics& graphics);
 
 	// デバッグ描画
 	void DrawDebugGUI();
+
+	/************************************************************************************************/
+		/*! どのイージングにするか */
+
+		//! ターゲット
+	enum class TargetChangeEasing
+	{
+		Linear,  // リニア(補完無し)
+		EaseIn,  // イーズイン(加速)
+		EaseOut, // イーズアウト(減速)
+	};
+
+	static TargetChangeEasing targetChangeEasing;
+
+	//! 角度
+	enum class AngleChangeEasing
+	{
+		Linear,  // リニア(補完無し)
+		EaseIn,  // イーズイン(加速)
+		EaseOut, // イーズアウト(減速)
+	};
+
+	static AngleChangeEasing angleChangeEasing;
+
+	//! 範囲
+	enum class RangeChangeEasing
+	{
+		Linear,  // リニア(補完無し)
+		EaseIn,  // イーズイン(加速)
+		EaseOut, // イーズアウト(減速)
+	};
+
+	static RangeChangeEasing rangeChangeEasing;
 
 	/************************************************************************************************/
 		/*! セッター */
@@ -48,31 +80,16 @@ public:
 	}
 
 	// ターゲットの位置変更の設定
-	void SetTargetChange(DirectX::XMFLOAT3 toTargetChange, DirectX::XMFLOAT3 targetChangeSpeed)
+	void SetTargetChange(DirectX::XMFLOAT3 endTargetChange, float targetChangeTime, TargetChangeEasing targetChangeEasing = TargetChangeEasing::Linear)
 	{
 		if (!targetChange)
 		{
-			targetChange = true;              // ターゲットの位置を変える
-			this->toTargetChange = toTargetChange;          // ここまでターゲットの位置を変える
-			this->targetChangeSpeed = targetChangeSpeed; // ターゲットの位置を変える速さ
-
-			// ターゲットXが目指す位置より小さい時
-			if (target.x < toTargetChange.x)
-				targetChangeUp.x = true;
-			else
-				targetChangeUp.x = false;
-
-			// ターゲットYが目指す位置より小さい時
-			if (target.y < toTargetChange.y)
-				targetChangeUp.y = true;
-			else
-				targetChangeUp.y = false;
-
-			// ターゲットZが目指す位置より小さい時
-			if (target.z < toTargetChange.z)
-				targetChangeUp.z = true;
-			else
-				targetChangeUp.z = false;
+			targetChange = true;               // ターゲットの位置を変える
+			this->startTargetChange = this->target;       // ターゲットの変更の開始の値
+			this->endTargetChange = endTargetChange;    // ここまでターゲットの位置を変える
+			this->targetChangeTime = targetChangeTime;   // ターゲットの位置を変える時間
+			this->targetChangeEasing = targetChangeEasing; // どのイージングにするか
+			this->currentTime = 0.0f;               // 経過時間をリセット
 		}
 	}
 
@@ -85,31 +102,16 @@ public:
 	}
 
 	// 角度変更の設定
-	void SetAngleChange(DirectX::XMFLOAT3 toAngleChange, DirectX::XMFLOAT3 angleChangeSpeed)
+	void SetAngleChange(DirectX::XMFLOAT3 endAngleChange, float angleChangeTime, AngleChangeEasing angleChangeEasing = AngleChangeEasing::Linear)
 	{
 		if (!angleChange)
 		{
-			angleChange = true;             // 角度を変える
-			this->toAngleChange = toAngleChange;          // ここまで角度を変える
-			this->angleChangeSpeed = angleChangeSpeed; // 角度を変える速さ
-
-			// 角度Xが目指す位置より小さい時
-			if (angle.x < toAngleChange.x)
-				angleChangeUp.x = true;
-			else
-				angleChangeUp.x = false;
-
-			// 角度Yが目指す位置より小さい時
-			if (angle.y < toAngleChange.y)
-				angleChangeUp.y = true;
-			else
-				angleChangeUp.y = false;
-
-			// 角度Zが目指す位置より小さい時
-			if (angle.z < toAngleChange.z)
-				angleChangeUp.z = true;
-			else
-				angleChangeUp.z = false;
+			angleChange = true;              // 角度を変える
+			this->startAngleChange = this->angle;       // 角度の変更の開始の値
+			this->endAngleChange = endAngleChange;    // ここまで角度を変える
+			this->angleChangeTime = angleChangeTime;   // 角度を変える時間
+			this->angleChangeEasing = angleChangeEasing; // どのイージングにするか
+			this->currentTime = 0.0f;              // 経過時間をリセット
 		}
 	}
 
@@ -122,19 +124,16 @@ public:
 	}
 
 	// カメラの範囲の変更の設定
-	void SetRangeChange(float toRangeChange, float rangeChangeSpeed)
+	void SetRangeChange(float endRangeChange, float rangeChangeTime, RangeChangeEasing rangeChangeEasing = RangeChangeEasing::Linear)
 	{
 		if (!rangeChange)
 		{
-			rangeChange = true;             // カメラの範囲を変える
-			this->toRangeChange = toRangeChange;          // ここまでカメラの範囲を変える
-			this->rangeChangeSpeed = rangeChangeSpeed; // カメラの範囲を変える速さ
-
-			// カメラの範囲が目指す大きさより小さい時
-			if (range < toRangeChange)
-				rangeChangeUp = true;
-			else
-				rangeChangeUp = false;
+			rangeChange = true;              // カメラの範囲を変える
+			this->startRangeChange = this->range;       // カメラの範囲の変更の開始の値
+			this->endRangeChange = endRangeChange;    // ここまでカメラの範囲を変える
+			this->rangeChangeTime = rangeChangeTime;   // カメラの範囲を変える時間
+			this->rangeChangeEasing = rangeChangeEasing; // どのイージングにするか
+			this->currentTime = 0.0f;              // 経過時間をリセット
 		}
 	}
 
@@ -183,8 +182,8 @@ public:
 
 		/*! その他の更新処理 */
 
-		// カメラのターゲット更新処理
-	void UpdateCameraTarget(float elapsedTime);
+		// カメラの注目更新処理
+	void UpdateCameraTargetTracking(float elapsedTime);
 
 	//-------------------------------------------------------------------//
 
@@ -194,7 +193,7 @@ public:
 	// カメラの制限処理
 	void CameraLimit();
 
-	// デブッグカメラ
+	// デバッグカメラ
 	bool UpdateDebugCamera(float elapsedTime);
 
 	//---------------------------------------------------------------------------//
@@ -202,16 +201,10 @@ public:
 		// カメラのターゲットの変更更新処理
 	bool UpdateTargetChange(float elapsedTime);
 
-	// 単一軸のターゲット位置変更処理
-	float UpdateTargetAxis(float target, float speed, bool targetChangeUp, float toTargetChangeChange, float elapsedTime);
-
 	//---------------------------------------------------------------------------//
 
 		// カメラの角度の変更更新処理
 	bool UpdateAngleChange(float elapsedTime);
-
-	// 単一軸の回転変更処理
-	float UpdateAngleAxis(float angle, float speed, bool angleChangeUp, float toAngleChange, float elapsedTime);
 
 	//---------------------------------------------------------------------------//
 
@@ -238,6 +231,9 @@ private:
 
 	bool  tracking = false; // カメラをプレイヤー中心でターゲットに注目させるか
 
+public:
+	static float currentTime;  // 経過時間
+
 	/**********************************************************************************************/
 		/*! ターゲット */
 
@@ -245,16 +241,9 @@ public:
 	static DirectX::XMFLOAT3 target;
 
 	static bool              targetChange;      // ターゲットの位置を変えるか
-	static DirectX::XMFLOAT3 toTargetChange;    // ここまでターゲットの位置を変える
-	static DirectX::XMFLOAT3 targetChangeSpeed; // ターゲットの位置を変える速さ
-
-	struct TargetChangeUp
-	{
-		bool x = false;
-		bool y = false;
-		bool z = false;
-	};
-	static TargetChangeUp targetChangeUp; // ターゲットの位置を増やすか
+	static DirectX::XMFLOAT3 startTargetChange; // ターゲットの変更の開始の値
+	static DirectX::XMFLOAT3 endTargetChange;   // ここまでターゲットの位置を変える
+	static float             targetChangeTime;  // ターゲットの位置を変える時間
 
 	/**********************************************************************************************/
 		/*! 角度 */
@@ -263,16 +252,9 @@ public:
 	static DirectX::XMFLOAT3 angle;
 
 	static bool              angleChange;      // 角度を変えるか
-	static DirectX::XMFLOAT3 toAngleChange;    // ここまで角度を変える
-	static DirectX::XMFLOAT3 angleChangeSpeed; // 角度を変える速さ
-
-	struct AngleChangeUp
-	{
-		bool x = false;
-		bool y = false;
-		bool z = false;
-	};
-	static AngleChangeUp angleChangeUp; // 角度を増やすか
+	static DirectX::XMFLOAT3 startAngleChange; // 角度の変更の開始の値
+	static DirectX::XMFLOAT3 endAngleChange;   // ここまで角度を変える
+	static float             angleChangeTime;  // 角度を変える時間
 
 	/**********************************************************************************************/
 		/*! カメラの範囲 */
@@ -285,9 +267,9 @@ public:
 	static float range; // カメラ範囲
 
 	static bool  rangeChange;      // カメラの範囲を変えるか
-	static float toRangeChange;    // ここまでカメラの範囲を変える
-	static float rangeChangeSpeed; // カメラの範囲を変える速さ
-	static bool  rangeChangeUp;    // カメラの範囲を増やすか
+	static float startRangeChange; // カメラの範囲の変更の開始の値
+	static float endRangeChange;   // ここまでカメラの範囲を変える
+	static float rangeChangeTime;  // カメラの範囲を変える時間
 
 	/**********************************************************************************************/
 		/*! カメラシェイク */
@@ -306,8 +288,8 @@ private:
 	float mouseZoomSpeed = 0.1f; // マウスの拡大速度
 	float mouseSensitivity = 1.0f; // マウス感度
 
-	float targetMoveSpeed = 80; // ターゲットの移動速度(ボタン移動の場合)
-	float targetUpSpeed = 80;  // ターゲットの上昇速度(ボタン移動の場合)
+	float targetMoveSpeed = 8; // ターゲットの移動速度(ボタン移動の場合)
+	float targetUpSpeed = 8;  // ターゲットの上昇速度(ボタン移動の場合)
 
 	//-----------------------------------------------------------------//
 
@@ -321,6 +303,6 @@ private:
 	std::unique_ptr<Fade> fade;
 	bool bossFinishSettings = false; // 設定したか
 
-	bool bossFinish = false; // ボスフィニッシュするか
+	bool  bossFinish = false; // ボスフィニッシュするか
 	float bossFinishTimer = 0.0f;  // ボスフィニッシュ時間
 };

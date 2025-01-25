@@ -12,10 +12,10 @@ public:
 	void CreatePostEffect();
 
 	//! ポストエフェクトのステータスを設定
-	void SetPostEffectStatus(float contrast = 1.3f,
-		float saturation = 0.7f,
-		const DirectX::XMFLOAT3 ColorFilter = { 0.9f, 1.0f, 1.05f },
-		float chromaticAberration = 0.01f);
+	void SetPostEffectStatus(float contrast = 1.0f,
+		float saturation = 0.8f,
+		const DirectX::XMFLOAT3 colorFilter = { 1.2f, 1.3f, 1.35f },
+		float chromaticAberration = 0);
 
 public:
 	//! ポストエフェクト関連
@@ -63,7 +63,8 @@ public:
 	/****************************************************************************************/
 		/*! ゲッター */
 
-		// ビュー行列取得
+#if 1
+	// ビュー行列取得
 	const DirectX::XMFLOAT4X4& GetView() const { return view; }
 
 	// プロジェクション行列取得
@@ -81,16 +82,24 @@ public:
 	// カメラの右方向取得
 	const DirectX::XMFLOAT3& GetRight() const { return right; }
 
+#endif
+
 	/****************************************************************************************/
 
 		// ポストエフェクトのステータス変更処理
-	bool UpdatePostEffectStatusChange(float elapsedTime);
+	void UpdatePostEffectStatusChange(float elapsedTime);
 
-	// カラーフィルターの変更処理
-	float UpdateColorComponent(float colorFilter, float speed, float colorFilterChangeUp, float toColorFilter, float elapsedTime);
+	// コントラスト変更更新処理
+	bool UpdateContrastChange(float elapsedTime);
 
-	// ポストエフェクトのステータスを元に戻す
-	bool UpdatepostEffectReset();
+	// サチュレーション(色の彩度)変更更新処理
+	bool UpdateSaturationChange(float elapsedTime);
+
+	// カラーフィルター変更更新処理
+	bool UpdateColorFilterChange(float elapsedTime);
+
+	// クロマティックアベレーション(色収差(色ズレ))変更更新処理
+	bool UpdateChromaticAberrationChange(float elapsedTime);
 
 private:
 	DirectX::XMFLOAT4X4 view;       // ビュー行列
@@ -110,27 +119,25 @@ public:
 	static bool postEffectControll;        //! ゲーム中に数値をいじれるようにする(ImGui用)
 	static bool postEffectReset;           //! ポストエフェクトのステータスを元に戻す
 
-	static bool postEffectChange; // ポストエフェクトのステータスを変更するか
+	static float currentTime;     // 経過時間
 
-	static float toContrastChange;    // ここまでコンストラクトを変える
-	static float contrastChangeSpeed; // コンストラクトの値を変える速度
-	static bool  contrastUp;          // コンストラクトの値を上昇させるか
+	static bool  contrastChange;      // コントラストを変えるか
+	static float startContrastChange; // コントラストの変更の開始の値
+	static float endContrastChange;   // ここまでコントラストを変える
+	static float contrastChangeTime;  // コンストラクトの値を変える速度
 
-	static float toSaturationChange;    // ここまでサチュレーション(色の彩度)を変える
-	static float saturationChangeSpeed; // サチュレーションの値を変える速度
-	static bool  saturationUp;          // サチュレーション値を上昇させるか
+	static bool  saturationChange;      // サチュレーションを変えるか
+	static float startSaturationChange; // サチュレーションの変更の開始の値
+	static float endSaturationChange;   // ここまでサチュレーション(色の彩度)を変える
+	static float saturationChangeTime;  // サチュレーションの値を変える速度
 
-	static DirectX::XMFLOAT3 toColorFilterChange;    // ここまでカラーフィルター(色フィルター)の値を変える
-	static DirectX::XMFLOAT3 colorFilterChangeSpeed; // カラーフィルターの値を変える速度
-	struct ColorFilterUp
-	{
-		bool x = false;
-		bool y = false;
-		bool z = false;
-	};
-	static ColorFilterUp colorFilterUp;   // カラーフィルターの値を上昇させるか
+	static bool colorFilterChange;                   // カラーフィルターを変えるか
+	static DirectX::XMFLOAT3 startColorFilterChange; // カラーフィルターの変更の開始の値
+	static DirectX::XMFLOAT3 endColorFilterChange;   // ここまでカラーフィルター(色フィルター)の値を変える
+	static float colorFilterChangeTime;              // カラーフィルターの値を変える速度
 
-	static float toChromaticAberrationChange;    // ここまでクロマティックアベレーション(色収差(色ズレ))の値を変える
-	static float chromaticAberrationChangeSpeed; // クロマティックアベレーションの値を変える速度
-	static bool  chromaticAberrationUp;          // クロマティックアベレーションの値を上昇させるか
+	static bool  chromaticAberrationChange;      // クロマティックアベレーションを変えるか
+	static float startChromaticAberrationChange; // クロマティックアベレーションの変更の開始の値
+	static float endChromaticAberrationChange;   // ここまでクロマティックアベレーション(色収差(色ズレ))の値を変える
+	static float chromaticAberrationChangeTime;  // クロマティックアベレーションの値を変える速度
 };

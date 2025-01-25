@@ -28,6 +28,7 @@ void G0_Onigokko::Initialize()
 
 	// プレイヤー初期化
 	player = std::make_unique<Player0_Onigokko>();
+	player->SetPosition(DirectX::XMFLOAT3(0, 50.0f, 0));
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
@@ -50,6 +51,18 @@ void G0_Onigokko::Initialize()
 	// 背景
 	backGround = std::make_unique<Sprite>();
 
+	// 鬼
+	std::unique_ptr<EnemyOni> oni = std::make_unique<EnemyOni>();
+	oni->SetPosition(DirectX::XMFLOAT3(0, 50, 30));
+	EnemyManager::Instance().Register(std::move(oni));
+
+	fade = std::make_unique<Fade>();
+	//! フェードを設定
+	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+		0.0f, 1.0f,
+		12.0f, 0.5f);
+
+	// タイマー
 	timer = std::make_unique<Timer>(true, 3);
 }
 
@@ -89,6 +102,9 @@ void G0_Onigokko::Update(float elapsedTime)
 
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
+
+	// カメラのムービー更新処理
+	UpdateCameraMovie(elapsedTime);
 }
 
 // 描画処理
@@ -127,7 +143,7 @@ void G0_Onigokko::Render()
 		StageManager::Instance().Render(dc, shader);
 
 		// カメラの位置を描画
-		CameraController::Instance().RenderTarget(dc, shader);
+		CameraController::Instance().RenderCameraTarget(dc, shader);
 
 		// プレイヤー描画
 		player->Render(dc, shader);
@@ -211,5 +227,42 @@ void G0_Onigokko::Render()
 			EnemyManager::Instance().DrawDebugGUI();
 		}
 		ImGui::End();
+	}
+}
+
+// カメラのムービー更新処理
+void G0_Onigokko::UpdateCameraMovie(float elapsedTime)
+{
+	if (movieScene)
+	{
+		switch (cameraMovieScene)
+		{
+		case CameraMovieScene::OniEntry:
+		{
+			cameraMovieTime += elapsedTime;
+
+			if (cameraMovieTime > 3.0f)
+			{
+				cameraMovieTime  = 0;
+				movieScene       = false;
+				cameraMovieScene = CameraMovieScene::OniDeath;
+			}
+		}
+		break;
+		case CameraMovieScene::OniDeath:
+		{
+			cameraMovieTime += elapsedTime;
+
+			if (cameraMovieTime > 5.0f)
+			{
+				fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+					0.0f, 1.0f,
+					12.0f, 5.0f);
+			}
+		}
+		break;
+		default:
+			break;
+		}
 	}
 }

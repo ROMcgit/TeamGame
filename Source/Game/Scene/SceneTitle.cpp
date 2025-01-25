@@ -4,12 +4,18 @@
 #include "Game/Scene/SceneManager.h"
 #include "Input/Input.h"
 #include "SceneLoading.h"
+#include "Graphics/Fade.h"
 
 // 初期化
 void SceneTitle::Initialize()
 {
 	// スプライト初期化
 	sprite = std::make_unique<Sprite>("Data/Sprite/Title.png");
+
+	fade = std::make_unique<Fade>();
+	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+		1.0f, 0.0f,
+		10.0f, 0.2f);
 }
 
 // 終了化
@@ -22,17 +28,26 @@ void SceneTitle::Update(float elapsedTime)
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
+	fade->Update(elapsedTime);
+
 	// なにかボタンを押したらローディングシーンを挟んでゲームシーンへ切り替え
 	const GamePadButton anyButton =
 		GamePad::BTN_A |
 		GamePad::BTN_B;
-	if (gamePad.GetButtonDown() & anyButton)
+	if (gamePad.GetButtonDown() & anyButton && !setFade && !fade->GetFade())
+	{
+		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+			0.0f, 1.0f,
+			2.5f, 0.2f);
+
+		setFade = true;
+	}
+	else if (setFade && !fade->GetFade())
 	{
 		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGameSelect>());
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示
 		SceneManager::Instance().ChangeScene(std::move(loadingScene));
-		
 	}
 }
 
@@ -62,5 +77,7 @@ void SceneTitle::Render()
 			0, 0, textureWidth, textureHeight,
 			0,
 			1, 1, 1, 1);
+
+		fade->Render(dc, graphics);
 	}
 }

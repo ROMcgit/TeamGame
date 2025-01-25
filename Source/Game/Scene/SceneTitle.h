@@ -3,6 +3,8 @@
 #include "Graphics/Sprite.h"
 #include "Scene.h"
 
+class Fade;
+
 // タイトルシーン
 class SceneTitle : public Scene
 {
@@ -24,4 +26,6 @@ public:
 
 private:
 	std::unique_ptr<Sprite> sprite;
+	std::unique_ptr<Fade> fade;
+	bool setFade = false; // フェードを設定したか
 };

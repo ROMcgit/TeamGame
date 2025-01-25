@@ -34,7 +34,13 @@ protected:
 private:
 
 	// ノードとプレイヤーの衝突処理
-	void CollisionNodeVsPlayer(const char* nodeName, float nodeRadius);
+	//void CollisionNodeVsPlayer(const char* nodeName, float nodeRadius);
+
+	// 登場ステートへ遷移
+	void TransitionEntryState();
+
+	// 登場ステート更新処理
+	void UpdateEntryState(float elapsedTime);
 
 	// 待機ステートへ遷移
 	void TransitionWaitState();
@@ -60,6 +66,12 @@ private:
 	// 追跡ステート更新処理
 	void UpdateTrackingState(float elapsedTime);
 
+	// 疲れるステート遷移
+	void TransitionTiredState();
+
+	// 疲れるステート更新処理
+	void UpdateTiredState(float elapsedTime);
+
 	// 攻撃ステートへ遷移
 	void TransitionAttackState();
 
@@ -82,11 +94,12 @@ private:
 	// ステート
 	enum class State
 	{
-		Enrry,
+		Entry,
 		Wait,
 		Move,
 		Laugh,
 		Tracking,
+		Tired,
 		Attack,
 		Damage,
 		Death
@@ -99,7 +112,8 @@ private:
 		Anim_Wait,
 		Anim_Move,
 		Anim_Laugh,
-		Anim_Dash,
+		Anim_Tracking,
+		Anim_Tired,
 		Anim_Attack,
 		Anim_Damage,
 		Anim_Death
@@ -107,6 +121,8 @@ private:
 
 private:
 	std::unique_ptr<Model> model;
+
+	float dist = 0;
 
 	State state = State::Wait;
 	float territoryRange = 10.0f;

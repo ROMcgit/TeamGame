@@ -145,6 +145,18 @@
     <Filter Include="Source\Character\Director">
       <UniqueIdentifier>{ad0e3991-b74f-423e-980b-835daf93e107}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Character\GameSelect">
+      <UniqueIdentifier>{70dcfd21-9fe1-46d8-ae52-7ef3ff4dca64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Character\GameSelect\Setting">
+      <UniqueIdentifier>{fcef8234-0b58-4d5b-8841-d563ca2b8560}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Character\Director\Setting">
+      <UniqueIdentifier>{99ff7498-53d1-41de-a0a7-c6ce8d36a71f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Character\GameSelect\0_おにごっこ">
+      <UniqueIdentifier>{26868fa7-b542-4f08-9f1c-a159a0e5c442}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -372,12 +384,6 @@
     <ClInclude Include="Source\Game\Stage\G1_StageDarumasangaKoronda.h">
       <Filter>Source\Stage\StageGame</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Character\Director\Director.h">
-      <Filter>Source\Character\Director</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Character\Director\DirectorManager.h">
-      <Filter>Source\Character\Director</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Game\Character\Director\CameraTarget.h">
       <Filter>Source\Character\Director</Filter>
     </ClInclude>
@@ -386,6 +392,24 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\Timer.h">
       <Filter>Source\Graphics\Polygon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\GameSelect\GameSelect.h">
+      <Filter>Source\Character\GameSelect\Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\GameSelect\GameSelectManager.h">
+      <Filter>Source\Character\GameSelect\Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\GameSelect\GS0_Onigokko.h">
+      <Filter>Source\Character\GameSelect\0_おにごっこ</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Director\Director.h">
+      <Filter>Source\Character\Director\Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Director\DirectorManager.h">
+      <Filter>Source\Character\Director\Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Other\Easing.h">
+      <Filter>Source\Other</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -602,12 +626,6 @@
     <ClCompile Include="Source\Game\Stage\G1_StageDarumasangaKoronda.cpp">
       <Filter>Source\Stage\StageGame</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Character\Director\Director.cpp">
-      <Filter>Source\Character\Director</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Character\Director\DirectorManager.cpp">
-      <Filter>Source\Character\Director</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Game\Character\Director\CameraTarget.cpp">
       <Filter>Source\Character\Director</Filter>
     </ClCompile>
@@ -616,6 +634,24 @@
     </ClCompile>
     <ClCompile Include="Source\Graphics\Timer.cpp">
       <Filter>Source\Graphics\Polygon</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\GameSelect\GameSelect.cpp">
+      <Filter>Source\Character\GameSelect\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\GameSelect\GameSelectManager.cpp">
+      <Filter>Source\Character\GameSelect\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\GameSelect\GS0_Onigokko.cpp">
+      <Filter>Source\Character\GameSelect\0_おにごっこ</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Director\Director.cpp">
+      <Filter>Source\Character\Director\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Director\DirectorManager.cpp">
+      <Filter>Source\Character\Director\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Other\Easing.cpp">
+      <Filter>Source\Other</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

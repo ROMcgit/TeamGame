@@ -31,6 +31,28 @@ public:
 	// デバッグプリミティブ描画
 	void DrawDebugPrimitive();
 
+	/*! 加速度 */
+
+	// 加速度Xを設定
+	void SetVelocityX(float velocityX) { this->velocity.x = velocityX; }
+
+	// 加速度Yを設定
+	void SetVelocityY(float velocityY) { this->velocity.y = velocityY; }
+
+	// 加速度Zを設定
+	void SetVelocityZ(float velocityZ) { this->velocity.z = velocityZ; }
+
+	/*! 位置 */
+
+	// 位置Xを設定
+	void SetPositionX(float positionX) { this->position.x = positionX; }
+
+	// 位置Yを設定
+	void SetPositionY(float positionY) { this->position.y = positionY; }
+
+	// 位置Zを設定
+	void SetPositionZ(float positionZ) { this->position.z = positionZ; }
+
 protected:
 	// 着地した時に呼ばれる
 	void OnLanding() override;
@@ -49,16 +71,10 @@ private:
 	// ジャンプ入力処理
 	bool InputJump();
 
-	// 攻撃入力処理
-	bool InputAttack();
-
 	/*! 当たり判定処理 */
 
 	// プレイヤーとエネミーとの衝突処理
 	void CollisionPlayer1_DarumasangaKorondaVsEnemies();
-
-	// 弾丸と敵の衝突処理
-	void CollisionProjectilesVsEnemies();
 
 /******************************************************************************************/
 
@@ -94,7 +110,7 @@ private:
 	// ダメージステート更新処理
 	void UpdateDamageState(float elapsedTime);
 
-//-----------------------------------------------------------------//
+	//-----------------------------------------------------------------//
 
 	// 死亡ステートへ遷移
 	void TransitionDeathState();
@@ -110,7 +126,7 @@ private:
 		Move,
 		Jump,
 		Damage,
-		Death
+		Death,
 	};
 
 	// アニメーション
@@ -125,7 +141,7 @@ private:
 
 private:
 	std::unique_ptr<Model> model;
-	
+
 	float turnSpeed = DirectX::XMConvertToRadians(720);
 
 	float jumpSpeed = 13.0f;

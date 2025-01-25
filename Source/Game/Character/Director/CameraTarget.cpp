@@ -16,6 +16,8 @@ CameraTarget::CameraTarget()
 
 	opacity = 0;
 
+	gravity = 0;
+
 	// •A‚‚³İ’è
 	radius = 0.5f;
 	height = 1.0f;

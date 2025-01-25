@@ -123,7 +123,7 @@ void G5_Asibawatari::Render()
 		StageManager::Instance().Render(dc, shader);
 
 		// カメラの位置を描画
-		CameraController::Instance().RenderTarget(dc, shader);
+		CameraController::Instance().RenderCameraTarget(dc, shader);
 
 		// プレイヤー描画
 		player->Render(dc, shader);

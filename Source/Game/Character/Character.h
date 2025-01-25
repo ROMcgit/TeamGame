@@ -23,6 +23,36 @@ public:
 	bool ApplyDamage(int damage, float invincibleTime, float defensesUpTime);
 
 	/**************************************************************************************/
+		/*! どのイージングにするか */
+
+		//! 位置
+	enum class PositionChangeEasing
+	{
+		Linear,  // リニア(補完無し)
+		EaseIn,  // イーズイン(加速)
+		EaseOut, // イーズアウト(減速)
+
+	}positionChangeEasing;
+
+	//! スケール
+	enum class ScaleChangeEasing
+	{
+		Linear,  // リニア(補完無し)
+		EaseIn,  // イーズイン(加速)
+		EaseOut, // イーズアウト(減速)
+
+	}scaleChangeEasing;
+
+	//! 角度
+	enum class AngleChangeEasing
+	{
+		Linear,  // リニア(補完無し)
+		EaseIn,  // イーズイン(加速)
+		EaseOut, // イーズアウト(減速)
+
+	}angleChangeEasing;
+
+	/**************************************************************************************/
 		/*! セッター */
 #if 1
 
@@ -32,6 +62,9 @@ public:
 		this->hp = hp;
 		this->hpDamage = hp;
 	}
+
+	// HPを増やす設定
+	void SetHpPlus(int hpPlus) { this->hp += hpPlus; }
 
 	// HPの形態変化の設定
 	void SetHpPhaseChange(float hpPhaseChangeTimer)
@@ -49,31 +82,15 @@ public:
 	void SetMaterialColor(const DirectX::XMFLOAT3 materialColor) { this->materialColor = materialColor; }
 
 	// マテリアルの色変更の設定
-	void SetMaterialColorChange(DirectX::XMFLOAT3 toMaterialColorChange, DirectX::XMFLOAT3 materialColorChangeSpeed)
+	void SetMaterialColorChange(DirectX::XMFLOAT3 endMaterialColorChange, DirectX::XMFLOAT3 materialColorChangeTime)
 	{
 		if (!this->materialColorChange)
 		{
-			this->materialColorChange = true;                     // マテリアルの色を変える
-			this->toMaterialColorChange = toMaterialColorChange;    // ここまでマテリアルの色を変える
-			this->materialColorChangeSpeed = materialColorChangeSpeed; // マテリアルの色を変える速さ
-
-			// マテリアルカラーXが目指す値より小さい時
-			if (materialColor.x < toMaterialColorChange.x)
-				materialColorChangeUp.x = true;
-			else
-				materialColorChangeUp.x = false;
-
-			// マテリアルカラーYが目指す値より小さい時
-			if (materialColor.y < toMaterialColorChange.y)
-				materialColorChangeUp.y = true;
-			else
-				materialColorChangeUp.y = false;
-
-			// マテリアルカラーZが目指す値より小さい時
-			if (materialColor.z < toMaterialColorChange.z)
-				materialColorChangeUp.z = true;
-			else
-				materialColorChangeUp.z = false;
+			this->materialColorChange = true;                    // マテリアルの色を変える
+			this->startMaterialColorChange = this->materialColor;     // マテリアルの色の変更の開始の値
+			this->endMaterialColorChange = endMaterialColorChange;  // ここまでマテリアルの色を変える
+			this->materialColorChangeTime = materialColorChangeTime; // マテリアルの色を変える時間
+			this->currentTime = 0.0f;                    // 待ち時間をリセット
 		}
 	}
 
@@ -81,19 +98,15 @@ public:
 	void SetOpacity(float opacity) { this->opacity = opacity; }
 
 	// 不透明度変更処理の設定
-	void SetOpacityChange(float toOpacityChange, float opacityChangeSpeed)
+	void SetOpacityChange(float endOpacityChange, float opacityChangeTime)
 	{
 		if (!this->opacityChange)
 		{
-			this->opacityChange = true;               // 不透明度を変える
-			this->toOpacityChange = toOpacityChange;    // ここまで不透明度を変える
-			this->opacityChangeSpeed = opacityChangeSpeed; // 不透明度を変える速さ
-
-			// 不透明度が目指す値より小さい時
-			if (opacity < toOpacityChange)
-				opacityChangeUp = true;
-			else
-				opacityChangeUp = false;
+			this->opacityChange = true;              // 不透明度を変える
+			this->startOpacityChange = this->opacity;     // 不透明度の変更の開始の値
+			this->endOpacityChange = endOpacityChange;  // ここまで不透明度を変える
+			this->opacityChangeTime = opacityChangeTime; // 不透明度を変える時間
+			this->currentTime = 0.0f;              // 経過時間をリセット
 		}
 	}
 
@@ -106,37 +119,17 @@ public:
 	void SetPositionChangeUnlock() { this->positionChange = false; }
 
 	// 位置変更の設定
-	void SetPositionChange(const DirectX::XMFLOAT3& toPositionChange,
-		const DirectX::XMFLOAT3& positionChangeSpeed, bool positionChangeSpeedContinuingToIncrease = false)
+	void SetPositionChange(const DirectX::XMFLOAT3& endPositionChange,
+		const DirectX::XMFLOAT3& positionChangeTime, PositionChangeEasing positionChangeEasing = PositionChangeEasing::Linear)
 	{
 		if (!positionChange)
 		{
-			this->positionChange = true;                // 位置を変える
-			this->toPositionChange = toPositionChange;    // ここまで位置を変える
-			this->positionChangeSpeed = positionChangeSpeed; // 位置を変える速さ
-			// 速度が増え続けるか
-			this->positionChangeSpeedContinuingToIncrease = positionChangeSpeedContinuingToIncrease;
-			// 増える速度
-			if (positionChangeSpeedContinuingToIncrease)
-				this->positionChangeSpeedIncrease = positionChangeSpeed;
-
-			/// 位置Xが目指す位置より小さい時
-			if (position.x < toPositionChange.x)
-				positionChangeUp.x = true;
-			else
-				positionChangeUp.x = false;
-
-			// 位置Yが目指す位置より小さい時
-			if (position.y < toPositionChange.y)
-				positionChangeUp.y = true;
-			else
-				positionChangeUp.y = false;
-
-			// 位置Zが目指す位置より小さい時
-			if (position.z < toPositionChange.z)
-				positionChangeUp.z = true;
-			else
-				positionChangeUp.z = false;
+			this->positionChange = true;                 // 位置を変える
+			this->startPositionChange = this->position;       // 位置の変更の開始の値
+			this->endPositionChange = endPositionChange;    // ここまで位置を変える
+			this->positionChangeTime = positionChangeTime;   // 位置を変える時間
+			this->positionChangeEasing = positionChangeEasing; // そのイージングにするか
+			this->currentTime = 0.0f;                 // 経過時間をリセット
 		}
 	}
 
@@ -155,32 +148,17 @@ public:
 	void SetAngle(const DirectX::XMFLOAT3& angle) { this->angle = angle; }
 
 	// 角度変更の設定
-	void SetAngleChange(const DirectX::XMFLOAT3& toAngleChange,
-		const DirectX::XMFLOAT3& angleChangeSpeed)
+	void SetAngleChange(const DirectX::XMFLOAT3& endAngleChange,
+		const DirectX::XMFLOAT3& angleChangeTime, AngleChangeEasing angleChangeEasing = AngleChangeEasing::Linear)
 	{
 		if (!this->angleChange)
 		{
-			this->angleChange = true;             // 角度を変える
-			this->toAngleChange = toAngleChange;    // ここまで角度を変える
-			this->angleChangeSpeed = angleChangeSpeed; // 角度を変える速さ
-
-			/// 角度Xが目指す大きさより小さい時
-			if (angle.x < toAngleChange.x)
-				angleChangeUp.x = true;
-			else
-				angleChangeUp.x = false;
-
-			// 角度Yが目指す大きさより小さい時
-			if (angle.y < toAngleChange.y)
-				angleChangeUp.y = true;
-			else
-				angleChangeUp.y = false;
-
-			// 角度Zが目指す大きさより小さい時
-			if (angle.z < toAngleChange.z)
-				angleChangeUp.z = true;
-			else
-				angleChangeUp.z = false;
+			this->angleChange = true;              // 角度を変える
+			this->startAngleChange = this->angle;       // 角度の変更の開始の値
+			this->endAngleChange = endAngleChange;    // ここまで角度を変える
+			this->angleChangeTime = angleChangeTime;   // 角度を変える時間
+			this->angleChangeEasing = angleChangeEasing; // どのイージングにするか
+			this->currentTime = 0.0f;              // 経過時間をリセット
 		}
 	}
 
@@ -201,32 +179,17 @@ public:
 	void SetScale(const DirectX::XMFLOAT3& scale) { this->scale = scale; }
 
 	// スケール変更の設定
-	void SetScaleChange(const DirectX::XMFLOAT3& toScaleChange,
-		const DirectX::XMFLOAT3& scaleChangeSpeed)
+	void SetScaleChange(const DirectX::XMFLOAT3& endScaleChange,
+		const DirectX::XMFLOAT3& scaleChangeTime, ScaleChangeEasing scaleChangeEasing = ScaleChangeEasing::Linear)
 	{
 		if (!this->scaleChange)
 		{
-			this->scaleChange = true;             // スケールを変える
-			this->toScaleChange = toScaleChange;    // ここまでスケールを変える
-			this->scaleChangeSpeed = scaleChangeSpeed; // スケールを変える速さ
-
-			/// スケールXが目指す大きさより小さい時
-			if (scale.x < toScaleChange.x)
-				scaleChangeUp.x = true;
-			else
-				scaleChangeUp.x = false;
-
-			// スケールYが目指す大きさより小さい時
-			if (scale.y < toScaleChange.y)
-				scaleChangeUp.y = true;
-			else
-				scaleChangeUp.y = false;
-
-			// スケールZが目指す大きさより小さい時
-			if (scale.z < toScaleChange.z)
-				scaleChangeUp.z = true;
-			else
-				scaleChangeUp.z = false;
+			this->scaleChange = true;              // スケールを変える
+			this->startScaleChange = this->scale;       // スケールの変更の開始の値
+			this->endScaleChange = endScaleChange;    // ここまでスケールを変える
+			this->scaleChangeTime = scaleChangeTime;   // スケールを変える時間
+			this->scaleChangeEasing = scaleChangeEasing; // どのイージングにするか
+			this->currentTime = 0.0f;              // 経過時間をリセット
 		}
 	}
 
@@ -276,13 +239,13 @@ public:
 		/*! カメラ */
 #if 1
 	// カメラのターゲットの位置変更の設定
-	void SetCameraTargetChange(DirectX::XMFLOAT3 toCameraTarget, DirectX::XMFLOAT3 cameraTargetChangeSpeed);
+	void SetCameraTargetChange(DirectX::XMFLOAT3 endCameraTarget, float cameraTargetChangeTime, int targetChangeEasing = 0);
 
 	// カメラの角度変更の設定
-	void SetCameraAngleChange(DirectX::XMFLOAT3 toCameraAngle, DirectX::XMFLOAT3 cameraAngleChangeSpeed);
+	void SetCameraAngleChange(DirectX::XMFLOAT3 endCameraAngle, float cameraAngleChangeTime, int = 0);
 
 	// カメラの範囲の変更の設定
-	void SetCameraRangeChange(float toCameraRange, float cameraRangeChangeSpeed);
+	void SetCameraRangeChange(float endCameraRange, float cameraRangeChangeTime, int rangeChangeEasing = 0);
 
 	// カメラシェイク設定
 	void SetCameraShake(float cameraShakeTimer, const DirectX::XMINT3& cameraShakePower);
@@ -294,55 +257,48 @@ public:
 		//! ポストエフェクト
 #if 1
 	// ポストエフェクトのステータスを設定
-	void SetPostEffectStatus(float contrast = 1.3f,
-		float saturation = 0.7f,
-		const DirectX::XMFLOAT3 ColorFilter = { 0.9f, 1.0f, 1.05f },
-		float chromaticAberration = 0.01f);
+	void SetPostEffectStatus(float contrast = 1.0f,
+		float saturation = 0.8f,
+		const DirectX::XMFLOAT3 colorFilter = { 1.2f, 1.3f, 1.35f },
+		float chromaticAberration = 0);
 
-	// ポストエフェクトの変更の設定
-	void SetPostEffectStatusChange(float toContrastChange = 1.3f,
-		float contrastChangeSpeed = 1.0f,
-		float toSaturationChange = 0.7f,
-		float saturationChangeSpeed = 1.0f,
-		const DirectX::XMFLOAT3 toColorFilterChange = { 0.9f, 1.0f, 1.05f },
-		const DirectX::XMFLOAT3 colorFilterChangeSpeed = { 1.0f, 1.0f, 1.0f },
-		float toChromaticAberrationChange = 0.1f,
-		float chromaticAberrationChangeSpeed = 1.0f
-	);
+	// ポストエフェクトのステータスを設定
+	void SetPostEffectStatusResetChange(float endContrastChange = 1.0f,
+		float contrastChangeTime = 1.5f,
+		float endSaturationChange = 0.8f,
+		float saturationChangeTime = 1.5f,
+		const DirectX::XMFLOAT3 endColorFilterChange = { 1.2f, 1.3f, 1.35f },
+		float colorFilterChangeTime = 1.5f,
+		float endChromaticAberrationChange = 0,
+		float chromaticAberrationChangeTime = 1.5f);
 
-	// カラーフィルターを上昇させるかの設定
-	void IncreaseColorFilterComponent(float colorFilter, float toColorFilterChange, bool& colorFilterUp);
+	// コントラスト変更の設定
+	void SetContrastChange(float endContrastChange, float contrastChangeTime = 1.5f);
+
+	// サチュレーション(色の彩度)変更の設定
+	void SetSaturationChange(float endSaturationChange, float saturationChange = 1.5f);
+
+	// カラーフィルター変更の設定
+	void SetColorFilterChange(DirectX::XMFLOAT3& endColorFilterChange, float colorFilterChangeTime = 1.5f);
+
+	// クロマティックアベレーション(色収差(色ズレ))変更の設定
+	void SetChromaticAberrationChange(float endChromaticAberrationChange, float chromaticAberrationChangeTime = 1.5f);
+
 #endif
 
 	// エミッシブの色の設定
 	void SetEmissiveColor(const DirectX::XMFLOAT3 emissiveColor) { this->emissiveColor = emissiveColor; }
 
 	// エミッシブの色変更の設定
-	void SetEmissiveColorChange(DirectX::XMFLOAT3 toEmissiveColorChange, DirectX::XMFLOAT3 emissiveColorChangeSpeed)
+	void SetEmissiveColorChange(DirectX::XMFLOAT3 endEmissiveColorChange, DirectX::XMFLOAT3 emissiveColorChangeTime)
 	{
 		if (!this->emissiveColorChange)
 		{
-			this->emissiveColorChange = true;                     //エミッシブの色を変える
-			this->toEmissiveColorChange = toEmissiveColorChange;    // ここまでエミシッブの色を変える
-			this->emissiveColorChangeSpeed = emissiveColorChangeSpeed; //エミッシブの色を変える速さ
-
-			//エミッシブカラーXが目指す値より小さい時
-			if (emissiveColor.x < toEmissiveColorChange.x)
-				emissiveColorChangeUp.x = true;
-			else
-				emissiveColorChangeUp.x = false;
-
-			//エミッシブカラーYが目指す値より小さい時
-			if (emissiveColor.y < toEmissiveColorChange.y)
-				emissiveColorChangeUp.y = true;
-			else
-				emissiveColorChangeUp.y = false;
-
-			//エミッシブカラーZが目指す値より小さい時
-			if (emissiveColor.z < toEmissiveColorChange.z)
-				emissiveColorChangeUp.z = true;
-			else
-				emissiveColorChangeUp.z = false;
+			this->emissiveColorChange = true;                    //エミッシブの色を変える
+			this->startEmissiveColorChange = this->emissiveColor;     // エミッシブの強さの変更の開始の値
+			this->endEmissiveColorChange = endEmissiveColorChange;   // ここまでエミシッブの色を変える
+			this->emissiveColorChangeTime = emissiveColorChangeTime; //エミッシブの色を変える時間
+			this->currentTime = 0.0f;                    // 経過時間をリセット
 		}
 	}
 
@@ -350,20 +306,16 @@ public:
 	void SetEmissiveStrength(float emissiveStrength) { this->emissiveStrength = emissiveStrength; }
 
 	// エミッシブの強さ変更の設定(設定の時に色を変えれる)
-	void SetEmissiveStrengthChange(DirectX::XMFLOAT3 emissiveColor, float toEmissiveStrengthChange, float emissiveStrengthChangeSpeed)
+	void SetEmissiveStrengthChange(DirectX::XMFLOAT3 emissiveColor, float endEmissiveStrengthChange, float emissiveStrengthChangeTime)
 	{
 		if (!this->emissiveStrengthChange)
 		{
-			this->emissiveColor = emissiveColor;               //エミッシブの色
-			this->emissiveStrengthChange = true;                        //エミッシブの強さを変える
-			this->toEmissiveStrengthChange = toEmissiveStrengthChange;    // ここまでエミッシブの強さを変える
-			this->emissiveStrengthChangeSpeed = emissiveStrengthChangeSpeed; // エミッシブの強さを変える速さ
-
-			//!エミッシブの強さが目指す値より小さい時
-			if (emissiveStrength < toEmissiveStrengthChange)
-				emissiveStrengthChangeUp = true;
-			else
-				emissiveStrengthChangeUp = false;
+			this->emissiveColor = emissiveColor;              //エミッシブの色
+			this->emissiveStrengthChange = true;                       //エミッシブの強さを変える
+			this->startEmissiveStrengthChange = this->emissiveStrength;     // エミッシブの強さの変更の開始の値
+			this->endEmissiveStrengthChange = endEmissiveStrengthChange;   // ここまでエミッシブの強さを変える
+			this->emissiveStrengthChangeTime = emissiveStrengthChangeTime; // エミッシブの強さを変える時間
+			this->currentTime = 0.0f;                       // 経過時間をリセット
 		}
 	}
 
@@ -437,7 +389,10 @@ public:
 
 	//---------------------------------------------------------------------------//
 
-		// 位置取得
+		// トランスフォーム取得
+	const DirectX::XMFLOAT4X4 GetTransform() const { return transform; }
+
+	// 位置取得
 	const DirectX::XMFLOAT3& GetPosition() const { return position; }
 
 	// 位置変更をしているかを取得
@@ -570,17 +525,11 @@ protected:
 	// マテリアルの色変更更新処理
 	bool UpdateMaterialColorChange(float elapsedTime);
 
-	// 単一軸のマテリアルの色変更更新処理
-	float UpdateMaterialColorAxis(float materialColor, float speed, bool materialColorChangeUp, float toMaterialColorChange, float elapsedTime);
-
 	// 不透明度変更更新処理
-	bool UpdateOpacityChange(float elapsedTime);
+	bool UpdateEffectOpacityChange(float elapsedTime);
 
 	// エミッシブの色変更更新処理
 	bool UpdateEmissiveColorChange(float elapsedTime);
-
-	// 単一軸のエミシッブの色変更更新処理
-	float UpdateEmissiveColorAxis(float emissiveColor, float speed, bool emissiveColorChangeUp, float toEmissiveColorChange, float elapsedTime);
 
 	//エミッシブの強さ変更更新処理
 	bool UpdateEmissiveStrengthChange(float elapsedTime);
@@ -589,41 +538,35 @@ protected:
 	bool UpdateEmissivePhaseChange(float elapsedTime);
 
 	//エミッシブの色変更更新処理(形態変化)
-	void UpdateEmissiveColorPhaseChange(float& emissiveColor, float& emissiveColorChangeSpeed, bool& emissiveColorUp, float elapsedTime);
+	void UpdateEmissiveColorPhaseChange(float& emissiveColor, float& emissiveColorChangeTime, bool& emissiveColorUp, float elapsedTime);
 
 	//---------------------------------------------------------------------------//
 
-		// 位置変更更新処理
+	// 位置変更更新処理
 	bool UpdatePositionChange(float elapsedTime);
 
-	// 単一軸の位置変更更新処理
-	float UpdatePositionAxis(float position, float& speed, float positionChangeSpeedIncrease, bool positionChangeUp, float toPositionChange, float elapsedTime);
-
 	//---------------------------------------------------------------------------//
 
-		// 角度制限処理
+	// 角度制限処理
 	void LimitAngle();
 
 	// 回転変更更新処理
 	bool UpdateAngleChange(float elapsedTime);
-
-	// 単一軸の角度変更更新処理
-	float UpdateAngleAxis(float angle, float speed, bool angleChangeUp, float toAngleChange, float elapsedTime);
 
 	// 角度の回転の更新処理(特定の値は目指さず、指定された時間中に回転する)
 	bool UpdateAngleRotation(float elapsedTime);
 
 	//---------------------------------------------------------------------------//
 
-		// スケール変更更新処理
+	// スケール変更更新処理
 	bool UpdateScaleChange(float elapsedTime);
 
 	// 単一軸のスケール変更更新処理
-	float UpdateScaleAxis(float scale, float speed, bool scaleChangeUp, float toScaleChange, float elapsedTime);
+	float UpdateScaleAxis(float scale, float speed, bool scaleChangeUp, float endScaleChange, float elapsedTime);
 
 	//---------------------------------------------------------------------------//
 
-		// ムービー時間更新処理
+	// ムービー時間更新処理
 	bool UpdateMovieTimer(float elapsedTime);
 
 	// ヒットストップ更新処理
@@ -665,52 +608,41 @@ protected:
 
 	bool isGround = false; // 地面にいる
 
-	float moveSpeed = 50.0f; // 移動速度
+	float moveSpeed = 10.0f; // 移動速度
 
 	/*****************************************************************************************************/
 		/*! マテリアル */
 	DirectX::XMFLOAT3 materialColor = { 1,1,1 }; // マテリアルの色
 	bool materialColorChange = false;            // マテリアルの色を変更するか
-	//マテリアルの色を増やすか
-	struct MaterialColorChangeUp
-	{
-		bool x = false;
-		bool y = false;
-		bool z = false;
-	}materialColorChangeUp;  // マテリアルの色を増やすか
 
-	DirectX::XMFLOAT3 toMaterialColorChange = { 0, 0, 0 }; // ここまでマテリアルの色を変える
-	DirectX::XMFLOAT3 materialColorChangeSpeed = { 0, 0, 0 }; // マテリアルの色を変える速さ
+	DirectX::XMFLOAT3 startMaterialColorChange = { 0, 0, 0 }; // マテリアルの色の変更の開始の値
+	DirectX::XMFLOAT3 endMaterialColorChange = { 0, 0, 0 }; // ここまでマテリアルの色を変える
+	DirectX::XMFLOAT3 materialColorChangeTime = { 0, 0, 0 }; // マテリアルの色を変える時間
 
 	//! 不透明度
 	float opacity = 1.0f;  // 不透明度
 	bool  opacityChange = false; // 不透明度を変更するか
-	bool  opacityChangeUp = false; // 不透明度を増やすか
-	float toOpacityChange = 0.0f;  // ここまで不透明度を変える 
-	float opacityChangeSpeed = 0.0f;  // 不透明度を変える速度
+	float startOpacityChange = 0.0f;  // 不透明度の変更の開始の値
+	float endOpacityChange = 0.0f;  // ここまで不透明度を変える 
+	float opacityChangeTime = 0.0f;  // 不透明度を変える速度
 
 	/*****************************************************************************************************/
-		/*!エミッシブ */
+		/*! エミッシブ */
 	DirectX::XMFLOAT3 emissiveColor = { 0.0f, 0.0f, 0.0f }; //エミッシブカラー
-	bool emissiveColorChange = false; //エミッシブの色を変えるか
-	//エミッシブの色を増やすか
-	struct EmissiveColorChangeUp
-	{
-		bool x = false;
-		bool y = false;
-		bool z = false;
-	}emissiveColorChangeUp;  //エミッシブの色を増やすか
+	bool emissiveColorChange = false;                //エミッシブの色を変えるか
 
-	DirectX::XMFLOAT3 toEmissiveColorChange = { 0, 0, 0 }; // ここまでエミシッブの色を変える
-	DirectX::XMFLOAT3 emissiveColorChangeSpeed = { 0, 0, 0 }; // エミッシブの色を変える速さ
+	DirectX::XMFLOAT3 startEmissiveColorChange = { 0, 0, 0 }; // エミシッブの色の変更の開始の値
+	DirectX::XMFLOAT3 endEmissiveColorChange = { 0, 0, 0 }; // ここまでエミシッブの色を変える
+	DirectX::XMFLOAT3 emissiveColorChangeTime = { 0, 0, 0 }; // エミッシブの色を変える時間
 
 	//!エミッシブの強さ
-	float emissiveStrength = 0.0f;  //エミッシブの強さ
-	bool  emissiveStrengthChange = false; //エミッシブの強さを変えるか
-	bool  emissiveStrengthChangeUp = false; //エミッシブの強さを増やすか
+	float emissiveStrength = 0.0f;  // エミッシブの強さ
+	bool  emissiveStrengthChange = false; // エミッシブの強さを変えるか
+	bool  emissiveStrengthChangeUp = false; // エミッシブの強さを増やすか
 
-	float toEmissiveStrengthChange = 0.0f;  //　ここまでエミシッブの強さを変える
-	float emissiveStrengthChangeSpeed = 0.0f;  //　エミシッブの強さを変える速さ
+	float startEmissiveStrengthChange = 0.0f; // エミッシブの強さの変更の開始の値
+	float endEmissiveStrengthChange = 0.0f; // ここまでエミシッブの強さを変える
+	float emissiveStrengthChangeTime = 0.0f; // エミシッブの強さを変える時間
 
 	//-------------------------------------------------------------------------------------------------------//
 
@@ -734,18 +666,10 @@ protected:
 
 	DirectX::XMFLOAT3 position = { 0, 0, 0 };
 	bool positionChange = false; // 位置を変更するか
-	bool positionChangeSpeedContinuingToIncrease = false; // 速度が増え続けるか
-	// 位置を増加させるか
-	struct PositionChangeUp
-	{
-		bool x = false;
-		bool y = false;
-		bool z = false;
-	}positionChangeUp;
 
-	DirectX::XMFLOAT3 toPositionChange = { 0, 0, 0 }; // ここまで位置を変える
-	DirectX::XMFLOAT3 positionChangeSpeed = { 0, 0, 0 }; // 位置を変える速さ
-	DirectX::XMFLOAT3 positionChangeSpeedIncrease = { 0, 0, 0 }; // 位置を変える速さの増える値
+	DirectX::XMFLOAT3 startPositionChange = { 0, 0, 0 }; // 位置の変更の開始の値
+	DirectX::XMFLOAT3 endPositionChange = { 0, 0, 0 }; // ここまで位置を変える
+	DirectX::XMFLOAT3 positionChangeTime = { 0, 0, 0 }; // 位置を変える時間
 	DirectX::XMFLOAT3 velocity = { 0, 0, 0 }; // 加速度
 
 #endif
@@ -756,16 +680,10 @@ protected:
 
 	DirectX::XMFLOAT3 angle = { 0, 0, 0 };
 	bool angleChange = false; // 角度を変更するか
-	// 角度を増やすか
-	struct AngleChangeUp
-	{
-		bool x = false;
-		bool y = false;
-		bool z = false;
-	}angleChangeUp;
 
-	DirectX::XMFLOAT3 toAngleChange = { 0, 0, 0 }; // ここまで角度を変える
-	DirectX::XMFLOAT3 angleChangeSpeed = { 0, 0, 0 }; // 角度を変える速さ
+	DirectX::XMFLOAT3 startAngleChange = { 0, 0, 0 }; // 角度の変更の開始の値
+	DirectX::XMFLOAT3 endAngleChange = { 0, 0, 0 }; // ここまで角度を変える
+	DirectX::XMFLOAT3 angleChangeTime = { 0, 0, 0 }; // 角度を変える時間
 
 	//! 回転(特定の値は目指さない)
 	float angleRotation = false; // 角度を回転させるか
@@ -780,16 +698,10 @@ protected:
 
 	DirectX::XMFLOAT3 scale = { 1, 1, 1 };
 	bool scaleChange = false;// スケールを変更するか
-	// スケールを大きくするか
-	struct ScaleChangeUp
-	{
-		bool x = false;
-		bool y = false;
-		bool z = false;
-	}scaleChangeUp;
 
-	DirectX::XMFLOAT3 toScaleChange = { 0, 0, 0 }; // ここまでスケールを変える
-	DirectX::XMFLOAT3 scaleChangeSpeed = { 0, 0, 0 }; // スケールを変える速さ
+	DirectX::XMFLOAT3 startScaleChange = { 0, 0, 0 }; // スケールの変更の開始の値
+	DirectX::XMFLOAT3 endScaleChange = { 0, 0, 0 }; // ここまでスケールを変える
+	DirectX::XMFLOAT3 scaleChangeTime = { 0, 0, 0 }; // スケールを変える時間
 
 #endif
 
@@ -825,22 +737,27 @@ protected:
 
 	//-----------------------------------------------------------------------------------//
 		//! HPの画像
+#if 1
 	DirectX::XMFLOAT2 hpSpritePos = { 0.0f, 0.0f };  // HPゲージの位置
 	DirectX::XMFLOAT3 hpSpriteColor = { 1, 0, 1 };     // HPゲージの色
 	DirectX::XMFLOAT2 hpImagePos = { 0.0f, 0.0f };  // HP画像の位置
 	DirectX::XMFLOAT3 hpImageColor = { 1, 1, 1 };     // HP画像の色
 
 	DirectX::XMFLOAT3 hpSpriteColorP = { 0, 1, 0 }; // HPゲージの色(プレイヤー用)
+#endif
 
 	//-----------------------------------------------------------------------------------//
 		//! HPシェイク
+#if 1
 	float hpSpriteShakePosY = 0.0f; // HPゲージシェイクの位置
 	float hpImageShakePosY = 0.0f; // HP画像シェイクの位置
 	bool  hpShake = false;// HPシェイクするか
 	float hpShakeTimer = 0.0f; // HPシェイクタイマー
+#endif
 
 	//-----------------------------------------------------------------------------------//
 		//! HP形態変化
+#if 1
 	bool  hpPhaseChange = false; // HPの形態変化演出
 	float hpPhaseChangeTimer = 0.0f;  // HPの形態変化演出を行う時間
 
@@ -861,14 +778,17 @@ protected:
 	float hpSpriteColorMax = 1.0f;  // HPゲージの色(最大値)
 	float hpSpriteColorChangeSpeed = 3.8f;  // HPゲージの色を変える速度
 	bool hpSpriteColorDown = false; // HPゲージの色を下げるか
+#endif
 
 	//-----------------------------------------------------------------------------------//
 		//! ダメージ計算関連
+#if 1
 	bool  isGuard = false; // ガードしているか
 	int   damage = 0;     // ダメージ
 	int   additionalDamage = 0;     // 追加ダメージ(防御力低下などを表現する)
 	int   defenses = 0;     // 防御力
 	float defensesUpTimer = 0.0f;    // 防御力アップ時間
+#endif
 
 	//-----------------------------------------------------------------------------------//
 		//! その他
@@ -878,9 +798,10 @@ protected:
 	float stateChangeWaitTimer = 0.0f; // ステート切り替えまでの時間
 	float actionTimer = 0.0f; // アクションタイマー
 	float actionFinishWaitTimer = 0.0f; // アクション終了までの待ち時間
+	float currentTime = 0.0f;  // 経過時間
 
 	/*****************************************************************************************************/
-	/*! ヒットストップ */
+		/*! ヒットストップ */
 
 	bool  hitStop = false; // ヒットストップ中か
 	float hitStopElapsedTime = 1.0f;  // ヒットストップ込みのelapsedTime

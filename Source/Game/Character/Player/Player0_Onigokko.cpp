@@ -93,23 +93,14 @@ void Player0_Onigokko::Update(float elapsedTime)
 		}
 	}
 
-	// 速力更新処理
-	UpdateVelocity(elapsedTime);
+	// キャラクター状態更新処理
+	UpdateCharacterState(elapsedTime);
 
 	// 弾丸更新処理
 	projectileManager.Update(elapsedTime);
 
 	// プレイヤーと敵との衝突処理
 	CollisionPlayer0_OnigokkoVsEnemies();
-
-	// 無敵時間更新
-	UpdateInvincibleTimer(elapsedTime);
-
-	// 当たり判定の位置を設定
-	CollisionPosSettings();
-
-	// オブジェクト行列を更新
-	UpdateTransform();
 
 	// モデルアニメーション更新処理
 	model->UpdateAnimation(elapsedTime);
@@ -320,33 +311,14 @@ void Player0_Onigokko::DrawDebugPrimitive()
 	//// 衝突判定用のデバッグ球を描画
 	//debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
 
+#ifndef _DEBUG
 	// 衝突判定用のデバッグ円柱を描画
 	debugRenderer->DrawCylinder(collisionPos, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
 
 	// 弾丸デバッグプリミティブ描画
 	projectileManager.DrawDebugPrimitive();
 
-	//Model::Node* leftHandBone = model->FindNode("mixamorig:LeftHand");
-	//debugRenderer->DrawSphere(DirectX::XMFLOAT3(
-	//	leftHandBone->worldTransform._41,
-	//	leftHandBone->worldTransform._42,
-	//	leftHandBone->worldTransform._43),
-	//	leftHandRadius,
-	//	DirectX::XMFLOAT4(1, 0, 0, 1)
-	//);
-
-	// 攻撃衝突用の左手ノードのデバッグ球を描画
-	if (attackCollisionFlag)
-	{
-		Model::Node* leftHandBone = model->FindNode("mixamorig:LeftHand");
-		debugRenderer->DrawSphere(DirectX::XMFLOAT3(
-			leftHandBone->worldTransform._41,
-			leftHandBone->worldTransform._42,
-			leftHandBone->worldTransform._43),
-			leftHandRadius,
-			DirectX::XMFLOAT4(1, 0, 0, 1)
-		);
-	}
+#endif // !_DEBUG
 }
 
 // 着地した時に呼ばれる
@@ -392,6 +364,13 @@ void Player0_Onigokko::DrawDebugGUI()
 			// スケール
 			ImGui::DragFloat3("Scale", &scale.x, 0.01f);
 		}
+		if (ImGui::CollapsingHeader("Collision", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::DragFloat("Radius", &radius, 0.01f);
+			ImGui::DragFloat("Height", &height, 0.01f);
+			ImGui::DragFloat3("CollisionOffset", &collisionOffset.x, 0.01f);
+		}
+
 		ImGui::TreePop();
 	}
 }

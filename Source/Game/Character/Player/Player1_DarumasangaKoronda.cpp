@@ -96,23 +96,14 @@ void Player1_DarumasangaKoronda::Update(float elapsedTime)
 		}
 	}
 
-	// 速力更新処理
-	UpdateVelocity(elapsedTime);
+	// キャラクター状態更新処理
+	UpdateCharacterState(elapsedTime);
 
 	// 弾丸更新処理
 	projectileManager.Update(elapsedTime);
 
 	// プレイヤーと敵との衝突処理
 	CollisionPlayer1_DarumasangaKorondaVsEnemies();
-
-	// 無敵時間更新
-	UpdateInvincibleTimer(elapsedTime);
-
-	// 当たり判定の位置を設定
-	CollisionPosSettings();
-
-	// オブジェクト行列を更新
-	UpdateTransform();
 
 	// モデルアニメーション更新処理
 	model->UpdateAnimation(elapsedTime);
@@ -442,6 +433,12 @@ void Player1_DarumasangaKoronda::DrawDebugGUI()
 			angle.z = DirectX::XMConvertToRadians(a.z);
 			// スケール
 			ImGui::DragFloat3("Scale", &scale.x, 0.01f);
+		}
+		if (ImGui::CollapsingHeader("Collision", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::DragFloat("Radius", &radius, 0.01f);
+			ImGui::DragFloat("Height", &height, 0.01f);
+			ImGui::DragFloat3("CollisionOffset", &collisionOffset.x, 0.01f);
 		}
 		ImGui::TreePop();
 	}

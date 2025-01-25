@@ -925,6 +925,9 @@ void Character::UpdateCharacterState(float elapsedTime)
 	// 行列更新処理
 	UpdateTransform();
 
+	// 加速度更新処理
+	UpdateVelocity(elapsedTime);
+
 	// 当たり判定の位置を設定
 	CollisionPosSettings();
 

@@ -18,8 +18,10 @@ GS0_OniGokko::GS0_OniGokko()
 	angle.y = DirectX::XMConvertToRadians(180);
 
 	// 幅、高さ設定
-	radius = 5.0f;
-	height = 1.0f;
+	radius = 11.5f;
+	height = 5.0f;
+
+	collisionOffset.y = -1.85f;
 
 	gravity = 0.0f;
 }
@@ -40,15 +42,6 @@ void GS0_OniGokko::Update(float elapsedTime)
 		UpdateWaitState(elapsedTime);
 		break;
 	}
-
-	// 速力処理更新
-	UpdateVelocity(elapsedTime);
-
-	// 無敵時間更新
-	UpdateInvincibleTimer(elapsedTime);
-
-	// オブジェクト行列を更新
-	UpdateTransform();
 
 	// キャラクターの状態更新処理
 	UpdateCharacterState(elapsedTime);
@@ -80,19 +73,6 @@ void GS0_OniGokko::DrawDebugPrimitive()
 	GameSelect::DrawDebugPrimitive();
 
 	DebugRenderer* debugRender = Graphics::Instance().GetDebugRenderer();
-
-	// 縄張り範囲をデバッグ円柱描画
-	//debugRender->DrawCylinder(territoryOrigin, territoryRange, 1.0f,
-	//	DirectX::XMFLOAT4(0, 1, 0, 1));
-
-	//// ターゲット位置をデバッグ球描画
-	//debugRender->DrawSphere(targetPosition, radius, DirectX::XMFLOAT4(1, 1, 0, 1));
-
-	//// 索敵範囲をデバッグ円柱描画
-	//debugRender->DrawCylinder(position, searchRange, 1.0f, DirectX::XMFLOAT4(0, 0, 1, 1));
-
-	//// 攻撃範囲をデバッグ円柱描画
-	//debugRender->DrawCylinder(position, attackRange, 1.0f, DirectX::XMFLOAT4(1, 0, 0, 1));
 }
 
 // デバッグGUI
@@ -119,6 +99,14 @@ void GS0_OniGokko::DrawDebugGUI()
 			// スケール
 			ImGui::DragFloat3("Scale", &scale.x, 0.01f);
 		}
+
+		if (ImGui::CollapsingHeader("Collision", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::DragFloat("Radius", &radius, 0.01f);
+			ImGui::DragFloat("Height", &height, 0.01f);
+			ImGui::DragFloat3("CollisionOffset", &collisionOffset.x, 0.01f);
+		}
+
 		ImGui::TreePop();
 	}
 }

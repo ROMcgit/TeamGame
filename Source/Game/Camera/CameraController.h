@@ -289,8 +289,8 @@ private:
 	float mouseZoomSpeed = 0.1f; // マウスの拡大速度
 	float mouseSensitivity = 1.0f; // マウス感度
 
-	float targetMoveSpeed = 8; // ターゲットの移動速度(ボタン移動の場合)
-	float targetUpSpeed = 8;  // ターゲットの上昇速度(ボタン移動の場合)
+	float targetMoveSpeed = 50; // ターゲットの移動速度(ボタン移動の場合)
+	float targetUpSpeed = 50;  // ターゲットの上昇速度(ボタン移動の場合)
 
 	//-----------------------------------------------------------------//
 

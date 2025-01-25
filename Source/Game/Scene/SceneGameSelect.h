@@ -34,6 +34,10 @@ public:
 	// 描画処理
 	void Render() override;
 
+private:
+	//! プレイヤーの位置制限
+	void PlayerPositionControll();
+
 public:
 	enum class GameSelect
 	{

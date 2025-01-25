@@ -42,10 +42,15 @@ public:
 	bool GetMovieScene() { return movieScene; }
 
 private:
+	// プレイヤーの位置制限
+	void PlayerPositionControll();
+
 	// カメラのムービー更新処理
 	void UpdateCameraMovie(float elapsedTime);
 
 private:
+	DirectX::XMFLOAT3 target = { 0, 0, 0 };
+
 	std::unique_ptr <Player0_Onigokko> player;
 	std::unique_ptr <CameraController> cameraController;
 
@@ -53,7 +58,7 @@ private:
 	std::unique_ptr<Sprite> backGround;
 	std::unique_ptr<Timer>  timer;
 
-	bool  movieScene = false; // ムービーシーンか
+	static bool  movieScene; // ムービーシーンか
 	float cameraMovieTime = 0.0f; // カメラのムービー時間
 
 	std::unique_ptr<Fade> fade;

@@ -22,6 +22,8 @@
 #include "Game/Character/GameSelect/GameSelectManager.h"
 #include "Game/Character/GameSelect/GS0_Onigokko.h"
 
+#include <algorithm>
+
 SceneGameSelect::GameSelect SceneGameSelect::gameSelect = SceneGameSelect::GameSelect::Onigokko;
 bool SceneGameSelect::sceneChange = false;
 
@@ -64,6 +66,7 @@ void SceneGameSelect::Initialize()
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
 	cameraController->SetRange(110);
+	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(40), 0, 0));
 
 	// 背景
 	backGround = std::make_unique<Sprite>();
@@ -106,6 +109,8 @@ void SceneGameSelect::Update(float elapsedTime)
 	// ステージ更新処理
 	StageManager::Instance().Update(elapsedTime);
 
+	// プレイヤーの位置制限
+	PlayerPositionControll();
 	// プレイヤー更新処理
 	player->Update(elapsedTime);
 
@@ -296,5 +301,23 @@ void SceneGameSelect::Render()
 			EnemyManager::Instance().DrawDebugGUI();
 		}
 		ImGui::End();
+	}
+}
+
+// プレイヤーの位置制限
+void SceneGameSelect::PlayerPositionControll()
+{
+	if (player->GetPosition().x < -300.0f || player->GetPosition().x > 300.0f)
+	{
+		player->SetVelocityX(0);
+		float positoinX = std::clamp(player->GetPosition().x, -300.0f, 300.0f);
+		player->SetPositionX(positoinX);
+	}
+
+	if (player->GetPosition().z < -300.0f || player->GetPosition().z > 300.0f)
+	{
+		player->SetVelocityZ(0);
+		float positoinZ = std::clamp(player->GetPosition().z, -300.0f, 300.0f);
+		player->SetPositionZ(positoinZ);
 	}
 }

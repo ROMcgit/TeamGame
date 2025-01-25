@@ -8,6 +8,9 @@
 #include "Game/Stage/StageManager.h"
 #include "Game/Stage/G0_StageOnigokko.h"
 #include "Game/Stage/StageMoveFloor.h"
+#include <algorithm>
+
+bool G0_Onigokko::movieScene = false;
 
 // 初期化
 void G0_Onigokko::Initialize()
@@ -28,7 +31,9 @@ void G0_Onigokko::Initialize()
 
 	// プレイヤー初期化
 	player = std::make_unique<Player0_Onigokko>();
-	player->SetPosition(DirectX::XMFLOAT3(0, 50.0f, 0));
+	player->SetPosition(DirectX::XMFLOAT3(0, 5.0f, 0));
+	player->SetMovieTime(10.0f);
+	player->SetMovieAnimation(0, true);
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
@@ -47,23 +52,28 @@ void G0_Onigokko::Initialize()
 
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
+	cameraController->SetRange(60);
+	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(10), 0, 0));
 
 	// 背景
 	backGround = std::make_unique<Sprite>();
 
 	// 鬼
 	std::unique_ptr<EnemyOni> oni = std::make_unique<EnemyOni>();
-	oni->SetPosition(DirectX::XMFLOAT3(0, 50, 80));
+	oni->SetPosition(DirectX::XMFLOAT3(0, 5, 250));
 	EnemyManager::Instance().Register(std::move(oni));
 
 	fade = std::make_unique<Fade>();
 	//! フェードを設定
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
-		0.0f, 1.0f,
-		12.0f, 0.5f);
+		1.0f, 0.0f,
+		1.0f, 0.5f);
 
 	// タイマー
 	timer = std::make_unique<Timer>(true, 3);
+
+	// ムービーシーンにする
+	movieScene = true;
 }
 
 // 終了化
@@ -83,17 +93,30 @@ void G0_Onigokko::Finalize()
 void G0_Onigokko::Update(float elapsedTime)
 {
 	// カメラコントローラー更新処理
-	DirectX::XMFLOAT3 target = player->GetPosition();
-	target.y += 0.5f;
+	if (!movieScene)
+	{
+		target = player->GetPosition();
+		target.y += 0.5f;
+		cameraController->SetRange(110);
+		cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(40), 0, 0));
+	}
+	
+
 	cameraController->SetTarget(target);
 	Camera::Instance().Update(elapsedTime);
 	cameraController->Update(elapsedTime);
 
+	fade->Update(elapsedTime);
+
+	if(!movieScene)
+	// タイマーの更新処理
 	timer->Update(elapsedTime);
 
 	// ステージ更新処理
 	StageManager::Instance().Update(elapsedTime);
 
+	//! プレイヤーの位置制限
+	PlayerPositionControll();
 	// プレイヤー更新処理
 	player->Update(elapsedTime);
 
@@ -113,6 +136,20 @@ void G0_Onigokko::Render()
 	Graphics& graphics = Graphics::Instance();
 
 	DrawingSettings(graphics);
+
+	std::unique_ptr<Enemy>& oni = EnemyManager::Instance().GetEnemy(0);
+
+	if (movieScene)
+		lightPosition = oni->GetPosition();
+	else
+		lightPosition = player->GetPosition();
+
+	lightRange = 20.0f;
+
+	//! フォグ
+	fogStart = 12.0f;
+	fogEnd   = 100.0f;
+	fogColor = { 0, 0, 0 };
 
 	//! レンダーターゲット
 	{
@@ -188,7 +225,12 @@ void G0_Onigokko::Render()
 	}
 
 	{
-		timer->Render(dc, graphics, DirectX::XMFLOAT2(30, 0));
+		if (timer->GetTimeM() == 0 && timer->GetTimeS() == 0)
+			timer->Render(dc, graphics, DirectX::XMFLOAT2(30, 0), DirectX::XMFLOAT4(1, 1, 0, 1));
+		else
+			timer->Render(dc, graphics, DirectX::XMFLOAT2(30, 0));
+	
+		fade->Render(dc, graphics);
 	}
 
 	// 2DデバッグGUI描画
@@ -230,6 +272,24 @@ void G0_Onigokko::Render()
 	}
 }
 
+// プレイヤーの位置制限
+void G0_Onigokko::PlayerPositionControll()
+{
+	if (player->GetPosition().x < -445.0f || player->GetPosition().x > 445.0f)
+	{
+		player->SetVelocityX(0);
+		float positoinX = std::clamp(player->GetPosition().x, -445.0f, 445.0f);
+		player->SetPositionX(positoinX);
+	}
+
+	if (player->GetPosition().z < -445.0f || player->GetPosition().z > 445.0f)
+	{
+		player->SetVelocityZ(0);
+		float positoinZ = std::clamp(player->GetPosition().z, -445.0f, 445.0f);
+		player->SetPositionZ(positoinZ);
+	}
+}
+
 // カメラのムービー更新処理
 void G0_Onigokko::UpdateCameraMovie(float elapsedTime)
 {
@@ -241,7 +301,12 @@ void G0_Onigokko::UpdateCameraMovie(float elapsedTime)
 		{
 			cameraMovieTime += elapsedTime;
 
-			if (cameraMovieTime > 3.0f)
+			std::unique_ptr<Enemy>& oni = EnemyManager::Instance().GetEnemy(0);
+
+			target = oni->GetPosition();
+			target.y = oni->GetHeight() * 2.0f;
+
+			if (cameraMovieTime > 10.0f)
 			{
 				cameraMovieTime  = 0;
 				movieScene       = false;
@@ -257,7 +322,7 @@ void G0_Onigokko::UpdateCameraMovie(float elapsedTime)
 			{
 				fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 					0.0f, 1.0f,
-					12.0f, 5.0f);
+					1.0f, 5.0f);
 			}
 		}
 		break;

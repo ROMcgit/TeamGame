@@ -815,7 +815,7 @@ void Character::SetCameraShake(float cameraShakeTimer, const DirectX::XMINT3& ca
 /*****************************************************************************************************************/
 
 //! ポストエフェクトのステータスを設定
-void Character::SetPostEffectStatus(float contrast, float saturation, const DirectX::XMFLOAT3 ColorFilter, float chromaticAberration)
+void Character::SetPostEffectStatusOnce(float contrast, float saturation, const DirectX::XMFLOAT3 ColorFilter, float chromaticAberration)
 {
 	Camera::postEffect.contrast = contrast;            // コンストラクト
 	Camera::postEffect.saturation = saturation;		  // サチュレーション
@@ -824,7 +824,7 @@ void Character::SetPostEffectStatus(float contrast, float saturation, const Dire
 }
 
 // ポストエフェクトのステータスを設定
-void Character::SetPostEffectStatusResetChange(float endContrastChange, float contrastChangeTime, float endSaturationChange, float saturationChangeTime, const DirectX::XMFLOAT3 endColorFilterChange, float colorFilterChangeTime, float endChromaticAberrationChange, float chromaticAberrationChangeTime)
+void Character::SetPostEffectStatusOnceResetChange(float endContrastChange, float contrastChangeTime, float endSaturationChange, float saturationChangeTime, const DirectX::XMFLOAT3 endColorFilterChange, float colorFilterChangeTime, float endChromaticAberrationChange, float chromaticAberrationChangeTime)
 {
 	//! 変更処理を一旦止める
 	Camera::contrastChange = false; // コントラスト

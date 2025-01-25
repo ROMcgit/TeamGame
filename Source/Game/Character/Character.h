@@ -257,13 +257,13 @@ public:
 		//! ポストエフェクト
 #if 1
 	// ポストエフェクトのステータスを設定
-	void SetPostEffectStatus(float contrast = 1.0f,
+	void SetPostEffectStatusOnce(float contrast = 1.0f,
 		float saturation = 0.8f,
 		const DirectX::XMFLOAT3 colorFilter = { 1.2f, 1.3f, 1.35f },
 		float chromaticAberration = 0);
 
 	// ポストエフェクトのステータスを設定
-	void SetPostEffectStatusResetChange(float endContrastChange = 1.0f,
+	void SetPostEffectStatusOnceResetChange(float endContrastChange = 1.0f,
 		float contrastChangeTime = 1.5f,
 		float endSaturationChange = 0.8f,
 		float saturationChangeTime = 1.5f,
@@ -276,7 +276,7 @@ public:
 	void SetContrastChange(float endContrastChange, float contrastChangeTime = 1.5f);
 
 	// サチュレーション(色の彩度)変更の設定
-	void SetSaturationChange(float endSaturationChange, float saturationChange = 1.5f);
+	void SetSaturationChange(float endSaturationChange, float saturationChangeTime = 1.5f);
 
 	// カラーフィルター変更の設定
 	void SetColorFilterChange(DirectX::XMFLOAT3& endColorFilterChange, float colorFilterChangeTime = 1.5f);

@@ -30,6 +30,9 @@ Player3_SoratobuHusenWari::Player3_SoratobuHusenWari()
 	// ヒットエフェクト読み込み
 	hitEffect = std::make_unique <Effect>("Data/Effect/Hit.efk");
 
+	radius = 2.3f;
+	height = 15.6f;
+
 	// 待機ステートへ遷移
 	TransitionWaitState();
 }

@@ -13,7 +13,7 @@ EnemyOni::EnemyOni()
 	model = std::make_unique<Model>("Data/Model/Oni/Oni.mdl");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.05f;
+	scale.x = scale.y = scale.z = 0.1f;
 
 	// 幅、高さ設定
 	radius = 0.5f;
@@ -122,6 +122,7 @@ void EnemyOni::DrawDebugGUI()
 {
 	if (ImGui::TreeNode("EnemyOni"))
 	{
+		ImGui::InputFloat("Dist", &dist);
 		ImGui::InputFloat3("Velocity", &velocity.x);
 
 		// トランスフォーム
@@ -222,7 +223,7 @@ void EnemyOni::UpdateWaitState(float elapsedTime)
 	float vx = targetPosition.x - player.GetCollisionPos().x;
 	float vz = targetPosition.z - player.GetCollisionPos().z;
 	dist = vx * vx + vz * vz;
-	if (dist < 100)
+	if (dist < 50)
 		//! 威嚇ステートへ遷移
 		TransitionLaughState();
 	else if (stateChangeWaitTimer <= 0.0f)
@@ -247,7 +248,7 @@ void EnemyOni::UpdateMoveState(float elapsedTime)
 	float vx = targetPosition.x - player.GetCollisionPos().x;
 	float vz = targetPosition.z - player.GetCollisionPos().z;
 	dist = vx * vx + vz * vz;
-	if (dist < 100)
+	if (dist < 50)
 		//! 威嚇ステートへ遷移
 		TransitionLaughState();
 	else if (stateChangeWaitTimer <= 0.0f)
@@ -262,17 +263,19 @@ void EnemyOni::TransitionLaughState()
 
 	stateChangeWaitTimer = 0.5f;
 
-	//! コントラストの
-	SetContrastChange(1.5f, 2.0f);
+
+
+	//! コントラスト
+	SetContrastChange(1.5f, 0.5f);
 
 	//! サチュレーション
-	SetSaturationChange(1.0f, 2.0f);
+	SetSaturationChange(1.0f, 0.5f);
 
 	//! カラーフィルター
-	SetColorFilterChange(DirectX::XMFLOAT3(2.0f, 1.3f, 1.35f), 2.0f);
+	SetColorFilterChange(DirectX::XMFLOAT3(3.0f, 1.3f, 1.35f), 0.5f);
 
 	//! クロマティックアベレーション
-	SetChromaticAberrationChange(0, 0);
+	SetChromaticAberrationChange(0.03f, 1.5f);
 
 	model->PlayAnimation(Anim_Laugh, false);
 }
@@ -303,7 +306,7 @@ void EnemyOni::UpdateTrackingState(float elapsedTime)
 	targetPosition = Player0_Onigokko::Instance().GetPosition();
 
 	//! プレイヤーに向かって移動する
-	MoveToTarget(elapsedTime, 100);
+	MoveToTarget(elapsedTime, 20);
 
 	stateChangeWaitTimer -= elapsedTime;
 
@@ -317,7 +320,7 @@ void EnemyOni::TransitionTiredState()
 	state = State::Tired;
 
 	//! ポストエフェクトを元に戻す
-	SetPostEffectStatusResetChange();
+	SetPostEffectStatusOnceResetChange();
 
 	model->PlayAnimation(Anim_Tired, false);
 }

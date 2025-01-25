@@ -23,6 +23,7 @@
 #include "Game/Character/GameSelect/GS0_Onigokko.h"
 
 SceneGameSelect::GameSelect SceneGameSelect::gameSelect = SceneGameSelect::GameSelect::Onigokko;
+bool SceneGameSelect::sceneChange = false;
 
 // 初期化
 void SceneGameSelect::Initialize()
@@ -70,7 +71,9 @@ void SceneGameSelect::Initialize()
 	fade = std::make_unique<Fade>();
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 		1.0f, 0.0f,
-		1.5f, 0.2f);
+		0.5f, 0.2f);
+
+	sceneChange = false;
 
 	std::unique_ptr<GS0_OniGokko> onigokko = std::make_unique<GS0_OniGokko>();
 	onigokko->SetPosition(DirectX::XMFLOAT3(0, 1, 80));
@@ -105,6 +108,8 @@ void SceneGameSelect::Update(float elapsedTime)
 
 	// プレイヤー更新処理
 	player->Update(elapsedTime);
+
+	fade->Update(elapsedTime);
 
 	// エネミー更新処理
 	EnemyManager::Instance().Update(elapsedTime);
@@ -239,13 +244,16 @@ void SceneGameSelect::Render()
 		renderTarget->End();
 		//! スクリーンをポストエフェクトシェーダーで描画
 		Camera::Instance().CreatePostEffect();
-		Camera::Instance().SetPostEffectStatus(
+		Camera::Instance().SetPostEffectStatusOnce(
 			1.0f, 0.8f,
 			DirectX::XMFLOAT3(1.2f, 1.3f, 1.35f), 0);
 		//! スクリーンをポストエフェクトシェーダーで描画
 		renderTarget->Render();
 	}
 
+	{
+		fade->Render(dc, graphics);
+	}
 	
 
 	// 2DデバッグGUI描画

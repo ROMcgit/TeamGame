@@ -53,7 +53,7 @@ void G0_Onigokko::Initialize()
 
 	// 鬼
 	std::unique_ptr<EnemyOni> oni = std::make_unique<EnemyOni>();
-	oni->SetPosition(DirectX::XMFLOAT3(0, 50, 30));
+	oni->SetPosition(DirectX::XMFLOAT3(0, 50, 80));
 	EnemyManager::Instance().Register(std::move(oni));
 
 	fade = std::make_unique<Fade>();
@@ -165,7 +165,7 @@ void G0_Onigokko::Render()
 		renderTarget->End();
 		//! スクリーンをポストエフェクトシェーダーで描画
 		Camera::Instance().CreatePostEffect();
-		Camera::Instance().SetPostEffectStatus(
+		Camera::Instance().SetPostEffectStatusOnce(
 			1.0f, 0.8f,
 			DirectX::XMFLOAT3(1.2f, 1.3f, 1.35f), 0);
 		//! スクリーンをポストエフェクトシェーダーで描画

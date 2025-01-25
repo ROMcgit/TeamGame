@@ -46,6 +46,9 @@ void GS0_OniGokko::Update(float elapsedTime)
 	// キャラクターの状態更新処理
 	UpdateCharacterState(elapsedTime);
 
+	// プレイヤーとの当たり判定
+	CollisionVsPlayer();
+
 	// モデルアニメーション更新
 	model->UpdateAnimation(elapsedTime);
 
@@ -172,9 +175,8 @@ void GS0_OniGokko::CollisionVsPlayer()
 	Player0_Onigokko& player = Player0_Onigokko::Instance();
 
 	DirectX::XMFLOAT3 outPosition;
-	if (
-		Collision::IntersectCylinderVsCylinder(
-			position,
+	if (Collision::IntersectCylinderVsCylinder(
+			collisionPos,
 			radius,
 			height,
 			player.GetPosition(),
@@ -184,6 +186,7 @@ void GS0_OniGokko::CollisionVsPlayer()
 	{
 		//! シーンを切り替える
 		SceneGameSelect::gameSelect = SceneGameSelect::GameSelect::Onigokko;
-		SceneGameSelect::Instance().SetSceneChange();
+		SceneGameSelect::sceneChange = true;
+		player.SetPosition(outPosition);
 	}
 }

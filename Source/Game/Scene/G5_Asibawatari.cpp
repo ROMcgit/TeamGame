@@ -145,7 +145,7 @@ void G5_Asibawatari::Render()
 		renderTarget->End();
 		//! スクリーンをポストエフェクトシェーダーで描画
 		Camera::Instance().CreatePostEffect();
-		Camera::Instance().SetPostEffectStatus(
+		Camera::Instance().SetPostEffectStatusOnce(
 			1.0f, 0.8f,
 			DirectX::XMFLOAT3(1.2f, 1.3f, 1.35f), 0);
 		//! スクリーンをポストエフェクトシェーダーで描画

@@ -30,6 +30,9 @@ Player1_DarumasangaKoronda::Player1_DarumasangaKoronda()
 	// ヒットエフェクト読み込み
 	hitEffect = std::make_unique <Effect>("Data/Effect/Hit.efk");
 
+	radius = 2.3f;
+	height = 15.6f;
+
 	// 待機ステートへ遷移
 	TransitionWaitState();
 }
@@ -101,9 +104,6 @@ void Player1_DarumasangaKoronda::Update(float elapsedTime)
 
 	// 弾丸更新処理
 	projectileManager.Update(elapsedTime);
-
-	// プレイヤーと敵との衝突処理
-	CollisionPlayer1_DarumasangaKorondaVsEnemies();
 
 	// モデルアニメーション更新処理
 	model->UpdateAnimation(elapsedTime);
@@ -282,76 +282,6 @@ void Player1_DarumasangaKoronda::TransitionDeathState()
 // 死亡ステート更新処理
 void Player1_DarumasangaKoronda::UpdateDeathState(float elapsedTimae)
 {
-}
-
-// プレイヤーとエネミーとの衝突処理
-void Player1_DarumasangaKoronda::CollisionPlayer1_DarumasangaKorondaVsEnemies()
-{
-	EnemyManager& enemyManager = EnemyManager::Instance();
-
-	// 全ての敵と総当たりで衝突処理
-	int enemyCount = enemyManager.GetEnemyCount();
-	for (int i = 0; i < enemyCount; ++i)
-	{
-		std::unique_ptr<Enemy>& enemy = enemyManager.GetEnemy(i);
-
-		// 衝突処理
-		DirectX::XMFLOAT3 outPosition;
-		//if (Collision::IntersectSphereVsSphere(
-		//	Player1_DarumasangaKoronda::GetPosition(),
-		//	Player1_DarumasangaKoronda::GetRadius(),
-		//	enemy->GetPosition(),
-		//	enemy->GetRadius(),
-		//	outPosition
-		//))
-		//{
-		//	// 押し出しの後の位置設定
-		//	enemy->SetPosition(outPosition);
-		//}
-
-
-		if (Collision::IntersectCylinderVsCylinder(
-			position,
-			radius,
-			height,
-			enemy->GetPosition(),
-			enemy->GetRadius(),
-			enemy->GetHeight(),
-			outPosition
-		))
-		{
-			//// プレイヤーが敵の上にいるかを判定する
-			//float diff = Player1_DarumasangaKoronda::GetPosition().y - ( enemy->GetPosition().y + enemy->GetHeight());
-			//if (diff < -0.2f)
-			//{
-			//	Player1_DarumasangaKoronda::Jump(10);
-			//	// 小ジャンプさせるためにY方向の速度を設定する
-			//}
-
-			//// 押し出しの後の位置設定
-			//enemy->SetPosition(outPosition);
-
-			DirectX::XMVECTOR P = DirectX::XMLoadFloat3(&position);
-			DirectX::XMVECTOR E = DirectX::XMLoadFloat3(&enemy->GetPosition());
-			DirectX::XMVECTOR V = DirectX::XMVectorSubtract(P, E);
-			DirectX::XMVECTOR N = DirectX::XMVector3Normalize(V);
-			DirectX::XMFLOAT3 normal;
-			DirectX::XMStoreFloat3(&normal, N);
-			// 上から踏んづけた場合は小ジャンプする
-			if (normal.y > 0.8f)
-			{
-				// 小ジャンプする
-				Jump(jumpSpeed * 0.5f);
-			}
-			else
-			{
-				// 押し出し後の位置設定
-				enemy->SetPosition(outPosition);
-			}
-
-		}
-
-	}
 }
 
 //デバッグプリミティブ描画

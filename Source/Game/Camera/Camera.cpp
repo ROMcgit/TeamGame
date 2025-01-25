@@ -74,15 +74,30 @@ void Camera::CreatePostEffect()
 	dc->PSSetConstantBuffers(5, 1, CBPostEffect.GetAddressOf());
 }
 
+//! ポストエフェクトのステータスの設定(一回だけ)
+void Camera::SetPostEffectStatusOnce(float contrast, float saturation, const DirectX::XMFLOAT3 colorFilter, float chromaticAberration)
+{
+	// パラメータ初期化
+	if (!setPostEffectStatusOnce)
+	{
+		postEffect.contrast = contrast;            // コンストラクト
+		postEffect.saturation = saturation;          // サチュレーション
+		postEffect.colorFilter = colorFilter;         // カラーフィルター
+		postEffect.chromaticAberration = chromaticAberration; // クロマティックアベレーション
+
+		setPostEffectStatusOnce = true;
+	}
+}
+
 // ポストエフェクトのステータスを設定
-void Camera::SetPostEffectStatus(float contrast, float saturation, const DirectX::XMFLOAT3 ColorFilter, float chromaticAberration)
+void Camera::SetPostEffectStatus(float contrast, float saturation, const DirectX::XMFLOAT3 colorFilter, float chromaticAberration)
 {
 	// パラメータ初期化
 	if (!postEffectControll)
 	{
 		postEffect.contrast = contrast;            // コンストラクト
 		postEffect.saturation = saturation;          // サチュレーション
-		postEffect.colorFilter = ColorFilter;         // カラーフィルター
+		postEffect.colorFilter = colorFilter;         // カラーフィルター
 		postEffect.chromaticAberration = chromaticAberration; // クロマティックアベレーション
 	}
 }

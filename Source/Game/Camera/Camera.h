@@ -11,6 +11,12 @@ public:
 	//! ポストエフェクトを生成
 	void CreatePostEffect();
 
+	//! ポストエフェクトのステータスの設定(一回だけ)
+	void SetPostEffectStatusOnce(float contrast = 1.0f,
+		float saturation = 0.8f,
+		const DirectX::XMFLOAT3 colorFilter = { 1.2f, 1.3f, 1.35f },
+		float chromaticAberration = 0);
+
 	//! ポストエフェクトのステータスを設定
 	void SetPostEffectStatus(float contrast = 1.0f,
 		float saturation = 0.8f,
@@ -113,7 +119,7 @@ private:
 	DirectX::XMFLOAT3 right; // カメラの右方向
 
 private:
-	bool postEffectInitialization = false; //! ポストエフェクトのステータスの初期化
+	bool setPostEffectStatusOnce = false; // ポストエフェクトのステータスの設定(一回だけ)をしたか
 
 public:
 	static bool postEffectControll;        //! ゲーム中に数値をいじれるようにする(ImGui用)

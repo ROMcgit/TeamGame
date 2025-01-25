@@ -34,9 +34,6 @@ public:
 	// 描画処理
 	void Render() override;
 
-	// シーン変更を設定
-	void SetSceneChange() { this->sceneChange = true; }
-
 public:
 	enum class GameSelect
 	{
@@ -50,6 +47,8 @@ public:
 
 	static GameSelect gameSelect; // ゲーム選択
 
+	static bool sceneChange; // シーン切り替え
+
 private:
 	std::unique_ptr <Player0_Onigokko> player;
 	std::unique_ptr <CameraController> cameraController;
@@ -57,7 +56,6 @@ private:
 	std::unique_ptr<RenderTarget>    renderTarget; //! レンダーターゲット
 	std::unique_ptr<Sprite> backGround;
 
-	bool sceneChange = false; // シーン切り替え
 
 	std::unique_ptr<Fade> fade;
 	bool setFade = false;

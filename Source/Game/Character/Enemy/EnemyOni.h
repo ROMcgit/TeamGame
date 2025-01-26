@@ -39,6 +39,9 @@ private:
 	// プレイヤーとの当たり判定
 	void CollisionVsPlayer();
 
+	// 移動位置に移動
+	void MoveTarget(float elapsedTime, float speedRate);
+
 	// ノードとプレイヤーの衝突処理
 	//void CollisionNodeVsPlayer(const char* nodeName, float nodeRadius);
 

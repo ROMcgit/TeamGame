@@ -7,8 +7,11 @@
 #include "Other/Collision.h"
 #include "Game/Character/Projectile/ProjectileStraight.h"
 #include "Game/Character/Projectile/ProjectileHoming.h"
+#include "Game/Scene/G0_Onigokko.h"
 
 static Player0_Onigokko* instance = nullptr;
+
+bool Player0_Onigokko::damage = false;
 
 // インスタンス取得
 Player0_Onigokko& Player0_Onigokko::Instance()
@@ -20,6 +23,9 @@ Player0_Onigokko::Player0_Onigokko()
 {
 	// インスタンスポインタ設定
 	instance = this;
+
+	// ダメージ
+	damage = false;
 
 	// モデル読み込み
 	model = std::make_unique <Model>("Data/Model/Ai/Ai.mdl");
@@ -216,6 +222,8 @@ void Player0_Onigokko::TransitionDamageState()
 {
 	state = State::Damage;
 
+	stateChangeWaitTimer = 2.2f;
+
 	// ダメージアニメーション再生
 	model->PlayAnimation(Anim_Damage, false);
 }
@@ -223,9 +231,12 @@ void Player0_Onigokko::TransitionDamageState()
 // ダメージステート更新処理
 void Player0_Onigokko::UpdateDamageState(float elapsedTime)
 {
+	stateChangeWaitTimer -= elapsedTime;
+
 	// ダメージアニメーションが終わったら待機ステートへ遷移
-	if (!model->IsPlayAnimation())
+	if (!model->IsPlayAnimation() && stateChangeWaitTimer <= 0.0f)
 	{
+		position = { 0, 5, 0 };
 		TransitionWaitState();
 	}
 }

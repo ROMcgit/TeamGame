@@ -127,6 +127,9 @@ private:
 		Anim_Death,
 	};
 
+public:
+	static bool damage;
+
 private:
 	std::unique_ptr<Model> model;
 

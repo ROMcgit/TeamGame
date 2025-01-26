@@ -61,11 +61,16 @@ private:
 	static bool  movieScene; // ムービーシーンか
 	float cameraMovieTime = 0.0f; // カメラのムービー時間
 
+	bool movieFade = false;
+	float movieWaitTimer = 0.0f;
+
 	std::unique_ptr<Fade> fade;
+	bool oniDeathFade = false;
 
 	enum class CameraMovieScene
 	{
 		OniEntry, // 鬼登場
+		OniMove,  // 鬼移動
 		OniDeath, // 鬼死亡
 	}cameraMovieScene;
 };

@@ -101,7 +101,6 @@ void G0_Onigokko::Update(float elapsedTime)
 		cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(40), 0, 0));
 	}
 	
-
 	cameraController->SetTarget(target);
 	Camera::Instance().Update(elapsedTime);
 	cameraController->Update(elapsedTime);
@@ -109,8 +108,20 @@ void G0_Onigokko::Update(float elapsedTime)
 	fade->Update(elapsedTime);
 
 	if(!movieScene)
-	// タイマーの更新処理
-	timer->Update(elapsedTime);
+	{
+		if(EnemyManager::Instance().GetEnemyCount() < 5)
+		{
+			// 鬼
+			std::unique_ptr<EnemyOni> oni = std::make_unique<EnemyOni>();
+			{
+				oni->SetPosition(DirectX::XMFLOAT3(100, 5, 200));
+				EnemyManager::Instance().Register(std::move(oni));
+			}
+		}
+
+		// タイマーの更新処理
+		timer->Update(elapsedTime);
+	}
 
 	// ステージ更新処理
 	StageManager::Instance().Update(elapsedTime);
@@ -137,20 +148,18 @@ void G0_Onigokko::Render()
 
 	DrawingSettings(graphics);
 
-	if(EnemyManager::Instance().GetEnemyCount() > 0)
-	{
-		std::unique_ptr<Enemy>& oni = EnemyManager::Instance().GetEnemy(0);
+	std::unique_ptr<Enemy>& oni = EnemyManager::Instance().GetEnemy(0);
 
-		if (movieScene)
-			lightPosition = oni->GetPosition();
-		else
-			lightPosition = player->GetPosition();
-	}
+	if (movieScene && cameraMovieScene != CameraMovieScene::OniMove)
+		lightPosition = oni->GetPosition();
+	else
+		lightPosition = player->GetPosition();
+	
 
-	lightRange = 20.0f;
+	lightRange = 30.0f;
 
 	//! フォグ
-	fogStart = 12.0f;
+	fogStart = 20.0f;
 	fogEnd   = 100.0f;
 	fogColor = { 0, 0, 0 };
 
@@ -307,13 +316,53 @@ void G0_Onigokko::UpdateCameraMovie(float elapsedTime)
 			std::unique_ptr<Enemy>& oni = EnemyManager::Instance().GetEnemy(0);
 
 			target = oni->GetPosition();
-			target.y = oni->GetHeight() * 2.0f;
+			target.y = oni->GetHeight() * 1.0f;
 
-			if (cameraMovieTime > 10.0f)
+			if (cameraMovieTime > 8.0f)
 			{
-				cameraMovieTime  = 0;
-				movieScene       = false;
+				cameraMovieTime = 0;
+				movieScene = false;
+				cameraMovieScene = CameraMovieScene::OniMove;
+			}
+		}
+		break;
+		case CameraMovieScene::OniMove:
+		{
+			if(movieWaitTimer <= 0.0f)
+				movieWaitTimer = 2;
+			
+			if (movieFade)
+			{
+				fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+					1.0f, 0.0f,
+					1.2f, 0.8f);
+
+				movieFade = false;
+			}
+
+			if (movieScene)
+			{
+				if (!movieFade)
+				{
+					fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+						0.0f, 1.0f,
+						1.2f, 0.2f);
+
+					movieFade = true;
+				}
+
+				movieWaitTimer -= elapsedTime;
+				if (movieWaitTimer <= 0.0f)
+					movieScene = false;
+			}
+
+			if (timer->GetTimeM_Int() <= 0 && timer->GetTimeS_Int() <= 0)
+			{
 				cameraMovieScene = CameraMovieScene::OniDeath;
+
+				fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+					0.0f, 1.0f,
+					1.0f, 0.2f);
 			}
 		}
 		break;
@@ -321,11 +370,25 @@ void G0_Onigokko::UpdateCameraMovie(float elapsedTime)
 		{
 			cameraMovieTime += elapsedTime;
 
-			if (cameraMovieTime > 5.0f)
+			if (!oniDeathFade && !fade->GetFade())
+			{
+				fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+					1.0f, 0.0f,
+					1.0f, 0.2f);
+
+				oniDeathFade = true;
+			}
+
+			std::unique_ptr<Enemy>& oni = EnemyManager::Instance().GetEnemy(0);
+
+			target = oni->GetPosition();
+			target.y = oni->GetHeight() * 1.0f;
+
+			if (cameraMovieTime > 10.0f)
 			{
 				fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 					0.0f, 1.0f,
-					1.0f, 5.0f);
+					1.0f, 0.2f);
 			}
 		}
 		break;

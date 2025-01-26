@@ -8,6 +8,8 @@
 #include "Game/Camera/Camera.h"
 #include "Graphics/Timer.h"
 
+#include <algorithm>
+
 // コンストラクタ
 EnemyOni::EnemyOni()
 {
@@ -18,9 +20,11 @@ EnemyOni::EnemyOni()
 
 	gravity = 0;
 
+	angle.y = DirectX::XMConvertToRadians(180);
+
 	// 幅、高さ設定
-	radius = 0.5f;
-	height = 1.0f;
+	radius = 2.28f;
+	height = 16.0f;
 
 	opacity = 0;
 	SetOpacityChange(1.0f, 0.8f);
@@ -37,6 +41,9 @@ EnemyOni::~EnemyOni()
 // 更新処理
 void EnemyOni::Update(float elapsedTime)
 {
+	if (Timer::GetTimeM_Int() <= 0 && Timer::GetTimeS_Int() <= 0)
+		TransitionDeathState();
+
 	// ステート毎の更新処理
 	switch (state)
 	{
@@ -64,6 +71,10 @@ void EnemyOni::Update(float elapsedTime)
 	case State::Tired:
 		UpdateTiredState(elapsedTime);
 		break;
+	// 攻撃
+	case State::Attack:
+		UpdateAttackState(elapsedTime);
+		break;
 	// 死亡
 	case State::Death:
 		UpdateDeathState(elapsedTime);
@@ -89,7 +100,7 @@ void EnemyOni::Update(float elapsedTime)
 // 描画処理
 void EnemyOni::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	shader->Draw(dc, model.get());
+	shader->Draw(dc, model.get(), materialColor, opacity);
 }
 
 // HPなどの描画
@@ -187,11 +198,11 @@ void EnemyOni::TransitionWaitState()
 // 待機ステート更新処理
 void EnemyOni::UpdateWaitState(float elapsedTime)
 {
-	Player0_Onigokko& player = Player0_Onigokko::Instance();
-
 	//! ムービーシーンでないなら、待ち時間を減らす
-	if(!G0_Onigokko::Instance().GetMovieScene())
+	if (!G0_Onigokko::Instance().GetMovieScene())
 		stateChangeWaitTimer -= elapsedTime;
+
+	Player0_Onigokko& player = Player0_Onigokko::Instance();
 
 	targetPosition = player.GetPosition();
 
@@ -203,9 +214,6 @@ void EnemyOni::UpdateWaitState(float elapsedTime)
 		TransitionLaughState();
 	else if (stateChangeWaitTimer <= 0.0f)
 		TransitionMoveState();
-
-	if (Timer::GetTimeM_Int() <= 0 && Timer::GetTimeS_Int() <= 0)
-		TransitionDeathState();
 }
 
 // 移動ステートへ遷移
@@ -221,10 +229,26 @@ void EnemyOni::TransitionMoveState()
 // 移動ステート更新処理
 void EnemyOni::UpdateMoveState(float elapsedTime)
 {
-	Player0_Onigokko& player = Player0_Onigokko::Instance();
-	//MoveToTarget();
-	//SetAngleChange(DirectX::XMFLOAT3(0, DirectX::XMConvertToRadians))
+	moveTarget.x = rand() % 150 + 30 * (rand() % 2 == 1 ? -1 : 1);
+	moveTarget.z = rand() % 150 + 30 * (rand() % 2 == 1 ? -1 : 1);
 
+	moveTarget.x = std::clamp(moveTarget.x, -445.0f, 445.0f);
+	moveTarget.z = std::clamp(moveTarget.z, -445.0f, 445.0f);
+
+	// 移動位置に移動
+	MoveTarget(elapsedTime, 60);
+
+	float vxm = moveTarget.x - position.x;
+	float vzm = moveTarget.z - position.z;
+	float d = vxm * vxm + vzm * vzm;
+	if (d < radius * radius)
+	{
+		MoveTarget(elapsedTime, 0);
+		// 待機ステートへ遷移
+		TransitionWaitState();
+	}
+
+	Player0_Onigokko& player = Player0_Onigokko::Instance();
 	targetPosition = player.GetPosition();
 
 	float vx = targetPosition.x - position.x;
@@ -244,6 +268,8 @@ void EnemyOni::TransitionLaughState()
 	state = State::Laugh;
 
 	stateChangeWaitTimer = 0.5f;
+
+	velocity.x = velocity.z = 0;
 
 	//! コントラスト
 	SetContrastChange(1.5f, 0.5f);
@@ -290,7 +316,7 @@ void EnemyOni::UpdateTrackingState(float elapsedTime)
 	dist = vx * vx + vz * vz;
 	if (dist < 3700)
 		//! プレイヤーに向かって移動する
-		MoveToTarget(elapsedTime, 22);
+		MoveToTarget(elapsedTime, 25);
 	else
 		//! プレイヤーの位置制に向かって移動する
 		//! プレイヤーに向かって移動する
@@ -327,7 +353,9 @@ void EnemyOni::TransitionAttackState()
 {
 	state = State::Attack;
 
-	stateChangeWaitTimer = 5.0f;
+	G0_Onigokko::Instance().SetMovieScene(true);
+
+	stateChangeWaitTimer = 2.2f;
 
 	// 攻撃アニメーション再生
 	model->PlayAnimation(Anim_Attack, false);
@@ -342,6 +370,9 @@ void EnemyOni::UpdateAttackState(float elapsedTime)
 	{
 		position = { 50, 5, 80 };
 
+		//! ポストエフェクトを元に戻す
+		SetPostEffectStatusOnceResetChange();
+
 		TransitionWaitState();
 	}
 }
@@ -351,6 +382,8 @@ void EnemyOni::TransitionDeathState()
 {
 	state = State::Death;
 
+	angle.y = DirectX::XMConvertToRadians(180);
+
 	// ダメージアニメーション再生
 	model->PlayAnimation(Anim_Death, false);
 }
@@ -358,6 +391,8 @@ void EnemyOni::TransitionDeathState()
 // 死亡ステート更新処理
 void EnemyOni::UpdateDeathState(float elapsedTime)
 {
+	if (!model->IsPlayAnimation())
+		SetOpacityChange(0.0f, 1.5f);
 }
 
 // ダメージ受けた時に呼ばれる
@@ -386,9 +421,24 @@ void EnemyOni::CollisionVsPlayer()
 		player.GetRadius(),
 		player.GetHeight(),
 		outPosition
-	))
+	) && player.GetInvincibleTimer() <= 0)
 	{
 		TransitionAttackState();
 		player.ApplyDamage(1, 10, 0);
 	}
+}
+
+// 移動位置に移動
+void EnemyOni::MoveTarget(float elapsedTime, float speedRate)
+{
+	// ターゲット方向への進行ベクトルを算出
+	float vx = moveTarget.x - position.x;
+	float vz = moveTarget.z - position.z;
+	float dist = sqrtf(vx * vx + vz * vz);
+	vx /= dist;
+	vz /= dist;
+
+	// 移動処理
+	Move3D(vx, vz, moveSpeed * speedRate);
+	Turn3DNotCancel(elapsedTime, vx, vz, turnSpeed * speedRate);
 }

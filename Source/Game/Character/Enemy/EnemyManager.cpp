@@ -18,20 +18,6 @@ void EnemyManager::Update(float elapsedTime)
 		enemy->Update(elapsedTime);
 	}
 
-	//for (Enemy* enemy : removes)
-	//{
-	//	// std::vectorから要素を削除する場合はイテレーターで削除しなければならない
-	//	std::vector<Enemy*>::iterator it = std::find(enemies.begin(),
-	//		enemies.end(), enemy);
-
-	//	if (it != enemies.end())
-	//	{
-	//		enemies.erase(it);
-	//	}
-
-	//	delete enemy;
-	//}
-
 	for (Enemy* enemy : removes)
 	{
 		auto it = std::remove_if(enemies.begin(), enemies.end(),

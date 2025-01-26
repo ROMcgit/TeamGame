@@ -220,10 +220,12 @@ void EnemyOni::UpdateWaitState(float elapsedTime)
 	if(!G0_Onigokko::Instance().GetMovieScene())
 		stateChangeWaitTimer -= elapsedTime;
 
-	float vx = targetPosition.x - player.GetCollisionPos().x;
-	float vz = targetPosition.z - player.GetCollisionPos().z;
+	targetPosition = player.GetPosition();
+
+	float vx = targetPosition.x - position.x;
+	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < 50)
+	if (dist < 4100)
 		//! 威嚇ステートへ遷移
 		TransitionLaughState();
 	else if (stateChangeWaitTimer <= 0.0f)
@@ -245,10 +247,14 @@ void EnemyOni::UpdateMoveState(float elapsedTime)
 {
 	Player0_Onigokko& player = Player0_Onigokko::Instance();
 
-	float vx = targetPosition.x - player.GetCollisionPos().x;
-	float vz = targetPosition.z - player.GetCollisionPos().z;
+	//SetAngleChange(DirectX::XMFLOAT3(0, DirectX::XMConvertToRadians))
+
+	targetPosition = player.GetPosition();
+
+	float vx = targetPosition.x - position.x;
+	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < 50)
+	if (dist < 4100)
 		//! 威嚇ステートへ遷移
 		TransitionLaughState();
 	else if (stateChangeWaitTimer <= 0.0f)
@@ -262,8 +268,6 @@ void EnemyOni::TransitionLaughState()
 	state = State::Laugh;
 
 	stateChangeWaitTimer = 0.5f;
-
-
 
 	//! コントラスト
 	SetContrastChange(1.5f, 0.5f);
@@ -305,8 +309,16 @@ void EnemyOni::UpdateTrackingState(float elapsedTime)
 {
 	targetPosition = Player0_Onigokko::Instance().GetPosition();
 
-	//! プレイヤーに向かって移動する
-	MoveToTarget(elapsedTime, 20);
+	float vx = targetPosition.x - position.x;
+	float vz = targetPosition.z - position.z;
+	dist = vx * vx + vz * vz;
+	if (dist < 3700)
+		//! プレイヤーに向かって移動する
+		MoveToTarget(elapsedTime, 22);
+	else
+		//! プレイヤーの位置制に向かって移動する
+		//! プレイヤーに向かって移動する
+		MoveToTarget(elapsedTime, 80);
 
 	stateChangeWaitTimer -= elapsedTime;
 

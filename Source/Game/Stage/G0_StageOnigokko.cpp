@@ -6,7 +6,7 @@ G0_StageOnigokko::G0_StageOnigokko()
 	// ステージモデルを読み込み
 	model = std::make_unique <Model>("Data/Model/Stage/0.StageOnigokko/StageOnigokko.mdl");
 
-	scale.x = scale.z = 0.2f;
+	scale.x = scale.z = 0.5f;
 	scale.y = 0.1f;
 
 }

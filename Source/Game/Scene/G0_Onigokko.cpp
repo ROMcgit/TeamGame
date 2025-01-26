@@ -199,19 +199,6 @@ void G0_Onigokko::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-	//! シェーダーを出す
-	{
-		//! レンダーターゲットへ描画終了
-		renderTarget->End();
-		//! スクリーンをポストエフェクトシェーダーで描画
-		Camera::Instance().CreatePostEffect();
-		Camera::Instance().SetPostEffectStatusOnce(
-			1.0f, 0.8f,
-			DirectX::XMFLOAT3(1.2f, 1.3f, 1.35f), 0);
-		//! スクリーンをポストエフェクトシェーダーで描画
-		renderTarget->Render();
-	}
-
 	// 3Dデバッグ描画
 	{
 		// プレイヤーデバッグプリミティブ描画
@@ -225,6 +212,19 @@ void G0_Onigokko::Render()
 
 		// デバッグレンダラ描画実行
 		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
+	}
+
+	//! シェーダーを出す
+	{
+		//! レンダーターゲットへ描画終了
+		renderTarget->End();
+		//! スクリーンをポストエフェクトシェーダーで描画
+		Camera::Instance().CreatePostEffect();
+		Camera::Instance().SetPostEffectStatusOnce(
+			1.0f, 0.8f,
+			DirectX::XMFLOAT3(1.2f, 1.3f, 1.35f), 0);
+		//! スクリーンをポストエフェクトシェーダーで描画
+		renderTarget->Render();
 	}
 
 	{

@@ -16,9 +16,16 @@ EnemyOni::EnemyOni()
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.1f;
 
+	gravity = 0;
+
 	// 幅、高さ設定
 	radius = 0.5f;
 	height = 1.0f;
+
+	opacity = 0;
+	SetOpacityChange(1.0f, 0.8f);
+
+	TransitionEntryState();
 }
 
 // デストラクタ
@@ -136,6 +143,12 @@ void EnemyOni::DrawDebugGUI()
 			// スケール
 			ImGui::DragFloat3("Scale", &scale.x, 0.01f);
 		}
+		if (ImGui::CollapsingHeader("Collision"))
+		{
+			ImGui::DragFloat("Radius", &radius, 0.01f);
+			ImGui::DragFloat("Height", &height, 0.01f);
+		}
+
 		ImGui::TreePop();
 	}
 }
@@ -185,7 +198,7 @@ void EnemyOni::UpdateWaitState(float elapsedTime)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < 4100 && player.GetInvincibleTimer() < 0)
+	if (dist < 4100 && player.GetInvincibleTimer() <= 0)
 		//! 威嚇ステートへ遷移
 		TransitionLaughState();
 	else if (stateChangeWaitTimer <= 0.0f)
@@ -217,7 +230,7 @@ void EnemyOni::UpdateMoveState(float elapsedTime)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < 4100 && player.GetInvincibleTimer() < 0)
+	if (dist < 4100 && player.GetInvincibleTimer() <= 0)
 		//! 威嚇ステートへ遷移
 		TransitionLaughState();
 	else if (stateChangeWaitTimer <= 0.0f)
@@ -326,7 +339,11 @@ void EnemyOni::UpdateAttackState(float elapsedTime)
 	stateChangeWaitTimer -= elapsedTime;
 
 	if (stateChangeWaitTimer <= 0.0f)
+	{
+		position = { 50, 5, 80 };
+
 		TransitionWaitState();
+	}
 }
 
 // 死亡ステートへ遷移

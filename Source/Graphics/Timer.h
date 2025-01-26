@@ -11,13 +11,6 @@ public:
 	Timer(bool countdown = false, int timeM = 0, int timeS = 0);
 	~Timer();
 
-	// —Bˆê‚ÌƒCƒ“ƒXƒ^ƒ“ƒXæ“¾
-	static Timer& Instance()
-	{
-		static Timer instance;
-		return instance;
-	}
-
 	// XVˆ—
 	void Update(float elapsedTime);
 
@@ -25,10 +18,10 @@ public:
 	void Render(ID3D11DeviceContext* dc, Graphics& graphics, DirectX::XMFLOAT2 position = { 30, 0 }, DirectX::XMFLOAT4 color = { 1, 1, 1, 1});
 
 	// •ª‚ğintŒ^‚Åæ“¾
-	float GetTimeM_Int() { return (int)timeM; }
+	static float GetTimeM_Int() { return (int)timeM; }
 
 	// •b‚ğintŒ^‚Åæ“¾
-	float GetTimeS_Int() { return (int)timeS; }
+	static float GetTimeS_Int() { return (int)timeS; }
 
 private:
 	static float timeM; // •ª

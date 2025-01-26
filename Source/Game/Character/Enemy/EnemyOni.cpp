@@ -57,10 +57,6 @@ void EnemyOni::Update(float elapsedTime)
 	case State::Tired:
 		UpdateTiredState(elapsedTime);
 		break;
-	// ダメージ
-	case State::Damage:
-		UpdateDamageState(elapsedTime);
-		break;
 	// 死亡
 	case State::Death:
 		UpdateDeathState(elapsedTime);
@@ -70,14 +66,11 @@ void EnemyOni::Update(float elapsedTime)
 	// 速力処理更新
 	UpdateVelocity(elapsedTime);
 
-	// 無敵時間更新
-	UpdateInvincibleTimer(elapsedTime);
-
-	// オブジェクト行列を更新
-	UpdateTransform();
-
 	// キャラクターの状態更新処理
 	UpdateCharacterState(elapsedTime);
+
+	// プレイヤーとの当たり判定
+	CollisionVsPlayer();
 
 	// モデルアニメーション更新
 	model->UpdateAnimation(elapsedTime);
@@ -147,40 +140,6 @@ void EnemyOni::DrawDebugGUI()
 	}
 }
 
-// ノードとプレイヤーの衝突処理
-//void EnemyOni::CollisionNodeVsPlayer(const char* nodeName, float nodeRadius)
-//{
-//	// ノードの位置と当たり判定を行う
-//	Model::Node* node = model->FindNode(nodeName);
-//	if (node != nullptr)
-//	{
-//		// ノードのワールド座標
-//		DirectX::XMFLOAT3 nodePosition(
-//			node->worldTransform._41,
-//			node->worldTransform._42,
-//			node->worldTransform._43
-//		);
-//
-//		// 当たり判定表示
-//		Graphics::Instance().GetDebugRenderer()->DrawSphere(
-//			nodePosition, nodeRadius, DirectX::XMFLOAT4(0, 0, 1, 1)
-//		);
-//
-//		// プレイヤーと当たり判定
-//		Player0_Onigokko& player = Player0_Onigokko::Instance();
-//		DirectX::XMFLOAT3 outPosition;
-//		if (Collision::IntersectSphereVsCylinder(
-//			nodePosition,
-//			nodeRadius,
-//			player.GetPosition(),
-//			player.GetRadius(),
-//			player.GetHeight(),
-//			outPosition))
-//		{
-//		}
-//	}
-//}
-
 // 登場ステートへ遷移
 void EnemyOni::TransitionEntryState()
 {
@@ -226,13 +185,14 @@ void EnemyOni::UpdateWaitState(float elapsedTime)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < 4100)
+	if (dist < 4100 && player.GetInvincibleTimer() < 0)
 		//! 威嚇ステートへ遷移
 		TransitionLaughState();
 	else if (stateChangeWaitTimer <= 0.0f)
 		TransitionMoveState();
 
-	if(Timer::Instance().GetTimeM_Int())
+	if (Timer::GetTimeM_Int() <= 0 && Timer::GetTimeS_Int() <= 0)
+		TransitionDeathState();
 }
 
 // 移動ステートへ遷移
@@ -257,7 +217,7 @@ void EnemyOni::UpdateMoveState(float elapsedTime)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < 4100)
+	if (dist < 4100 && player.GetInvincibleTimer() < 0)
 		//! 威嚇ステートへ遷移
 		TransitionLaughState();
 	else if (stateChangeWaitTimer <= 0.0f)
@@ -325,6 +285,7 @@ void EnemyOni::UpdateTrackingState(float elapsedTime)
 
 	stateChangeWaitTimer -= elapsedTime;
 
+	// 一定時間で疲れる
 	if (stateChangeWaitTimer <= 0.0f)
 		TransitionTiredState();
 }
@@ -353,6 +314,8 @@ void EnemyOni::TransitionAttackState()
 {
 	state = State::Attack;
 
+	stateChangeWaitTimer = 5.0f;
+
 	// 攻撃アニメーション再生
 	model->PlayAnimation(Anim_Attack, false);
 }
@@ -360,21 +323,10 @@ void EnemyOni::TransitionAttackState()
 // 攻撃ステート更新処理
 void EnemyOni::UpdateAttackState(float elapsedTime)
 {
-	
-}
+	stateChangeWaitTimer -= elapsedTime;
 
-// ダメージステートへ遷移
-void EnemyOni::TransitionDamageState()
-{
-	state = State::Damage;
-
-	// ダメージアニメーション再生
-	model->PlayAnimation(Anim_Attack, false);
-}
-
-// ダメージステート更新処理
-void EnemyOni::UpdateDamageState(float elapsedTime)
-{
+	if (stateChangeWaitTimer <= 0.0f)
+		TransitionWaitState();
 }
 
 // 死亡ステートへ遷移
@@ -389,25 +341,37 @@ void EnemyOni::TransitionDeathState()
 // 死亡ステート更新処理
 void EnemyOni::UpdateDeathState(float elapsedTime)
 {
-	// ダメージアニメーションが終わったら自分を破棄
-	if (!model->IsPlayAnimation())
-	{
-		Destroy();
-	}
 }
 
 // ダメージ受けた時に呼ばれる
 void EnemyOni::OnDamaged()
 {
-	// ダメージステートへ遷移
-	TransitionDamageState();
 }
 
 // 死亡しと時に呼ばれる
 void EnemyOni::OnDead()
 {
-	//Destroy();
-
 	// 死亡ステートへ遷移
 	TransitionDeathState();
+}
+
+// プレイヤーとの当たり判定
+void EnemyOni::CollisionVsPlayer()
+{
+	Player0_Onigokko& player = Player0_Onigokko::Instance();
+
+	DirectX::XMFLOAT3 outPosition;
+	if (Collision::IntersectCylinderVsCylinder(
+		position,
+		radius,
+		height,
+		player.GetPosition(),
+		player.GetRadius(),
+		player.GetHeight(),
+		outPosition
+	))
+	{
+		TransitionAttackState();
+		player.ApplyDamage(1, 10, 0);
+	}
 }

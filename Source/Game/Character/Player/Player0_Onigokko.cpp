@@ -54,6 +54,11 @@ void Player0_Onigokko::Update(float elapsedTime)
 	if ((gamePad.GetAxisLX() == 0 && gamePad.GetAxisLY() == 0))
 		velocity.x = velocity.z = 0;
 
+	if (invincibleTimer > 0)
+		opacity = 0.5f;
+	else
+		opacity = 1.0f;
+
 	// ムービー中なら待機ステートへ遷移
 	if (movieScene)
 	{

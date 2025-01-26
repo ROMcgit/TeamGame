@@ -36,6 +36,9 @@ protected:
 
 private:
 
+	// プレイヤーとの当たり判定
+	void CollisionVsPlayer();
+
 	// ノードとプレイヤーの衝突処理
 	//void CollisionNodeVsPlayer(const char* nodeName, float nodeRadius);
 
@@ -80,12 +83,6 @@ private:
 
 	// 攻撃ステート更新処理
 	void UpdateAttackState(float elapsedTime);
-
-	// ダメージステートへ遷移
-	void TransitionDamageState();
-
-	// ダメージステート更新処理
-	void UpdateDamageState(float elapsedTime);
 
 	// 死亡ステートへ遷移
 	void TransitionDeathState();

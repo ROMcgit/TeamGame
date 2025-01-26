@@ -137,12 +137,15 @@ void G0_Onigokko::Render()
 
 	DrawingSettings(graphics);
 
-	std::unique_ptr<Enemy>& oni = EnemyManager::Instance().GetEnemy(0);
+	if(EnemyManager::Instance().GetEnemyCount() > 0)
+	{
+		std::unique_ptr<Enemy>& oni = EnemyManager::Instance().GetEnemy(0);
 
-	if (movieScene)
-		lightPosition = oni->GetPosition();
-	else
-		lightPosition = player->GetPosition();
+		if (movieScene)
+			lightPosition = oni->GetPosition();
+		else
+			lightPosition = player->GetPosition();
+	}
 
 	lightRange = 20.0f;
 

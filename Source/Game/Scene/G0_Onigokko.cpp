@@ -114,7 +114,7 @@ void G0_Onigokko::Update(float elapsedTime)
 
 	if(!movieScene)
 	{
-		if(EnemyManager::Instance().GetEnemyCount() < 5)
+		if(EnemyManager::Instance().GetEnemyCount() < 50)
 		{
 			// ‹S
 			std::unique_ptr<EnemyOni> oni = std::make_unique<EnemyOni>();

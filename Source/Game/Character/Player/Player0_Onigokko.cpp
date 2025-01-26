@@ -27,6 +27,9 @@ Player0_Onigokko::Player0_Onigokko()
 	// ダメージ
 	damage = false;
 
+	//! 体力
+	hp = 2;
+
 	// モデル読み込み
 	model = std::make_unique <Model>("Data/Model/Ai/Ai.mdl");
 

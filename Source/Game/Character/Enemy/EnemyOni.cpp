@@ -103,7 +103,12 @@ void EnemyOni::Update(float elapsedTime)
 // 描画処理
 void EnemyOni::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	shader->Draw(dc, model.get(), materialColor, opacity);
+	targetPosition = Player0_Onigokko::Instance().GetPosition();
+	float vx = targetPosition.x - position.x;
+	float vz = targetPosition.z - position.z;
+	dist = vx * vx + vz * vz;
+	if (dist < 8000 || G0_Onigokko::Instance().GetMovieScene())
+		shader->Draw(dc, model.get(), materialColor, opacity);
 }
 
 // HPなどの描画
@@ -172,7 +177,7 @@ void EnemyOni::TransitionEntryState()
 {
 	state = State::Entry;
 
-	stateChangeWaitTimer = 3.0f;
+	stateChangeWaitTimer = 1.0f;
 
 	model->PlayAnimation(Anim_Entry, false);
 }
@@ -226,17 +231,24 @@ void EnemyOni::TransitionMoveState()
 
 	stateChangeWaitTimer = 10.0f;
 
+	setMoveTarget = false;
+
 	model->PlayAnimation(Anim_Move, true);
 }
 
 // 移動ステート更新処理
 void EnemyOni::UpdateMoveState(float elapsedTime)
 {
-	moveTarget.x = rand() % 150 + 30 * (rand() % 2 == 1 ? -1 : 1);
-	moveTarget.z = rand() % 150 + 30 * (rand() % 2 == 1 ? -1 : 1);
+	if(!setMoveTarget)
+	{
+		moveTarget.x = rand() % 150 + 80 * (rand() % 2 == 1 ? -1 : 1);
+		moveTarget.z = rand() % 150 + 80 * (rand() % 2 == 1 ? -1 : 1);
 
-	moveTarget.x = std::clamp(moveTarget.x, -445.0f, 445.0f);
-	moveTarget.z = std::clamp(moveTarget.z, -445.0f, 445.0f);
+		moveTarget.x = std::clamp(moveTarget.x, -445.0f, 445.0f);
+		moveTarget.z = std::clamp(moveTarget.z, -445.0f, 445.0f);
+
+		setMoveTarget = true;
+	}
 
 	// 移動位置に移動
 	MoveTarget(elapsedTime, 60);
@@ -244,7 +256,7 @@ void EnemyOni::UpdateMoveState(float elapsedTime)
 	float vxm = moveTarget.x - position.x;
 	float vzm = moveTarget.z - position.z;
 	float d = vxm * vxm + vzm * vzm;
-	if (d < radius * radius)
+	if (d < (radius * radius) * 2)
 	{
 		MoveTarget(elapsedTime, 0);
 		// 待機ステートへ遷移

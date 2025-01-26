@@ -333,7 +333,7 @@ void Player0_Onigokko::DrawDebugPrimitive()
 	//// 衝突判定用のデバッグ球を描画
 	//debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 	// 衝突判定用のデバッグ円柱を描画
 	debugRenderer->DrawCylinder(collisionPos, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
 

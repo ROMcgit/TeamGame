@@ -104,7 +104,6 @@ private:
 		Tracking,
 		Tired,
 		Attack,
-		Damage,
 		Death
 	};
 
@@ -118,13 +117,15 @@ private:
 		Anim_Tracking,
 		Anim_Tired,
 		Anim_Attack,
-		Anim_Damage,
 		Anim_Death
 	};
 
 private:
 	std::unique_ptr<Model> model;
 
+	bool deathState = false;
+
+	bool playAnimation = false;
 	float dist = 0;
 	DirectX::XMFLOAT3 moveTarget = { 0, 0, 0 }; // 位置移動のターゲット(プレイヤーとは別)
 

@@ -411,6 +411,12 @@
     <ClInclude Include="Source\Other\Easing.h">
       <Filter>Source\Other</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G0_Onigokko_Clear.h">
+      <Filter>Source\Scene\GameScene\0.おにごっこ</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G0_Onigokko_GameOver.h">
+      <Filter>Source\Scene\GameScene\0.おにごっこ</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -652,6 +658,12 @@
     </ClCompile>
     <ClCompile Include="Source\Other\Easing.cpp">
       <Filter>Source\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G0_Onigokko_Clear.cpp">
+      <Filter>Source\Scene\GameScene\0.おにごっこ</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G0_Onigokko_GameOver.cpp">
+      <Filter>Source\Scene\GameScene\0.おにごっこ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -126,11 +126,13 @@ void SceneGameSelect::Update(float elapsedTime)
 
 	if (sceneChange)
 	{
+		player->SetMovieTime(1.0f);
+
 		if (!setFade)
 		{
 			fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 				0.0f, 1.0f,
-				1.5f, 0.2f);
+				1.0f, 0.2f);
 
 			setFade = true;
 		}
@@ -226,6 +228,8 @@ void SceneGameSelect::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
+#ifdef _DEBUG
+
 	// 3Dデバッグ描画
 	{
 		// プレイヤーデバッグプリミティブ描画
@@ -242,6 +246,7 @@ void SceneGameSelect::Render()
 		// デバッグレンダラ描画実行
 		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 	}
+#endif // DEBUG
 
 	//! シェーダーを出す
 	{
@@ -260,6 +265,7 @@ void SceneGameSelect::Render()
 		fade->Render(dc, graphics);
 	}
 	
+#ifdef _DEBUG
 
 	// 2DデバッグGUI描画
 	{
@@ -302,6 +308,7 @@ void SceneGameSelect::Render()
 		}
 		ImGui::End();
 	}
+#endif
 }
 
 // プレイヤーの位置制限

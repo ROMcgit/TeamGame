@@ -100,7 +100,7 @@ void Framework::ChangeSceneButtonGUI(const char* name)
 // ƒV[ƒ“Ø‚è‘Ö‚¦GUI
 void Framework::SceneSelectGUI()
 {
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	//! ˆÊ’uİ’è
 	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);

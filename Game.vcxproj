@@ -177,6 +177,8 @@
     <ClInclude Include="Source\Game\Scene\G3_SoratobuHusenWari.h" />
     <ClInclude Include="Source\Game\Scene\G4_OssanTataki.h" />
     <ClInclude Include="Source\Game\Scene\G5_Asibawatari.h" />
+    <ClInclude Include="Source\Game\Scene\G0_Onigokko_Clear.h" />
+    <ClInclude Include="Source\Game\Scene\G0_Onigokko_GameOver.h" />
     <ClInclude Include="Source\Game\Stage\G1_StageDarumasangaKoronda.h" />
     <ClInclude Include="Source\Game\Stage\StageGameSelect.h" />
     <ClInclude Include="Source\Graphics\HDRTexture.h" />
@@ -262,6 +264,8 @@
     <ClCompile Include="Source\Game\Scene\G3_SoratobuHusenWari.cpp" />
     <ClCompile Include="Source\Game\Scene\G4_OssanTataki.cpp" />
     <ClCompile Include="Source\Game\Scene\G5_Asibawatari.cpp" />
+    <ClCompile Include="Source\Game\Scene\G0_Onigokko_Clear.cpp" />
+    <ClCompile Include="Source\Game\Scene\G0_Onigokko_GameOver.cpp" />
     <ClCompile Include="Source\Game\Scene\Scene.cpp" />
     <ClCompile Include="Source\Game\Stage\G1_StageDarumasangaKoronda.cpp" />
     <ClCompile Include="Source\Game\Stage\Stage.cpp" />

@@ -63,6 +63,9 @@ private:
 
 	bool movieFade = false;
 	float movieWaitTimer = 0.0f;
+	bool gameFinishFade = false;
+
+	bool nextOnideathFade = false;
 
 	std::unique_ptr<Fade> fade;
 	bool oniDeathFade = false;

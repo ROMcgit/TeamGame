@@ -41,8 +41,11 @@ EnemyOni::~EnemyOni()
 // 更新処理
 void EnemyOni::Update(float elapsedTime)
 {
-	if (Timer::GetTimeM_Int() <= 0 && Timer::GetTimeS_Int() <= 0)
+	if (Timer::GetTimeM_Int() <= 0 && Timer::GetTimeS_Int() <= 0 && !deathState)
+	{
 		TransitionDeathState();
+		deathState = true;
+	}
 
 	// ステート毎の更新処理
 	switch (state)
@@ -384,14 +387,23 @@ void EnemyOni::TransitionDeathState()
 
 	angle.y = DirectX::XMConvertToRadians(180);
 
-	// ダメージアニメーション再生
-	model->PlayAnimation(Anim_Death, false);
+	stateChangeWaitTimer = 2.0f;
 }
 
 // 死亡ステート更新処理
 void EnemyOni::UpdateDeathState(float elapsedTime)
 {
-	if (!model->IsPlayAnimation())
+	stateChangeWaitTimer -= elapsedTime;
+
+	if (!playAnimation && stateChangeWaitTimer <= 0.0f)
+	{
+		// ダメージアニメーション再生
+		model->PlayAnimation(Anim_Death, false);
+
+		playAnimation = true;
+	}
+
+	if (!model->IsPlayAnimation() && playAnimation)
 		SetOpacityChange(0.0f, 1.5f);
 }
 

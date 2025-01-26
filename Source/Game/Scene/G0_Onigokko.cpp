@@ -8,6 +8,11 @@
 #include "Game/Stage/StageManager.h"
 #include "Game/Stage/G0_StageOnigokko.h"
 #include "Game/Stage/StageMoveFloor.h"
+#include "Game/Scene/SceneTitle.h"
+#include "Game/Scene/G0_Onigokko_Clear.h"
+#include "Game/Scene/G0_Onigokko_GameOver.h"
+#include "Game/Scene/SceneLoading.h"
+#include "Game/Scene/SceneManager.h"
 #include <algorithm>
 
 bool G0_Onigokko::movieScene = false;
@@ -52,7 +57,7 @@ void G0_Onigokko::Initialize()
 
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
-	cameraController->SetRange(60);
+	cameraController->SetRange(30);
 	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(10), 0, 0));
 
 	// 背景
@@ -70,7 +75,7 @@ void G0_Onigokko::Initialize()
 		1.0f, 0.5f);
 
 	// タイマー
-	timer = std::make_unique<Timer>(true, 3);
+	timer = std::make_unique<Timer>(true, 2);
 
 	// ムービーシーンにする
 	movieScene = true;
@@ -208,6 +213,8 @@ void G0_Onigokko::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
+#ifdef _DEBUG
+
 	// 3Dデバッグ描画
 	{
 		// プレイヤーデバッグプリミティブ描画
@@ -222,6 +229,7 @@ void G0_Onigokko::Render()
 		// デバッグレンダラ描画実行
 		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 	}
+#endif // _DEBUG
 
 	//! シェーダーを出す
 	{
@@ -244,6 +252,8 @@ void G0_Onigokko::Render()
 	
 		fade->Render(dc, graphics);
 	}
+
+#ifdef _DEBUG
 
 	// 2DデバッグGUI描画
 	{
@@ -282,6 +292,7 @@ void G0_Onigokko::Render()
 		}
 		ImGui::End();
 	}
+#endif // _DEBUG
 }
 
 // プレイヤーの位置制限
@@ -305,95 +316,123 @@ void G0_Onigokko::PlayerPositionControll()
 // カメラのムービー更新処理
 void G0_Onigokko::UpdateCameraMovie(float elapsedTime)
 {
-	if (movieScene)
+
+	switch (cameraMovieScene)
 	{
-		switch (cameraMovieScene)
+	case CameraMovieScene::OniEntry:
+	{
+		cameraMovieTime += elapsedTime;
+
+		std::unique_ptr<Enemy>& oni = EnemyManager::Instance().GetEnemy(0);
+
+		target = oni->GetPosition();
+		target.y = oni->GetHeight() * 0.8f;
+
+		if (cameraMovieTime > 8.0f)
 		{
-		case CameraMovieScene::OniEntry:
-		{
-			cameraMovieTime += elapsedTime;
-
-			std::unique_ptr<Enemy>& oni = EnemyManager::Instance().GetEnemy(0);
-
-			target = oni->GetPosition();
-			target.y = oni->GetHeight() * 1.0f;
-
-			if (cameraMovieTime > 8.0f)
-			{
-				cameraMovieTime = 0;
-				movieScene = false;
-				cameraMovieScene = CameraMovieScene::OniMove;
-			}
+			cameraMovieTime = 0;
+			movieScene = false;
+			cameraMovieScene = CameraMovieScene::OniMove;
 		}
-		break;
-		case CameraMovieScene::OniMove:
+	}
+	break;
+	case CameraMovieScene::OniMove:
+	{
+		if (movieScene)
 		{
-			if(movieWaitTimer <= 0.0f)
-				movieWaitTimer = 2;
-			
-			if (movieFade)
+			if (!movieFade)
 			{
+				fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+					0.0f, 1.0f,
+					1.2f, 0.2f);
+
+				movieFade = true;
+			}
+
+			movieWaitTimer -= elapsedTime;
+			if (movieWaitTimer <= 0.0f)
+				movieScene = false;
+		}
+		else
+		{
+			movieWaitTimer = 2;
+
+			if (movieFade && !fade->GetFade())
+			{
+				if (player->GetHp() <= 0)
+				{
+					std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneTitle>());
+					// シーンマネージャーにローディングシーンへの切り替えを指示
+					SceneManager::Instance().ChangeScene(std::move(loadingScene));
+				}
+
 				fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 					1.0f, 0.0f,
 					1.2f, 0.8f);
 
 				movieFade = false;
 			}
-
-			if (movieScene)
-			{
-				if (!movieFade)
-				{
-					fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
-						0.0f, 1.0f,
-						1.2f, 0.2f);
-
-					movieFade = true;
-				}
-
-				movieWaitTimer -= elapsedTime;
-				if (movieWaitTimer <= 0.0f)
-					movieScene = false;
-			}
-
-			if (timer->GetTimeM_Int() <= 0 && timer->GetTimeS_Int() <= 0)
-			{
-				cameraMovieScene = CameraMovieScene::OniDeath;
-
-				fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
-					0.0f, 1.0f,
-					1.0f, 0.2f);
-			}
 		}
-		break;
-		case CameraMovieScene::OniDeath:
+
+		if (timer->GetTimeM_Int() == 0 && timer->GetTimeS_Int() == 0)
 		{
-			cameraMovieTime += elapsedTime;
+			movieScene = true;
+			player->SetMovieTime(100);
 
-			if (!oniDeathFade && !fade->GetFade())
+			if (!nextOnideathFade)
 			{
+				fade->SetFadeUnlock();
 				fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
-					1.0f, 0.0f,
+					0.0f, 1.0f,
 					1.0f, 0.2f);
-
-				oniDeathFade = true;
+				nextOnideathFade = true;
 			}
 
-			std::unique_ptr<Enemy>& oni = EnemyManager::Instance().GetEnemy(0);
+			if(!fade->GetFade())
+				cameraMovieScene = CameraMovieScene::OniDeath;
+		}
+	}
+	break;
+	case CameraMovieScene::OniDeath:
+	{
+		cameraMovieTime += elapsedTime;
 
-			target = oni->GetPosition();
-			target.y = oni->GetHeight() * 1.0f;
+		if (!oniDeathFade && !fade->GetFade())
+		{
+			fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+				1.0f, 0.0f,
+				1.0f, 0.2f);
 
-			if (cameraMovieTime > 10.0f)
+			oniDeathFade = true;
+		}
+
+		std::unique_ptr<Enemy>& oni = EnemyManager::Instance().GetEnemy(0);
+
+		cameraController->SetRange(30);
+		cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(10), 0, 0));
+		target = oni->GetPosition();
+		target.y = oni->GetHeight() * 0.8f;
+
+		if (cameraMovieTime > 4.0f)
+		{
+			if (!gameFinishFade)
 			{
 				fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 					0.0f, 1.0f,
 					1.0f, 0.2f);
+
+				gameFinishFade = true;
+			}
+			else if (!fade->GetFade())
+			{
+				std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneTitle>());
+				// シーンマネージャーにローディングシーンへの切り替えを指示
+				SceneManager::Instance().ChangeScene(std::move(loadingScene));
 			}
 		}
+	}
+	break;
+	default:
 		break;
-		default:
-			break;
-		}
 	}
 }

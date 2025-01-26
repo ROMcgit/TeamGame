@@ -30,6 +30,9 @@ Player0_Onigokko::Player0_Onigokko()
 	// ヒットエフェクト読み込み
 	hitEffect = std::make_unique <Effect>("Data/Effect/Hit.efk");
 
+	// 重力
+	gravity = 0;
+
 	radius = 2.3f;
 	height = 15.6f;
 

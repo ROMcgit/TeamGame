@@ -126,6 +126,7 @@ private:
 	std::unique_ptr<Model> model;
 
 	float dist = 0;
+	DirectX::XMFLOAT3 moveTarget = { 0, 0, 0 }; // 位置移動のターゲット(プレイヤーとは別)
 
 	State state = State::Wait;
 	float territoryRange = 10.0f;

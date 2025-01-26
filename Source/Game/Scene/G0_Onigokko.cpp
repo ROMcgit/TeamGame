@@ -225,7 +225,7 @@ void G0_Onigokko::Render()
 	}
 
 	{
-		if (timer->GetTimeM() == 0 && timer->GetTimeS() == 0)
+		if (timer->GetTimeM_Int() == 0 && timer->GetTimeS_Int() == 0)
 			timer->Render(dc, graphics, DirectX::XMFLOAT2(30, 0), DirectX::XMFLOAT4(1, 1, 0, 1));
 		else
 			timer->Render(dc, graphics, DirectX::XMFLOAT2(30, 0));

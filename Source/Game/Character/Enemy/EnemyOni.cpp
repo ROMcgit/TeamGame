@@ -6,6 +6,7 @@
 #include "Other/Collision.h"
 #include "Game/Scene/G0_Onigokko.h"
 #include "Game/Camera/Camera.h"
+#include "Graphics/Timer.h"
 
 // コンストラクタ
 EnemyOni::EnemyOni()
@@ -230,6 +231,8 @@ void EnemyOni::UpdateWaitState(float elapsedTime)
 		TransitionLaughState();
 	else if (stateChangeWaitTimer <= 0.0f)
 		TransitionMoveState();
+
+	if(Timer::Instance().GetTimeM_Int())
 }
 
 // 移動ステートへ遷移
@@ -246,7 +249,7 @@ void EnemyOni::TransitionMoveState()
 void EnemyOni::UpdateMoveState(float elapsedTime)
 {
 	Player0_Onigokko& player = Player0_Onigokko::Instance();
-
+	//MoveToTarget();
 	//SetAngleChange(DirectX::XMFLOAT3(0, DirectX::XMConvertToRadians))
 
 	targetPosition = player.GetPosition();

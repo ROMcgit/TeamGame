@@ -1,6 +1,11 @@
 #include "Timer.h"
 #include "Text.h"
 
+//! •ª
+float Timer::timeM = 0;
+//! •b
+float Timer::timeS = 0;
+
 Timer::Timer(bool countdown, int timeM, int timeS)
 {
 	this->countdown = countdown;

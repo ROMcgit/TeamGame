@@ -11,21 +11,28 @@ public:
 	Timer(bool countdown = false, int timeM = 0, int timeS = 0);
 	~Timer();
 
+	// —Bˆê‚ÌƒCƒ“ƒXƒ^ƒ“ƒXæ“¾
+	static Timer& Instance()
+	{
+		static Timer instance;
+		return instance;
+	}
+
 	// XVˆ—
 	void Update(float elapsedTime);
 
 	// •`‰æˆ—
 	void Render(ID3D11DeviceContext* dc, Graphics& graphics, DirectX::XMFLOAT2 position = { 30, 0 }, DirectX::XMFLOAT4 color = { 1, 1, 1, 1});
 
-	// •ª‚ğæ“¾
-	float GetTimeM() { return (int)timeM; }
+	// •ª‚ğintŒ^‚Åæ“¾
+	float GetTimeM_Int() { return (int)timeM; }
 
-	// •b‚ğæ“¾
-	float GetTimeS() { return (int)timeS; }
+	// •b‚ğintŒ^‚Åæ“¾
+	float GetTimeS_Int() { return (int)timeS; }
 
 private:
-	float timeM = 0; // •ª
-	float timeS = 0; // •b
+	static float timeM; // •ª
+	static float timeS; // •b
 
 	std::unique_ptr<Text> timeMSprite;
 	std::unique_ptr<Text> timeSSprite;

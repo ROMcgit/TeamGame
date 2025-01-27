@@ -241,8 +241,8 @@ void EnemyOni::UpdateMoveState(float elapsedTime)
 {
 	if(!setMoveTarget)
 	{
-		moveTarget.x = rand() % 150 + 80 * (rand() % 2 == 1 ? -1 : 1);
-		moveTarget.z = rand() % 150 + 80 * (rand() % 2 == 1 ? -1 : 1);
+		moveTarget.x = position.x + (rand() % 150 + 50 * (rand() % 2 == 1 ? -1 : 1));
+		moveTarget.z = position.z + (rand() % 150 + 50 * (rand() % 2 == 1 ? -1 : 1));
 
 		moveTarget.x = std::clamp(moveTarget.x, -445.0f, 445.0f);
 		moveTarget.z = std::clamp(moveTarget.z, -445.0f, 445.0f);

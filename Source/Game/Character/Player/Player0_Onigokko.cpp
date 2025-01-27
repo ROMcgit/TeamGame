@@ -132,7 +132,7 @@ void Player0_Onigokko::Update(float elapsedTime)
 // •`‰æˆ—
 void Player0_Onigokko::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	shader->Draw(dc, model.get());
+	shader->Draw(dc, model.get(), materialColor, opacity);
 
 	// ’eŠÛ•`‰æˆ—
 	projectileManager.Render(dc, shader);

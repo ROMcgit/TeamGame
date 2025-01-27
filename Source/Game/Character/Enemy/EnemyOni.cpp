@@ -107,7 +107,7 @@ void EnemyOni::Render(ID3D11DeviceContext* dc, Shader* shader)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < 8000 || G0_Onigokko::Instance().GetMovieScene())
+	if ((dist < 8000 || G0_Onigokko::Instance().GetMovieScene()) && opacity > 0)
 		shader->Draw(dc, model.get(), materialColor, opacity);
 }
 
@@ -241,8 +241,8 @@ void EnemyOni::UpdateMoveState(float elapsedTime)
 {
 	if(!setMoveTarget)
 	{
-		moveTarget.x = position.x + (rand() % 150 + 50 * (rand() % 2 == 1 ? -1 : 1));
-		moveTarget.z = position.z + (rand() % 150 + 50 * (rand() % 2 == 1 ? -1 : 1));
+		moveTarget.x = position.x + (rand() % 200 + 200 * (rand() % 2 == 1 ? -1 : 1));
+		moveTarget.z = position.z + (rand() % 200 + 200 * (rand() % 2 == 1 ? -1 : 1));
 
 		moveTarget.x = std::clamp(moveTarget.x, -445.0f, 445.0f);
 		moveTarget.z = std::clamp(moveTarget.z, -445.0f, 445.0f);

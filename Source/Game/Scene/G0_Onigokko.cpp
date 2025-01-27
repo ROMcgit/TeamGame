@@ -253,7 +253,7 @@ void G0_Onigokko::Render()
 		fade->Render(dc, graphics);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

@@ -37,8 +37,8 @@ public:
 
 	/************************************************************************************************/
 		/*! どのイージングにするか */
-
-		//! ターゲット
+#if 1
+	//! ターゲット
 	enum class TargetChangeEasing
 	{
 		Linear,  // リニア(補完無し)
@@ -68,6 +68,8 @@ public:
 
 	static RangeChangeEasing rangeChangeEasing;
 
+#endif
+
 	/************************************************************************************************/
 		/*! セッター */
 
@@ -90,7 +92,7 @@ public:
 			this->endTargetChange = endTargetChange;    // ここまでターゲットの位置を変える
 			this->targetChangeTime = targetChangeTime;   // ターゲットの位置を変える時間
 			this->targetChangeEasing = targetChangeEasing; // どのイージングにするか
-			this->currentTime = 0.0f;               // 経過時間をリセット
+			this->targetChangeCurrentTime = 0.0f;               // 経過時間をリセット
 		}
 	}
 
@@ -112,7 +114,7 @@ public:
 			this->endAngleChange = endAngleChange;    // ここまで角度を変える
 			this->angleChangeTime = angleChangeTime;   // 角度を変える時間
 			this->angleChangeEasing = angleChangeEasing; // どのイージングにするか
-			this->currentTime = 0.0f;              // 経過時間をリセット
+			this->angleChangeCurrentTime = 0.0f;              // 経過時間をリセット
 		}
 	}
 
@@ -134,7 +136,7 @@ public:
 			this->endRangeChange = endRangeChange;    // ここまでカメラの範囲を変える
 			this->rangeChangeTime = rangeChangeTime;   // カメラの範囲を変える時間
 			this->rangeChangeEasing = rangeChangeEasing; // どのイージングにするか
-			this->currentTime = 0.0f;              // 経過時間をリセット
+			this->rangeChangeCurrentTime = 0.0f;              // 経過時間をリセット
 		}
 	}
 
@@ -232,19 +234,17 @@ private:
 
 	bool  tracking = false; // カメラをプレイヤー中心でターゲットに注目させるか
 
-public:
-	static float currentTime;  // 経過時間
-
 	/**********************************************************************************************/
 		/*! ターゲット */
 
 public:
 	static DirectX::XMFLOAT3 target;
 
-	static bool              targetChange;      // ターゲットの位置を変えるか
-	static DirectX::XMFLOAT3 startTargetChange; // ターゲットの変更の開始の値
-	static DirectX::XMFLOAT3 endTargetChange;   // ここまでターゲットの位置を変える
-	static float             targetChangeTime;  // ターゲットの位置を変える時間
+	static bool              targetChange;            // ターゲットの位置を変えるか
+	static DirectX::XMFLOAT3 startTargetChange;       // ターゲットの変更の開始の値
+	static DirectX::XMFLOAT3 endTargetChange;         // ここまでターゲットの位置を変える
+	static float             targetChangeTime;        // ターゲットの位置を変える時間
+	static float             targetChangeCurrentTime; // ターゲットの位置変更の経過時間
 
 	/**********************************************************************************************/
 		/*! 角度 */
@@ -252,10 +252,11 @@ public:
 public:
 	static DirectX::XMFLOAT3 angle;
 
-	static bool              angleChange;      // 角度を変えるか
-	static DirectX::XMFLOAT3 startAngleChange; // 角度の変更の開始の値
-	static DirectX::XMFLOAT3 endAngleChange;   // ここまで角度を変える
-	static float             angleChangeTime;  // 角度を変える時間
+	static bool              angleChange;            // 角度を変えるか
+	static DirectX::XMFLOAT3 startAngleChange;       // 角度の変更の開始の値
+	static DirectX::XMFLOAT3 endAngleChange;         // ここまで角度を変える
+	static float             angleChangeTime;        // 角度を変える時間
+	static float             angleChangeCurrentTime; // 角度変更の経過時間
 
 	/**********************************************************************************************/
 		/*! カメラの範囲 */
@@ -267,10 +268,11 @@ private:
 public:
 	static float range; // カメラ範囲
 
-	static bool  rangeChange;      // カメラの範囲を変えるか
-	static float startRangeChange; // カメラの範囲の変更の開始の値
-	static float endRangeChange;   // ここまでカメラの範囲を変える
-	static float rangeChangeTime;  // カメラの範囲を変える時間
+	static bool  rangeChange;            // カメラの範囲を変えるか
+	static float startRangeChange;       // カメラの範囲の変更の開始の値
+	static float endRangeChange;         // ここまでカメラの範囲を変える
+	static float rangeChangeTime;        // カメラの範囲を変える時間
+	static float rangeChangeCurrentTime; // カメラの範囲変更の経過時間
 
 	/**********************************************************************************************/
 		/*! カメラシェイク */
@@ -289,8 +291,8 @@ private:
 	float mouseZoomSpeed = 0.1f; // マウスの拡大速度
 	float mouseSensitivity = 1.0f; // マウス感度
 
-	float targetMoveSpeed = 50; // ターゲットの移動速度(ボタン移動の場合)
-	float targetUpSpeed = 50;  // ターゲットの上昇速度(ボタン移動の場合)
+	float targetMoveSpeed = 8; // ターゲットの移動速度(ボタン移動の場合)
+	float targetUpSpeed = 8;  // ターゲットの上昇速度(ボタン移動の場合)
 
 	//-----------------------------------------------------------------//
 

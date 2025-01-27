@@ -119,31 +119,33 @@ private:
 	DirectX::XMFLOAT3 right; // カメラの右方向
 
 private:
-	bool setPostEffectStatusOnce = false; // ポストエフェクトのステータスの設定(一回だけ)をしたか
+	bool setPostEffectStatusOnce = false; //! ポストエフェクトのステータスの設定(一回だけ)をしたか
 
 public:
 	static bool postEffectControll;        //! ゲーム中に数値をいじれるようにする(ImGui用)
 	static bool postEffectReset;           //! ポストエフェクトのステータスを元に戻す
 
-	static float currentTime;     // 経過時間
+	static bool  contrastChange;            // コントラストを変えるか
+	static float startContrastChange;       // コントラストの変更の開始の値
+	static float endContrastChange;         // ここまでコントラストを変える
+	static float contrastChangeTime;        // コントラストの値を変える時間
+	static float contrastChangeCurrentTime; // コントラスト変更の経過時間
 
-	static bool  contrastChange;      // コントラストを変えるか
-	static float startContrastChange; // コントラストの変更の開始の値
-	static float endContrastChange;   // ここまでコントラストを変える
-	static float contrastChangeTime;  // コンストラクトの値を変える速度
-
-	static bool  saturationChange;      // サチュレーションを変えるか
-	static float startSaturationChange; // サチュレーションの変更の開始の値
-	static float endSaturationChange;   // ここまでサチュレーション(色の彩度)を変える
-	static float saturationChangeTime;  // サチュレーションの値を変える速度
+	static bool  saturationChange;            // サチュレーションを変えるか
+	static float startSaturationChange;       // サチュレーションの変更の開始の値
+	static float endSaturationChange;         // ここまでサチュレーション(色の彩度)を変える
+	static float saturationChangeTime;        // サチュレーションの値を変える時間
+	static float saturationChangeCurrentTime; // サチュレーション変更の経過時間
 
 	static bool colorFilterChange;                   // カラーフィルターを変えるか
 	static DirectX::XMFLOAT3 startColorFilterChange; // カラーフィルターの変更の開始の値
 	static DirectX::XMFLOAT3 endColorFilterChange;   // ここまでカラーフィルター(色フィルター)の値を変える
-	static float colorFilterChangeTime;              // カラーフィルターの値を変える速度
+	static float colorFilterChangeTime;              // カラーフィルターの値を変える時間
+	static float colorFilterChangeCurrentTime;       // カラーフィルター変更の経過時間
 
-	static bool  chromaticAberrationChange;      // クロマティックアベレーションを変えるか
-	static float startChromaticAberrationChange; // クロマティックアベレーションの変更の開始の値
-	static float endChromaticAberrationChange;   // ここまでクロマティックアベレーション(色収差(色ズレ))の値を変える
-	static float chromaticAberrationChangeTime;  // クロマティックアベレーションの値を変える速度
+	static bool  chromaticAberrationChange;            // クロマティックアベレーションを変えるか
+	static float startChromaticAberrationChange;       // クロマティックアベレーションの変更の開始の値
+	static float endChromaticAberrationChange;         // ここまでクロマティックアベレーション(色収差(色ズレ))の値を変える
+	static float chromaticAberrationChangeTime;        // クロマティックアベレーションの値を変える時間
+	static float chromaticAberrationChangeCurrentTime; // クロマティックアベレーション変更の経過時間
 };

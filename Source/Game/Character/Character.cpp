@@ -231,6 +231,8 @@ bool Character::UpdateHpShake(float elapsedTime)
 	{
 		hpSpritePos.y = hpSpriteShakePosY - 4.5f; // HPゲージのシェイク位置
 		hpSpriteColor = { 1, 0.6f, 1 };           // HPゲージの色
+
+
 		hpImagePos.y = hpImageShakePosY - 4.5f;  // HP画像のシェイク位置
 		hpImageColor = { 1, 0, 0 };              // HP画像の色
 
@@ -772,7 +774,7 @@ void Character::SetCameraTargetChange(DirectX::XMFLOAT3 endCameraTarget, float c
 		CameraController::endTargetChange = endCameraTarget;                                                       // ここまでターゲットの位置を変える
 		CameraController::targetChangeTime = cameraTargetChangeTime;                                                // ターゲットの位置を変える時間
 		CameraController::targetChangeEasing = static_cast<CameraController::TargetChangeEasing>(targetChangeEasing); // どのイージングにするか
-		CameraController::currentTime = 0.0f;                                                                  // 経過時間をリセット
+		CameraController::targetChangeCurrentTime = 0.0f;                                                                  // 経過時間をリセット
 	}
 }
 
@@ -786,7 +788,7 @@ void Character::SetCameraAngleChange(DirectX::XMFLOAT3 endCameraAngle, float cam
 		CameraController::endAngleChange = endCameraAngle;                                                      // ここまで角度を変える
 		CameraController::angleChangeTime = cameraAngleChangeTime;                                               // 角度を変える時間
 		CameraController::angleChangeEasing = static_cast<CameraController::AngleChangeEasing>(angleChangeEasing); // どのイージングにするか
-		CameraController::currentTime = 0.0f;                                                                // 経過時間をリセット
+		CameraController::angleChangeCurrentTime = 0.0f;                                                                // 経過時間をリセット
 	}
 }
 
@@ -796,11 +798,11 @@ void Character::SetCameraRangeChange(float endCameraRange, float cameraRangeChan
 	if (!CameraController::rangeChange)
 	{
 		CameraController::rangeChange = true;                                                                // カメラの範囲を変える
-		CameraController::startRangeChange = CameraController::range;											   // カメラの範囲の変更の開始の値
+		CameraController::startRangeChange = CameraController::range;											    // カメラの範囲の変更の開始の値
 		CameraController::endRangeChange = endCameraRange;                                                      // ここまでカメラの範囲を変える
 		CameraController::rangeChangeTime = cameraRangeChangeTime;                                               // カメラの範囲を変える時間
 		CameraController::rangeChangeEasing = static_cast<CameraController::RangeChangeEasing>(rangeChangeEasing); // どのイージングにするか
-		CameraController::currentTime = 0.0f;                                                                // 経過時間をリセット
+		CameraController::rangeChangeCurrentTime = 0.0f;                                                                // 経過時間をリセット
 	}
 }
 
@@ -831,31 +833,34 @@ void Character::SetPostEffectStatusOnceResetChange(float endContrastChange, floa
 	Camera::saturationChange = false; // サチュレーション
 	Camera::colorFilterChange = false; // カラーフィルター
 	Camera::chromaticAberrationChange = false; // クロマティックアベレーション
-	Camera::currentTime = 0.0f;  // 経過時間をリセット
 
 	//! コントラスト
 	Camera::contrastChange = true;                        // コントラストの値を変える
 	Camera::startContrastChange = Camera::postEffect.contrast; // コントラストの変更の開始の値
 	Camera::endContrastChange = endContrastChange;           // ここまでコントラストの値を変える
 	Camera::contrastChangeTime = contrastChangeTime;          // コントラストの値を変える時間
+	Camera::contrastChangeCurrentTime = 0.0f;                        // 経過時間をリセット
 
 	//! サチュレーション
 	Camera::saturationChange = true;                          // サチュレーションの値を変える
 	Camera::startSaturationChange = Camera::postEffect.saturation; // サチュレーションの変更の開始の値
 	Camera::endSaturationChange = endSaturationChange;           // ここまでサチュレーションの値を変える
 	Camera::saturationChangeTime = saturationChangeTime;          // サチュレーションの値を変える時間
+	Camera::saturationChangeCurrentTime = 0.0f;                          // 経過時間をリセット
 
 	//! カラーフィルターの値を変更していないなら
 	Camera::colorFilterChange = true;                           // カラーフィルターの値を変える
 	Camera::startColorFilterChange = Camera::postEffect.colorFilter; // カラーフィルターの変更の開始の値
 	Camera::endColorFilterChange = endColorFilterChange;           // ここまでカラーフィルターの値を変える
 	Camera::colorFilterChangeTime = colorFilterChangeTime;          // カラーフィルターの値を変える時間
+	Camera::colorFilterChangeCurrentTime = 0.0f;                           // 経過時間をリセット
 
 	//! クロマティックアベレーション
 	Camera::chromaticAberrationChange = true;                                   // クロマティックアベレーションの値を変える
 	Camera::startChromaticAberrationChange = Camera::postEffect.chromaticAberration; // クロマティックアベレーションの変更の開始の値
 	Camera::endChromaticAberrationChange = endChromaticAberrationChange;           // ここまでクロマティックアベレーションの値を変える
 	Camera::chromaticAberrationChangeTime = chromaticAberrationChangeTime;          // クロマティックアベレーションの値を変える時間
+	Camera::chromaticAberrationChangeCurrentTime = 0.0f;                                   // 経過時間をリセット
 }
 
 // コントラスト変更の設定
@@ -867,7 +872,7 @@ void Character::SetContrastChange(float endContrastChange, float contrastChangeT
 		Camera::startContrastChange = Camera::postEffect.contrast; // コントラストの変更の開始の値
 		Camera::endContrastChange = endContrastChange;           // ここまでコントラストの値を変える
 		Camera::contrastChangeTime = contrastChangeTime;          // コントラストの値を変える時間
-		Camera::currentTime = 0.0f;                        // 経過時間をリセット
+		Camera::contrastChangeCurrentTime = 0.0f;                        // 経過時間をリセット
 	}
 }
 
@@ -880,7 +885,7 @@ void Character::SetSaturationChange(float endSaturationChange, float saturationC
 		Camera::startSaturationChange = Camera::postEffect.saturation; // サチュレーションの変更の開始の値
 		Camera::endSaturationChange = endSaturationChange;           // ここまでサチュレーションの値を変える
 		Camera::saturationChangeTime = saturationChangeTime;          // サチュレーションの値を変える時間
-		Camera::currentTime = 0.0f;                          // 経過時間をリセット
+		Camera::saturationChangeCurrentTime = 0.0f;                          // 経過時間をリセット
 	}
 }
 
@@ -893,7 +898,7 @@ void Character::SetColorFilterChange(DirectX::XMFLOAT3& endColorFilterChange, fl
 		Camera::startColorFilterChange = Camera::postEffect.colorFilter; // カラーフィルターの変更の開始の値
 		Camera::endColorFilterChange = endColorFilterChange;           // ここまでカラーフィルターの値を変える
 		Camera::colorFilterChangeTime = colorFilterChangeTime;          // カラーフィルターの値を変える時間
-		Camera::currentTime = 0.0f;                           // 経過時間をリセット
+		Camera::colorFilterChangeCurrentTime = 0.0f;                           // 経過時間をリセット
 	}
 }
 
@@ -906,7 +911,7 @@ void Character::SetChromaticAberrationChange(float endChromaticAberrationChange,
 		Camera::startChromaticAberrationChange = Camera::postEffect.chromaticAberration; // クロマティックアベレーションの変更の開始の値
 		Camera::endChromaticAberrationChange = endChromaticAberrationChange;           // ここまでクロマティックアベレーションの値を変える
 		Camera::chromaticAberrationChangeTime = chromaticAberrationChangeTime;          // クロマティックアベレーションの値を変える時間
-		Camera::currentTime = 0.0f;                                   // 経過時間をリセット
+		Camera::chromaticAberrationChangeCurrentTime = 0.0f;                                   // 経過時間をリセット
 	}
 }
 
@@ -925,9 +930,6 @@ void Character::UpdateCharacterState(float elapsedTime)
 	// 行列更新処理
 	UpdateTransform();
 
-	// 加速度更新処理
-	UpdateVelocity(elapsedTime);
-
 	// 当たり判定の位置を設定
 	CollisionPosSettings();
 
@@ -944,7 +946,7 @@ void Character::UpdateCharacterState(float elapsedTime)
 	UpdateMaterialColorChange(elapsedTime);
 
 	// 不透明度変更処理
-	UpdateEffectOpacityChange(elapsedTime);
+	UpdateOpacityChange(elapsedTime);
 
 	//エミッシブの色変更更新処理
 	UpdateEmissiveColorChange(elapsedTime);
@@ -992,42 +994,49 @@ bool Character::UpdateMaterialColorChange(float elapsedTime)
 
 
 	//! 経過時間を計測
-	currentTime += elapsedTime;
+	materialColorChangeCurrentTime += elapsedTime;
 
 	//! イージングタイム
-	float tX = currentTime / materialColorChangeTime.x;
-	float tY = currentTime / materialColorChangeTime.y;
-	float tZ = currentTime / materialColorChangeTime.z;
+	float tX = materialColorChangeCurrentTime / materialColorChangeTime.x;
+	float tY = materialColorChangeCurrentTime / materialColorChangeTime.y;
+	float tZ = materialColorChangeCurrentTime / materialColorChangeTime.z;
 
 	//! マテリアルの色を変更
 	materialColor.x = Easing::Linear(materialColor.x, endMaterialColorChange.x, tX);
 	materialColor.y = Easing::Linear(materialColor.y, endMaterialColorChange.y, tY);
 	materialColor.z = Easing::Linear(materialColor.z, endMaterialColorChange.z, tZ);
 
+	//! マテリアルの色の範囲
+	materialColor.x = std::clamp(materialColor.x, 0.0f, 1.0f);
+	materialColor.y = std::clamp(materialColor.y, 0.0f, 1.0f);
+	materialColor.z = std::clamp(materialColor.z, 0.0f, 1.0f);
+
 	//! マテリアルの色変更が終わったら、処理を止める
-	if (materialColor.x == endMaterialColorChange.x
-		&& materialColor.y == endMaterialColorChange.y
-		&& materialColor.z == endMaterialColorChange.z)
+	if (tX >= 1.0f && tY >= 1.0f && tZ >= 1.0f)
 		materialColorChange = false;
 
 	return true;
 }
 
 //! 不透明度変更更新処理
-bool Character::UpdateEffectOpacityChange(float elapsedTime)
+bool Character::UpdateOpacityChange(float elapsedTime)
 {
 	//! 不透明度を変更しないなら、処理を止める
 	if (!opacityChange)
 		return false;
 
+
 	//! 経過時間を計測
-	currentTime += elapsedTime;
+	opacityChangeCurrentTime += elapsedTime;
 
 	//! イージングタイム
-	float t = currentTime / opacityChangeTime;
+	float t = opacityChangeCurrentTime / opacityChangeTime;
 
 	//! 不透明度を変更
 	opacity = Easing::Linear(startOpacityChange, endOpacityChange, t);
+
+	//! 不透明度の変異
+	opacity = std::clamp(opacity, 0.0f, 1.0f);
 
 	//! 不透明度の変更が終わったら
 	if (t >= 1.0f)
@@ -1036,48 +1045,58 @@ bool Character::UpdateEffectOpacityChange(float elapsedTime)
 	return true;
 }
 
-//!エミッシブの色変更更新処理
+//! エミッシブの色変更更新処理
 bool Character::UpdateEmissiveColorChange(float elapsedTime)
 {
-	//!エミッシブの色を変えないなら、処理を止める
+	//! エミッシブの色を変えないなら、処理を止める
 	if (!emissiveColorChange)
 		return false;
 
+
 	//! 経過時間を計測
-	currentTime += elapsedTime;
+	emissiveColorChangeCurrentTime += elapsedTime;
 
 	//! イージングタイム
-	float tX = currentTime / emissiveColorChangeTime.x;
-	float tY = currentTime / emissiveColorChangeTime.y;
-	float tZ = currentTime / emissiveColorChangeTime.z;
+	float tX = emissiveColorChangeCurrentTime / emissiveColorChangeTime.x;
+	float tY = emissiveColorChangeCurrentTime / emissiveColorChangeTime.y;
+	float tZ = emissiveColorChangeCurrentTime / emissiveColorChangeTime.z;
 
 	//!エミッシブの色を変更
 	emissiveColor.x = Easing::Linear(startEmissiveColorChange.x, endEmissiveColorChange.x, tX);
 	emissiveColor.y = Easing::Linear(startEmissiveColorChange.y, endEmissiveColorChange.y, tY);
 	emissiveColor.z = Easing::Linear(startEmissiveColorChange.z, endEmissiveColorChange.z, tZ);
 
+	//! エミッシブの色の範囲
+	emissiveColor.x = std::clamp(emissiveColor.x, 0.0f, 1.0f);
+	emissiveColor.y = std::clamp(emissiveColor.y, 0.0f, 1.0f);
+	emissiveColor.z = std::clamp(emissiveColor.z, 0.0f, 1.0f);
+
 	//! 処理を止める
-	if (tX >= 1.0f && tY >= 1.0f, tZ >= 1.0f);
+	if (tX >= 1.0f && tY >= 1.0f && tZ >= 1.0f);
 	emissiveColorChange = false;
 
 	return true;
 }
 
-// !エミッシブの強さ変更更新処理
+//! エミッシブの強さ変更更新処理
 bool Character::UpdateEmissiveStrengthChange(float elapsedTime)
 {
-	//!エミッシブの強さを変えないなら、処理を止める
+	//! エミッシブの強さを変えないなら、処理を止める
 	if (!emissiveStrengthChange)
 		return false;
 
+
 	//! 経過時間を計測
-	currentTime += elapsedTime;
+	emissiveStrengthChangeCurrentTime += elapsedTime;
 
 	//! イージングタイム
-	float t = currentTime / emissiveStrengthChangeTime;
+	float t = emissiveStrengthChangeCurrentTime / emissiveStrengthChangeTime;
 
 	//! エミッシブの強さを変更
 	emissiveStrength = Easing::Linear(startEmissiveStrengthChange, endEmissiveStrengthChange, t);
+
+	//! エミッシブの強さの範囲
+	emissiveStrength = std::clamp(emissiveStrength, 0.0f, 1.0f);
 
 	//! 処理を止める
 	if (t >= 1.0f)
@@ -1086,7 +1105,7 @@ bool Character::UpdateEmissiveStrengthChange(float elapsedTime)
 	return true;
 }
 
-//!エミッシブの形態変化演出更新処理
+//! エミッシブの形態変化演出更新処理
 bool Character::UpdateEmissivePhaseChange(float elapsedTime)
 {
 	//!エミッシブの形態変化演出をしないなら、処理を止める
@@ -1113,11 +1132,11 @@ bool Character::UpdateEmissivePhaseChange(float elapsedTime)
 	return true;
 }
 
-//エミッシブの色変更更新処理
-void Character::UpdateEmissiveColorPhaseChange(float& emissiveColor, float& emissiveColorChangeSpeed, bool& emissiveColorDown, float elapsedTime)
+// エミッシブの色変更更新処理
+void Character::UpdateEmissiveColorPhaseChange(float& emissiveColor, float& emissiveColorChangeTime, bool& emissiveColorDown, float elapsedTime)
 {
 	//! カラー
-	emissiveColor += (emissiveColorDown ? -1 : 1) * emissiveColorChangeSpeed * elapsedTime;
+	emissiveColor += (emissiveColorDown ? -1 : 1) * emissiveColorChangeTime * elapsedTime;
 
 	//! 色が最小値より小さい、または、最大値より大きいなら
 	if (emissiveColor < hpImageColorMin || emissiveColor > hpImageColorMax)
@@ -1139,13 +1158,14 @@ bool Character::UpdatePositionChange(float elapsedTime)
 	if (!positionChange)
 		return false;
 
+
 	//! 経過時間を計測
-	currentTime += elapsedTime;
+	positionChangeCurrentTime += elapsedTime;
 
 	//! イージングタイム
-	float tX = currentTime / positionChangeTime.x;
-	float tY = currentTime / positionChangeTime.y;
-	float tZ = currentTime / positionChangeTime.z;
+	float tX = positionChangeCurrentTime / positionChangeTime.x;
+	float tY = positionChangeCurrentTime / positionChangeTime.y;
+	float tZ = positionChangeCurrentTime / positionChangeTime.z;
 
 	switch (positionChangeEasing)
 	{
@@ -1220,13 +1240,14 @@ bool Character::UpdateAngleChange(float elapsedTime)
 	if (!angleChange)
 		return false;
 
+
 	//! 経過時間を計測
-	currentTime += elapsedTime;
+	angleChangeCurrentTime += elapsedTime;
 
 	//! イージングタイム
-	float tX = currentTime / angleChangeTime.x;
-	float tY = currentTime / angleChangeTime.y;
-	float tZ = currentTime / angleChangeTime.z;
+	float tX = angleChangeCurrentTime / angleChangeTime.x;
+	float tY = angleChangeCurrentTime / angleChangeTime.y;
+	float tZ = angleChangeCurrentTime / angleChangeTime.z;
 
 	switch (angleChangeEasing)
 	{
@@ -1259,7 +1280,7 @@ bool Character::UpdateAngleChange(float elapsedTime)
 	}
 
 	//! 処理を止める
-	if (tX >= 1.0f, tY >= 1.0f, tZ >= 1.0f)
+	if (tX >= 1.0f && tY >= 1.0f && tZ >= 1.0f)
 		angleChange = false;
 
 	return true;
@@ -1298,12 +1319,12 @@ bool Character::UpdateScaleChange(float elapsedTime)
 
 
 	//! 経過時間を計測
-	currentTime += elapsedTime;
+	scaleChangeCurrentTime += elapsedTime;
 
 	//! イージングタイム
-	float tX = currentTime / scaleChangeTime.x;
-	float tY = currentTime / scaleChangeTime.y;
-	float tZ = currentTime / scaleChangeTime.z;
+	float tX = scaleChangeCurrentTime / scaleChangeTime.x;
+	float tY = scaleChangeCurrentTime / scaleChangeTime.y;
+	float tZ = scaleChangeCurrentTime / scaleChangeTime.z;
 
 	switch (scaleChangeEasing)
 	{
@@ -1336,7 +1357,7 @@ bool Character::UpdateScaleChange(float elapsedTime)
 	}
 
 	//! 処理を止める
-	if (tX >= 1.0f && tY >= 1.0f, tZ >= 1.0f)
+	if (tX >= 1.0f && tY >= 1.0f && tZ >= 1.0f)
 		scaleChange = false;
 
 	return true;

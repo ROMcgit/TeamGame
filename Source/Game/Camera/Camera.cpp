@@ -15,9 +15,6 @@ bool Camera::postEffectControll = false;
 //! ポストエフェクトのステータスを元に戻す
 bool Camera::postEffectReset = false;
 
-//! 経過時間
-float Camera::currentTime = 0;
-
 //----------------------------------------------------------//
 
 //! コントラストの値を変更するか
@@ -26,8 +23,10 @@ bool Camera::contrastChange = false;
 float Camera::startContrastChange = 0.0f;
 //! ここまでコントラストを変える
 float Camera::endContrastChange = 0.0f;
-//! コントラストの値を変える速度
+//! コントラストの値を変える時間
 float Camera::contrastChangeTime = 0.0f;
+//! コントラスト変更の経過時間
+float Camera::contrastChangeCurrentTime = 0.0f;
 
 //----------------------------------------------------------//
 
@@ -37,8 +36,10 @@ bool Camera::saturationChange = false;
 float Camera::startSaturationChange = 0.0f;
 //! ここまでサチュレーション(色の彩度)を変える
 float Camera::endSaturationChange = 0.0f;
-//! サチュレーションの値を変える速度
+//! サチュレーションの値を変える時間
 float Camera::saturationChangeTime = 0.0f;
+// !サチュレーション変更の経過時間
+float Camera::saturationChangeCurrentTime = 0.0f;
 
 //----------------------------------------------------------//
 
@@ -48,8 +49,10 @@ bool Camera::colorFilterChange = false;
 DirectX::XMFLOAT3 Camera::startColorFilterChange = { 0, 0, 0 };
 //! ここまでカラーフィルター(色フィルター)を変える
 DirectX::XMFLOAT3 Camera::endColorFilterChange = { 0, 0, 0 };
-//! カラーフィルターの値を変える速度
-float Camera::colorFilterChangeTime = 0;
+//! カラーフィルターの値を変える時間
+float Camera::colorFilterChangeTime = 0.0f;
+//! カラーフィルター変更の経過時間
+float Camera::colorFilterChangeCurrentTime = 0.0f;
 
 //----------------------------------------------------------//
 
@@ -59,9 +62,10 @@ bool Camera::chromaticAberrationChange = false;
 float Camera::startChromaticAberrationChange = 0.0f;
 //! ここまでクロマティックアベレーションを変える
 float Camera::endChromaticAberrationChange = 0.0f;
-//! クロマティックアベレーションの値を変える速度
+//! クロマティックアベレーションの値を変える時間
 float Camera::chromaticAberrationChangeTime = 0.0f;
-
+//! クロマティックアベレーション変更の経過時間
+float Camera::chromaticAberrationChangeCurrentTime = 0.0f;
 
 // ポストエフェクトを生成
 void Camera::CreatePostEffect()
@@ -70,7 +74,7 @@ void Camera::CreatePostEffect()
 	// posteffect構造体の内容でコンスタントバッファ更新
 	dc->UpdateSubresource(CBPostEffect.Get(), 0, 0, &postEffect, 0, 0);
 
-	// ピクセルシェーダーSlot5に設定
+	// ピクセルシェーダーSlot5に設定する
 	dc->PSSetConstantBuffers(5, 1, CBPostEffect.GetAddressOf());
 }
 
@@ -80,22 +84,29 @@ void Camera::SetPostEffectStatusOnce(float contrast, float saturation, const Dir
 	// パラメータ初期化
 	if (!setPostEffectStatusOnce)
 	{
-		postEffect.contrast = contrast;            // コンストラクト
+		//! 変更処理を解除
+		contrastChange = false; // コントラストの変更
+		saturationChange = false; // サチュレーションの変更
+		colorFilterChange = false; // カラーフィルターの変更
+		chromaticAberrationChange = false; // クロマティックアベレーションの変更
+
+		//! ポストエフェクト
+		postEffect.contrast = contrast;            // コントラスト
 		postEffect.saturation = saturation;          // サチュレーション
 		postEffect.colorFilter = colorFilter;         // カラーフィルター
 		postEffect.chromaticAberration = chromaticAberration; // クロマティックアベレーション
 
-		setPostEffectStatusOnce = true;
+		setPostEffectStatusOnce = true; // ポストエフェクトのステータスの設定(一回だけ)をした
 	}
 }
 
 // ポストエフェクトのステータスを設定
 void Camera::SetPostEffectStatus(float contrast, float saturation, const DirectX::XMFLOAT3 colorFilter, float chromaticAberration)
 {
-	// パラメータ初期化
+	//! パラメータの設定
 	if (!postEffectControll)
 	{
-		postEffect.contrast = contrast;            // コンストラクト
+		postEffect.contrast = contrast;            // コントラスト
 		postEffect.saturation = saturation;          // サチュレーション
 		postEffect.colorFilter = colorFilter;         // カラーフィルター
 		postEffect.chromaticAberration = chromaticAberration; // クロマティックアベレーション
@@ -182,7 +193,7 @@ void Camera::SetPerspectiveFov(float fovY, float aspect, float nearZ, float farZ
 	DirectX::XMStoreFloat4x4(&projection, Projection);
 }
 
-// ポストエフェクトのステータス変更処理
+//! ポストエフェクトのステータス変更処理
 void Camera::UpdatePostEffectStatusChange(float elapsedTime)
 {
 	//! コントラスト変更更新処理
@@ -207,10 +218,10 @@ bool Camera::UpdateContrastChange(float elapsedTime)
 
 
 	//! 経過時間を計測
-	currentTime += elapsedTime;
+	contrastChangeCurrentTime += elapsedTime;
 
 	//! イージングタイム
-	float t = currentTime / contrastChangeTime;
+	float t = contrastChangeCurrentTime / contrastChangeTime;
 
 	//! コントラストを変更する
 	postEffect.contrast = Easing::Linear(startContrastChange, endContrastChange, t);
@@ -231,10 +242,10 @@ bool Camera::UpdateSaturationChange(float elapsedTime)
 
 
 	//! 経過時間を計測
-	currentTime += elapsedTime;
+	saturationChangeCurrentTime += elapsedTime;
 
 	//! イージングタイム
-	float t = currentTime / saturationChangeTime;
+	float t = saturationChangeCurrentTime / saturationChangeTime;
 
 	//! サチュレーションを変更する
 	postEffect.saturation = Easing::Linear(startSaturationChange, endSaturationChange, t);
@@ -249,16 +260,16 @@ bool Camera::UpdateSaturationChange(float elapsedTime)
 //! カラーフィルター変更更新処理
 bool Camera::UpdateColorFilterChange(float elapsedTime)
 {
-	//! コントラストを変えないなら、処理を止める
+	//! カラーフィルターを変えないなら、処理を止める
 	if (!colorFilterChange)
 		return false;
 
 
 	//! 経過時間を計測
-	currentTime += elapsedTime;
+	colorFilterChangeCurrentTime += elapsedTime;
 
 	//! イージングタイム
-	float t = currentTime / colorFilterChangeTime;
+	float t = colorFilterChangeCurrentTime / colorFilterChangeTime;
 
 	//! コントラストを変更する
 	postEffect.colorFilter.x = Easing::Linear(startColorFilterChange.x, endColorFilterChange.x, t);
@@ -281,10 +292,10 @@ bool Camera::UpdateChromaticAberrationChange(float elapsedTime)
 
 
 	//! 経過時間を計測
-	currentTime += elapsedTime;
+	chromaticAberrationChangeCurrentTime += elapsedTime;
 
 	//! イージングタイム
-	float t = currentTime / chromaticAberrationChangeTime;
+	float t = chromaticAberrationChangeCurrentTime / chromaticAberrationChangeTime;
 
 	//! コントラストを変更する
 	postEffect.chromaticAberration = Easing::Linear(startChromaticAberrationChange, endChromaticAberrationChange, t);

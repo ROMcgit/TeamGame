@@ -1,8 +1,8 @@
 #include "CameraController.h"
 #include "Camera.h"
 #include "Graphics/Fade.h"
-#include "Game/Character/Director/CameraTarget.h"
 #include "Game/Character/Director/DirectorManager.h"
+#include "Game/Character/Director/CameraTarget.h"
 #include "Input/Input.h"
 #include "Audio/SoundManager.h"
 #include "Other/Easing.h"
@@ -17,9 +17,6 @@ CameraController::AngleChangeEasing CameraController::angleChangeEasing = Camera
 //! 範囲
 CameraController::RangeChangeEasing CameraController::rangeChangeEasing = CameraController::RangeChangeEasing::Linear;
 
-//! 経過時間
-float CameraController::currentTime = 0.0f;
-
 //! ターゲット
 DirectX::XMFLOAT3 CameraController::target = { 0, 0, 0 };
 
@@ -30,7 +27,9 @@ DirectX::XMFLOAT3 CameraController::startTargetChange = { 0, 0, 0 };
 //! ここまでターゲットの位置を変える
 DirectX::XMFLOAT3 CameraController::endTargetChange = { 0, 0, 0 };
 //! ターゲットの位置を変える時間
-float CameraController::targetChangeTime = 0;
+float CameraController::targetChangeTime = 0.0f;
+//! ターゲットの位置変更の経過時間
+float CameraController::targetChangeCurrentTime = 0.0f;
 
 /********************************************************************/
 
@@ -44,7 +43,9 @@ DirectX::XMFLOAT3 CameraController::startAngleChange = { 0, 0, 0 };
 //! ここまで角度を変える
 DirectX::XMFLOAT3 CameraController::endAngleChange = { 0, 0, 0 };
 //! 角度を変える時間
-float CameraController::angleChangeTime = 0;
+float CameraController::angleChangeTime = 0.0f;
+//! 角度変更の経過時間
+float CameraController::angleChangeCurrentTime = 0.0f;
 
 /********************************************************************/
 
@@ -59,6 +60,8 @@ float CameraController::startRangeChange = 0.0f;
 float CameraController::endRangeChange = 0.0f;
 //! カメラの範囲を変える時間
 float CameraController::rangeChangeTime = 0.0f;
+//! カメラの範囲変更の経過時間
+float CameraController::rangeChangeCurrentTime = 0.0f;
 
 /********************************************************************/
 
@@ -95,9 +98,9 @@ CameraController::CameraController()
 	// フェードを生成
 	fade = std::make_unique<Fade>();
 
-	//SoundManager::Instance().LoadSound("ボス撃破", "Data/Audio/Sound/Enemy/Defeat.wav");
+	SoundManager::Instance().LoadSound("ボス撃破", "Data/Audio/Sound/Enemy/Defeat.wav");
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 	//! カメラのターゲットを生成
 	std::unique_ptr<CameraTarget> cameraTarget = std::make_unique<CameraTarget>();
 	DirectorManager::Instance().Register(std::move(cameraTarget));
@@ -203,7 +206,6 @@ void CameraController::DrawDebugGUI()
 // カメラの注目更新処理
 void CameraController::UpdateCameraTargetTracking(float elapsedTime)
 {
-
 }
 
 // カメラの状態更新処理
@@ -252,7 +254,7 @@ void CameraController::CameraLimit()
 // デバッグカメラ
 bool CameraController::UpdateDebugCamera(float elapsedTime)
 {
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	Mouse& mouse = Input::Instance().GetMouse();
 	//! ImGuiを操作中は処理をしない
@@ -437,10 +439,10 @@ bool CameraController::UpdateTargetChange(float elapsedTime)
 		return false;
 
 	//! 経過時間を計測
-	currentTime += elapsedTime;
+	targetChangeCurrentTime += elapsedTime;
 
 	//! イージングタイム
-	float t = currentTime / targetChangeTime;
+	float t = targetChangeCurrentTime / targetChangeTime;
 
 	switch (targetChangeEasing)
 	{
@@ -490,10 +492,10 @@ bool CameraController::UpdateAngleChange(float elapsedTime)
 
 
 	//! 経過時間を計測
-	currentTime += elapsedTime;
+	angleChangeCurrentTime += elapsedTime;
 
 	//! イージングタイム
-	float t = currentTime / angleChangeTime;
+	float t = angleChangeCurrentTime / angleChangeTime;
 
 	switch (angleChangeEasing)
 	{
@@ -543,10 +545,10 @@ bool CameraController::UpdateRangeChange(float elapsedTime)
 
 
 	//! 経過時間を計測
-	currentTime += elapsedTime;
+	rangeChangeCurrentTime += elapsedTime;
 
 	//! イージングタイム
-	float t = currentTime / rangeChangeTime;
+	float t = rangeChangeCurrentTime / rangeChangeTime;
 
 	switch (rangeChangeEasing)
 	{
@@ -635,10 +637,13 @@ bool CameraController::UpdateBossFinish(float elapsedTime)
 			fade->SetFade(
 				DirectX::XMFLOAT3(1, 0, 0),
 				0.9f, 0.0f,
-				3.0f, 0.2f);
+				0.5f, 0.2f);
 
 			// カメラシェイク
 			SetCameraShake(0.8f, DirectX::XMINT3(100, 100, 0));
+
+			// 効果音
+			SoundManager::Instance().PlaySound("ボス撃破", 0.5f);
 
 			bossFinishSettings = true;
 		}

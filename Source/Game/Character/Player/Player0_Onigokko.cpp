@@ -113,6 +113,8 @@ void Player0_Onigokko::Update(float elapsedTime)
 		}
 	}
 
+	UpdateVelocity(elapsedTime);
+
 	// キャラクター状態更新処理
 	UpdateCharacterState(elapsedTime);
 

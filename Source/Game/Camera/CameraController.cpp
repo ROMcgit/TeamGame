@@ -98,8 +98,6 @@ CameraController::CameraController()
 	// フェードを生成
 	fade = std::make_unique<Fade>();
 
-	SoundManager::Instance().LoadSound("ボス撃破", "Data/Audio/Sound/Enemy/Defeat.wav");
-
 #ifndef _DEBUG
 	//! カメラのターゲットを生成
 	std::unique_ptr<CameraTarget> cameraTarget = std::make_unique<CameraTarget>();

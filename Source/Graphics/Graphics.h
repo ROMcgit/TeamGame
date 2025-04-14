@@ -9,6 +9,7 @@
 #include "Graphics/ImGuiRenderer.h"
 #include "Graphics/HDRTexture.h"
 #include "Graphics/DefaltLitShader.h"
+#include "Graphics/ShadowMapShader.h"
 #include <mutex>
 
 // グラフィックス
@@ -36,8 +37,23 @@ public:
 	// デプスステンシルビュー取得
 	ID3D11DepthStencilView* GetDepthStencilView() const { return depthStencilView.Get(); }
 
-	// DefaltLitShader取得
-	Shader* GetDefaltLitShader() const { return shader.get(); }
+	// ブレンドステートのゲッター
+	ID3D11BlendState* GetBlendState() const { return blendState.Get(); }
+
+	// デプスステンシルステートのゲッター
+	ID3D11DepthStencilState* GetDepthStencilState() const { return depthStencilState.Get(); }
+
+	// 深度無効
+	ID3D11DepthStencilState* GetDepthDisabledState() const { return depthDisabledState.Get(); }
+
+	// 深度有効
+	ID3D11DepthStencilState* GetDepthEnabledState() const { return depthEnabledState.Get(); }
+
+	// ShadowMap取得
+	Shader* GetShadowMapShader() const { return shadowMapShader.get(); }
+
+	// DefaultLitShader取得
+	Shader* GetDefaultLitShader() const { return defaultLitshader.get(); }
 
 	// スクリーン幅取得
 	float GetScreenWidth() const { return screenWidth; }
@@ -66,8 +82,14 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView>	renderTargetView;
 	Microsoft::WRL::ComPtr<ID3D11Texture2D>			depthStencilBuffer;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>	depthStencilView;
+	Microsoft::WRL::ComPtr<ID3D11BlendState>        blendState;         // ブレンドステート
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;  // デプスステンシルステート
 
-	std::unique_ptr<Shader>                         shader;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthDisabledState; // 深度無効
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthEnabledState;  // 深度有効
+
+	std::unique_ptr<Shader>                         shadowMapShader; // シャドウマップシェーダー
+	std::unique_ptr<Shader>                         defaultLitshader; // デフォルトリットシェーダー
 	std::unique_ptr<DebugRenderer>					debugRenderer;
 	std::unique_ptr<LineRenderer>					lineRenderer;
 	std::unique_ptr<ImGuiRenderer>					imguiRenderer;

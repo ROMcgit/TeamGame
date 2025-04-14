@@ -117,7 +117,7 @@ void G1_DarumasangaKoronda::Render()
 
 	// 3Dモデル描画
 	{
-		Shader* shader = graphics.GetDefaltLitShader();
+		Shader* shader = graphics.GetDefaultLitShader();
 		shader->Begin(dc, rc);
 		// ステージ描画
 		StageManager::Instance().Render(dc, shader);
@@ -145,9 +145,7 @@ void G1_DarumasangaKoronda::Render()
 		renderTarget->End();
 		//! スクリーンをポストエフェクトシェーダーで描画
 		Camera::Instance().CreatePostEffect();
-		Camera::Instance().SetPostEffectStatusOnce(
-			1.0f, 0.8f,
-			DirectX::XMFLOAT3(1.2f, 1.3f, 1.35f), 0);
+		Camera::Instance().SetPostEffectStatusOnce();
 		//! スクリーンをポストエフェクトシェーダーで描画
 		renderTarget->Render();
 	}

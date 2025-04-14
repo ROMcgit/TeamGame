@@ -29,7 +29,7 @@ DirectX::XMFLOAT3 CameraController::endTargetChange = { 0, 0, 0 };
 //! ターゲットの位置を変える時間
 float CameraController::targetChangeTime = 0.0f;
 //! ターゲットの位置変更の経過時間
-float CameraController::targetChangeCurrentTime = 0.0f;
+float CameraController::targetChangeElapsedTime = 0.0f;
 
 /********************************************************************/
 
@@ -45,7 +45,7 @@ DirectX::XMFLOAT3 CameraController::endAngleChange = { 0, 0, 0 };
 //! 角度を変える時間
 float CameraController::angleChangeTime = 0.0f;
 //! 角度変更の経過時間
-float CameraController::angleChangeCurrentTime = 0.0f;
+float CameraController::angleChangeElapsedTime = 0.0f;
 
 /********************************************************************/
 
@@ -61,7 +61,7 @@ float CameraController::endRangeChange = 0.0f;
 //! カメラの範囲を変える時間
 float CameraController::rangeChangeTime = 0.0f;
 //! カメラの範囲変更の経過時間
-float CameraController::rangeChangeCurrentTime = 0.0f;
+float CameraController::rangeChangeElapsedTime = 0.0f;
 
 /********************************************************************/
 
@@ -437,10 +437,10 @@ bool CameraController::UpdateTargetChange(float elapsedTime)
 		return false;
 
 	//! 経過時間を計測
-	targetChangeCurrentTime += elapsedTime;
+	targetChangeElapsedTime += elapsedTime;
 
 	//! イージングタイム
-	float t = targetChangeCurrentTime / targetChangeTime;
+	float t = targetChangeElapsedTime / targetChangeTime;
 
 	switch (targetChangeEasing)
 	{
@@ -490,10 +490,10 @@ bool CameraController::UpdateAngleChange(float elapsedTime)
 
 
 	//! 経過時間を計測
-	angleChangeCurrentTime += elapsedTime;
+	angleChangeElapsedTime += elapsedTime;
 
 	//! イージングタイム
-	float t = angleChangeCurrentTime / angleChangeTime;
+	float t = angleChangeElapsedTime / angleChangeTime;
 
 	switch (angleChangeEasing)
 	{
@@ -543,10 +543,10 @@ bool CameraController::UpdateRangeChange(float elapsedTime)
 
 
 	//! 経過時間を計測
-	rangeChangeCurrentTime += elapsedTime;
+	rangeChangeElapsedTime += elapsedTime;
 
 	//! イージングタイム
-	float t = rangeChangeCurrentTime / rangeChangeTime;
+	float t = rangeChangeElapsedTime / rangeChangeTime;
 
 	switch (rangeChangeEasing)
 	{

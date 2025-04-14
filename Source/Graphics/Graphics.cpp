@@ -138,13 +138,47 @@ Graphics::Graphics(HWND hWnd)
 		immediateContext->RSSetViewports(1, &viewport);
 	}
 
+	// デプスステンシルステートの初期化
+	{
+		D3D11_DEPTH_STENCIL_DESC depthStencilDesc = {};
+		depthStencilDesc.DepthEnable = TRUE;
+		depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+		depthStencilDesc.StencilEnable = FALSE; // ステンシル機能を使わない場合
+		device->CreateDepthStencilState(&depthStencilDesc, depthStencilState.ReleaseAndGetAddressOf());
+	}
+
+	// 深度有効のステンシルステートを作成
+	{
+		D3D11_DEPTH_STENCIL_DESC depthEnabledDesc = {};
+		depthEnabledDesc.DepthEnable = TRUE;  // 深度テストを有効化
+		depthEnabledDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		depthEnabledDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+		depthEnabledDesc.StencilEnable = FALSE; // ステンシル機能を使わない場合
+		device->CreateDepthStencilState(&depthEnabledDesc, depthEnabledState.ReleaseAndGetAddressOf());
+	}
+
+	// 深度無効のステンシルステートを作成
+	{
+		D3D11_DEPTH_STENCIL_DESC depthDisabledDesc = {};
+		depthDisabledDesc.DepthEnable = FALSE; // 深度テストを無効化
+		depthDisabledDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+		depthDisabledDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;
+
+		depthDisabledDesc.StencilEnable = FALSE; // ステンシル機能を使わない場合
+		device->CreateDepthStencilState(&depthDisabledDesc, depthDisabledState.ReleaseAndGetAddressOf());
+	}
+
 	// シェーダー
 	{
-		shader = std::make_unique<DefaltLitShader>(device.Get());
+		shadowMapShader = std::make_unique<ShadowMapShader>(device.Get());
+		defaultLitshader = std::make_unique<DefaltLitShader>(device.Get());
 
 		environmentMap = std::make_unique<HDRTexture>();
 		environmentMap->Load(
-			"Data/Environment/dry_orchard_meadow_4k.hdr"
+			"Data/Environment/rogland_clear_night_4k.hdr"
 		);
 		// シェーダーのテクスチャSlot15にセット
 		environmentMap->Set(15);

@@ -112,6 +112,11 @@ void Framework::SceneSelectGUI()
 	//! 不透明度
 	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.5f, 0.0f, 0.0f, 0.8f));
 
+	/*! 区切り線 */
+	ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(1.0f, 0.5f, 0.0f, 1.0f));         // 通常の色
+	ImGui::PushStyleColor(ImGuiCol_SeparatorHovered, ImVec4(1.0f, 0.7f, 0.3f, 1.0f));  // ホバー時の色
+	ImGui::PushStyleColor(ImGuiCol_SeparatorActive, ImVec4(1.0f, 1.0f, 0.5f, 1.0f));   // クリック時の色
+
 	/*! ヘッダー */
 	// 背景色
 	ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.2f, 0.4f, 0.6f, 1.0f));
@@ -188,49 +193,126 @@ void Framework::SceneSelectGUI()
 
 #endif
 		//! ライト
-		if (ImGui::CollapsingHeader("Light"))
+		if (ImGui::TreeNode(u8"ライトなど"))
 #if 1
 		{
-			ImGui::Checkbox(u8"数値を変える", &Scene::debugControll);
-			ImGui::DragFloat4(u8"ライトの向き", &Scene::debugLightDirection.x, 0.01f);
-			ImGui::ColorEdit4(u8"ライトの色", &Scene::debugLightColor.x);
-			ImGui::DragFloat3(u8"ライトの位置", &Scene::debugLightPosition.x, 0.1f);
-			ImGui::DragFloat(u8"ライトの範囲", &Scene::debugLightRange, 0.01f);
+			ImGui::Checkbox(u8"数値をデバッグで変更する", &Scene::debugControll);
+			if (ImGui::CollapsingHeader(u8"ライト情報"))
+			{
+				ImGui::DragFloat4(u8"向き", &Scene::debugLightDirection.x, 0.01f);
+				ImGui::ColorEdit4(u8"色(ライト)", &Scene::debugLightColor.x);
+				ImGui::InputFloat3(u8"色の数値", &Scene::debugLightColor.x);
+				ImGui::DragFloat3(u8"位置", &Scene::debugLightPosition.x, 0.1f);
+				ImGui::DragFloat(u8"範囲", &Scene::debugLightRange, 0.1f);
+			}
+			if (ImGui::CollapsingHeader(u8"シャドウマップ"))
+			{
+				ImGui::DragFloat3(u8"位置のオフセット", &Scene::debugShadowMapEyeOffset.x, 0.1f);
+				ImGui::DragFloat(u8"バイアス", &Scene::debugShadowMapBias, 0.001f);
+				ImGui::DragFloat(u8"横の範囲", &Scene::debugShadowMapWidth, 0.01f);
+				ImGui::DragFloat(u8"縦の範囲", &Scene::debugShadowMapLength, 0.01f);
+				ImGui::DragFloat(u8"開始(影)", &Scene::debugShadowMapStart, 0.01f);
+				ImGui::DragFloat(u8"終了(影)", &Scene::debugShadowMapEnd, 0.01f);
+			}
+			if (ImGui::CollapsingHeader(u8"光の影響"))
+			{
+				ImGui::DragFloat(u8"環境光", &Scene::debugAmbientStrength, 0.01f);
+				ImGui::DragFloat(u8"拡散光", &Scene::debugDiffuseStrength, 0.01f);
+				ImGui::DragFloat(u8"スペキュラー光", &Scene::debugSpecularStrength, 0.01f);
+			}
 			//-----------------------------------------------------------------------------------------------------//
 			ImGui::Spacing(); // 一行空ける
 			ImGui::Separator(); // セクションの間に区切り線を表示
 			ImGui::Spacing(); // 一行空ける
 			//-----------------------------------------------------------------------------------------------------//
-			ImGui::DragFloat(u8"環境光", &Scene::debugAmbientStrength, 0.01f);
-			ImGui::DragFloat(u8"拡散光", &Scene::debugDiffuseStrength, 0.01f);
-			ImGui::DragFloat(u8"スペキュラー光", &Scene::debugSpecularStrength, 0.01f);
-			//-----------------------------------------------------------------------------------------------------//
-			ImGui::Spacing(); // 一行空ける
-			ImGui::Separator(); // セクションの間に区切り線を表示
-			ImGui::Spacing(); // 一行空ける
-			//-----------------------------------------------------------------------------------------------------//
-			ImGui::ColorEdit3(u8"フォグの色", &Scene::debugFogColor.x);
-			ImGui::DragFloat(u8"フォグの開始", &Scene::debugFogStart);
-			ImGui::DragFloat(u8"フォグの終了", &Scene::debugFogEnd);
+			if (ImGui::CollapsingHeader(u8"フォグ"))
+			{
+				ImGui::ColorEdit3(u8"色(フォグ)", &Scene::debugFogColor.x);
+				ImGui::DragFloat(u8"開始(フォグ)", &Scene::debugFogStart);
+				ImGui::DragFloat(u8"終了(フォグ)", &Scene::debugFogEnd);
+			}
+
+			ImGui::TreePop();
 		}
 #endif
 		//! ポストエフェクト
-		if (ImGui::CollapsingHeader("PostEffect"))
+		if (ImGui::TreeNode(u8"ポストエフェクト"))
 #if 1
 		{
-			//! ゲーム中に数値をいじれるようにする
-			ImGui::Checkbox("PostEffectControll", &Camera::postEffectControll);
 			//! 数値をリセットする
-			ImGui::Checkbox("PostEffectReset", &Camera::postEffectReset);
+			ImGui::Checkbox(u8"数値をリセットする", &Camera::postEffectReset);
 
-			// コンストラクト(数値が大きいほど、明るい部分はより明るく、暗い部分はより暗くなる)
-			ImGui::DragFloat(u8"コンストラクト", &Camera::postEffect.contrast, 0.01f);
-			// サチュレーション(色の彩度)
-			ImGui::DragFloat(u8"彩度", &Camera::postEffect.saturation, 0.01f);
-			// カラーフィルター(色フィルター)
-			ImGui::DragFloat3(u8"色フィルター", &Camera::postEffect.colorFilter.x, 0.01f);
-			// クロマティックアベレーション(色収差(色ズレ))
-			ImGui::DragFloat(u8"色ズレ", &Camera::postEffect.chromaticAberration, 0.01f);
+			if (ImGui::CollapsingHeader(u8"色関連"))
+			{
+				// コントラスト(数値が大きいほど、明るい部分はより明るく、暗い部分はより暗くなる)
+				ImGui::DragFloat(u8"コントラスト", &Camera::postEffect.contrast, 0.01f);
+				// サチュレーション(色の彩度)
+				ImGui::DragFloat(u8"彩度", &Camera::postEffect.saturation, 0.01f);
+				// カラーフィルター(色フィルター)
+				ImGui::DragFloat3(u8"色フィルター", &Camera::postEffect.colorFilter.x, 0.01f);
+				// クロマティックアベレーション(色収差(色ズレ))
+				ImGui::DragFloat(u8"色ズレ", &Camera::postEffect.chromaticAberration, 0.01f);
+				// 色相シフト
+				ImGui::DragFloat(u8"色相シフト", &Camera::postEffect.hueShift, 0.01f, 0.0f, 1.0f);
+			}
+			//-------------------------------------------------------------------------------------------------------//
+			ImGui::Spacing(); // 一行空ける
+			ImGui::Separator(); // セクションの間に区切り線を表示
+			ImGui::Spacing(); // 一行空ける
+			//-------------------------------------------------------------------------------------------------------//
+			if (ImGui::CollapsingHeader(u8"ビネット"))
+			{
+				// ビネットの強度
+				ImGui::DragFloat(u8"ビネットの強度", &Camera::postEffect.vignetteIntensity, 0.01f, 0.0f, 1.0f);
+				// ビネットの不透明度
+				ImGui::DragFloat(u8"ビネットの不透明度", &Camera::postEffect.vignetteOpacity, 0.01f, 0.0f, 1.0f);
+			}
+			//-------------------------------------------------------------------------------------------------------//
+			ImGui::Spacing(); // 一行空ける
+			ImGui::Separator(); // セクションの間に区切り線を表示
+			ImGui::Spacing(); // 一行空ける
+			//-------------------------------------------------------------------------------------------------------//
+			if (ImGui::CollapsingHeader(u8"ブラー関連"))
+			{
+				// ブラー強度
+				ImGui::DragFloat(u8"ブラー強度", &Camera::postEffect.blurStrength, 0.01f);
+				// ピントを合わせる距離
+				ImGui::DragFloat(u8"ピントを合わせる距離", &Camera::postEffect.focusDistance, 0.1f);
+				// ピントが合う範囲
+				ImGui::DragFloat(u8"ピントが合う範囲", &Camera::postEffect.focusRange, 0.1f);
+				// 被写界深度のブラー強度
+				ImGui::DragFloat(u8"被写界深度のブラー強度", &Camera::postEffect.dofBlurStrength, 0.1f);
+			}
+			//-------------------------------------------------------------------------------------------------------//
+			ImGui::Spacing(); // 一行空ける
+			ImGui::Separator(); // セクションの間に区切り線を表示
+			ImGui::Spacing(); // 一行空ける
+			//-------------------------------------------------------------------------------------------------------//
+			if (ImGui::CollapsingHeader(u8"グレア"))
+			{
+				// グレアの強度
+				ImGui::DragFloat(u8"グレアの閾値", &Camera::postEffect.bloomThreshold, 0.01f);
+				// グレアの強度
+				ImGui::DragFloat(u8"グレアの強度", &Camera::postEffect.bloomIntensity, 0.01f);
+			}
+			//-------------------------------------------------------------------------------------------------------//
+			ImGui::Spacing(); // 一行空ける
+			ImGui::Separator(); // セクションの間に区切り線を表示
+			ImGui::Spacing(); // 一行空ける
+			//-------------------------------------------------------------------------------------------------------//
+			if (ImGui::CollapsingHeader(u8"カメラシェイク"))
+			{
+				// シェイクのオフセット
+				ImGui::DragFloat2(u8"シェイクのオフセット", &Camera::postEffect.shakeOffset.x, 0.01f);
+				// シェイクの速さ
+				ImGui::DragFloat(u8"シェイクの速さ", &Camera::postEffect.shakeSpeed, 0.1f);
+				// シェイクの強度
+				ImGui::DragFloat(u8"シェイクの強度", &Camera::postEffect.shakeStrength, 0.01f);
+				// シェイクの時間
+				ImGui::DragFloat(u8"シェイクの時間", &Camera::postEffect.shakeTime, 0.01f);
+			}
+
+			ImGui::TreePop();
 		}
 #endif
 

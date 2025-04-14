@@ -11,7 +11,7 @@
 //   float4 lightDirection;             // Offset:   64 Size:    16
 //   float4 lightColor;                 // Offset:   80 Size:    16
 //   float3 lightPosition;              // Offset:   96 Size:    12
-//   float lightRange;                  // Offset:  108 Size:     4 [unused]
+//   float lightRange;                  // Offset:  108 Size:     4
 //   float ambientStrength;             // Offset:  112 Size:     4
 //   float diffuseStrength;             // Offset:  116 Size:     4
 //   float specularStrength;            // Offset:  120 Size:     4
@@ -32,6 +32,15 @@
 //
 // }
 //
+// cbuffer CbShadowMap
+// {
+//
+//   row_major float4x4 shadowProjection;// Offset:    0 Size:    64
+//   float shadowBias;                  // Offset:   64 Size:     4
+//   float3 shadowPadding;              // Offset:   68 Size:    12 [unused]
+//
+// }
+//
 //
 // Resource Bindings:
 //
@@ -39,12 +48,15 @@
 // ------------------------------ ---------- ------- ----------- -------------- ------
 // diffuseMapSamplerState            sampler      NA          NA             s0      1 
 // environmentMapSamplerState        sampler      NA          NA             s1      1 
+// shadowmapSampler                  sampler      NA          NA             s3      1 
 // diffuseMap                        texture  float4          2d             t0      1 
 // metallicMap                       texture  float4          2d             t2      1 
 // roughnessMap                      texture  float4          2d             t3      1 
+// shadowmap                         texture  float4          2d            t10      1 
 // environmentMap                    texture  float4          2d            t15      1 
 // CbScene                           cbuffer      NA          NA            cb0      1 
 // CbSubset                          cbuffer      NA          NA            cb2      1 
+// CbShadowMap                       cbuffer      NA          NA           cb10      1 
 //
 //
 //
@@ -71,18 +83,21 @@ ps_5_0
 dcl_globalFlags refactoringAllowed
 dcl_constantbuffer CB0[10], immediateIndexed
 dcl_constantbuffer CB2[2], immediateIndexed
+dcl_constantbuffer CB10[5], immediateIndexed
 dcl_sampler s0, mode_default
 dcl_sampler s1, mode_default
+dcl_sampler s3, mode_default
 dcl_resource_texture2d (float,float,float,float) t0
 dcl_resource_texture2d (float,float,float,float) t2
 dcl_resource_texture2d (float,float,float,float) t3
+dcl_resource_texture2d (float,float,float,float) t10
 dcl_resource_texture2d (float,float,float,float) t15
 dcl_input_ps linear v1.xy
 dcl_input_ps linear v2.xyz
 dcl_input_ps linear v5.xyz
 dcl_input_ps linear v6.xyz
 dcl_output o0.xyzw
-dcl_temps 6
+dcl_temps 7
 sample_indexable(texture2d)(float,float,float,float) r0.x, v1.xyxx, t3.xyzw, s0
 add r0.x, -r0.x, l(1.000000)
 mul r0.x, r0.x, l(50.000000)
@@ -114,12 +129,12 @@ mul r0.xzw, r0.xxxx, r4.xxyz
 mul r0.xzw, r0.xxzw, cb0[7].zzzz
 mul r4.xyz, r0.yyyy, r2.xyzx
 mul r4.xyz, r4.xyzx, cb0[5].xyzx
-add r5.xyz, v6.xyzx, -cb0[6].xyzx
-dp3 r0.y, r5.xyzx, r5.xyzx
+add r5.xy, cb0[7].xzxx, l(-1.200000, -0.800000, 0.000000, 0.000000)
+add r6.xyz, v6.xyzx, -cb0[6].xyzx
+dp3 r0.y, r6.xyzx, r6.xyzx
 sqrt r0.y, r0.y
 add r1.w, r0.y, l(-5.000000)
 mul_sat r1.w, r1.w, l(0.020000)
-add r5.xy, cb0[7].xzxx, l(-1.200000, -0.800000, 0.000000, 0.000000)
 mad r5.xy, r1.wwww, r5.xyxx, l(1.200000, 0.800000, 0.000000, 0.000000)
 mul r5.xzw, r5.xxxx, cb0[5].xxyz
 mad r2.xyz, r5.xzwx, r2.xyzx, r4.xyzx
@@ -134,10 +149,25 @@ mad r1.xy, r1.xyxx, l(0.500000, 0.500000, 0.000000, 0.000000), l(0.500000, 0.500
 sample_l_indexable(texture2d)(float,float,float,float) r1.xyz, r1.xyxx, t15.xyzw, s1, l(0.000000)
 add r2.xyz, r1.xyzx, l(1000.000000, 1000.000000, 1000.000000, 0.000000)
 div r1.xyz, r1.xyzx, r2.xyzx
-add r0.xzw, r0.xxzw, r1.xxyz
-mad r0.xzw, cb2[1].xxyz, cb2[1].wwww, r0.xxzw
-mul_sat r0.xzw, r0.xxzw, cb2[0].xxyz
-add r0.xzw, r0.xxzw, -cb0[8].xxyz
+div r1.w, r0.y, cb0[6].w
+add_sat r1.w, -r1.w, l(1.000000)
+mul r1.w, r1.w, r1.w
+mad r0.xzw, r0.xxzw, r1.wwww, r1.xxyz
+mul r1.xyz, cb2[1].wwww, cb2[1].xyzx
+mad_sat r0.xzw, r0.xxzw, cb2[0].xxyz, r1.xxyz
+mul r2.xyzw, v6.yyyy, cb10[1].xyzw
+mad r2.xyzw, v6.xxxx, cb10[0].xyzw, r2.xyzw
+mad r2.xyzw, v6.zzzz, cb10[2].xyzw, r2.xyzw
+add r2.xyzw, r2.xyzw, cb10[3].xyzw
+div r1.xyz, r2.xyzx, r2.wwww
+mad r2.xy, r1.xyxx, l(0.500000, 0.500000, 0.000000, 0.000000), l(0.500000, 0.500000, 0.000000, 0.000000)
+add r1.x, r1.z, -cb10[4].x
+add r2.z, -r2.y, l(1.000000)
+sample_indexable(texture2d)(float,float,float,float) r1.y, r2.xzxx, t10.yxzw, s3
+lt r1.x, r1.y, r1.x
+movc r1.x, r1.x, l(0.500000), l(1.000000)
+mul r1.x, r1.w, r1.x
+mad r0.xzw, r0.xxzw, r1.xxxx, -cb0[8].xxyz
 add r1.x, -r0.y, cb0[9].y
 lt r0.y, r0.y, l(10.000000)
 add r1.y, -cb0[9].x, cb0[9].y
@@ -146,4 +176,4 @@ movc r0.y, r0.y, l(1.000000), r1.x
 mad o0.xyz, r0.yyyy, r0.xzwx, cb0[8].xyzx
 mov o0.w, cb2[0].w
 ret 
-// Approximately 63 instruction slots used
+// Approximately 78 instruction slots used

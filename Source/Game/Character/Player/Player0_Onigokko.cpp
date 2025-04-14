@@ -34,7 +34,7 @@ Player0_Onigokko::Player0_Onigokko()
 	model = std::make_unique <Model>("Data/Model/Ai/Ai.mdl");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.1f;
+	scale.x = scale.y = scale.z = 0.05f;
 
 	// ヒットエフェクト読み込み
 	hitEffect = std::make_unique <Effect>("Data/Effect/Hit.efk");
@@ -338,7 +338,7 @@ void Player0_Onigokko::DrawDebugPrimitive()
 	//// 衝突判定用のデバッグ球を描画
 	//debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 	// 衝突判定用のデバッグ円柱を描画
 	debugRenderer->DrawCylinder(collisionPos, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
 

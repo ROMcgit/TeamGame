@@ -37,6 +37,9 @@ void SceneGameSelect::Initialize()
 	// レンダーターゲット
 	renderTarget = std::make_unique<RenderTarget>(device, screenWidth, screenHeight, DXGI_FORMAT_R8G8B8A8_UNORM);
 
+	// シャドウマップ初期化
+	shadowMap.Initialize();
+
 /********************************************************************************/
 
 	// ステージ初期化
@@ -174,12 +177,43 @@ void SceneGameSelect::Update(float elapsedTime)
 // 描画処理
 void SceneGameSelect::Render()
 {
-	lightPosition = CameraController::target;
-	lightPosition.y += 0.5f;
+	lightPosition.x = CameraController::target.x;
+	lightPosition.y = 5.0f;
+	lightPosition.z = 425.0f;
+	lightRange = 20000.0f;
+
+	shadowMapEyeOffset.y = 0.0f;
+
+	//! フォグ
+	fogStart = 2000.0f;
+	fogEnd = 2100.0f;
 
 	Graphics& graphics = Graphics::Instance();
 	
 	DrawingSettings(graphics);
+
+	//! シャドウマップ
+	{
+		// ポーズ画面じゃないなら
+		//if (pause->GetPause_BurioHuntersOpacity() < 1.0f)
+		{
+			//! シャドウマップ開始
+			shadowMap.Begin(rc);
+			{
+				Shader* shadowMapShader = graphics.GetShadowMapShader();
+				shadowMapShader->Begin(dc, rc);
+
+				//エネミー描画
+				EnemyManager::Instance().Render(dc, shadowMapShader);
+				// プレイヤー描画
+				player->Render(dc, shadowMapShader);
+
+				shadowMapShader->End(dc);
+			}
+			//! シャドウマップ終了
+			shadowMap.End();
+		}
+	}
 
 	//! レンダーターゲット
 	{
@@ -189,6 +223,10 @@ void SceneGameSelect::Render()
 
 	//! 2Dスプライト
 	{
+		// 深度を無効にする
+		ID3D11DepthStencilState* depthDisabledState = graphics.GetDepthDisabledState();
+		dc->OMSetDepthStencilState(depthDisabledState, 0);
+
 		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
 		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
 		float textureWidth = static_cast<float>(backGround->GetTextureWidth());
@@ -200,11 +238,14 @@ void SceneGameSelect::Render()
 			0, 0, textureWidth, textureHeight,
 			0,
 			1, 1, 1, 1);
+
+		ID3D11DepthStencilState* depthEnabledState = graphics.GetDepthEnabledState();
+		dc->OMSetDepthStencilState(depthEnabledState, 0);
 	}
 
 	// 3Dモデル描画
 	{
-		Shader* shader = graphics.GetDefaltLitShader();
+		Shader* shader = graphics.GetDefaultLitShader();
 		shader->Begin(dc, rc);
 		// ステージ描画
 		StageManager::Instance().Render(dc, shader);
@@ -228,7 +269,7 @@ void SceneGameSelect::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -254,9 +295,7 @@ void SceneGameSelect::Render()
 		renderTarget->End();
 		//! スクリーンをポストエフェクトシェーダーで描画
 		Camera::Instance().CreatePostEffect();
-		Camera::Instance().SetPostEffectStatusOnce(
-			1.0f, 0.8f,
-			DirectX::XMFLOAT3(1.2f, 1.3f, 1.35f), 0);
+		Camera::Instance().SetPostEffectStatusOnce();
 		//! スクリーンをポストエフェクトシェーダーで描画
 		renderTarget->Render();
 	}
@@ -265,7 +304,7 @@ void SceneGameSelect::Render()
 		fade->Render(dc, graphics);
 	}
 	
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

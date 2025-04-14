@@ -191,7 +191,7 @@ void G0_Onigokko::Render()
 
 	// 3Dモデル描画
 	{
-		Shader* shader = graphics.GetDefaltLitShader();
+		Shader* shader = graphics.GetDefaultLitShader();
 		shader->Begin(dc, rc);
 		// ステージ描画
 		StageManager::Instance().Render(dc, shader);
@@ -213,7 +213,7 @@ void G0_Onigokko::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -237,9 +237,7 @@ void G0_Onigokko::Render()
 		renderTarget->End();
 		//! スクリーンをポストエフェクトシェーダーで描画
 		Camera::Instance().CreatePostEffect();
-		Camera::Instance().SetPostEffectStatusOnce(
-			1.0f, 0.8f,
-			DirectX::XMFLOAT3(1.2f, 1.3f, 1.35f), 0);
+		Camera::Instance().SetPostEffectStatusOnce();
 		//! スクリーンをポストエフェクトシェーダーで描画
 		renderTarget->Render();
 	}
@@ -253,7 +251,7 @@ void G0_Onigokko::Render()
 		fade->Render(dc, graphics);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

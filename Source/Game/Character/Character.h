@@ -91,7 +91,7 @@ public:
 			this->startMaterialColorChange = this->materialColor;     // マテリアルの色の変更の開始の値
 			this->endMaterialColorChange = endMaterialColorChange;  // ここまでマテリアルの色を変える
 			this->materialColorChangeTime = materialColorChangeTime; // マテリアルの色を変える時間
-			this->materialColorChangeCurrentTime = 0.0f;                    // 待ち時間をリセット
+			this->materialColorChangeElapsedTime = 0.0f;                    // 待ち時間をリセット
 		}
 	}
 
@@ -107,7 +107,7 @@ public:
 			this->startOpacityChange = this->opacity;     // 不透明度の変更の開始の値
 			this->endOpacityChange = endOpacityChange;  // ここまで不透明度を変える
 			this->opacityChangeTime = opacityChangeTime; // 不透明度を変える時間
-			this->opacityChangeCurrentTime = 0.0f;              // 経過時間をリセット
+			this->opacityChangeElapsedTime = 0.0f;              // 経過時間をリセット
 		}
 	}
 
@@ -130,7 +130,7 @@ public:
 			this->endPositionChange = endPositionChange;    // ここまで位置を変える
 			this->positionChangeTime = positionChangeTime;   // 位置を変える時間
 			this->positionChangeEasing = positionChangeEasing; // そのイージングにするか
-			this->positionChangeCurrentTime = 0.0f;                 // 経過時間をリセット
+			this->positionChangeElapsedTime = 0.0f;                 // 経過時間をリセット
 		}
 	}
 
@@ -159,7 +159,7 @@ public:
 			this->endAngleChange = endAngleChange;    // ここまで角度を変える
 			this->angleChangeTime = angleChangeTime;   // 角度を変える時間
 			this->angleChangeEasing = angleChangeEasing; // どのイージングにするか
-			this->angleChangeCurrentTime = 0.0f;              // 経過時間をリセット
+			this->angleChangeElapsedTime = 0.0f;              // 経過時間をリセット
 		}
 	}
 
@@ -190,7 +190,7 @@ public:
 			this->endScaleChange = endScaleChange;    // ここまでスケールを変える
 			this->scaleChangeTime = scaleChangeTime;   // スケールを変える時間
 			this->scaleChangeEasing = scaleChangeEasing; // どのイージングにするか
-			this->scaleChangeCurrentTime = 0.0f;              // 経過時間をリセット
+			this->scaleChangeElapsedTime = 0.0f;              // 経過時間をリセット
 		}
 	}
 
@@ -299,7 +299,7 @@ public:
 			this->startEmissiveColorChange = this->emissiveColor;     // エミッシブの強さの変更の開始の値
 			this->endEmissiveColorChange = endEmissiveColorChange;  // ここまでエミシッブの色を変える
 			this->emissiveColorChangeTime = emissiveColorChangeTime; //エミッシブの色を変える時間
-			this->emissiveColorChangeCurrentTime = 0.0f;                    // 経過時間をリセット
+			this->emissiveColorChangeElapsedTime = 0.0f;                    // 経過時間をリセット
 		}
 	}
 
@@ -316,7 +316,7 @@ public:
 			this->startEmissiveStrengthChange = this->emissiveStrength;     // エミッシブの強さの変更の開始の値
 			this->endEmissiveStrengthChange = endEmissiveStrengthChange;  // ここまでエミッシブの強さを変える
 			this->emissiveStrengthChangeTime = emissiveStrengthChangeTime; // エミッシブの強さを変える時間
-			this->emissiveStrengthChangeCurrentTime = 0.0f;                       // 経過時間をリセット
+			this->emissiveStrengthChangeElapsedTime = 0.0f;                       // 経過時間をリセット
 		}
 	}
 
@@ -620,7 +620,7 @@ protected:
 	DirectX::XMFLOAT3 startMaterialColorChange = { 0, 0, 0 }; // マテリアルの色の変更の開始の値
 	DirectX::XMFLOAT3 endMaterialColorChange = { 0, 0, 0 }; // ここまでマテリアルの色を変える
 	DirectX::XMFLOAT3 materialColorChangeTime = { 0, 0, 0 }; // マテリアルの色を変える時間
-	float materialColorChangeCurrentTime = 0.0f;        // マテリアルの色変更の経過時間
+	float materialColorChangeElapsedTime = 0.0f;        // マテリアルの色変更の経過時間
 
 	//! 不透明度
 	float opacity = 1.0f;  // 不透明度
@@ -629,7 +629,7 @@ protected:
 	float startOpacityChange = 0.0f;  // 不透明度の変更の開始の値
 	float endOpacityChange = 0.0f;  // ここまで不透明度を変える 
 	float opacityChangeTime = 0.0f;  // 不透明度を変える時間
-	float opacityChangeCurrentTime = 0.0f;  // 不透明度変更の経過時間
+	float opacityChangeElapsedTime = 0.0f;  // 不透明度変更の経過時間
 
 	/*****************************************************************************************************/
 		/*! エミッシブ */
@@ -639,7 +639,7 @@ protected:
 	DirectX::XMFLOAT3 startEmissiveColorChange = { 0, 0, 0 }; // エミシッブの色の変更の開始の値
 	DirectX::XMFLOAT3 endEmissiveColorChange = { 0, 0, 0 }; // ここまでエミシッブの色を変える
 	DirectX::XMFLOAT3 emissiveColorChangeTime = { 0, 0, 0 }; // エミッシブの色を変える時間
-	float emissiveColorChangeCurrentTime = 0.0f;        // エミッシブの色変更の経過時間
+	float emissiveColorChangeElapsedTime = 0.0f;        // エミッシブの色変更の経過時間
 
 	//! エミッシブの強さ
 	float emissiveStrength = 0.0f;  // エミッシブの強さ
@@ -648,7 +648,7 @@ protected:
 	float startEmissiveStrengthChange = 0.0f; // エミッシブの強さの変更の開始の値
 	float endEmissiveStrengthChange = 0.0f; // ここまでエミシッブの強さを変える
 	float emissiveStrengthChangeTime = 0.0f; // エミシッブの強さを変える時間
-	float emissiveStrengthChangeCurrentTime = 0.0f; // エミッシブの強さ変更の経過時間
+	float emissiveStrengthChangeElapsedTime = 0.0f; // エミッシブの強さ変更の経過時間
 
 	//-------------------------------------------------------------------------------------------------------//
 
@@ -679,7 +679,7 @@ protected:
 	DirectX::XMFLOAT3 endPositionChange = { 0, 0, 0 }; // ここまで位置を変える
 	DirectX::XMFLOAT3 positionChangeTime = { 0, 0, 0 }; // 位置を変える時間
 	DirectX::XMFLOAT3 velocity = { 0, 0, 0 }; // 加速度
-	float positionChangeCurrentTime = 0.0f;        // 位置変更の経過時間
+	float positionChangeElapsedTime = 0.0f;        // 位置変更の経過時間
 #endif
 
 	/*****************************************************************************************************/
@@ -692,7 +692,7 @@ protected:
 	DirectX::XMFLOAT3 startAngleChange = { 0, 0, 0 }; // 角度の変更の開始の値
 	DirectX::XMFLOAT3 endAngleChange = { 0, 0, 0 }; // ここまで角度を変える
 	DirectX::XMFLOAT3 angleChangeTime = { 0, 0, 0 }; // 角度を変える時間
-	float angleChangeCurrentTime = 0.0f;        // 角度変更の経過時間
+	float angleChangeElapsedTime = 0.0f;        // 角度変更の経過時間
 
 	//! 回転(特定の値は目指さない)
 	float angleRotation = false; // 角度を回転させるか
@@ -711,7 +711,7 @@ protected:
 	DirectX::XMFLOAT3 startScaleChange = { 0, 0, 0 }; // スケールの変更の開始の値
 	DirectX::XMFLOAT3 endScaleChange = { 0, 0, 0 }; // ここまでスケールを変える
 	DirectX::XMFLOAT3 scaleChangeTime = { 0, 0, 0 }; // スケールを変える時間
-	float scaleChangeCurrentTime = 0.0f;        // スケール変更の経過時間
+	float scaleChangeElapsedTime = 0.0f;        // スケール変更の経過時間
 
 #endif
 

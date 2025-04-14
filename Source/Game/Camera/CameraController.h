@@ -92,7 +92,7 @@ public:
 			this->endTargetChange = endTargetChange;    // ここまでターゲットの位置を変える
 			this->targetChangeTime = targetChangeTime;   // ターゲットの位置を変える時間
 			this->targetChangeEasing = targetChangeEasing; // どのイージングにするか
-			this->targetChangeCurrentTime = 0.0f;               // 経過時間をリセット
+			this->targetChangeElapsedTime = 0.0f;               // 経過時間をリセット
 		}
 	}
 
@@ -114,7 +114,7 @@ public:
 			this->endAngleChange = endAngleChange;    // ここまで角度を変える
 			this->angleChangeTime = angleChangeTime;   // 角度を変える時間
 			this->angleChangeEasing = angleChangeEasing; // どのイージングにするか
-			this->angleChangeCurrentTime = 0.0f;              // 経過時間をリセット
+			this->angleChangeElapsedTime = 0.0f;              // 経過時間をリセット
 		}
 	}
 
@@ -136,7 +136,7 @@ public:
 			this->endRangeChange = endRangeChange;    // ここまでカメラの範囲を変える
 			this->rangeChangeTime = rangeChangeTime;   // カメラの範囲を変える時間
 			this->rangeChangeEasing = rangeChangeEasing; // どのイージングにするか
-			this->rangeChangeCurrentTime = 0.0f;              // 経過時間をリセット
+			this->rangeChangeElapsedTime = 0.0f;              // 経過時間をリセット
 		}
 	}
 
@@ -244,7 +244,7 @@ public:
 	static DirectX::XMFLOAT3 startTargetChange;       // ターゲットの変更の開始の値
 	static DirectX::XMFLOAT3 endTargetChange;         // ここまでターゲットの位置を変える
 	static float             targetChangeTime;        // ターゲットの位置を変える時間
-	static float             targetChangeCurrentTime; // ターゲットの位置変更の経過時間
+	static float             targetChangeElapsedTime; // ターゲットの位置変更の経過時間
 
 	/**********************************************************************************************/
 		/*! 角度 */
@@ -256,7 +256,7 @@ public:
 	static DirectX::XMFLOAT3 startAngleChange;       // 角度の変更の開始の値
 	static DirectX::XMFLOAT3 endAngleChange;         // ここまで角度を変える
 	static float             angleChangeTime;        // 角度を変える時間
-	static float             angleChangeCurrentTime; // 角度変更の経過時間
+	static float             angleChangeElapsedTime; // 角度変更の経過時間
 
 	/**********************************************************************************************/
 		/*! カメラの範囲 */
@@ -272,7 +272,7 @@ public:
 	static float startRangeChange;       // カメラの範囲の変更の開始の値
 	static float endRangeChange;         // ここまでカメラの範囲を変える
 	static float rangeChangeTime;        // カメラの範囲を変える時間
-	static float rangeChangeCurrentTime; // カメラの範囲変更の経過時間
+	static float rangeChangeElapsedTime; // カメラの範囲変更の経過時間
 
 	/**********************************************************************************************/
 		/*! カメラシェイク */

@@ -157,6 +157,24 @@
     <Filter Include="Source\Character\GameSelect\0_おにごっこ">
       <UniqueIdentifier>{26868fa7-b542-4f08-9f1c-a159a0e5c442}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Stage\StageGame\G0_おにごっこ">
+      <UniqueIdentifier>{4943b1b1-a9b5-43dc-848e-9602a1429587}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Stage\StageGame\G1_だるまさんが転んだ">
+      <UniqueIdentifier>{dd70c24a-dae2-4e96-9180-ea5fd53e61c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Stage\StageGame\G2_寸止め">
+      <UniqueIdentifier>{6bf32307-229e-4dd4-9c22-1fe5af877ec6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Stage\StageGame\G3_空飛ぶ風船割り">
+      <UniqueIdentifier>{a04fb7e3-51ae-417e-96a1-b8e1d71a2e5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Stage\StageGame\G4_おっさん叩き">
+      <UniqueIdentifier>{b5f152a1-7162-47bc-a205-93faeb2f545f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Stage\StageGame\G5_足場渡り">
+      <UniqueIdentifier>{5e4cfcf6-e6ac-4883-96a8-bfeb0c9594f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -363,9 +381,6 @@
     <ClInclude Include="Source\Game\Stage\StageGameSelect.h">
       <Filter>Source\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Stage\G0_StageOnigokko.h">
-      <Filter>Source\Stage\StageGame</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Game\Scene\Scene.h">
       <Filter>Source\Scene\OtherScene</Filter>
     </ClInclude>
@@ -380,9 +395,6 @@
     </ClInclude>
     <ClInclude Include="Source\Game\Scene\SceneTitle.h">
       <Filter>Source\Scene\OtherScene</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Stage\G1_StageDarumasangaKoronda.h">
-      <Filter>Source\Stage\StageGame</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Character\Director\CameraTarget.h">
       <Filter>Source\Character\Director</Filter>
@@ -416,6 +428,24 @@
     </ClInclude>
     <ClInclude Include="Source\Game\Scene\G0_Onigokko_GameOver.h">
       <Filter>Source\Scene\GameScene\0.おにごっこ</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Stage\G0_StageOnigokko.h">
+      <Filter>Source\Stage\StageGame\G0_おにごっこ</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Stage\G1_StageDarumasangaKoronda.h">
+      <Filter>Source\Stage\StageGame\G1_だるまさんが転んだ</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Stage\G2_StageSundome.h">
+      <Filter>Source\Stage\StageGame\G2_寸止め</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Stage\G3_StageSoratobuHusenWari.h">
+      <Filter>Source\Stage\StageGame\G3_空飛ぶ風船割り</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Stage\G4_StageOssanTataki.h">
+      <Filter>Source\Stage\StageGame\G4_おっさん叩き</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Stage\G5_StageAsibawatari_Normal.h">
+      <Filter>Source\Stage\StageGame\G5_足場渡り</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -611,9 +641,6 @@
     <ClCompile Include="Source\Game\Stage\StageGameSelect.cpp">
       <Filter>Source\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Stage\G0_StageOnigokko.cpp">
-      <Filter>Source\Stage\StageGame</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Game\Scene\Scene.cpp">
       <Filter>Source\Scene\OtherScene</Filter>
     </ClCompile>
@@ -628,9 +655,6 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Scene\SceneTitle.cpp">
       <Filter>Source\Scene\OtherScene</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Stage\G1_StageDarumasangaKoronda.cpp">
-      <Filter>Source\Stage\StageGame</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Director\CameraTarget.cpp">
       <Filter>Source\Character\Director</Filter>
@@ -664,6 +688,24 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Scene\G0_Onigokko_GameOver.cpp">
       <Filter>Source\Scene\GameScene\0.おにごっこ</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Stage\G0_StageOnigokko.cpp">
+      <Filter>Source\Stage\StageGame\G0_おにごっこ</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Stage\G1_StageDarumasangaKoronda.cpp">
+      <Filter>Source\Stage\StageGame\G1_だるまさんが転んだ</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Stage\G2_StageSundome.cpp">
+      <Filter>Source\Stage\StageGame\G2_寸止め</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Stage\G3_StageSoratobuHusenWari.cpp">
+      <Filter>Source\Stage\StageGame\G3_空飛ぶ風船割り</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Stage\G4_StageOssanTataki.cpp">
+      <Filter>Source\Stage\StageGame\G4_おっさん叩き</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Stage\G5_StageAsibawatari_Normal.cpp">
+      <Filter>Source\Stage\StageGame\G5_足場渡り</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

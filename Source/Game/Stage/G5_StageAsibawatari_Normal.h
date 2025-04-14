@@ -4,11 +4,11 @@
 #include "Stage.h"
 
 // ステージ
-class G1_StageDarumasangaKoronda : public Stage
+class G5_StageAsibawatari_Normal : public Stage
 {
 public:
-	G1_StageDarumasangaKoronda();
-	~G1_StageDarumasangaKoronda();
+	G5_StageAsibawatari_Normal();
+	~G5_StageAsibawatari_Normal();
 
 	// 更新処理
 	void Update(float elapsedTime) override;

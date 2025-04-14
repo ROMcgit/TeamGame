@@ -180,6 +180,10 @@
     <ClInclude Include="Source\Game\Scene\G0_Onigokko_Clear.h" />
     <ClInclude Include="Source\Game\Scene\G0_Onigokko_GameOver.h" />
     <ClInclude Include="Source\Game\Stage\G1_StageDarumasangaKoronda.h" />
+    <ClInclude Include="Source\Game\Stage\G2_StageSundome.h" />
+    <ClInclude Include="Source\Game\Stage\G3_StageSoratobuHusenWari.h" />
+    <ClInclude Include="Source\Game\Stage\G4_StageOssanTataki.h" />
+    <ClInclude Include="Source\Game\Stage\G5_StageAsibawatari_Normal.h" />
     <ClInclude Include="Source\Game\Stage\StageGameSelect.h" />
     <ClInclude Include="Source\Graphics\HDRTexture.h" />
     <ClInclude Include="Source\Graphics\RenderTarget.h" />
@@ -268,6 +272,10 @@
     <ClCompile Include="Source\Game\Scene\G0_Onigokko_GameOver.cpp" />
     <ClCompile Include="Source\Game\Scene\Scene.cpp" />
     <ClCompile Include="Source\Game\Stage\G1_StageDarumasangaKoronda.cpp" />
+    <ClCompile Include="Source\Game\Stage\G2_StageSundome.cpp" />
+    <ClCompile Include="Source\Game\Stage\G3_StageSoratobuHusenWari.cpp" />
+    <ClCompile Include="Source\Game\Stage\G4_StageOssanTataki.cpp" />
+    <ClCompile Include="Source\Game\Stage\G5_StageAsibawatari_Normal.cpp" />
     <ClCompile Include="Source\Game\Stage\Stage.cpp" />
     <ClCompile Include="Source\Game\Stage\StageGameSelect.cpp" />
     <ClCompile Include="Source\Graphics\HDRTexture.cpp" />

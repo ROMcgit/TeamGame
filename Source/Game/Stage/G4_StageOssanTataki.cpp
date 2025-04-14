@@ -1,7 +1,7 @@
-#include "Game/Stage/G1_StageDarumasangaKoronda.h"
+#include "Game/Stage/G4_StageOssanTataki.h"
 
 // コンストラクタ
-G1_StageDarumasangaKoronda::G1_StageDarumasangaKoronda()
+G4_StageOssanTataki::G4_StageOssanTataki()
 {
 	// ステージモデルを読み込み
 	model = std::make_unique <Model>("Data/Model/Stage/0.StageOnigokko/StageOnigokko.mdl");
@@ -11,12 +11,12 @@ G1_StageDarumasangaKoronda::G1_StageDarumasangaKoronda()
 
 }
 
-G1_StageDarumasangaKoronda::~G1_StageDarumasangaKoronda()
+G4_StageOssanTataki::~G4_StageOssanTataki()
 {
 }
 
 // 更新処理
-void G1_StageDarumasangaKoronda::Update(float elapsedTime)
+void G4_StageOssanTataki::Update(float elapsedTime)
 {
 	// 行列更新
 	UpdateTransform();
@@ -27,7 +27,7 @@ void G1_StageDarumasangaKoronda::Update(float elapsedTime)
 }
 
 // 描画処理
-void G1_StageDarumasangaKoronda::Render(ID3D11DeviceContext* dc, Shader* shader)
+void G4_StageOssanTataki::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	// 表示用のためワールド行列を更新する
 	model->UpdateTransform(transform);
@@ -37,7 +37,7 @@ void G1_StageDarumasangaKoronda::Render(ID3D11DeviceContext* dc, Shader* shader)
 }
 
 // レイキャスト
-bool G1_StageDarumasangaKoronda::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit)
+bool G4_StageOssanTataki::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit)
 {
 	// 前回のワールド行列と逆行列を求める
 	DirectX::XMMATRIX oldWorld = DirectX::XMLoadFloat4x4(&oldTransform);
@@ -90,7 +90,7 @@ bool G1_StageDarumasangaKoronda::RayCast(const DirectX::XMFLOAT3& start, const D
 }
 
 // 行列更新処理
-void G1_StageDarumasangaKoronda::UpdateTransform()
+void G4_StageOssanTataki::UpdateTransform()
 {
 	// 以前の変換行列を保存
 	oldTransform = transform;

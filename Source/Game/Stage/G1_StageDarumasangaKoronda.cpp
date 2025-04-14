@@ -4,11 +4,9 @@
 G1_StageDarumasangaKoronda::G1_StageDarumasangaKoronda()
 {
 	// ステージモデルを読み込み
-	model = std::make_unique <Model>("Data/Model/Stage/0.StageOnigokko/StageOnigokko.mdl");
+	model = std::make_unique <Model>("Data/Model/Stage/1.DarumasangaKoronda/StageDarumasangaKoronda.mdl");
 
-	scale.x = scale.z = 0.5f;
-	scale.y = 0.1f;
-
+	scale.x = scale.y = scale.z = 0.5f;
 }
 
 G1_StageDarumasangaKoronda::~G1_StageDarumasangaKoronda()

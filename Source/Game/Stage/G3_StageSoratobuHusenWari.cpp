@@ -4,10 +4,9 @@
 G3_StageSoratobuHusenWari::G3_StageSoratobuHusenWari()
 {
 	// ステージモデルを読み込み
-	model = std::make_unique <Model>("Data/Model/Stage/0.StageOnigokko/StageOnigokko.mdl");
+	model = std::make_unique <Model>("Data/Model/Stage/3.SoratobuHusenWari/StageSoratobuHusenWari.mdl");
 
-	scale.x = scale.z = 0.5f;
-	scale.y = 0.1f;
+	scale.x = scale.y = scale.z = 0.5f;
 
 }
 

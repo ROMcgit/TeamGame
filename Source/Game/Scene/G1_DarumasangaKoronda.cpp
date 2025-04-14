@@ -6,7 +6,7 @@
 #include "Game/Effect/EffectManager.h"
 #include "Input/Input.h"
 #include "Game/Stage/StageManager.h"
-#include "Game/Stage/G0_StageOnigokko.h"
+#include "Game/Stage/G1_StageDarumasangaKoronda.h"
 #include "Game/Stage/StageMoveFloor.h"
 
 // 初期化
@@ -23,7 +23,7 @@ void G1_DarumasangaKoronda::Initialize()
 
 	// ステージ初期化
 	StageManager& stageManager = StageManager::Instance();
-	std::unique_ptr<G0_StageOnigokko> stageMain = std::make_unique<G0_StageOnigokko>();
+	std::unique_ptr<G1_StageDarumasangaKoronda> stageMain = std::make_unique<G1_StageDarumasangaKoronda>();
 	stageManager.Register(std::move(stageMain));
 
 	// プレイヤー初期化

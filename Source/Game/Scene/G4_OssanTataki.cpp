@@ -6,7 +6,7 @@
 #include "Game/Effect/EffectManager.h"
 #include "Input/Input.h"
 #include "Game/Stage/StageManager.h"
-#include "Game/Stage/G0_StageOnigokko.h"
+#include "Game/Stage/G4_StageOssanTataki.h"
 #include "Game/Stage/StageMoveFloor.h"
 
 // 初期化
@@ -22,7 +22,7 @@ void G4_OssanTataki::Initialize()
 
 	// ステージ初期化
 	StageManager& stageManager = StageManager::Instance();
-	std::unique_ptr<G0_StageOnigokko> stageMain = std::make_unique<G0_StageOnigokko>();
+	std::unique_ptr<G4_StageOssanTataki> stageMain = std::make_unique<G4_StageOssanTataki>();
 	stageManager.Register(std::move(stageMain));
 
 	// プレイヤー初期化

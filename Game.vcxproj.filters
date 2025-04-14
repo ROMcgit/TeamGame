@@ -175,6 +175,12 @@
     <Filter Include="Source\Stage\StageGame\G5_足場渡り">
       <UniqueIdentifier>{5e4cfcf6-e6ac-4883-96a8-bfeb0c9594f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="HLSL\ShadowMap">
+      <UniqueIdentifier>{3a99b8ab-24c8-4502-981a-c2ebd0bb62c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Graphics\ShadowMap">
+      <UniqueIdentifier>{a7f85467-71cd-44b3-b260-8852b00ac60e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -447,6 +453,33 @@
     <ClInclude Include="Source\Game\Stage\G5_StageAsibawatari_Normal.h">
       <Filter>Source\Stage\StageGame\G5_足場渡り</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G1_DarumasangaKoronda_Clear.h">
+      <Filter>Source\Scene\GameScene\1.だるまさんが転んだ</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G1_DarumasangaKoronda_GameOver.h">
+      <Filter>Source\Scene\GameScene\1.だるまさんが転んだ</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G2_Sundome_Result.h">
+      <Filter>Source\Scene\GameScene\2.寸止め</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G3_SoratobuHusenWari_Result.h">
+      <Filter>Source\Scene\GameScene\3.空飛ぶ風船割り</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G4_OssanTataki_Result.h">
+      <Filter>Source\Scene\GameScene\4.おっさん叩き</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G5_Asibawatari_Clear.h">
+      <Filter>Source\Scene\GameScene\5.足場渡り</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G5_Asibawatari_GameOver.h">
+      <Filter>Source\Scene\GameScene\5.足場渡り</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\ShadowMap.h">
+      <Filter>Source\Graphics\ShadowMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\ShadowMapShader.h">
+      <Filter>Source\Graphics\ShadowMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -707,6 +740,33 @@
     <ClCompile Include="Source\Game\Stage\G5_StageAsibawatari_Normal.cpp">
       <Filter>Source\Stage\StageGame\G5_足場渡り</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G1_DarumasangaKoronda_Clear.cpp">
+      <Filter>Source\Scene\GameScene\1.だるまさんが転んだ</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G1_DarumasangaKoronda_GameOver.cpp">
+      <Filter>Source\Scene\GameScene\1.だるまさんが転んだ</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G2_Sundome_Result.cpp">
+      <Filter>Source\Scene\GameScene\2.寸止め</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G3_SoratobuHusenWari_Result.cpp">
+      <Filter>Source\Scene\GameScene\3.空飛ぶ風船割り</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G4_OssanTataki_Result.cpp">
+      <Filter>Source\Scene\GameScene\4.おっさん叩き</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G5_Asibawatari_Clear.cpp">
+      <Filter>Source\Scene\GameScene\5.足場渡り</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G5_Asibawatari_GameOver.cpp">
+      <Filter>Source\Scene\GameScene\5.足場渡り</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\ShadowMap.cpp">
+      <Filter>Source\Graphics\ShadowMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\ShadowMapShader.cpp">
+      <Filter>Source\Graphics\ShadowMap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Debug.hlsli">
@@ -726,6 +786,9 @@
     </None>
     <None Include="Source\Game\Scene\G0_Onigokko.h">
       <Filter>Source\Scene\GameScene\0.おにごっこ</Filter>
+    </None>
+    <None Include="Shader\ShadowMap.hlsli">
+      <Filter>HLSL\ShadowMap</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -764,6 +827,12 @@
     </FxCompile>
     <FxCompile Include="Shader\PostEffectVS.hlsl">
       <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\ShadowMapPS.hlsl">
+      <Filter>HLSL\ShadowMap</Filter>
+    </FxCompile>
+    <FxCompile Include="Shader\ShadowMapVS.hlsl">
+      <Filter>HLSL\ShadowMap</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

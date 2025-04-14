@@ -173,12 +173,19 @@
     <ClInclude Include="Source\Game\Character\Player\Player4_OssanTataki.h" />
     <ClInclude Include="Source\Game\Character\Player\Player5_AsibaWatari.h" />
     <ClInclude Include="Source\Game\Scene\G1_DarumasangaKoronda.h" />
+    <ClInclude Include="Source\Game\Scene\G1_DarumasangaKoronda_Clear.h" />
+    <ClInclude Include="Source\Game\Scene\G1_DarumasangaKoronda_GameOver.h" />
     <ClInclude Include="Source\Game\Scene\G2_Sundome.h" />
+    <ClInclude Include="Source\Game\Scene\G2_Sundome_Result.h" />
     <ClInclude Include="Source\Game\Scene\G3_SoratobuHusenWari.h" />
+    <ClInclude Include="Source\Game\Scene\G3_SoratobuHusenWari_Result.h" />
     <ClInclude Include="Source\Game\Scene\G4_OssanTataki.h" />
+    <ClInclude Include="Source\Game\Scene\G4_OssanTataki_Result.h" />
     <ClInclude Include="Source\Game\Scene\G5_Asibawatari.h" />
     <ClInclude Include="Source\Game\Scene\G0_Onigokko_Clear.h" />
     <ClInclude Include="Source\Game\Scene\G0_Onigokko_GameOver.h" />
+    <ClInclude Include="Source\Game\Scene\G5_Asibawatari_Clear.h" />
+    <ClInclude Include="Source\Game\Scene\G5_Asibawatari_GameOver.h" />
     <ClInclude Include="Source\Game\Stage\G1_StageDarumasangaKoronda.h" />
     <ClInclude Include="Source\Game\Stage\G2_StageSundome.h" />
     <ClInclude Include="Source\Game\Stage\G3_StageSoratobuHusenWari.h" />
@@ -188,6 +195,8 @@
     <ClInclude Include="Source\Graphics\HDRTexture.h" />
     <ClInclude Include="Source\Graphics\RenderTarget.h" />
     <ClInclude Include="Source\Graphics\ShaderSetting.h" />
+    <ClInclude Include="Source\Graphics\ShadowMap.h" />
+    <ClInclude Include="Source\Graphics\ShadowMapShader.h" />
     <ClInclude Include="Source\Graphics\Timer.h" />
     <ClInclude Include="Source\Other\Collision.h" />
     <ClInclude Include="Source\Game\Effect\Effect.h" />
@@ -264,12 +273,19 @@
     <ClCompile Include="Source\Game\Character\Player\Player5_AsibaWatari.cpp" />
     <ClCompile Include="Source\Game\Scene\G0_Onigokko.cpp" />
     <ClCompile Include="Source\Game\Scene\G1_DarumasangaKoronda.cpp" />
+    <ClCompile Include="Source\Game\Scene\G1_DarumasangaKoronda_Clear.cpp" />
+    <ClCompile Include="Source\Game\Scene\G1_DarumasangaKoronda_GameOver.cpp" />
     <ClCompile Include="Source\Game\Scene\G2_Sundome.cpp" />
+    <ClCompile Include="Source\Game\Scene\G2_Sundome_Result.cpp" />
     <ClCompile Include="Source\Game\Scene\G3_SoratobuHusenWari.cpp" />
+    <ClCompile Include="Source\Game\Scene\G3_SoratobuHusenWari_Result.cpp" />
     <ClCompile Include="Source\Game\Scene\G4_OssanTataki.cpp" />
+    <ClCompile Include="Source\Game\Scene\G4_OssanTataki_Result.cpp" />
     <ClCompile Include="Source\Game\Scene\G5_Asibawatari.cpp" />
     <ClCompile Include="Source\Game\Scene\G0_Onigokko_Clear.cpp" />
     <ClCompile Include="Source\Game\Scene\G0_Onigokko_GameOver.cpp" />
+    <ClCompile Include="Source\Game\Scene\G5_Asibawatari_Clear.cpp" />
+    <ClCompile Include="Source\Game\Scene\G5_Asibawatari_GameOver.cpp" />
     <ClCompile Include="Source\Game\Scene\Scene.cpp" />
     <ClCompile Include="Source\Game\Stage\G1_StageDarumasangaKoronda.cpp" />
     <ClCompile Include="Source\Game\Stage\G2_StageSundome.cpp" />
@@ -281,6 +297,8 @@
     <ClCompile Include="Source\Graphics\HDRTexture.cpp" />
     <ClCompile Include="Source\Graphics\RenderTarget.cpp" />
     <ClCompile Include="Source\Graphics\ShaderSetting.cpp" />
+    <ClCompile Include="Source\Graphics\ShadowMap.cpp" />
+    <ClCompile Include="Source\Graphics\ShadowMapShader.cpp" />
     <ClCompile Include="Source\Graphics\Timer.cpp" />
     <ClCompile Include="Source\Other\Collision.cpp" />
     <ClCompile Include="Source\Game\Effect\Effect.cpp" />
@@ -326,6 +344,7 @@
     <None Include="HLSL\DefaltLit.hlsli" />
     <None Include="HLSL\Line.hlsli" />
     <None Include="HLSL\Sprite.hlsli" />
+    <None Include="Shader\ShadowMap.hlsli" />
     <None Include="Source\Game\Scene\G0_Onigokko.h" />
   </ItemGroup>
   <ItemGroup>
@@ -433,6 +452,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
+    <FxCompile Include="Shader\ShadowMapPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
     <FxCompile Include="Shader\PostEffectPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -444,6 +469,12 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shader\ShadowMapVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

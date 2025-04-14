@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/RenderTarget.h"
+#include "Graphics/ShadowMap.h"
 
 // ゲームシーン
 class G4_OssanTataki : public Scene
@@ -30,6 +31,7 @@ private:
 	std::unique_ptr <Player4_OssanTataki> player;
 	std::unique_ptr <CameraController> cameraController;
 
-	std::unique_ptr<RenderTarget>    renderTarget; //! レンダーターゲット
+	std::unique_ptr<RenderTarget>  renderTarget; //! レンダーターゲット
+	ShadowMap                      shadowMap;    // シャドウマップの実体
 	std::unique_ptr<Sprite> backGround;
 };

@@ -26,7 +26,7 @@ public:
 	void End();
 
 	// シェーダーリソースビューを取得
-	//ID3D11ShaderResourceView* GetSRV() { return shadowmap->GetSRV(); }
+	ID3D11ShaderResourceView* GetSRV() { return shadowmap->GetSRV(); }
 
 private:
 	std::unique_ptr<RenderTarget> shadowmap;

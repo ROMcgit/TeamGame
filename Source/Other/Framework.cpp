@@ -344,7 +344,7 @@ void Framework::SceneSelectGUI()
 		}
 	}
 	ImGui::PopStyleVar(3);    // PushStyleVar‚Åw’è‚µ‚½”‚¾‚¯Pop‚·‚é
-	ImGui::PopStyleColor(12); // PushStyleColor‚Åw’è‚µ‚½”‚¾‚¯Pop‚·‚é
+	ImGui::PopStyleColor(15); // PushStyleColor‚Åw’è‚µ‚½”‚¾‚¯Pop‚·‚é
 
 	ImGui::End();
 

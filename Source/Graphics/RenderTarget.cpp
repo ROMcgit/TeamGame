@@ -22,7 +22,7 @@ void RenderTarget::Begin()
 	if (depthStencilView.Get() != nullptr) dsv = depthStencilView.Get();
 
 	// ÉNÉäÉA
-	FLOAT color[] = { 0.4f, 0.4f, 0.4f, 1.0f };	// RGBA(0.0Å`1.0)
+	FLOAT color[] = { 0.5f, 0.5f, 0.5f, 1.0f };	// RGBA(0.0Å`1.0)
 	dc->ClearRenderTargetView(rtv[0], color);
 	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	dc->OMSetRenderTargets(1, rtv, dsv);
@@ -34,7 +34,6 @@ void RenderTarget::Begin()
 	vp.MinDepth = 0.0f;
 	vp.MaxDepth = 1.0f;
 	dc->RSSetViewports(1, &vp);
-
 }
 
 // ï`âÊèIóπ
@@ -53,39 +52,37 @@ void RenderTarget::SetPSSlot(int slot)
 
 RenderTarget::RenderTarget(ID3D11Device* device, UINT width, UINT height, DXGI_FORMAT format, bool depth)
 {
-	if (!depth)
-	{
-		texture2dDesc = {};
-		texture2dDesc.Width = width;
-		texture2dDesc.Height = height;
-		texture2dDesc.MipLevels = 1;
-		texture2dDesc.ArraySize = 1;
-		texture2dDesc.Format = format;
-		texture2dDesc.SampleDesc.Count = 1;
-		texture2dDesc.SampleDesc.Quality = 0;
-		texture2dDesc.Usage = D3D11_USAGE_DEFAULT;
-		texture2dDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-		texture2dDesc.CPUAccessFlags = 0;
-		texture2dDesc.MiscFlags = 0;
+	texture2dDesc = {};
+	texture2dDesc.Width = width;
+	texture2dDesc.Height = height;
+	texture2dDesc.MipLevels = 1;
+	texture2dDesc.ArraySize = 1;
+	texture2dDesc.Format = format;
+	texture2dDesc.SampleDesc.Count = 1;
+	texture2dDesc.SampleDesc.Quality = 0;
+	texture2dDesc.Usage = D3D11_USAGE_DEFAULT;
+	texture2dDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+	texture2dDesc.CPUAccessFlags = 0;
+	texture2dDesc.MiscFlags = 0;
 
-		Microsoft::WRL::ComPtr<ID3D11Texture2D>	texture2d;
-		HRESULT hr = device->CreateTexture2D(&texture2dDesc, 0, texture2d.ReleaseAndGetAddressOf());
-		_ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
+	Microsoft::WRL::ComPtr<ID3D11Texture2D>	texture2d;
+	HRESULT hr = device->CreateTexture2D(&texture2dDesc, 0, texture2d.ReleaseAndGetAddressOf());
+	_ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
 
-		D3D11_SHADER_RESOURCE_VIEW_DESC shader_resource_view_desc = {};
-		shader_resource_view_desc.Format = texture2dDesc.Format;
-		shader_resource_view_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		shader_resource_view_desc.Texture2D.MipLevels = 1;
-		hr = device->CreateShaderResourceView(texture2d.Get(), &shader_resource_view_desc, shaderResourceView.ReleaseAndGetAddressOf());
-		_ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
+	D3D11_SHADER_RESOURCE_VIEW_DESC shader_resource_view_desc = {};
+	shader_resource_view_desc.Format = texture2dDesc.Format;
+	shader_resource_view_desc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	shader_resource_view_desc.Texture2D.MipLevels = 1;
+	hr = device->CreateShaderResourceView(texture2d.Get(), &shader_resource_view_desc, shaderResourceView.ReleaseAndGetAddressOf());
+	_ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
 
-		D3D11_RENDER_TARGET_VIEW_DESC render_target_view_desc{};
-		render_target_view_desc.Format = texture2dDesc.Format;
-		render_target_view_desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-		hr = device->CreateRenderTargetView(texture2d.Get(), &render_target_view_desc, renderTargetView.ReleaseAndGetAddressOf());
-		_ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
-	}
-	else if (depth)
+	D3D11_RENDER_TARGET_VIEW_DESC render_target_view_desc{};
+	render_target_view_desc.Format = texture2dDesc.Format;
+	render_target_view_desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+	hr = device->CreateRenderTargetView(texture2d.Get(), &render_target_view_desc, renderTargetView.ReleaseAndGetAddressOf());
+	_ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
+
+	if (depth)
 	{
 		depthStencilView = nullptr;
 

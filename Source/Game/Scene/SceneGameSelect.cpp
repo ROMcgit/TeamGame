@@ -179,10 +179,10 @@ void SceneGameSelect::Render()
 {
 	lightPosition.x = CameraController::target.x;
 	lightPosition.y = 5.0f;
-	lightPosition.z = 425.0f;
+	lightPosition.z = CameraController::target.z - 25.0f;
 	lightRange = 20000.0f;
 
-	shadowMapEyeOffset.y = 0.0f;
+	shadowMapEyeOffset = { 4.0f, 17.0f, 9.0f };
 
 	//! ÉtÉHÉO
 	fogStart = 2000.0f;
@@ -310,6 +310,7 @@ void SceneGameSelect::Render()
 	{
 		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
 		{
+			ImGui::Image(shadowMap.GetSRV(), ImVec2(300, 200));
 			StageManager::Instance().DrawDebugGUI();
 
 			GameSelectManager::Instance().DrawDebugGUI();

@@ -53,6 +53,9 @@ public:
 	// テクスチャ高さ取得
 	inline int GetHeight() const { return texture2dDesc.Height; }
 
+	// シェーダーリソースビューを取得
+	ID3D11ShaderResourceView* GetSRV() { return shaderResourceView.Get(); }
+
 public:
 	ID3D11RenderTargetView* orgRtv[4];
 	ID3D11DepthStencilView* orgDsv;

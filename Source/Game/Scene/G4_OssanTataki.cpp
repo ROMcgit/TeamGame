@@ -18,6 +18,10 @@ void G4_OssanTataki::Initialize()
 
 	// レンダーターゲット
 	renderTarget = std::make_unique<RenderTarget>(device, screenWidth, screenHeight, DXGI_FORMAT_R8G8B8A8_UNORM);
+
+	// シャドウマップ初期化
+	shadowMap.Initialize();
+
 /********************************************************************************/
 
 	// ステージ初期化
@@ -89,9 +93,43 @@ void G4_OssanTataki::Update(float elapsedTime)
 // 描画処理
 void G4_OssanTataki::Render()
 {
+	lightPosition.x = CameraController::target.x;
+	lightPosition.y = 5.0f;
+	lightPosition.z = CameraController::target.z - 25.0f;
+	lightRange = 20000.0f;
+
+	shadowMapEyeOffset = { 4.0f, 17.0f, 9.0f };
+
+	//! フォグ
+	fogStart = 2000.0f;
+	fogEnd = 2100.0f;
+
 	Graphics& graphics = Graphics::Instance();
 
 	DrawingSettings(graphics);
+
+	//! シャドウマップ
+	{
+		// ポーズ画面じゃないなら
+		//if (pause->GetPause_BurioHuntersOpacity() < 1.0f)
+		{
+			//! シャドウマップ開始
+			shadowMap.Begin(rc);
+			{
+				Shader* shadowMapShader = graphics.GetShadowMapShader();
+				shadowMapShader->Begin(dc, rc);
+
+				//エネミー描画
+				EnemyManager::Instance().Render(dc, shadowMapShader);
+				// プレイヤー描画
+				player->Render(dc, shadowMapShader);
+
+				shadowMapShader->End(dc);
+			}
+			//! シャドウマップ終了
+			shadowMap.End();
+		}
+	}
 
 	//! レンダーターゲット
 	{
@@ -101,6 +139,10 @@ void G4_OssanTataki::Render()
 
 	//! 2Dスプライト
 	{
+		// 深度を無効にする
+		ID3D11DepthStencilState* depthDisabledState = graphics.GetDepthDisabledState();
+		dc->OMSetDepthStencilState(depthDisabledState, 0);
+
 		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
 		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
 		float textureWidth = static_cast<float>(backGround->GetTextureWidth());
@@ -112,6 +154,9 @@ void G4_OssanTataki::Render()
 			0, 0, textureWidth, textureHeight,
 			0,
 			1, 1, 1, 1);
+
+		ID3D11DepthStencilState* depthEnabledState = graphics.GetDepthEnabledState();
+		dc->OMSetDepthStencilState(depthEnabledState, 0);
 	}
 
 	// 3Dモデル描画

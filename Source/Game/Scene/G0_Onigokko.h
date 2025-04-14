@@ -6,6 +6,7 @@
 #include "Scene.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/RenderTarget.h"
+#include "Graphics/ShadowMap.h"
 #include "Graphics/Timer.h"
 #include "Graphics/Fade.h"
 
@@ -54,7 +55,9 @@ private:
 	std::unique_ptr <Player0_Onigokko> player;
 	std::unique_ptr <CameraController> cameraController;
 
-	std::unique_ptr<RenderTarget>    renderTarget; //! レンダーターゲット
+	std::unique_ptr<RenderTarget>  renderTarget; //! レンダーターゲット
+	ShadowMap                      shadowMap;    // シャドウマップの実体
+	
 	std::unique_ptr<Sprite> backGround;
 	std::unique_ptr<Timer>  timer;
 

@@ -38,53 +38,6 @@ void G3_StageSoratobuHusenWari::Render(ID3D11DeviceContext* dc, Shader* shader)
 // レイキャスト
 bool G3_StageSoratobuHusenWari::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit)
 {
-	// 前回のワールド行列と逆行列を求める
-	DirectX::XMMATRIX oldWorld = DirectX::XMLoadFloat4x4(&oldTransform);
-	DirectX::XMMATRIX invOldWorld = DirectX::XMMatrixInverse(nullptr, oldWorld);
-
-	// 前回のローカル空間でのレイに変換
-	DirectX::XMVECTOR rayStart = DirectX::XMLoadFloat3(&start);
-	DirectX::XMVECTOR rayEnd = DirectX::XMLoadFloat3(&end);
-
-	DirectX::XMVECTOR localStartVec = DirectX::XMVector3TransformCoord(rayStart, invOldWorld);
-	DirectX::XMVECTOR localEndVec = DirectX::XMVector3TransformCoord(rayEnd, invOldWorld);
-
-	DirectX::XMFLOAT3 localStart, localEnd;
-	DirectX::XMStoreFloat3(&localStart, localStartVec);
-	DirectX::XMStoreFloat3(&localEnd, localEndVec);
-
-	// ローカル空間でのレイとの交点を求める
-	HitResult localHit;
-	if (Collision::IntersectRayVsModel(localStart, localEnd, model.get(), localHit))
-	{
-		// 前回のローカル空間から今回のワールド空間へ変換
-		// 前回から今回のかけて変更された内容が乗っているオブジェクトに反映される。
-		// レイの始点と終点から交点の位置を計算
-		DirectX::XMVECTOR localRayDir = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(localEndVec, localStartVec));
-		DirectX::XMVECTOR localHitPointVec = DirectX::XMVectorAdd(localStartVec, DirectX::XMVectorScale(localRayDir, localHit.distance));
-
-		// 前回のローカル空間から今回のワールド空間へ変換
-		DirectX::XMMATRIX currentWorld = DirectX::XMLoadFloat4x4(&transform);
-		DirectX::XMVECTOR worldHitPointVec = DirectX::XMVector3TransformCoord(localHitPointVec, currentWorld);
-
-		// 交点の位置を取得
-		DirectX::XMFLOAT3 worldHitPoint;
-		DirectX::XMStoreFloat3(&worldHitPoint, worldHitPointVec);
-		hit.distance = localHit.distance;
-		hit.position = worldHitPoint; // 交点の位置をヒット結果に設定
-
-		// 法線の変換
-		DirectX::XMVECTOR localNormalVec = DirectX::XMLoadFloat3(&localHit.normal);
-		DirectX::XMVECTOR worldNormalVec = DirectX::XMVector3TransformNormal(localNormalVec, currentWorld);
-		DirectX::XMStoreFloat3(&hit.normal, worldNormalVec);
-
-		// 回転差分を算出
-		hit.rotation.x = angle.x;
-		hit.rotation.y = angle.y;
-		hit.rotation.z = angle.z;
-
-		return true;
-	}
 	return false;
 }
 

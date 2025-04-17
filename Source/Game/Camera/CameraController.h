@@ -2,11 +2,12 @@
 
 #include <DirectXMath.h>
 #include <memory>
+#include <stdexcept>
 #include "Camera.h"
+#include "Game/Character/Director/DirectorManager.h"
 
 // 前方宣言
 class Graphics;
-class Shader;
 class Fade;
 
 // カメラコントローラー
@@ -74,7 +75,10 @@ public:
 		/*! セッター */
 
 #if 1
-	// ターゲットの位置設定
+	/*! ターゲット */
+#if 1
+
+	// ターゲットの位置設定(デバッグカメラでは作動しない)
 	void SetTarget(const DirectX::XMFLOAT3& target)
 	{
 		//! デバッグカメラじゃないなら
@@ -85,7 +89,10 @@ public:
 	// ターゲットの位置変更の設定
 	void SetTargetChange(DirectX::XMFLOAT3 endTargetChange, float targetChangeTime, TargetChangeEasing targetChangeEasing = TargetChangeEasing::Linear)
 	{
-		if (!targetChange)
+		if (!targetChange &&
+			(target.x != endTargetChange.x
+				|| target.y != endTargetChange.y
+				|| target.z != endTargetChange.z))
 		{
 			targetChange = true;               // ターゲットの位置を変える
 			this->startTargetChange = this->target;       // ターゲットの変更の開始の値
@@ -93,10 +100,49 @@ public:
 			this->targetChangeTime = targetChangeTime;   // ターゲットの位置を変える時間
 			this->targetChangeEasing = targetChangeEasing; // どのイージングにするか
 			this->targetChangeElapsedTime = 0.0f;               // 経過時間をリセット
+
+			// 変更時間の設定が0以下の時にエラーを出す
+			if (this->targetChangeTime <= 0)
+			{
+				throw std::out_of_range("イージング出来ません！！");
+			}
 		}
 	}
 
-	// 角度設定
+	// ターゲットのリセット
+	void SetTargetReset() { this->target = this->targetReset; }
+
+	// ターゲットのリセットの設定
+	void SetTargetResetChange(float targetResetChangeTime = 0.5f, TargetChangeEasing targetChangeEasing = TargetChangeEasing::Linear)
+	{
+		//! カメラの位置の変更を解除
+		targetChange = false;
+
+		if ((target.x != targetReset.x
+			|| target.y != targetReset.y
+			|| target.z != targetReset.z))
+		{
+			this->targetChange = true;                  // カメラのターゲットの位置を変える
+			this->startTargetChange = target;                // カメラのターゲットの変更の開始の値
+			this->endTargetChange = targetReset;           // ここまでターゲットの位置を変える
+			this->targetChangeTime = targetResetChangeTime; // ターゲットの位置を変える時間
+			this->targetChangeEasing = targetChangeEasing;    // どのイージングにするか
+			this->targetChangeElapsedTime = 0.0f;                  // 経過時間をリセット
+
+			// 変更時間の設定が0以下の時にエラーを出す
+			if (targetChangeTime <= 0)
+			{
+				throw std::out_of_range("イージング出来ません！！");
+			}
+		}
+	}
+
+#endif
+
+	/*! 角度 */
+#if 1
+
+	// 角度の設定(デバッグカメラでは作動しない)
 	void SetAngle(const DirectX::XMFLOAT3& angle)
 	{
 		//! デバッグカメラじゃないなら
@@ -107,7 +153,10 @@ public:
 	// 角度変更の設定
 	void SetAngleChange(DirectX::XMFLOAT3 endAngleChange, float angleChangeTime, AngleChangeEasing angleChangeEasing = AngleChangeEasing::Linear)
 	{
-		if (!angleChange)
+		if (!angleChange &&
+			(angle.x != endAngleChange.x
+				|| angle.y != endAngleChange.y
+				|| angle.z != endAngleChange.z))
 		{
 			angleChange = true;              // 角度を変える
 			this->startAngleChange = this->angle;       // 角度の変更の開始の値
@@ -115,10 +164,49 @@ public:
 			this->angleChangeTime = angleChangeTime;   // 角度を変える時間
 			this->angleChangeEasing = angleChangeEasing; // どのイージングにするか
 			this->angleChangeElapsedTime = 0.0f;              // 経過時間をリセット
+
+			// 変更時間の設定が0以下の時にエラーを出す
+			if (this->angleChangeTime <= 0)
+			{
+				throw std::out_of_range("イージング出来ません！！");
+			}
 		}
 	}
 
-	// カメラの範囲の設定
+	// 角度のリセット
+	void SetAngleReset() { this->angle = this->angleReset; }
+
+	// 角度のリセットの設定
+	void SetAngleResetChange(float angleResetChangeTime = 0.5f, AngleChangeEasing angleChangeEasing = AngleChangeEasing::Linear)
+	{
+		//! カメラの角度の変更を解除
+		angleChange = false;
+
+		if ((angle.x != angleReset.x)
+			|| angle.y != angleReset.y
+			|| angle.z != angleReset.z)
+		{
+			this->angleChange = true;                 // カメラの角度を変える
+			this->startAngleChange = angle;				   // カメラの角度の変更の開始の値
+			this->endAngleChange = angleReset;           // ここまで角度を変える
+			this->angleChangeTime = angleResetChangeTime; // 角度を変える時間
+			this->angleChangeEasing = angleChangeEasing;    // どのイージングにするか
+			this->angleChangeElapsedTime = 0.0f;                 // 経過時間をリセット
+
+			// 変更時間の設定が0以下の時にエラーを出す
+			if (angleChangeTime <= 0)
+			{
+				throw std::out_of_range("イージング出来ません！！");
+			}
+		}
+	}
+
+#endif
+
+	/*! 範囲 */
+#if 1
+
+	// カメラの範囲の設定(デバッグカメラでは作動しない)
 	void SetRange(float range)
 	{
 		//! デバッグカメラじゃないなら
@@ -129,7 +217,7 @@ public:
 	// カメラの範囲の変更の設定
 	void SetRangeChange(float endRangeChange, float rangeChangeTime, RangeChangeEasing rangeChangeEasing = RangeChangeEasing::Linear)
 	{
-		if (!rangeChange)
+		if (!rangeChange && range != endRangeChange)
 		{
 			rangeChange = true;              // カメラの範囲を変える
 			this->startRangeChange = this->range;       // カメラの範囲の変更の開始の値
@@ -137,8 +225,42 @@ public:
 			this->rangeChangeTime = rangeChangeTime;   // カメラの範囲を変える時間
 			this->rangeChangeEasing = rangeChangeEasing; // どのイージングにするか
 			this->rangeChangeElapsedTime = 0.0f;              // 経過時間をリセット
+
+			// 変更時間の設定が0以下の時にエラーを出す
+			if (this->rangeChangeTime <= 0)
+			{
+				throw std::out_of_range("イージング出来ません！！");
+			}
 		}
 	}
+
+	// カメラの範囲のリセット
+	void SetRangeReset() { this->range = this->rangeReset; }
+
+	// カメラの範囲のリセットの設定
+	void SetRangeResetChange(float rangeResetChangeTime = 0.5f, RangeChangeEasing rangeChangeEasing = RangeChangeEasing::Linear)
+	{
+		//! カメラの範囲の変更を解除
+		rangeChange = false;
+
+		if (CameraController::range != CameraController::rangeReset)
+		{
+			rangeChange = true;                         // カメラの範囲を変える
+			startRangeChange = CameraController::range;      // カメラの範囲の変更の開始の値
+			endRangeChange = CameraController::rangeReset; // ここまでカメラの範囲を変える
+			rangeChangeTime = rangeResetChangeTime;         // カメラの範囲を変える時間
+			rangeChangeEasing = rangeChangeEasing;            // どのイージングにするか
+			rangeChangeElapsedTime = 0.0f;                         // 経過時間をリセット
+
+			// 変更時間の設定が0以下の時にエラーを出す
+			if (CameraController::rangeChangeTime <= 0)
+			{
+				throw std::out_of_range("イージング出来ません！！");
+			}
+		}
+	}
+
+#endif
 
 	// カメラの高さの設定
 	void SetHeight(float height) { this->height = height; }
@@ -161,6 +283,9 @@ public:
 		this->cameraShakeTimer = shakeTime;  // 揺らす時間
 		this->cameraShakePower = shakePower; // 揺らす大きさ
 	}
+
+	// カメラシェイクを解除
+	void SetCameraShakeUnlock() { this->cameraShake = false; }
 
 	// 他の更新処理を止める設定
 	void SetBossFinish()
@@ -229,16 +354,17 @@ private:
 	float minAngleX = DirectX::XMConvertToRadians(-90);
 	float maxAngleX = DirectX::XMConvertToRadians(90);
 
-	float height = 9.0f; // カメラの高さ
-	float dist = 0.0f; // プレイヤーとターゲットの距離
-
-	bool  tracking = false; // カメラをプレイヤー中心でターゲットに注目させるか
+public:
+	static bool  tracking; // カメラをプレイヤー中心でターゲットに注目させるか
+	static float height;   // カメラの高さ
+	static float dist;     // プレイヤーとターゲットの距離
 
 	/**********************************************************************************************/
 		/*! ターゲット */
 
 public:
-	static DirectX::XMFLOAT3 target;
+	static DirectX::XMFLOAT3 target;      // ターゲット
+	static DirectX::XMFLOAT3 targetReset; // ターゲットのリセット位置
 
 	static bool              targetChange;            // ターゲットの位置を変えるか
 	static DirectX::XMFLOAT3 startTargetChange;       // ターゲットの変更の開始の値
@@ -250,7 +376,8 @@ public:
 		/*! 角度 */
 
 public:
-	static DirectX::XMFLOAT3 angle;
+	static DirectX::XMFLOAT3 angle;      // 角度
+	static DirectX::XMFLOAT3 angleReset; // 角度のリセットの数値
 
 	static bool              angleChange;            // 角度を変えるか
 	static DirectX::XMFLOAT3 startAngleChange;       // 角度の変更の開始の値
@@ -266,7 +393,8 @@ private:
 	float maxRange = 999.0f; // カメラ範囲の最大
 
 public:
-	static float range; // カメラ範囲
+	static float range;      // カメラの範囲
+	static float rangeReset; // カメラの範囲のリセットの数値
 
 	static bool  rangeChange;            // カメラの範囲を変えるか
 	static float startRangeChange;       // カメラの範囲の変更の開始の値
@@ -294,12 +422,14 @@ private:
 	float targetMoveSpeed = 8; // ターゲットの移動速度(ボタン移動の場合)
 	float targetUpSpeed = 8;  // ターゲットの上昇速度(ボタン移動の場合)
 
+	DirectorManager directorManager; // 演出マネージャー
+
 	//-----------------------------------------------------------------//
 
 	bool cameraTargetPlayer_3D = false; // カメラのターゲットをプレイヤーにするか
 
 	bool  cameraMovie = false; // カメラのムービー中か
-	float movieTime = 0.0f;  // ムービーの時間
+	float movieTime = 0.0f;  // ムービー時間
 
 	//-----------------------------------------------------------------//
 

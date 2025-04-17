@@ -44,7 +44,7 @@ void GS0_OniGokko::Update(float elapsedTime)
 	}
 
 	// キャラクターの状態更新処理
-	UpdateCharacterState(elapsedTime);
+	UpdateGameObjectBaseState(elapsedTime);
 
 	// プレイヤーとの当たり判定
 	CollisionVsPlayer();

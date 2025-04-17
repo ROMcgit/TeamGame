@@ -57,7 +57,7 @@ public:
 	// エネミー全削除
 	void Clear();
 
-private:
+public:
 
 	std::vector<std::unique_ptr<Enemy>> enemies;
 	std::vector<Enemy*> removes;

@@ -51,7 +51,7 @@ void Togemaru::Update(float elapsedTime)
 	UpdateTransform();
 
 	// キャラクターの状態更新処理
-	UpdateCharacterState(elapsedTime);
+	UpdateGameObjectBaseState(elapsedTime);
 
 	// モデルアニメーション更新
 	model->UpdateAnimation(elapsedTime);

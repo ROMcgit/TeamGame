@@ -9,7 +9,7 @@
 // エネミーマネージャー
 class DirectorManager
 {
-private:
+public:
 	DirectorManager();
 	~DirectorManager();
 

@@ -1,7 +1,6 @@
 #include "CameraController.h"
 #include "Camera.h"
 #include "Graphics/Fade.h"
-#include "Game/Character/Director/DirectorManager.h"
 #include "Game/Character/Director/CameraTarget.h"
 #include "Input/Input.h"
 #include "Audio/SoundManager.h"
@@ -19,6 +18,8 @@ CameraController::RangeChangeEasing CameraController::rangeChangeEasing = Camera
 
 //! ターゲット
 DirectX::XMFLOAT3 CameraController::target = { 0, 0, 0 };
+//! ターゲットのリセットの位置
+DirectX::XMFLOAT3 CameraController::targetReset = { 0, 0, 0 };
 
 //! ターゲットの位置を変変えるか
 bool CameraController::targetChange = false;
@@ -34,7 +35,9 @@ float CameraController::targetChangeElapsedTime = 0.0f;
 /********************************************************************/
 
 //! 角度
-DirectX::XMFLOAT3 CameraController::angle = { DirectX::XMConvertToRadians(26),0,0 };
+DirectX::XMFLOAT3 CameraController::angle = { 0, 0, 0 };
+//! 角度のリセットの数値
+DirectX::XMFLOAT3 CameraController::angleReset = { 0, 0, 0 };
 
 //! 角度を変えるか
 bool CameraController::angleChange = false;
@@ -51,6 +54,8 @@ float CameraController::angleChangeElapsedTime = 0.0f;
 
 //! カメラの範囲
 float CameraController::range = 16.0f;
+//! カメラの範囲のリセットの数値
+float CameraController::rangeReset = 0.0f;
 
 //! カメラの範囲を変えるか
 bool CameraController::rangeChange = false;
@@ -79,6 +84,13 @@ bool CameraController::debugCamera = false;
 //! デバッグカメラ中に移動しないようにするか
 bool CameraController::noMoveDebugCamera = false;
 
+//! カメラがプレイヤーを元にターゲットに注目しているか
+bool CameraController::tracking = false;
+//! カメラの高さ
+float CameraController::height = 9.0f;
+//! プレイヤーとターゲットとの距離
+float CameraController::dist = 0;
+
 // コンストラクタ
 CameraController::CameraController()
 {
@@ -86,6 +98,10 @@ CameraController::CameraController()
 	targetChange = false; // ターゲットの位置を変変えるか
 	angleChange = false; // 角度を変えるか
 	rangeChange = false; // カメラの範囲を変えるか
+
+	tracking = false; // プレイヤーを元にターゲットに注目しているか
+	height = 9;    // カメラの高さ
+	dist = 0;     // プレイヤーとターゲットとの距離
 
 	cameraShake = false;       // カメラを揺らすか
 	cameraShakeTimer = 0.0f;        // カメラを揺らす時間
@@ -98,10 +114,12 @@ CameraController::CameraController()
 	// フェードを生成
 	fade = std::make_unique<Fade>();
 
+	//SoundManager::Instance().LoadSound("ボス撃破", "Data/Audio/Sound/Enemy/Defeat.wav");
+
 #ifndef _DEBUG
 	//! カメラのターゲットを生成
 	std::unique_ptr<CameraTarget> cameraTarget = std::make_unique<CameraTarget>();
-	DirectorManager::Instance().Register(std::move(cameraTarget));
+	directorManager.Register(std::move(cameraTarget));
 #endif
 }
 
@@ -117,7 +135,7 @@ void CameraController::Update(float elapsedTime)
 	fade->Update(elapsedTime);
 
 	// 演出マネージャーの更新処理
-	DirectorManager::Instance().Update(elapsedTime);
+	directorManager.Update(elapsedTime);
 
 #if 1
 	// カメラの回転値を回転行列に変換
@@ -148,7 +166,7 @@ void CameraController::Update(float elapsedTime)
 void CameraController::RenderCameraTarget(ID3D11DeviceContext* dc, Shader* shader)
 {
 	//! デバッグカメラ中に表示
-	DirectorManager::Instance().Render(dc, shader);
+	directorManager.Render(dc, shader);
 }
 
 // フェードを描画
@@ -204,6 +222,7 @@ void CameraController::DrawDebugGUI()
 // カメラの注目更新処理
 void CameraController::UpdateCameraTargetTracking(float elapsedTime)
 {
+
 }
 
 // カメラの状態更新処理
@@ -474,7 +493,11 @@ bool CameraController::UpdateTargetChange(float elapsedTime)
 
 	//! 処理を止める
 	if (t >= 1.0f)
+	{
+		//! 値のずれを無くす
+		target = endTargetChange;
 		targetChange = false;
+	}
 
 	return true;
 }
@@ -527,7 +550,11 @@ bool CameraController::UpdateAngleChange(float elapsedTime)
 
 	//! 処理を止める
 	if (t >= 1.0f)
+	{
+		//! 値のずれを無くす
+		angle = endAngleChange;
 		angleChange = false;
+	}
 
 	return true;
 }
@@ -574,7 +601,11 @@ bool CameraController::UpdateRangeChange(float elapsedTime)
 
 	// 値が同じなら処理をとめる
 	if (t >= 1.0f)
+	{
+		//! 値のずれを無くす
+		range = endRangeChange;
 		rangeChange = false;
+	}
 
 	return true;
 }
@@ -634,11 +665,14 @@ bool CameraController::UpdateBossFinish(float elapsedTime)
 			//! フェードを設定
 			fade->SetFade(
 				DirectX::XMFLOAT3(1, 0, 0),
-				0.9f, 0.0f,
+				0.8f, 0.0f,
 				0.5f, 0.2f);
 
+			//! カメラシェイク(シェーダー)を解除
+			Camera::Instance().cameraShakeShader = false;
+
 			// カメラシェイク
-			SetCameraShake(0.8f, DirectX::XMINT3(100, 100, 0));
+			Camera::Instance().SetCameraShakeShader(1.0f, 0.3f, DirectX::XMFLOAT2(0.015f, 0.05f));
 
 			// 効果音
 			SoundManager::Instance().PlaySound("ボス撃破", 0.5f);

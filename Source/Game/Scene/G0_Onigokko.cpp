@@ -160,7 +160,7 @@ void G0_Onigokko::Render()
 		lightPosition = player->GetPosition();
 
 
-	lightRange = 30.0f;
+	lightRange = 800.0f;
 
 	//! フォグ
 	fogStart = 20.0f;
@@ -231,11 +231,11 @@ void G0_Onigokko::Render()
 		// ステージ描画
 		StageManager::Instance().Render(dc, shader);
 
-		// カメラの位置を描画
-		CameraController::Instance().RenderCameraTarget(dc, shader);
-
 		// プレイヤー描画
 		player->Render(dc, shader);
+
+		// カメラの位置を描画
+		CameraController::Instance().RenderCameraTarget(dc, shader);
 
 		//エネミー描画
 		EnemyManager::Instance().Render(dc, shader);

@@ -20,4 +20,18 @@ public:
 
 	// バウンド(弾む動き)
 	static float EaseBounce(float start, float end, float t);
+
+	// エラスティック(弾性のような動き)
+	static float EaseElastic(float start, float end, float t);
+
+	/*! 円形 */
+
+	// イーズインサークル(円形加速)
+	static float EaseInCircle(float start, float end, float t);
+
+	// イーズアウトサークル(円形減速)
+	static float EaseOutCircle(float start, float end, float t);
+
+	// イーズインアウトサークル(円形加速→円形減速)
+	static float EaseInOutCircle(float start, float end, float t);
 };

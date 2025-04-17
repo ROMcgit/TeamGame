@@ -80,7 +80,7 @@ DebugRenderer::DebugRenderer(ID3D11Device* device)
 		desc.AlphaToCoverageEnable = false;
 		desc.IndependentBlendEnable = false;
 		// TODO:背景透過
-		desc.RenderTarget[0].BlendEnable = true;
+		desc.RenderTarget[0].BlendEnable = TRUE;
 		desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 		desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
 		desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
@@ -129,6 +129,9 @@ DebugRenderer::DebugRenderer(ID3D11Device* device)
 
 	// 円柱メッシュ作成
 	CreateCylinderMesh(device, 1.0f, 1.0f, 0.0f, 1.0f, 16, 1);
+
+	// ボックスメッシュ作成
+	CreateBoxMesh(device);
 }
 
 // 描画開始
@@ -159,7 +162,8 @@ void DebugRenderer::Render(ID3D11DeviceContext* context, const DirectX::XMFLOAT4
 	UINT offset = 0;
 	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
-	// 球描画
+	//! 球描画
+#if 1
 	context->IASetVertexBuffers(0, 1, sphereVertexBuffer.GetAddressOf(), &stride, &offset);
 	for (const Sphere& sphere : spheres)
 	{
@@ -178,8 +182,10 @@ void DebugRenderer::Render(ID3D11DeviceContext* context, const DirectX::XMFLOAT4
 		context->Draw(sphereVertexCount, 0);
 	}
 	spheres.clear();
+#endif
 
-	// 円柱描画
+	//! 円柱描画
+#if 1
 	context->IASetVertexBuffers(0, 1, cylinderVertexBuffer.GetAddressOf(), &stride, &offset);
 	for (const Cylinder& cylinder : cylinders)
 	{
@@ -198,6 +204,33 @@ void DebugRenderer::Render(ID3D11DeviceContext* context, const DirectX::XMFLOAT4
 		context->Draw(cylinderVertexCount, 0);
 	}
 	cylinders.clear();
+#endif
+
+	//! ボックス描画
+#if 1
+	// ボックス用頂点バッファをセット
+	context->IASetVertexBuffers(0, 1, boxVertexBuffer.GetAddressOf(), &stride, &offset);
+
+	for (const Box& box : boxes)
+	{
+		// 単位ボックス（-0.5～0.5）の各軸に対してスケーリング
+		DirectX::XMMATRIX S = DirectX::XMMatrixScaling(box.width, box.height, box.depth);
+		// 平行移動（ボックスの中心位置へ）
+		DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(box.center.x, box.center.y, box.center.z);
+		DirectX::XMMATRIX W = S * T;
+		DirectX::XMMATRIX WVP = W * VP;  // VPは Render 関数内で算出済み
+
+		// 定数バッファ更新
+		CbMesh cbMesh;
+		cbMesh.color = box.color;
+		DirectX::XMStoreFloat4x4(&cbMesh.wvp, WVP);
+		context->UpdateSubresource(constantBuffer.Get(), 0, nullptr, &cbMesh, 0, 0);
+
+		// 描画
+		context->Draw(boxVertexCount, 0);
+	}
+	boxes.clear();
+#endif
 }
 
 // 球描画
@@ -221,6 +254,18 @@ void DebugRenderer::DrawCylinder(const DirectX::XMFLOAT3& position, float radius
 	cylinders.emplace_back(cylinder);
 }
 
+// ボックス描画
+void DebugRenderer::DrawBox(const DirectX::XMFLOAT3& center, float width, float height, float depth, const DirectX::XMFLOAT4& color)
+{
+	Box box;
+	box.center = center;
+	box.width = width;
+	box.height = height;
+	box.depth = depth;
+	box.color = color;
+	boxes.emplace_back(box);
+}
+
 // 球メッシュ作成
 void DebugRenderer::CreateSphereMesh(ID3D11Device* device, float radius, int slices, int stacks)
 {
@@ -231,7 +276,7 @@ void DebugRenderer::CreateSphereMesh(ID3D11Device* device, float radius, int sli
 	float thetaStep = DirectX::XM_2PI / slices;
 
 	DirectX::XMFLOAT3* p = vertices.get();
-	
+
 	for (int i = 0; i < stacks; ++i)
 	{
 		float phi = i * phiStep;
@@ -364,4 +409,47 @@ void DebugRenderer::CreateCylinderMesh(ID3D11Device* device, float radius1, floa
 		HRESULT hr = device->CreateBuffer(&desc, &subresourceData, cylinderVertexBuffer.GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
 	}
+}
+
+// ボックスメッシュ作成
+void DebugRenderer::CreateBoxMesh(ID3D11Device* device)
+{
+	// 原点中心で幅1, 高さ1の長方形（Z=0）の各頂点（線リスト用：4本のライン＝8頂点）
+	DirectX::XMFLOAT3 vertices[] =
+	{
+		// 底面（下側の正方形、4エッジ＝8頂点）
+		{ -0.5f, -0.5f, -0.5f }, {  0.5f, -0.5f, -0.5f }, // 辺1
+		{  0.5f, -0.5f, -0.5f }, {  0.5f, -0.5f,  0.5f }, // 辺2
+		{  0.5f, -0.5f,  0.5f }, { -0.5f, -0.5f,  0.5f }, // 辺3
+		{ -0.5f, -0.5f,  0.5f }, { -0.5f, -0.5f, -0.5f }, // 辺4
+
+		// 上面（上側の正方形、4エッジ＝8頂点）
+		{ -0.5f,  0.5f, -0.5f }, {  0.5f,  0.5f, -0.5f }, // 辺5
+		{  0.5f,  0.5f, -0.5f }, {  0.5f,  0.5f,  0.5f }, // 辺6
+		{  0.5f,  0.5f,  0.5f }, { -0.5f,  0.5f,  0.5f }, // 辺7
+		{ -0.5f,  0.5f,  0.5f }, { -0.5f,  0.5f, -0.5f }, // 辺8
+
+		// 縦のエッジ（上下を結ぶ4エッジ＝8頂点）
+		{ -0.5f, -0.5f, -0.5f }, { -0.5f,  0.5f, -0.5f }, // 辺9
+		{  0.5f, -0.5f, -0.5f }, {  0.5f,  0.5f, -0.5f }, // 辺10
+		{  0.5f, -0.5f,  0.5f }, {  0.5f,  0.5f,  0.5f }, // 辺11
+		{ -0.5f, -0.5f,  0.5f }, { -0.5f,  0.5f,  0.5f }, // 辺12
+	};
+	// メンバ変数に頂点数を保存
+	boxVertexCount = ARRAYSIZE(vertices);
+
+	// 頂点バッファの作成
+	D3D11_BUFFER_DESC desc = {};
+	desc.ByteWidth = sizeof(vertices);
+	desc.Usage = D3D11_USAGE_IMMUTABLE;
+	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	desc.CPUAccessFlags = 0;
+	desc.MiscFlags = 0;
+	desc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA initData = {};
+	initData.pSysMem = vertices;
+
+	HRESULT hr = device->CreateBuffer(&desc, &initData, boxVertexBuffer.GetAddressOf());
+	_ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
 }

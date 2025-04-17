@@ -181,6 +181,9 @@
     <Filter Include="Source\Graphics\ShadowMap">
       <UniqueIdentifier>{a7f85467-71cd-44b3-b260-8852b00ac60e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Character\CollisionAttack">
+      <UniqueIdentifier>{8be9a1e0-c8fc-412e-8eb2-405f0ae6cd8f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -480,6 +483,15 @@
     <ClInclude Include="Source\Graphics\ShadowMapShader.h">
       <Filter>Source\Graphics\ShadowMap</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Character\GameObjectBase.h">
+      <Filter>Source\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\CollisionAttack\CollisionAttack.h">
+      <Filter>Source\Character\CollisionAttack</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\CollisionAttack\CollisionAttackManager.h">
+      <Filter>Source\Character\CollisionAttack</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -766,6 +778,15 @@
     </ClCompile>
     <ClCompile Include="Source\Graphics\ShadowMapShader.cpp">
       <Filter>Source\Graphics\ShadowMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\GameObjectBase.cpp">
+      <Filter>Source\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\CollisionAttack\CollisionAttack.cpp">
+      <Filter>Source\Character\CollisionAttack</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\CollisionAttack\CollisionAttackManager.cpp">
+      <Filter>Source\Character\CollisionAttack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

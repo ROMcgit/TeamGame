@@ -1,5 +1,6 @@
 #include "Easing.h"
 #include <corecrt_math.h>
+#include <corecrt_math_defines.h>
 
 //! イージング(補完無し)
 float Easing::Linear(float start, float end, float t)
@@ -56,6 +57,42 @@ float Easing::EaseBounce(float start, float end, float t)
 	}
 	else {
 		t = n1 * (t -= 2.625 / d1) * t + 0.984375;
+	}
+	return start + t * (end - start);
+}
+
+//! エラスティック(弾性のような動き)
+float Easing::EaseElastic(float start, float end, float t)
+{
+	const float c4 = (2 * M_PI) / 3;
+	if (t == 0) return start;
+	if (t == 1) return end;
+	t = -pow(2, 10 * t - 10) * sin((t * 10 - 10.75) * c4);
+	return start + t * (end - start);
+}
+
+//! イーズインサークル(円形加速)
+float Easing::EaseInCircle(float start, float end, float t)
+{
+	t = 1 - sqrt(1 - t * t);
+	return start + t * (end - start);
+}
+
+//! イーズアウトサークル(円形減速)
+float Easing::EaseOutCircle(float start, float end, float t)
+{
+	t = sqrt(1 - (t - 1) * (t - 1));
+	return start + t * (end - start);
+}
+
+//! イーズインアウトサークル(円形加速→円形減速)
+float Easing::EaseInOutCircle(float start, float end, float t)
+{
+	if (t < 0.5) {
+		t = (1 - sqrt(1 - (2 * t) * (2 * t))) / 2;
+	}
+	else {
+		t = (sqrt(1 - (-2 * t + 2) * (-2 * t + 2)) + 1) / 2;
 	}
 	return start + t * (end - start);
 }

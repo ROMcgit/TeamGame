@@ -45,6 +45,9 @@ Player0_Onigokko::Player0_Onigokko()
 	radius = 2.3f;
 	height = 15.6f;
 
+	// 移動速度
+	moveSpeed = 20.0f;
+
 	// 待機ステートへ遷移
 	TransitionWaitState();
 }
@@ -116,7 +119,7 @@ void Player0_Onigokko::Update(float elapsedTime)
 	UpdateVelocity(elapsedTime);
 
 	// キャラクター状態更新処理
-	UpdateCharacterState(elapsedTime);
+	UpdateGameObjectBaseState(elapsedTime);
 
 	// 弾丸更新処理
 	projectileManager.Update(elapsedTime);
@@ -155,7 +158,7 @@ bool Player0_Onigokko::InputMove(float elapsedTime)
 	Move3D(moveVec.x, moveVec.z, moveSpeed);
 
 	// 旋回処理
-	Turn3D(elapsedTime, moveVec.x, moveVec.z, turnSpeed);
+	Turn3D_Player(elapsedTime, moveVec.x, moveVec.z, turnSpeed);
 
 	// 進行ベクトルがゼロベクトルでない場合は入力された
 	return !(moveVec.x == 0.0f && moveVec.z == 0.0f);

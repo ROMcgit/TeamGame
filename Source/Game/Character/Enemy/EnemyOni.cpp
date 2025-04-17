@@ -88,7 +88,7 @@ void EnemyOni::Update(float elapsedTime)
 	UpdateVelocity(elapsedTime);
 
 	// キャラクターの状態更新処理
-	UpdateCharacterState(elapsedTime);
+	UpdateGameObjectBaseState(elapsedTime);
 
 	// プレイヤーとの当たり判定
 	CollisionVsPlayer();
@@ -350,7 +350,7 @@ void EnemyOni::TransitionTiredState()
 	state = State::Tired;
 
 	//! ポストエフェクトを元に戻す
-	SetPostEffectStatusOnceResetChange();
+	SetPostEffectStatusResetChange();
 
 	model->PlayAnimation(Anim_Tired, false);
 }
@@ -386,7 +386,7 @@ void EnemyOni::UpdateAttackState(float elapsedTime)
 		position = { 50, 5, 80 };
 
 		//! ポストエフェクトを元に戻す
-		SetPostEffectStatusOnceResetChange();
+		SetPostEffectStatusResetChange();
 
 		TransitionWaitState();
 	}

@@ -7,6 +7,9 @@ G1_StageDarumasangaKoronda::G1_StageDarumasangaKoronda()
 	// ステージモデルを読み込み
 	model = std::make_unique <Model>("Data/Model/Stage/1.DarumasangaKoronda/StageDarumasangaKoronda.mdl");
 
+	position.x = position.y = 0;
+	position.z = 54.0f;
+
 	scale.x = scale.y = scale.z = 0.5f;
 }
 
@@ -17,8 +20,8 @@ G1_StageDarumasangaKoronda::~G1_StageDarumasangaKoronda()
 // 更新処理
 void G1_StageDarumasangaKoronda::Update(float elapsedTime)
 {
-	// 行列更新
-	UpdateTransform();
+	// ステージの状態更新処理
+	UpdateGameObjectBaseState(elapsedTime, Object::Stage);
 
 	//レイキャストようにモデル空間行列にするために単位行列を渡す
 	const DirectX::XMFLOAT4X4 transformIdentity = { 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
@@ -94,7 +97,7 @@ void G1_StageDarumasangaKoronda::DrawDebugGUI()
 	if (ImGui::TreeNode(u8"ステージだるまさんが転んだ"))
 	{
 		// 位置
-		ImGui::InputFloat3(u8"位置", &position.x);
+		ImGui::DragFloat3(u8"位置", &position.x);
 
 		// 回転
 		DirectX::XMFLOAT3 a;
@@ -111,17 +114,4 @@ void G1_StageDarumasangaKoronda::DrawDebugGUI()
 
 		ImGui::TreePop();
 	}
-}
-
-// 行列更新処理
-void G1_StageDarumasangaKoronda::UpdateTransform()
-{
-	// 以前の変換行列を保存
-	oldTransform = transform;
-
-	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
-	DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
-	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
-	DirectX::XMMATRIX W = S * R * T;
-	DirectX::XMStoreFloat4x4(&transform, W);
 }

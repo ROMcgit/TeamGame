@@ -17,8 +17,8 @@ G2_StageSundome::~G2_StageSundome()
 // 更新処理
 void G2_StageSundome::Update(float elapsedTime)
 {
-	// 行列更新
-	UpdateTransform();
+	// ステージの状態更新処理
+	UpdateGameObjectBaseState(elapsedTime, Object::Stage);
 
 	//レイキャストようにモデル空間行列にするために単位行列を渡す
 	const DirectX::XMFLOAT4X4 transformIdentity = { 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
@@ -94,7 +94,7 @@ void G2_StageSundome::DrawDebugGUI()
 	if (ImGui::TreeNode(u8"ステージ寸止め"))
 	{
 		// 位置
-		ImGui::InputFloat3(u8"位置", &position.x);
+		ImGui::DragFloat3(u8"位置", &position.x);
 
 		// 回転
 		DirectX::XMFLOAT3 a;
@@ -111,17 +111,4 @@ void G2_StageSundome::DrawDebugGUI()
 
 		ImGui::TreePop();
 	}
-}
-
-// 行列更新処理
-void G2_StageSundome::UpdateTransform()
-{
-	// 以前の変換行列を保存
-	oldTransform = transform;
-
-	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
-	DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
-	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
-	DirectX::XMMATRIX W = S * R * T;
-	DirectX::XMStoreFloat4x4(&transform, W);
 }

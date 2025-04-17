@@ -1455,14 +1455,20 @@ protected:
 
 #endif
 
-public:
+protected:
 
-/**************************************************************************************/
+	//! オブジェクト
+	enum class Object
+	{
+		Character,  // キャラクター
+		Stage,      // ステージ
+		Projectile, // 飛び道具
+	}object;
 
 protected:
 
 	//! 状態更新処理
-	void UpdateGameObjectBaseState(float elapsedTime, bool projectile = false);
+	void UpdateGameObjectBaseState(float elapsedTime, Object object = Object::Character);
 
 	// 状態更新処理関連(上の関数にまとめられている)
 #if 1
@@ -1472,6 +1478,9 @@ protected:
 
 	// 行列更新処理
 	void UpdateTransform();
+
+	// 行列更新処理(ステージ)
+	void UpdateTransform_Stage();
 
 	// 行列更新処理(飛び道具)
 	void UpdateTransform_Projectile();
@@ -1634,13 +1643,12 @@ protected:
 	virtual void OnDead();
 
 protected:
-	DirectX::XMFLOAT3 direction = { 0, 0, 1 }; // 向き
-	DirectX::XMFLOAT4X4  transform = {
-		1,0,0,0,
-		0,1,0,0,
-		0,0,1,0,
-		0,0,0,1
-	};
+	// 向き
+	DirectX::XMFLOAT3   direction = { 0, 0, 1 };
+	// トランスフォーム
+	DirectX::XMFLOAT4X4 transform = { 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1 };
+	// オルドトランスフォーム
+	DirectX::XMFLOAT4X4 oldTransform = { 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1 };
 
 	float gravity      = 0.0f; // 重力
 	float gravityReset = 0.0f; // 重力のリセット

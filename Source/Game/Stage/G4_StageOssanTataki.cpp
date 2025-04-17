@@ -18,8 +18,8 @@ G4_StageOssanTataki::~G4_StageOssanTataki()
 // 更新処理
 void G4_StageOssanTataki::Update(float elapsedTime)
 {
-	// 行列更新
-	UpdateTransform();
+	// ステージの状態更新処理
+	UpdateGameObjectBaseState(elapsedTime, Object::Stage);
 
 	//レイキャストようにモデル空間行列にするために単位行列を渡す
 	const DirectX::XMFLOAT4X4 transformIdentity = { 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
@@ -48,7 +48,7 @@ void G4_StageOssanTataki::DrawDebugGUI()
 	if (ImGui::TreeNode(u8"ステージおっさん叩き"))
 	{
 		// 位置
-		ImGui::InputFloat3(u8"位置", &position.x);
+		ImGui::DragFloat3(u8"位置", &position.x);
 
 		// 回転
 		DirectX::XMFLOAT3 a;
@@ -65,17 +65,4 @@ void G4_StageOssanTataki::DrawDebugGUI()
 
 		ImGui::TreePop();
 	}
-}
-
-// 行列更新処理
-void G4_StageOssanTataki::UpdateTransform()
-{
-	// 以前の変換行列を保存
-	oldTransform = transform;
-
-	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
-	DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
-	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
-	DirectX::XMMATRIX W = S * R * T;
-	DirectX::XMStoreFloat4x4(&transform, W);
 }

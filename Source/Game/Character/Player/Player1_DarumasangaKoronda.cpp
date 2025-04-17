@@ -32,7 +32,7 @@ Player1_DarumasangaKoronda::Player1_DarumasangaKoronda()
 	hitEffect = std::make_unique <Effect>("Data/Effect/Hit.efk");
 
 	// d—Í
-	gravity = 0.5f;
+	gravity = 0.0f;
 
 	// “–‚½‚è”»’è
 	radius = 2.3f;

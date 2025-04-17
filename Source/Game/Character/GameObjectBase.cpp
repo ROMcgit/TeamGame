@@ -878,13 +878,15 @@ bool GameObjectBase::GetBlurStrengthChange()
 /*****************************************************************************************************************/
 
 //! 状態更新処理
-void GameObjectBase::UpdateGameObjectBaseState(float elapsedTime, bool projectile)
+void GameObjectBase::UpdateGameObjectBaseState(float elapsedTime, Object object)
 {
 	// ヒットストップ更新処理
 	UpdateHitStop(elapsedTime);
 
-	//! 飛び道具じゃないなら
-	if(!projectile)
+	switch (object)
+	{
+	//! キャラクター
+	case Object::Character:
 	{
 		//! 行列更新処理
 		UpdateTransform();
@@ -892,13 +894,26 @@ void GameObjectBase::UpdateGameObjectBaseState(float elapsedTime, bool projectil
 		//! 速力更新処理
 		UpdateVelocity(hitStopElapsedTime);
 	}
-	else
+	break;
+	//! ステージ
+	case Object::Projectile:
 	{
 		//! 行列更新処理(飛び道具)
 		UpdateTransform_Projectile();
 
 		//! レイキャスト更新処理(飛び道具)
 		UpdateProjectileRaycast();
+	}
+	break;
+	//! 飛び道具
+	case Object::Stage:
+	{
+		//! 行列更新処理(ステージ)
+		UpdateTransform_Stage();
+	}
+	break;
+	default:
+		break;
 	}
 
 	/*! HP */
@@ -1050,6 +1065,19 @@ void GameObjectBase::UpdateTransform()
 	DirectX::XMMATRIX W = S * R * T;
 
 	// 計算したワールド行列を取り出す
+	DirectX::XMStoreFloat4x4(&transform, W);
+}
+
+// 行列更新処理(ステージ)
+void GameObjectBase::UpdateTransform_Stage()
+{
+	// 以前の変換行列を保存
+	oldTransform = transform;
+
+	DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
+	DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
+	DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
+	DirectX::XMMATRIX W = S * R * T;
 	DirectX::XMStoreFloat4x4(&transform, W);
 }
 

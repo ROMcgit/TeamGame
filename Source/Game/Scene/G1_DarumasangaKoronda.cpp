@@ -24,10 +24,16 @@ void G1_DarumasangaKoronda::Initialize()
 
 /********************************************************************************/
 
+	float posZ = 54.0f;
 	// ステージ初期化
-	StageManager& stageManager = StageManager::Instance();
-	std::unique_ptr<G1_StageDarumasangaKoronda> stageMain = std::make_unique<G1_StageDarumasangaKoronda>();
-	stageManager.Register(std::move(stageMain));
+	for(int i = 0; i < 2; i ++)
+	{
+		StageManager& stageManager = StageManager::Instance();
+		std::unique_ptr<G1_StageDarumasangaKoronda> stageMain = std::make_unique<G1_StageDarumasangaKoronda>();
+		
+		stageMain->SetPosition(DirectX::XMFLOAT3(0, 0, 54.0f));
+		stageManager.Register(std::move(stageMain));
+	}
 
 	// プレイヤー初期化
 	player = std::make_unique<Player1_DarumasangaKoronda>();
@@ -105,8 +111,8 @@ void G1_DarumasangaKoronda::Render()
 	shadowMapEyeOffset = { 4.0f, 17.0f, 9.0f };
 
 	//! フォグ
-	fogStart = 2000.0f;
-	fogEnd = 2100.0f;
+	fogStart = 500.0f;
+	fogEnd   = 1200.0f;
 
 	Graphics& graphics = Graphics::Instance();
 

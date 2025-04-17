@@ -36,8 +36,11 @@ Player3_SoratobuHusenWari::Player3_SoratobuHusenWari()
 	radius = 0.6f;
 	height = 5.0f;
 
-	// 待機ステートへ遷移
-	TransitionWaitState();
+	// 重力
+	gravity = 0.5f;
+
+	// 移動ステートへ遷移
+	TransitionMoveState();
 }
 
 // デストラクタ
@@ -66,7 +69,7 @@ void Player3_SoratobuHusenWari::Update(float elapsedTime)
 		// ムービー中のアニメーション
 		if (!movieAnimation)
 		{
-			state = State::Wait; // ステートを待機に変更
+			state = State::Move; // ステートを待機に変更
 			model->PlayAnimation(movieAnimNum, movieAnimLoop);
 			movieAnimation = true;
 		}
@@ -80,9 +83,6 @@ void Player3_SoratobuHusenWari::Update(float elapsedTime)
 		// ステート毎の処理
 		switch (state)
 		{
-		case State::Wait:
-			UpdateWaitState(elapsedTime);
-			break;
 		case State::Move:
 			UpdateMoveState(elapsedTime);
 			break;
@@ -141,37 +141,6 @@ bool Player3_SoratobuHusenWari::InputMove(float elapsedTime)
 	return !(moveVec.x == 0.0f && moveVec.z == 0.0f);
 }
 
-// 待機ステートへ遷移
-void Player3_SoratobuHusenWari::TransitionWaitState()
-{
-	state = State::Wait;
-
-	// 待機アニメーション再生
-	model->PlayAnimation(Anim_Wait, true);
-}
-
-// 待機ステート更新処理
-void Player3_SoratobuHusenWari::UpdateWaitState(float elapsedTime)
-{
-	// 移動入力処理
-	// 移動入力されたら移動ステートへ遷移
-
-	const GamePadButton ArrowButton =
-		GamePad::BTN_UP |
-		GamePad::BTN_LEFT |
-		GamePad::BTN_RIGHT |
-		GamePad::BTN_DOWN;
-
-	GamePad& gamePad = Input::Instance().GetGamePad();
-	if (gamePad.GetAxisLX() != 0 || gamePad.GetAxisLY() != 0)
-	{
-		// 移動ステートへ遷移
-		TransitionMoveState();
-	}
-
-	InputMove(elapsedTime);
-}
-
 // 移動ステートへ遷移
 void Player3_SoratobuHusenWari::TransitionMoveState()
 {
@@ -184,22 +153,8 @@ void Player3_SoratobuHusenWari::TransitionMoveState()
 // 移動ステート更新処理
 void Player3_SoratobuHusenWari::UpdateMoveState(float elapsedTime)
 {
-	// 移動入力処理
-	const GamePadButton ArrowButton =
-		GamePad::BTN_UP |
-		GamePad::BTN_LEFT |
-		GamePad::BTN_RIGHT |
-		GamePad::BTN_DOWN;
+	if()
 
-	GamePad& gamePad = Input::Instance().GetGamePad();
-
-	if (gamePad.GetAxisLX() == 0 && gamePad.GetAxisLY() == 0)
-	{
-		// 待機ステートへ遷移
-		TransitionWaitState();
-	}
-
-	InputMove(elapsedTime);
 }
 
 // ダメージステートへ遷移

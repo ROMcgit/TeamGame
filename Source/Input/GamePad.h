@@ -1,67 +1,66 @@
-#pragma once
+ï»¿#pragma once
 
 using GamePadButton = unsigned int;
 
-// ƒQ[ƒ€ƒpƒbƒh
+// ã‚²ãƒ¼ãƒ ãƒ‘ãƒƒãƒ‰
 class GamePad
 {
 public:
-	static const GamePadButton BTN_UP				= (1 <<  0);
-	static const GamePadButton BTN_RIGHT			= (1 <<  1);
-	static const GamePadButton BTN_DOWN				= (1 <<  2);
-	static const GamePadButton BTN_LEFT				= (1 <<  3);
-	static const GamePadButton BTN_A				= (1 <<  4);
-	static const GamePadButton BTN_B				= (1 <<  5);
-	static const GamePadButton BTN_X				= (1 <<  6);
-	static const GamePadButton BTN_Y				= (1 <<  7);
-	static const GamePadButton BTN_START			= (1 <<  8);
-	static const GamePadButton BTN_BACK				= (1 <<  9);
-	static const GamePadButton BTN_SPACE            = (1 << 10);
-	static const GamePadButton BTN_LEFT_THUMB		= (1 << 11);
-	static const GamePadButton BTN_RIGHT_THUMB		= (1 << 12);
-	static const GamePadButton BTN_LEFT_SHOULDER	= (1 << 13);
-	static const GamePadButton BTN_RIGHT_SHOULDER	= (1 << 14);
-	static const GamePadButton BTN_LEFT_TRIGGER		= (1 << 15);
-	static const GamePadButton BTN_RIGHT_TRIGGER	= (1 << 16);
+	static const GamePadButton BTN_UP = (1 << 0); // ä¸Š
+	static const GamePadButton BTN_RIGHT = (1 << 1); // å³
+	static const GamePadButton BTN_DOWN = (1 << 2); // ä¸‹
+	static const GamePadButton BTN_LEFT = (1 << 3); // å·¦
+	static const GamePadButton BTN_A = (1 << 4); // Zã‚­ãƒ¼
+	static const GamePadButton BTN_B = (1 << 5); /// Xã‚­ãƒ¼
+	static const GamePadButton BTN_X = (1 << 6); // Cã‚­ãƒ¼/â“§ãƒœã‚¿ãƒ³
+	static const GamePadButton BTN_Y = (1 << 7); // Vã‚­ãƒ¼/â“ãƒœã‚¿ãƒ³
+	static const GamePadButton BTN_START = (1 << 8); // Enterã‚­ãƒ¼
+	static const GamePadButton BTN_BACK = (1 << 9); // BackSpaceã‚­ãƒ¼
+	static const GamePadButton BTN_LEFT_THUMB = (1 << 10);
+	static const GamePadButton BTN_RIGHT_THUMB = (1 << 11);
+	static const GamePadButton BTN_LEFT_SHOULDER = (1 << 12);
+	static const GamePadButton BTN_RIGHT_SHOULDER = (1 << 13);
+	static const GamePadButton BTN_LEFT_TRIGGER = (1 << 14);
+	static const GamePadButton BTN_RIGHT_TRIGGER = (1 << 15);
 
 public:
 	GamePad() {}
 	~GamePad() {}
 
-	// XV
+	// æ›´æ–°
 	void Update();
 
-	// ƒXƒƒbƒgİ’è
+	// ã‚¹ãƒ­ãƒƒãƒˆè¨­å®š
 	void SetSlot(int slot) { this->slot = slot; }
 
-	// ƒ{ƒ^ƒ““ü—Íó‘Ô‚Ìæ“¾
+	// ãƒœã‚¿ãƒ³å…¥åŠ›çŠ¶æ…‹ã®å–å¾—
 	GamePadButton GetButton() const { return buttonState[0]; }
 
-	// ƒ{ƒ^ƒ“‰Ÿ‰ºó‘Ô‚Ìæ“¾
+	// ãƒœã‚¿ãƒ³æŠ¼ä¸‹çŠ¶æ…‹ã®å–å¾—
 	GamePadButton GetButtonDown() const { return buttonDown; }
 
-	// ƒ{ƒ^ƒ“‰Ÿãó‘Ô‚Ìæ“¾
+	// ãƒœã‚¿ãƒ³æŠ¼ä¸ŠçŠ¶æ…‹ã®å–å¾—
 	GamePadButton GetButtonUp() const { return buttonUp; }
 
-	// ƒ{ƒ^ƒ“‰Ÿ‚³‚ê‚Ä‚¢‚éŠÔ‚Ìó‘Ô‚Ìæ“¾
+	// ãƒœã‚¿ãƒ³æŠ¼ã•ã‚Œã¦ã„ã‚‹é–“ã®çŠ¶æ…‹ã®å–å¾—
 	GamePadButton GetButtonHeld() const { return buttonHeld; }
 
-	// ¶ƒXƒeƒBƒbƒNX²“ü—Íó‘Ô‚Ìæ“¾
+	// å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯Xè»¸å…¥åŠ›çŠ¶æ…‹ã®å–å¾—
 	float GetAxisLX() const { return axisLx; }
 
-	// ¶ƒXƒeƒBƒbƒNY²“ü—Íó‘Ô‚Ìæ“¾
+	// å·¦ã‚¹ãƒ†ã‚£ãƒƒã‚¯Yè»¸å…¥åŠ›çŠ¶æ…‹ã®å–å¾—
 	float GetAxisLY() const { return axisLy; }
 
-	// ‰EƒXƒeƒBƒbƒNX²“ü—Íó‘Ô‚Ìæ“¾
+	// å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯Xè»¸å…¥åŠ›çŠ¶æ…‹ã®å–å¾—
 	float GetAxisRX() const { return axisRx; }
 
-	// ‰EƒXƒeƒBƒbƒNY²“ü—Íó‘Ô‚Ìæ“¾
+	// å³ã‚¹ãƒ†ã‚£ãƒƒã‚¯Yè»¸å…¥åŠ›çŠ¶æ…‹ã®å–å¾—
 	float GetAxisRY() const { return axisRy; }
 
-	// ¶ƒgƒŠƒK[“ü—Íó‘Ô‚Ìæ“¾
+	// å·¦ãƒˆãƒªã‚¬ãƒ¼å…¥åŠ›çŠ¶æ…‹ã®å–å¾—
 	float GetTriggerL() const { return triggerL; }
 
-	// ‰EƒgƒŠƒK[“ü—Íó‘Ô‚Ìæ“¾
+	// å³ãƒˆãƒªã‚¬ãƒ¼å…¥åŠ›çŠ¶æ…‹ã®å–å¾—
 	float GetTriggerR() const { return triggerR; }
 
 private:

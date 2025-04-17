@@ -19,15 +19,6 @@
     <Filter Include="External\DirectXTex">
       <UniqueIdentifier>{8dd0c8ba-1f1c-4648-8a04-c28bb5a1c75a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Input">
-      <UniqueIdentifier>{1922815d-5a70-4f38-9fbd-fb6e72c44df0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Graphics">
-      <UniqueIdentifier>{2ac7cb79-cb10-43d1-856f-e51f0f698e73}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Audio">
-      <UniqueIdentifier>{dfdec87c-66e2-424a-8126-477d89e5eb73}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Camera">
       <UniqueIdentifier>{f05fb4ed-55bf-463b-b75b-599795396e2c}</UniqueIdentifier>
     </Filter>
@@ -43,23 +34,11 @@
     <Filter Include="Source\Other">
       <UniqueIdentifier>{95b78dc7-0755-422d-a9b8-e6619ec7769b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Effekseer">
-      <UniqueIdentifier>{aa075a61-5e26-41ba-808c-d4bc4ce86252}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Scene">
       <UniqueIdentifier>{8b016800-98c8-403a-bd05-2ca5686b545b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Stage">
       <UniqueIdentifier>{05cc1565-350f-4a31-ae5e-1124782536be}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Graphics\Shader">
-      <UniqueIdentifier>{80ce996f-cb99-4a9c-8a4c-87d392f99081}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Graphics\Polygon">
-      <UniqueIdentifier>{5688a902-52d8-4be3-8060-3b584841f340}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Graphics\Render">
-      <UniqueIdentifier>{b214d2cb-84a8-41ff-b1e4-dc3c4c8c7893}</UniqueIdentifier>
     </Filter>
     <Filter Include="HLSL\Debug">
       <UniqueIdentifier>{bc1717a1-2136-43b5-9e15-b3a25ec691b0}</UniqueIdentifier>
@@ -178,11 +157,35 @@
     <Filter Include="HLSL\ShadowMap">
       <UniqueIdentifier>{3a99b8ab-24c8-4502-981a-c2ebd0bb62c8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Graphics\ShadowMap">
-      <UniqueIdentifier>{a7f85467-71cd-44b3-b260-8852b00ac60e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Character\CollisionAttack">
       <UniqueIdentifier>{8be9a1e0-c8fc-412e-8eb2-405f0ae6cd8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\0_Settings 《🔧》">
+      <UniqueIdentifier>{a40b38a3-356e-48cd-a614-c51c2dca7a41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\0_Settings 《🔧》\Audio">
+      <UniqueIdentifier>{dfdec87c-66e2-424a-8126-477d89e5eb73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\0_Settings 《🔧》\Effekseer">
+      <UniqueIdentifier>{aa075a61-5e26-41ba-808c-d4bc4ce86252}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\0_Settings 《🔧》\Input">
+      <UniqueIdentifier>{1922815d-5a70-4f38-9fbd-fb6e72c44df0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\0_Settings 《🔧》\Graphics">
+      <UniqueIdentifier>{2ac7cb79-cb10-43d1-856f-e51f0f698e73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\0_Settings 《🔧》\Graphics\Shader">
+      <UniqueIdentifier>{80ce996f-cb99-4a9c-8a4c-87d392f99081}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\0_Settings 《🔧》\Graphics\Polygon">
+      <UniqueIdentifier>{5688a902-52d8-4be3-8060-3b584841f340}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\0_Settings 《🔧》\Graphics\Render">
+      <UniqueIdentifier>{b214d2cb-84a8-41ff-b1e4-dc3c4c8c7893}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\0_Settings 《🔧》\Graphics\ShadowMap">
+      <UniqueIdentifier>{a7f85467-71cd-44b3-b260-8852b00ac60e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -208,25 +211,25 @@
       <Filter>External\DirectXTex</Filter>
     </ClInclude>
     <ClInclude Include="Source\Input\GamePad.h">
-      <Filter>Source\Input</Filter>
+      <Filter>Source\0_Settings 《🔧》\Input</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Graphics.h">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Source\Input\Input.h">
-      <Filter>Source\Input</Filter>
+      <Filter>Source\0_Settings 《🔧》\Input</Filter>
     </ClInclude>
     <ClInclude Include="Source\Audio\Audio.h">
-      <Filter>Source\Audio</Filter>
+      <Filter>Source\0_Settings 《🔧》\Audio</Filter>
     </ClInclude>
     <ClInclude Include="Source\Audio\AudioResource.h">
-      <Filter>Source\Audio</Filter>
+      <Filter>Source\0_Settings 《🔧》\Audio</Filter>
     </ClInclude>
     <ClInclude Include="Source\Audio\AudioSource.h">
-      <Filter>Source\Audio</Filter>
+      <Filter>Source\0_Settings 《🔧》\Audio</Filter>
     </ClInclude>
     <ClInclude Include="Source\Input\Mouse.h">
-      <Filter>Source\Input</Filter>
+      <Filter>Source\0_Settings 《🔧》\Input</Filter>
     </ClInclude>
     <ClInclude Include="Source\Other\Collision.h">
       <Filter>Source</Filter>
@@ -268,64 +271,64 @@
       <Filter>Source\Other</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Effect\EffectManager.h">
-      <Filter>Source\Effekseer</Filter>
+      <Filter>Source\0_Settings 《🔧》\Effekseer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Effect\Effect.h">
-      <Filter>Source\Effekseer</Filter>
+      <Filter>Source\0_Settings 《🔧》\Effekseer</Filter>
     </ClInclude>
     <ClInclude Include="Source\Other\Mathf.h">
       <Filter>Source\Other</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\DefaltLitShader.h">
-      <Filter>Source\Graphics\Shader</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Shader</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Model.h">
-      <Filter>Source\Graphics\Polygon</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Polygon</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\ModelResource.h">
-      <Filter>Source\Graphics\Polygon</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Polygon</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Text.h">
-      <Filter>Source\Graphics\Polygon</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Polygon</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Sprite.h">
-      <Filter>Source\Graphics\Polygon</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Polygon</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Shader.h">
-      <Filter>Source\Graphics\Shader</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Shader</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\DebugRenderer.h">
-      <Filter>Source\Graphics\Render</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Render</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\ImGuiRenderer.h">
-      <Filter>Source\Graphics\Render</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Render</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\LineRenderer.h">
-      <Filter>Source\Graphics\Render</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Render</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\RenderContext.h">
-      <Filter>Source\Graphics\Render</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Render</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\ResourceManager.h">
-      <Filter>Source\Graphics\Render</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Render</Filter>
     </ClInclude>
     <ClInclude Include="Source\Audio\BgmManager.h">
-      <Filter>Source\Audio</Filter>
+      <Filter>Source\0_Settings 《🔧》\Audio</Filter>
     </ClInclude>
     <ClInclude Include="Source\Audio\SoundManager.h">
-      <Filter>Source\Audio</Filter>
+      <Filter>Source\0_Settings 《🔧》\Audio</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Fade.h">
-      <Filter>Source\Graphics\Polygon</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Polygon</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\ShaderSetting.h">
-      <Filter>Source\Graphics\Shader</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Shader</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\HDRTexture.h">
-      <Filter>Source\Graphics\Shader</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Shader</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\RenderTarget.h">
-      <Filter>Source\Graphics\Render</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Render</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Scene\G1_DarumasangaKoronda.h">
       <Filter>Source\Scene\GameScene\1.だるまさんが転んだ</Filter>
@@ -412,7 +415,7 @@
       <Filter>Source\Character\Obstacle</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Timer.h">
-      <Filter>Source\Graphics\Polygon</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Polygon</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Character\GameSelect\GameSelect.h">
       <Filter>Source\Character\GameSelect\Setting</Filter>
@@ -478,10 +481,10 @@
       <Filter>Source\Scene\GameScene\5.足場渡り</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\ShadowMap.h">
-      <Filter>Source\Graphics\ShadowMap</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\ShadowMap</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\ShadowMapShader.h">
-      <Filter>Source\Graphics\ShadowMap</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\ShadowMap</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Character\GameObjectBase.h">
       <Filter>Source\Character</Filter>
@@ -510,25 +513,25 @@
       <Filter>External\DirectXTex</Filter>
     </ClCompile>
     <ClCompile Include="Source\Input\GamePad.cpp">
-      <Filter>Source\Input</Filter>
+      <Filter>Source\0_Settings 《🔧》\Input</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Graphics.cpp">
-      <Filter>Source\Graphics</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Source\Input\Input.cpp">
-      <Filter>Source\Input</Filter>
+      <Filter>Source\0_Settings 《🔧》\Input</Filter>
     </ClCompile>
     <ClCompile Include="Source\Audio\Audio.cpp">
-      <Filter>Source\Audio</Filter>
+      <Filter>Source\0_Settings 《🔧》\Audio</Filter>
     </ClCompile>
     <ClCompile Include="Source\Audio\AudioResource.cpp">
-      <Filter>Source\Audio</Filter>
+      <Filter>Source\0_Settings 《🔧》\Audio</Filter>
     </ClCompile>
     <ClCompile Include="Source\Audio\AudioSource.cpp">
-      <Filter>Source\Audio</Filter>
+      <Filter>Source\0_Settings 《🔧》\Audio</Filter>
     </ClCompile>
     <ClCompile Include="Source\Input\Mouse.cpp">
-      <Filter>Source\Input</Filter>
+      <Filter>Source\0_Settings 《🔧》\Input</Filter>
     </ClCompile>
     <ClCompile Include="Source\Other\Collision.cpp">
       <Filter>Source</Filter>
@@ -567,58 +570,58 @@
       <Filter>Source\Other</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Effect\EffectManager.cpp">
-      <Filter>Source\Effekseer</Filter>
+      <Filter>Source\0_Settings 《🔧》\Effekseer</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Effect\Effect.cpp">
-      <Filter>Source\Effekseer</Filter>
+      <Filter>Source\0_Settings 《🔧》\Effekseer</Filter>
     </ClCompile>
     <ClCompile Include="Source\Other\Mathf.cpp">
       <Filter>Source\Other</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\DefaltLitShader.cpp">
-      <Filter>Source\Graphics\Shader</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Shader</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Model.cpp">
-      <Filter>Source\Graphics\Polygon</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Polygon</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\ModelResource.cpp">
-      <Filter>Source\Graphics\Polygon</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Polygon</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Sprite.cpp">
-      <Filter>Source\Graphics\Polygon</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Polygon</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Text.cpp">
-      <Filter>Source\Graphics\Polygon</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Polygon</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\DebugRenderer.cpp">
-      <Filter>Source\Graphics\Render</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Render</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\ImGuiRenderer.cpp">
-      <Filter>Source\Graphics\Render</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Render</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\LineRenderer.cpp">
-      <Filter>Source\Graphics\Render</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Render</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\ResourceManager.cpp">
-      <Filter>Source\Graphics\Render</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Render</Filter>
     </ClCompile>
     <ClCompile Include="Source\Audio\BgmManager.cpp">
-      <Filter>Source\Audio</Filter>
+      <Filter>Source\0_Settings 《🔧》\Audio</Filter>
     </ClCompile>
     <ClCompile Include="Source\Audio\SoundManager.cpp">
-      <Filter>Source\Audio</Filter>
+      <Filter>Source\0_Settings 《🔧》\Audio</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Fade.cpp">
-      <Filter>Source\Graphics\Polygon</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Polygon</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\ShaderSetting.cpp">
-      <Filter>Source\Graphics\Shader</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Shader</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\HDRTexture.cpp">
-      <Filter>Source\Graphics\Shader</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Shader</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\RenderTarget.cpp">
-      <Filter>Source\Graphics\Render</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Render</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Scene\G0_Onigokko.cpp">
       <Filter>Source\Scene\GameScene\0.おにごっこ</Filter>
@@ -708,7 +711,7 @@
       <Filter>Source\Character\Obstacle</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Timer.cpp">
-      <Filter>Source\Graphics\Polygon</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\Polygon</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Character\GameSelect\GameSelect.cpp">
       <Filter>Source\Character\GameSelect\Setting</Filter>
@@ -774,10 +777,10 @@
       <Filter>Source\Scene\GameScene\5.足場渡り</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\ShadowMap.cpp">
-      <Filter>Source\Graphics\ShadowMap</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\ShadowMap</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\ShadowMapShader.cpp">
-      <Filter>Source\Graphics\ShadowMap</Filter>
+      <Filter>Source\0_Settings 《🔧》\Graphics\ShadowMap</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Character\GameObjectBase.cpp">
       <Filter>Source\Character</Filter>

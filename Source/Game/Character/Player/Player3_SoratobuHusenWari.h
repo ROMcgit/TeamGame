@@ -31,28 +31,6 @@ public:
 	// デバッグプリミティブ描画
 	void DrawDebugPrimitive();
 
-	/*! 加速度 */
-
-	// 加速度Xを設定
-	void SetVelocityX(float velocityX) { this->velocity.x = velocityX; }
-
-	// 加速度Yを設定
-	void SetVelocityY(float velocityY) { this->velocity.y = velocityY; }
-
-	// 加速度Zを設定
-	void SetVelocityZ(float velocityZ) { this->velocity.z = velocityZ; }
-
-	/*! 位置 */
-
-	// 位置Xを設定
-	void SetPositionX(float positionX) { this->position.x = positionX; }
-
-	// 位置Yを設定
-	void SetPositionY(float positionY) { this->position.y = positionY; }
-
-	// 位置Zを設定
-	void SetPositionZ(float positionZ) { this->position.z = positionZ; }
-
 protected:
 	// 着地した時に呼ばれる
 	void OnLanding() override;
@@ -73,35 +51,23 @@ private:
 	// プレイヤーとエネミーとの衝突処理
 	void CollisionPlayer3_SoratobuHusenWariVsEnemies();
 
-	/******************************************************************************************/
-
-		/*! 行動制御 */
-
-		// 待機ステートへ遷移
-	void TransitionWaitState();
-
-	// 待機ステート更新処理
-	void UpdateWaitState(float elapsedTime);
-
-	//-----------------------------------------------------------------//
-
-			// 移動ステートへ遷移
+	// 移動ステートへ遷移
 	void TransitionMoveState();
 
 	// 移動ステート更新処理
 	void UpdateMoveState(float elapsedTime);
 
-	//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//
 
-		// ダメージステートへ遷移
+	// ダメージステートへ遷移
 	void TransitionDamageState();
 
 	// ダメージステート更新処理
 	void UpdateDamageState(float elapsedTime);
 
-	//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//
 
-			// 死亡ステートへ遷移
+	// 死亡ステートへ遷移
 	void TransitionDeathState();
 
 	// 死亡ステート更新処理
@@ -111,7 +77,6 @@ private:
 
 	enum class State
 	{
-		Wait,
 		Move,
 		Damage,
 		Death,
@@ -142,7 +107,7 @@ private:
 
 	std::unique_ptr<Effect> hitEffect;
 
-	State state = State::Wait;
+	State state = State::Move;
 
 	float playerAnimeCount = 0.0f;
 

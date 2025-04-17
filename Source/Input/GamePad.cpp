@@ -1,9 +1,9 @@
-#include <windows.h>
+﻿#include <windows.h>
 #include <math.h>
 #include <Xinput.h>
 #include "Input/GamePad.h"
 
-// �X�V
+// 更新
 void GamePad::Update()
 {
 	axisLx = axisLy = 0.0f;
@@ -12,30 +12,30 @@ void GamePad::Update()
 
 	GamePadButton newButtonState = 0;
 
-	// �{�^�����擾
+	// ボタン情報取得
 	XINPUT_STATE xinputState;
 	if (XInputGetState(slot, &xinputState) == ERROR_SUCCESS)
 	{
-		//XINPUT_CAPABILITIES caps;
-		//XInputGetCapabilities(m_slot, XINPUT_FLAG_GAMEPAD, &caps);
+		/// XINPUT_CAPABILITIES caps;
+		/// XInputGetCapabilities(m_slot, XINPUT_FLAG_GAMEPAD, &caps);
 		XINPUT_GAMEPAD& pad = xinputState.Gamepad;
 
-		if (pad.wButtons & XINPUT_GAMEPAD_DPAD_UP)					newButtonState |= BTN_UP;
-		if (pad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT)				newButtonState |= BTN_RIGHT;
-		if (pad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN)				newButtonState |= BTN_DOWN;
-		if (pad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT)				newButtonState |= BTN_LEFT;
-		if (pad.wButtons & XINPUT_GAMEPAD_A)						newButtonState |= BTN_A;
-		if (pad.wButtons & XINPUT_GAMEPAD_B)						newButtonState |= BTN_B;
-		if (pad.wButtons & XINPUT_GAMEPAD_X)						newButtonState |= BTN_X;
-		if (pad.wButtons & XINPUT_GAMEPAD_Y)						newButtonState |= BTN_Y;
-		if (pad.wButtons & XINPUT_GAMEPAD_START)					newButtonState |= BTN_START;
-		if (pad.wButtons & XINPUT_GAMEPAD_BACK)						newButtonState |= BTN_BACK;
-		if (pad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB)				newButtonState |= BTN_LEFT_THUMB;
-		if (pad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB)				newButtonState |= BTN_RIGHT_THUMB;
-		if (pad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER)			newButtonState |= BTN_LEFT_SHOULDER;
-		if (pad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)			newButtonState |= BTN_RIGHT_SHOULDER;
-		if (pad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)	newButtonState |= BTN_LEFT_TRIGGER;
-		if (pad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)	newButtonState |= BTN_RIGHT_TRIGGER;
+		if (pad.wButtons & XINPUT_GAMEPAD_DPAD_UP)					newButtonState |= BTN_UP;             // 上キー
+		if (pad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT)				newButtonState |= BTN_RIGHT;		  // 右キー
+		if (pad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN)				newButtonState |= BTN_DOWN;			  // 下キー
+		if (pad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT)				newButtonState |= BTN_LEFT;			  // 左キー
+		if (pad.wButtons & XINPUT_GAMEPAD_A)						newButtonState |= BTN_A;			  // Zキー
+		if (pad.wButtons & XINPUT_GAMEPAD_B)						newButtonState |= BTN_B;			  /// Xキー
+		if (pad.wButtons & XINPUT_GAMEPAD_X)						newButtonState |= BTN_X;			  // Cキー/ⓧボタン
+		if (pad.wButtons & XINPUT_GAMEPAD_Y)						newButtonState |= BTN_Y;			  // Vキー/Ⓨボタン
+		if (pad.wButtons & XINPUT_GAMEPAD_START)					newButtonState |= BTN_START;		  // Enterキー
+		if (pad.wButtons & XINPUT_GAMEPAD_BACK)						newButtonState |= BTN_BACK;			  // Backspaceキー
+		if (pad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB)				newButtonState |= BTN_LEFT_THUMB;	  // 左スティックの押し込み
+		if (pad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB)				newButtonState |= BTN_RIGHT_THUMB;	  // 右スティックの押し込み
+		if (pad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER)			newButtonState |= BTN_LEFT_SHOULDER;  // 左肩ボタン
+		if (pad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)			newButtonState |= BTN_RIGHT_SHOULDER; // 右肩ボタン
+		if (pad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)	newButtonState |= BTN_LEFT_TRIGGER;	  // LT(左トリガー)
+		if (pad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)	newButtonState |= BTN_RIGHT_TRIGGER;  // RT(右トリガー)
 
 		if ((pad.sThumbLX <  XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE && pad.sThumbLX > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) &&
 			(pad.sThumbLY <  XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE && pad.sThumbLY > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE))
@@ -61,39 +61,39 @@ void GamePad::Update()
 	else
 	{
 #if 0
-		// XInput�œ��͏�񂪎擾�o���Ȃ������ꍇ��WindowsAPI�Ŏ擾����
+		/// XInputで入力情報が取得出来なかった場合はWindowsAPIで取得する
 		JOYINFOEX joyInfo;
 		joyInfo.dwSize = sizeof(JOYINFOEX);
-		joyInfo.dwFlags = JOY_RETURNALL;	// �S�Ă̏����擾
+		joyInfo.dwFlags = JOY_RETURNALL;	// 全ての情報を取得
 
 		if (joyGetPosEx(slot, &joyInfo) == JOYERR_NOERROR)
 		{
-			// ���iID���`�F�b�N����PS4�R���g���[���[�����Ή�����
+			// 製品IDをチェックしてPS4コントローラーだけ対応する
 			static const WORD PS4_PID = 1476;
 
 			JOYCAPS joy_caps;
 			if (joyGetDevCaps(slot, &joy_caps, sizeof(JOYCAPS)) == JOYERR_NOERROR)
 			{
-				// �\���L�[
+				// 十字キー
 				if (joyInfo.dwPOV != 0xFFFF)
 				{
 					static const int povBit[8] =
 					{
-						BTN_UP,					// ��
-						BTN_RIGHT | BTN_UP,		// �E��
-						BTN_RIGHT,				// �E
-						BTN_RIGHT | BTN_DOWN,	// �E��
-						BTN_DOWN,				// ��
-						BTN_LEFT | BTN_DOWN,	// ����
-						BTN_LEFT,				// ��
-						BTN_LEFT | BTN_UP		// ����
+						BTN_UP,					// 上
+						BTN_RIGHT | BTN_UP,		// 右上
+						BTN_RIGHT,				// 右
+						BTN_RIGHT | BTN_DOWN,	// 右下
+						BTN_DOWN,				// 下
+						BTN_LEFT | BTN_DOWN,	// 左下
+						BTN_LEFT,				// 左
+						BTN_LEFT | BTN_UP		// 左上
 					};
 					int angle = joyInfo.dwPOV / 4500;
 					newButtonState |= povBit[angle];
 				}
 				if (joy_caps.wPid == PS4_PID)
 				{
-					// �{�^�����
+					// ボタン情報
 					if (joyInfo.dwButtons & JOY_BUTTON1)  newButtonState |= BTN_Y;
 					if (joyInfo.dwButtons & JOY_BUTTON2)  newButtonState |= BTN_B;
 					if (joyInfo.dwButtons & JOY_BUTTON3)  newButtonState |= BTN_A;
@@ -109,15 +109,15 @@ void GamePad::Update()
 					//if (joyInfo.dwButtons & JOY_BUTTON13) newButtonState |= BTN_?;	// PS
 					//if (joyInfo.dwButtons & JOY_BUTTON14) newButtonState |= BTN_?;	// Touch
 
-					// ���X�e�B�b�N
+					// 左スティック
 					axisLx = static_cast<int>(joyInfo.dwXpos - 0x7FFF) / static_cast<float>(0x8000);
 					axisLy = -static_cast<int>(joyInfo.dwYpos - 0x7FFF) / static_cast<float>(0x8000);
 
-					// �E�X�e�B�b�N
+					// 右スティック
 					axisRx = static_cast<int>(joyInfo.dwZpos - 0x7FFF) / static_cast<float>(0x8000);
 					axisRy = -static_cast<int>(joyInfo.dwRpos - 0x7FFF) / static_cast<float>(0x8000);
 
-					// LR�g���K�[
+					// LRトリガー
 					triggerL = static_cast<float>(joyInfo.dwVpos) / static_cast<float>(0xFFFF);
 					triggerR = static_cast<float>(joyInfo.dwUpos) / static_cast<float>(0xFFFF);
 
@@ -129,33 +129,44 @@ void GamePad::Update()
 #endif
 	}
 
-	// �L�[�{�[�h�ŃG�~�����[�V����
+	// キーボードでエミュレーション
 	{
 		float lx = 0.0f;
 		float ly = 0.0f;
 		float rx = 0.0f;
 		float ry = 0.0f;
-		if (GetAsyncKeyState('W') & 0x8000) ly = 1.0f;
-		if (GetAsyncKeyState('A') & 0x8000) lx = -1.0f;
-		if (GetAsyncKeyState('S') & 0x8000) ly = -1.0f;
-		if (GetAsyncKeyState('D') & 0x8000) lx = 1.0f;
-		if (GetAsyncKeyState('I') & 0x8000) ry = 1.0f;
-		if (GetAsyncKeyState('J') & 0x8000) rx = -1.0f;
-		if (GetAsyncKeyState('K') & 0x8000) ry = -1.0f;
-		if (GetAsyncKeyState('L') & 0x8000) rx = 1.0f;
-		if (GetAsyncKeyState('Q') & 0x8000) newButtonState |= BTN_LEFT_SHOULDER;
-		if (GetAsyncKeyState('E') & 0x8000) newButtonState |= BTN_RIGHT_SHOULDER;
-		if (GetAsyncKeyState('Z') & 0x8000) newButtonState |= BTN_A;
-		if (GetAsyncKeyState('X') & 0x8000) newButtonState |= BTN_B;
-		if (GetAsyncKeyState('C') & 0x8000) newButtonState |= BTN_X;
-		if (GetAsyncKeyState('V') & 0x8000) newButtonState |= BTN_Y;
-		if (GetAsyncKeyState(VK_UP) & 0x8000)	newButtonState |= BTN_UP;
-		if (GetAsyncKeyState(VK_RIGHT) & 0x8000)	newButtonState |= BTN_RIGHT;
-		if (GetAsyncKeyState(VK_DOWN) & 0x8000)	newButtonState |= BTN_DOWN;
-		if (GetAsyncKeyState(VK_LEFT) & 0x8000)	newButtonState |= BTN_LEFT;
+		if (GetAsyncKeyState('I') & 0x8000)       ry = 1.0f;
+		if (GetAsyncKeyState('J') & 0x8000)       rx = -1.0f;
+		if (GetAsyncKeyState('K') & 0x8000)       ry = -1.0f;
+		if (GetAsyncKeyState('L') & 0x8000)       rx = 1.0f;
+		if (GetAsyncKeyState('Q') & 0x8000)       newButtonState |= BTN_LEFT_SHOULDER;
+		if (GetAsyncKeyState('E') & 0x8000)       newButtonState |= BTN_RIGHT_SHOULDER;
+		if (GetAsyncKeyState(VK_SPACE) & 0x8000)  newButtonState |= BTN_LEFT_TRIGGER;
+		if (GetAsyncKeyState('Z') & 0x8000)       newButtonState |= BTN_A;
+		if (GetAsyncKeyState('X') & 0x8000)       newButtonState |= BTN_B;
+		if (GetAsyncKeyState('C') & 0x8000)       newButtonState |= BTN_X;
+		if (GetAsyncKeyState('V') & 0x8000)       newButtonState |= BTN_Y;
+		if (GetAsyncKeyState(VK_UP) & 0x8000)	  newButtonState |= BTN_UP;
+		if (GetAsyncKeyState(VK_LEFT) & 0x8000)	  newButtonState |= BTN_LEFT;
+		if (GetAsyncKeyState(VK_DOWN) & 0x8000)	  newButtonState |= BTN_DOWN;
+		if (GetAsyncKeyState(VK_RIGHT) & 0x8000)  newButtonState |= BTN_RIGHT;
 		if (GetAsyncKeyState(VK_RETURN) & 0x8000) newButtonState |= BTN_START;
-		if (GetAsyncKeyState(VK_BACK) & 0x8000) newButtonState |= BTN_BACK;
-		if (GetAsyncKeyState(VK_SPACE) & 0x8000) newButtonState |= BTN_SPACE;
+		if (GetAsyncKeyState(VK_BACK) & 0x8000)   newButtonState |= BTN_BACK;
+
+		// スティックの上下左右に基づいてボタンを設定
+		if (axisLy > 0.5f) {  // 上方向に倒した場合
+			newButtonState |= BTN_UP;
+		}
+		else if (axisLy < -0.5f) {  // 下方向に倒した場合
+			newButtonState |= BTN_DOWN;
+		}
+
+		if (axisLx > 0.5f) {  // 右方向に倒した場合
+			newButtonState |= BTN_RIGHT;
+		}
+		else if (axisLx < -0.5f) {  // 左方向に倒した場合
+			newButtonState |= BTN_LEFT;
+		}
 
 #if 1
 		if (newButtonState & BTN_UP)    ly = 1.0f;
@@ -179,15 +190,13 @@ void GamePad::Update()
 		}
 	}
 
-
-
-	// �{�^�����̍X�V
+	// ボタン情報の更新
 	{
-		buttonState[1] = buttonState[0];	// �X�C�b�`����
+		buttonState[1] = buttonState[0];	// スイッチ履歴
 		buttonState[0] = newButtonState;
 
-		buttonDown = ~buttonState[1] & newButtonState;	// �������u��
-		buttonUp = ~newButtonState & buttonState[1];	// �������u��
-		buttonHeld = buttonState[0]; // �{�^��������Ă���Ԃ̏��
+		buttonDown = ~buttonState[1] & newButtonState;	// 押した瞬間
+		buttonUp = ~newButtonState & buttonState[1];	// 離した瞬間
+		buttonHeld = buttonState[0]; // ボタン押されている間の状態
 	}
 }

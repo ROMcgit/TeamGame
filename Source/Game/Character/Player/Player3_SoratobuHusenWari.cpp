@@ -7,6 +7,7 @@
 #include "Other/Collision.h"
 #include "Game/Character/Projectile/ProjectileStraight.h"
 #include "Game/Character/Projectile/ProjectileHoming.h"
+#include "Game/Camera/CameraController.h"
 
 static Player3_SoratobuHusenWari* instance = nullptr;
 
@@ -47,6 +48,8 @@ Player3_SoratobuHusenWari::~Player3_SoratobuHusenWari()
 // 更新処理
 void Player3_SoratobuHusenWari::Update(float elapsedTime)
 {
+	if (CameraController::debugCamera) return;
+
 	// ムービー中なら待機ステートへ遷移
 	if (movieScene)
 	{

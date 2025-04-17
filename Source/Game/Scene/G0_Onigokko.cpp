@@ -60,7 +60,7 @@ void G0_Onigokko::Initialize()
 
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
-	cameraController->SetRange(20);
+	cameraController->SetRange(14);
 	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(10), 0, 0));
 
 	// 背景
@@ -103,13 +103,28 @@ void G0_Onigokko::Update(float elapsedTime)
 	// カメラコントローラー更新処理
 	if (!movieScene)
 	{
-		target = player->GetPosition();
-		target.y += 0.2f;
-		
+		DirectX::XMFLOAT3 cameraTarget = player->GetPosition();
+		cameraTarget.y += player->GetHeight() * 0.6f;
+
+		if (cameraTarget.x < -280 || cameraTarget.x > 280)
+		{
+			cameraTarget.x = std::clamp(cameraTarget.x, -280.0f, 280.0f);
+		}
+
+		if (cameraTarget.z < -280 || cameraTarget.z > 280)
+		{
+			cameraTarget.z = std::clamp(cameraTarget.z, -280.0f, 280.0f);
+		}
+
+		// ターゲットを設定
+		cameraController->SetTarget(cameraTarget);
+		// カメラの範囲
+		cameraController->SetRange(25.0f);
+		// カメラの角度
 		cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(40), 0, 0));
 	}
-	
-	cameraController->SetTarget(target);
+	else
+		cameraController->SetTarget(target);
 	Camera::Instance().Update(elapsedTime);
 	cameraController->Update(elapsedTime);
 
@@ -150,7 +165,7 @@ void G0_Onigokko::Render()
 		lightPosition = player->GetPosition();
 
 
-	lightRange = 800.0f;
+	lightRange = 80.0f;
 
 	//! フォグ
 	fogStart = 20.0f;
@@ -324,17 +339,19 @@ void G0_Onigokko::Render()
 // プレイヤーの位置制限
 void G0_Onigokko::PlayerPositionControll()
 {
-	if (player->GetPosition().x < -445.0f || player->GetPosition().x > 445.0f)
+	float setPosX = 295.0f;
+	if (player->GetPosition().x < -setPosX || player->GetPosition().x > setPosX)
 	{
 		player->SetVelocityX(0);
-		float positoinX = std::clamp(player->GetPosition().x, -445.0f, 445.0f);
+		float positoinX = std::clamp(player->GetPosition().x, -setPosX, setPosX);
 		player->SetPositionX(positoinX);
 	}
 
-	if (player->GetPosition().z < -445.0f || player->GetPosition().z > 445.0f)
+	float setPosZ = 287.0f;
+	if (player->GetPosition().z < -setPosZ || player->GetPosition().z > setPosZ)
 	{
 		player->SetVelocityZ(0);
-		float positoinZ = std::clamp(player->GetPosition().z, -445.0f, 445.0f);
+		float positoinZ = std::clamp(player->GetPosition().z, -setPosZ, setPosZ);
 		player->SetPositionZ(positoinZ);
 	}
 }
@@ -351,8 +368,8 @@ void G0_Onigokko::UpdateCameraMovie(float elapsedTime)
 
 		std::unique_ptr<Enemy>& oni = EnemyManager::Instance().GetEnemy(0);
 
-		target = oni->GetPosition();
-		target.y = oni->GetHeight() * 0.8f;
+		target    = oni->GetPosition();
+		target.y += oni->GetHeight() * 0.6f;
 
 		if (cameraMovieTime > 8.0f)
 		{

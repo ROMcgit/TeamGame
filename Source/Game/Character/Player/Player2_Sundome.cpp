@@ -7,6 +7,7 @@
 #include "Other/Collision.h"
 #include "Game/Character/Projectile/ProjectileStraight.h"
 #include "Game/Character/Projectile/ProjectileHoming.h"
+#include "Game/Camera/CameraController.h"
 
 static Player2_Sundome* instance = nullptr;
 
@@ -47,6 +48,9 @@ Player2_Sundome::~Player2_Sundome()
 // 更新処理
 void Player2_Sundome::Update(float elapsedTime)
 {
+	if (CameraController::debugCamera) return;
+
+
 	// ムービー中なら待機ステートへ遷移
 	if (movieScene)
 	{

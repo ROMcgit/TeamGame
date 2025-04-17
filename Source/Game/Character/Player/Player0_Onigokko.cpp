@@ -48,7 +48,7 @@ Player0_Onigokko::Player0_Onigokko()
 	height = 5.0f;
 
 	// 移動速度
-	moveSpeed = 20.0f;
+	moveSpeed = 5.0f;
 
 	// 待機ステートへ遷移
 	TransitionWaitState();
@@ -62,9 +62,11 @@ Player0_Onigokko::~Player0_Onigokko()
 // 更新処理
 void Player0_Onigokko::Update(float elapsedTime)
 {
+	if (CameraController::debugCamera) return;
+
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
-	// 移動した事が証明されているなら、待機ステートへ遷移する
+	// 移動していないなら
 	if ((gamePad.GetAxisLX() == 0 && gamePad.GetAxisLY() == 0))
 		velocity.x = velocity.z = 0;
 

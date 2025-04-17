@@ -7,6 +7,7 @@
 #include "Other/Collision.h"
 #include "Game/Character/Projectile/ProjectileStraight.h"
 #include "Game/Character/Projectile/ProjectileHoming.h"
+#include "Game/Camera/CameraController.h"
 
 static Player1_DarumasangaKoronda* instance = nullptr;
 
@@ -45,6 +46,8 @@ Player1_DarumasangaKoronda::~Player1_DarumasangaKoronda()
 // 更新処理
 void Player1_DarumasangaKoronda::Update(float elapsedTime)
 {
+	if (CameraController::debugCamera) return;
+
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
 	// 移動した事が証明されているなら、待機ステートへ遷移する

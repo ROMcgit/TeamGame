@@ -12,7 +12,7 @@ CameraTarget::CameraTarget()
 	model = std::make_unique<Model>("Data/Model/CameraTarget/CameraTarget.mdl");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.05f;
+	scale.x = scale.y = scale.z = 0.01f;
 
 	opacity = 0;
 

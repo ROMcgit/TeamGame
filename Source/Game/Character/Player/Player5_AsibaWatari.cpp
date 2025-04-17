@@ -7,6 +7,7 @@
 #include "Other/Collision.h"
 #include "Game/Character/Projectile/ProjectileStraight.h"
 #include "Game/Character/Projectile/ProjectileHoming.h"
+#include "Game/Camera/CameraController.h"
 
 static Player5_AsibaWatari* instance = nullptr;
 
@@ -47,6 +48,8 @@ Player5_AsibaWatari::~Player5_AsibaWatari()
 // 更新処理
 void Player5_AsibaWatari::Update(float elapsedTime)
 {
+	if (CameraController::debugCamera) return;
+
 	// ムービー中なら待機ステートへ遷移
 	if (movieScene)
 	{

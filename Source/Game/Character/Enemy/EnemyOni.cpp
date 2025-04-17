@@ -22,9 +22,10 @@ EnemyOni::EnemyOni()
 
 	angle.y = DirectX::XMConvertToRadians(180);
 
-	// 幅、高さ設定
-	radius = 2.28f;
-	height = 16.0f;
+	debugPrimitiveColor = { 0, 0, 1 };
+
+	radius = 0.6f;
+	height = 5.0f;
 
 	opacity = 0;
 	SetOpacityChange(1.0f, 0.8f);
@@ -329,9 +330,9 @@ void EnemyOni::UpdateTrackingState(float elapsedTime)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < 3700)
+	if (dist < 3000)
 		//! プレイヤーに向かって移動する
-		MoveToTarget(elapsedTime, 25);
+		MoveToTarget(elapsedTime, 5);
 	else
 		//! プレイヤーの位置制に向かって移動する
 		//! プレイヤーに向かって移動する

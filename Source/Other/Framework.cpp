@@ -341,7 +341,7 @@ void Framework::SceneSelectGUI()
 		ChangeSceneButtonGUI<SceneTitle>(u8"00.タイトル画面");
 		ChangeSceneButtonGUI<SceneGameSelect>(u8"01.ゲーム画面");
 
-		if (ImGui::TreeNode(u8"ゲームシーン"))
+		if (ImGui::TreeNodeEx(u8"ゲームシーン", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			ChangeSceneButtonGUI<G0_Onigokko>          (u8"00.おにごっこ");
 			ChangeSceneButtonGUI<G1_DarumasangaKoronda>(u8"01.だるまさんが転んだ");

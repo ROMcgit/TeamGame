@@ -133,7 +133,7 @@ void G0_Onigokko::Update(float elapsedTime)
 	if(!movieScene)
 	{
 		// タイマーの更新処理
-		//timer->Update(elapsedTime);
+		timer->Update(elapsedTime);
 	}
 
 	// ステージ更新処理

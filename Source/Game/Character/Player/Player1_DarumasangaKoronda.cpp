@@ -31,6 +31,10 @@ Player1_DarumasangaKoronda::Player1_DarumasangaKoronda()
 	// ヒットエフェクト読み込み
 	hitEffect = std::make_unique <Effect>("Data/Effect/Hit.efk");
 
+	// 重力
+	gravity = 0.5f;
+
+	// 当たり判定
 	radius = 2.3f;
 	height = 15.6f;
 

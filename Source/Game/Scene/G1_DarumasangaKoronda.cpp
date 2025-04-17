@@ -31,6 +31,7 @@ void G1_DarumasangaKoronda::Initialize()
 
 	// プレイヤー初期化
 	player = std::make_unique<Player1_DarumasangaKoronda>();
+	player->SetPosition(DirectX::XMFLOAT3(0, 3.0f, 0));
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
@@ -49,6 +50,8 @@ void G1_DarumasangaKoronda::Initialize()
 
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
+	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(26.5f), 0, 0));
+	cameraController->SetRange(20.0f);
 
 	// 背景
 	backGround = std::make_unique<Sprite>();
@@ -72,7 +75,8 @@ void G1_DarumasangaKoronda::Update(float elapsedTime)
 {
 	// カメラコントローラー更新処理
 	DirectX::XMFLOAT3 target = player->GetPosition();
-	target.y += 0.5f;
+	target.x = 0;
+	target.y += player->GetHeight() * 0.5f;
 	cameraController->SetTarget(target);
 	Camera::Instance().Update(elapsedTime);
 	cameraController->Update(elapsedTime);

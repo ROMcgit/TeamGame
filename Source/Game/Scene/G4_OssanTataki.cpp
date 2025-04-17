@@ -71,9 +71,6 @@ void G4_OssanTataki::Finalize()
 void G4_OssanTataki::Update(float elapsedTime)
 {
 	// カメラコントローラー更新処理
-	DirectX::XMFLOAT3 target = player->GetPosition();
-	target.y += 0.5f;
-	cameraController->SetTarget(target);
 	Camera::Instance().Update(elapsedTime);
 	cameraController->Update(elapsedTime);
 
@@ -166,11 +163,10 @@ void G4_OssanTataki::Render()
 		// ステージ描画
 		StageManager::Instance().Render(dc, shader);
 
-		// カメラの位置を描画
-		CameraController::Instance().RenderCameraTarget(dc, shader);
-
 		// プレイヤー描画
 		player->Render(dc, shader);
+
+		cameraController->RenderCameraTarget(dc, shader);
 
 		//エネミー描画
 		EnemyManager::Instance().Render(dc, shader);

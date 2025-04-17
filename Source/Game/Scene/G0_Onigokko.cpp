@@ -235,7 +235,7 @@ void G0_Onigokko::Render()
 		player->Render(dc, shader);
 
 		// カメラの位置を描画
-		CameraController::Instance().RenderCameraTarget(dc, shader);
+		cameraController->RenderCameraTarget(dc, shader);
 
 		//エネミー描画
 		EnemyManager::Instance().Render(dc, shader);
@@ -316,6 +316,9 @@ void G0_Onigokko::Render()
 				cameraController->DrawDebugGUI(); // !カメラコントローラー
 				ImGui::TreePop();
 			}
+
+			StageManager::Instance().DrawDebugGUI();
+
 			//-----------------------------------------------------------------------------------------------------//
 			ImGui::Spacing(); // 一行空ける
 			ImGui::Separator(); // セクションの間に区切り線を表示

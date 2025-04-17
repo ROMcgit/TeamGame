@@ -58,13 +58,14 @@ Graphics::Graphics(HWND hWnd)
 
 			// TODO:ウインドウモードか、フルスクリーンにするか
 
-#if 1
+#ifndef _DEBUG
 			// ウインドウモード
 			swapchainDesc.Windowed = TRUE;
 			swapchainDesc.Flags = 0;
+#else
 			// フルスクリーン
-			//swapchainDesc.Windowed = FALSE;
-			//swapchainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+			swapchainDesc.Windowed = FALSE;
+			swapchainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 #endif // DEBUG
 		}
 

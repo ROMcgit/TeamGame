@@ -1,4 +1,5 @@
 #include "Game/Stage/G0_StageOnigokko.h"
+#include <imgui.h>
 
 // コンストラクタ
 G0_StageOnigokko::G0_StageOnigokko()
@@ -40,6 +41,31 @@ void G0_StageOnigokko::Render(ID3D11DeviceContext* dc, Shader* shader)
 bool G0_StageOnigokko::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit)
 {
 	return false;
+}
+
+// デバッグGUI
+void G0_StageOnigokko::DrawDebugGUI()
+{
+	if (ImGui::TreeNode(u8"ステージおにごっこ"))
+	{
+		// 位置
+		ImGui::InputFloat3(u8"位置", &position.x);
+
+		// 回転
+		DirectX::XMFLOAT3 a;
+		a.x = DirectX::XMConvertToDegrees(angle.x);
+		a.y = DirectX::XMConvertToDegrees(angle.y);
+		a.z = DirectX::XMConvertToDegrees(angle.z);
+		ImGui::DragFloat3("角度", &a.x, 0.01f);
+		angle.x = DirectX::XMConvertToRadians(a.x);
+		angle.y = DirectX::XMConvertToRadians(a.y);
+		angle.z = DirectX::XMConvertToRadians(a.z);
+
+		// スケール
+		ImGui::DragFloat3("大きさ", &scale.x, 0.01f);
+
+		ImGui::TreePop();
+	}
 }
 
 // 行列更新処理

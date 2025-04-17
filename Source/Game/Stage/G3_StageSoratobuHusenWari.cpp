@@ -1,4 +1,5 @@
 #include "Game/Stage/G3_StageSoratobuHusenWari.h"
+#include <imgui.h>
 
 // コンストラクタ
 G3_StageSoratobuHusenWari::G3_StageSoratobuHusenWari()
@@ -39,6 +40,31 @@ void G3_StageSoratobuHusenWari::Render(ID3D11DeviceContext* dc, Shader* shader)
 bool G3_StageSoratobuHusenWari::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit)
 {
 	return false;
+}
+
+// デバッグGUI
+void G3_StageSoratobuHusenWari::DrawDebugGUI()
+{
+	if (ImGui::TreeNode(u8"ステージ空飛ぶ風船割り"))
+	{
+		// 位置
+		ImGui::InputFloat3(u8"位置", &position.x);
+
+		// 回転
+		DirectX::XMFLOAT3 a;
+		a.x = DirectX::XMConvertToDegrees(angle.x);
+		a.y = DirectX::XMConvertToDegrees(angle.y);
+		a.z = DirectX::XMConvertToDegrees(angle.z);
+		ImGui::DragFloat3("角度", &a.x, 0.01f);
+		angle.x = DirectX::XMConvertToRadians(a.x);
+		angle.y = DirectX::XMConvertToRadians(a.y);
+		angle.z = DirectX::XMConvertToRadians(a.z);
+
+		// スケール
+		ImGui::DragFloat3("大きさ", &scale.x, 0.01f);
+
+		ImGui::TreePop();
+	}
 }
 
 // 行列更新処理

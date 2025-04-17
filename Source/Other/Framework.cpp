@@ -6,6 +6,9 @@
 #include "Framework.h"
 #include "Audio/BgmManager.h"
 #include "Game/Effect/EffectManager.h"
+
+#include "Game/Stage/StageManager.h"
+
 #include "Game/Scene/SceneManager.h"
 #include "Game/Scene/SceneTitle.h"
 #include "Game/Scene/SceneGameSelect.h"
@@ -31,7 +34,6 @@ Framework::Framework(HWND hWnd)
 	EffectManager::Instance().Initialize();
 
 	// シーン初期化
-	//sceneGame.Initialize();
 	SceneManager::Instance().ChangeScene(std::make_unique<SceneTitle>());
 }
 
@@ -39,7 +41,6 @@ Framework::Framework(HWND hWnd)
 Framework::~Framework()
 {
 	// シーン終了化
-	//sceneGame.Finalize();
 	SceneManager::Instance().Clear();
 
 	// エフェクトマネージャー終了化
@@ -53,7 +54,6 @@ void Framework::Update(float elapsedTime/*Elapsed seconds from last frame*/)
 	input.Update();
 
 	// シーン更新処理
-	//sceneGame.Update(elapsedTime);
 	SceneManager::Instance().Update(elapsedTime);
 }
 
@@ -70,11 +70,7 @@ void Framework::Render(float elapsedTime/*Elapsed seconds from last frame*/)
 	graphics.GetImGuiRenderer()->NewFrame();
 
 	// シーン描画処理
-	//sceneGame.Render();
 	SceneManager::Instance().Render();
-
-	// IMGUIデモウインドウ描画（IMGUI機能テスト用）
-	//ImGui::ShowDemoWindow();
 
 	// シーン切り替えGUI
 	SceneSelectGUI();
@@ -315,7 +311,9 @@ void Framework::SceneSelectGUI()
 			ImGui::TreePop();
 		}
 #endif
-
+		//! ステージ
+		if (ImGui::TreeNode(u8"ステージ"))
+			StageManager::Instance().DrawDebugGUI();
 #endif
 	}
 	// 終了
@@ -337,8 +335,8 @@ void Framework::SceneSelectGUI()
 			ChangeSceneButtonGUI<G1_DarumasangaKoronda>(u8"01.だるまさんが転んだ");
 			ChangeSceneButtonGUI<G2_Sundome>           (u8"02.寸止め");
 			ChangeSceneButtonGUI<G3_SoratobuHusenWari> (u8"03.空飛ぶ風船割り");
-			ChangeSceneButtonGUI<G4_OssanTataki>       (u8"04.おにごっこ");
-			ChangeSceneButtonGUI<G5_Asibawatari>       (u8"05.おにごっこ");
+			ChangeSceneButtonGUI<G4_OssanTataki>       (u8"04.おっさん叩き");
+			ChangeSceneButtonGUI<G5_Asibawatari>       (u8"05.足場渡り");
 
 			ImGui::TreePop();
 		}

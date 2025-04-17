@@ -30,6 +30,10 @@ Player4_OssanTataki::Player4_OssanTataki()
 	// ヒットエフェクト読み込み
 	hitEffect = std::make_unique <Effect>("Data/Effect/Hit.efk");
 
+	// 重力
+	gravity = 0.0f;
+
+	// 当たり判定
 	radius = 2.3f;
 	height = 15.6f;
 
@@ -109,7 +113,7 @@ void Player4_OssanTataki::Update(float elapsedTime)
 // 描画処理
 void Player4_OssanTataki::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	shader->Draw(dc, model.get());
+	//shader->Draw(dc, model.get());
 
 	// 弾丸描画処理
 	projectileManager.Render(dc, shader);
@@ -118,22 +122,6 @@ void Player4_OssanTataki::Render(ID3D11DeviceContext* dc, Shader* shader)
 // HPなどのUI描画
 void Player4_OssanTataki::SpriteRender(ID3D11DeviceContext* dc)
 {
-}
-
-// 移動入力処理
-bool Player4_OssanTataki::InputMove(float elapsedTime)
-{
-	// 進行ベクトル取得
-	DirectX::XMFLOAT3 moveVec = GetMoveVec();
-
-	// 移動処理
-	Move3D(moveVec.x, moveVec.z, moveSpeed);
-
-	// 旋回処理
-	Turn3D_Player(elapsedTime, moveVec.x, moveVec.z, turnSpeed);
-
-	// 進行ベクトルがゼロベクトルでない場合は入力された
-	return !(moveVec.x == 0.0f && moveVec.z == 0.0f);
 }
 
 // 待機ステートへ遷移
@@ -163,8 +151,6 @@ void Player4_OssanTataki::UpdateWaitState(float elapsedTime)
 		// 移動ステートへ遷移
 		TransitionMoveState();
 	}
-
-	InputMove(elapsedTime);
 }
 
 // 移動ステートへ遷移
@@ -193,8 +179,6 @@ void Player4_OssanTataki::UpdateMoveState(float elapsedTime)
 		// 待機ステートへ遷移
 		TransitionWaitState();
 	}
-
-	InputMove(elapsedTime);
 }
 
 // ダメージステートへ遷移

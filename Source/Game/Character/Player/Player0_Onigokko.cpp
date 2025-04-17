@@ -36,9 +36,6 @@ Player0_Onigokko::Player0_Onigokko()
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.03f;
 
-	// ヒットエフェクト読み込み
-	hitEffect = std::make_unique <Effect>("Data/Effect/Hit.efk");
-
 	// 重力
 	gravity = 0;
 

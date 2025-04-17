@@ -7,8 +7,8 @@ G4_StageOssanTataki::G4_StageOssanTataki()
 	// ステージモデルを読み込み
 	model = std::make_unique <Model>("Data/Model/Stage/4.OssanTataki/StageOssanTataki.mdl");
 
-	scale.x = scale.y = scale.z = 0.5f;
-
+	scale.x = scale.z = 0.5f;
+	scale.y = 0.2f;
 }
 
 G4_StageOssanTataki::~G4_StageOssanTataki()

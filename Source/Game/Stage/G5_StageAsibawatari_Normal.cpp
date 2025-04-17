@@ -7,7 +7,7 @@ G5_StageAsibawatari_Normal::G5_StageAsibawatari_Normal()
 	// ステージモデルを読み込み
 	model = std::make_unique <Model>("Data/Model/Stage/5.Asibawatari/0.Normal/StageNormal.mdl");
 
-	scale.x = scale.y = scale.z = 0.5f;
+	scale.x = scale.y = scale.z = 0.2f;
 }
 
 G5_StageAsibawatari_Normal::~G5_StageAsibawatari_Normal()

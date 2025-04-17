@@ -31,6 +31,7 @@ void G3_SoratobuHusenWari::Initialize()
 
 	// プレイヤー初期化
 	player = std::make_unique<Player3_SoratobuHusenWari>();
+	player->SetPosition(DirectX::XMFLOAT3(0, 12, 0));
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
@@ -49,6 +50,8 @@ void G3_SoratobuHusenWari::Initialize()
 
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
+	cameraController->SetTarget(DirectX::XMFLOAT3(0, 19.0f, 0));
+	cameraController->SetRange(23.0f);
 
 	// 背景
 	backGround = std::make_unique<Sprite>();
@@ -70,10 +73,10 @@ void G3_SoratobuHusenWari::Finalize()
 // 更新処理
 void G3_SoratobuHusenWari::Update(float elapsedTime)
 {
-	// カメラコントローラー更新処理
 	DirectX::XMFLOAT3 target = player->GetPosition();
-	target.y += 0.5f;
+	target.y = 19.0f;
 	cameraController->SetTarget(target);
+
 	Camera::Instance().Update(elapsedTime);
 	cameraController->Update(elapsedTime);
 
@@ -182,6 +185,24 @@ void G3_SoratobuHusenWari::Render()
 	{
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
+
+#ifndef _DEBUG
+
+	// 3Dデバッグ描画
+	{
+		// プレイヤーデバッグプリミティブ描画
+		player->DrawDebugPrimitive();
+
+		// エネミーデバッグプリミティブ描画
+		EnemyManager::Instance().DrawDebugPrimitive();
+
+		// ラインレンダラ描画実行
+		graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
+
+		// デバッグレンダラ描画実行
+		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
+	}
+#endif // _DEBUG
 
 	//! シェーダーを出す
 	{

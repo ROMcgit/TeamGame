@@ -28,16 +28,13 @@ Player3_SoratobuHusenWari::Player3_SoratobuHusenWari()
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.03f;
 
-	// ヒットエフェクト読み込み
-	hitEffect = std::make_unique <Effect>("Data/Effect/Hit.efk");
-
 	debugPrimitiveColor = { 0, 0, 1 };
 
 	radius = 0.6f;
 	height = 5.0f;
 
 	// 重力
-	gravity = 0.5f;
+	gravity = 0.3f;
 
 	// 移動ステートへ遷移
 	TransitionMoveState();
@@ -153,8 +150,56 @@ void Player3_SoratobuHusenWari::TransitionMoveState()
 // 移動ステート更新処理
 void Player3_SoratobuHusenWari::UpdateMoveState(float elapsedTime)
 {
-	if()
+	GamePad& gamePad = Input::Instance().GetGamePad();
 
+	float move = 5;
+	float angleZ = 25;
+	float angleZChangeTime = 0.2f;
+	if ((gamePad.GetButtonHeld() & GamePad::BTN_LEFT) && !(gamePad.GetButtonHeld() & GamePad::BTN_RIGHT))
+	{
+#if 1
+		velocity.x = -move;
+
+		//! 角度の変更を解除
+		SetAngleChangeUnlock();
+
+		//! 角度Zを変更する
+		SetAngleZChange(DirectX::XMConvertToRadians(-angleZ), angleZChangeTime);
+#endif
+	}
+	else if ((gamePad.GetButtonHeld() & GamePad::BTN_RIGHT) && !(gamePad.GetButtonHeld() & GamePad::BTN_LEFT))
+	{
+#if 1
+		velocity.x = move;
+
+		//! 角度の変更を解除
+		SetAngleChangeUnlock();
+
+		//! 角度Zを変更する
+		SetAngleZChange(DirectX::XMConvertToRadians(angleZ), angleZChangeTime);
+#endif
+	}
+	else
+	{
+#if 1
+		velocity.x = 0;
+
+		//! 角度変更を解除
+		SetAngleChangeUnlock();
+
+		//! 角度Zを変更する
+		SetAngleZChange(DirectX::XMConvertToRadians(0), angleZChangeTime);
+#endif
+	}
+
+	GamePadButton button =
+	GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
+	if (gamePad.GetButtonHeld() & button)
+	{
+		velocity.y += 20 * elapsedTime;
+	}
+
+	velocity.y = std::clamp(velocity.y, -5.0f, 5.0f);
 }
 
 // ダメージステートへ遷移
@@ -172,7 +217,7 @@ void Player3_SoratobuHusenWari::UpdateDamageState(float elapsedTime)
 	// ダメージアニメーションが終わったら待機ステートへ遷移
 	if (!model->IsPlayAnimation())
 	{
-		TransitionWaitState();
+		TransitionMoveState();
 	}
 }
 

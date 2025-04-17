@@ -82,7 +82,7 @@ bool GameObjectBase::HpDirector(float elapsedTime)
 
 		//---------------------------------------------------------------------//
 
-			//! –³“G‚É‚·‚é
+		//! –³“G‚É‚·‚é
 		invincibleTimer = 0.1f;
 
 		//! Œo‰ßŽžŠÔ‚ðŒv‘ª

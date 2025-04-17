@@ -28,9 +28,6 @@ Player4_OssanTataki::Player4_OssanTataki()
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.03f;
 
-	// ヒットエフェクト読み込み
-	hitEffect = std::make_unique <Effect>("Data/Effect/Hit.efk");
-
 	debugPrimitiveColor = { 0, 0, 1 };
 
 	radius = 0.6f;

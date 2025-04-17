@@ -1,19 +1,20 @@
 #pragma once
 
 #include "Graphics/Shader.h"
+#include "Game/Effect/Effect.h"
+#include "../GameObjectBase.h"
+#include <stdexcept>
+#include <algorithm>
 
 // 前方宣言
 class ProjectileManager;
 
 // 弾丸
-class Projectile
+class Projectile :public GameObjectBase
 {
 public:
 	Projectile(ProjectileManager* manager);
 	virtual ~Projectile() {}
-
-	// 当たり判定の位置を設定
-	void CollisionPosSettings();
 
 	// 更新処理
 	virtual void Update(float elapsedTime) = 0;
@@ -24,33 +25,34 @@ public:
 	// デバッグプリミティブ描画
 	virtual void DrawDebugPrimitive();
 
+	// エフェクトのハンドルを取得
+	virtual Effekseer::Handle GetHandle() { return -1; }
+
 	// 破棄
 	void Destroy();
 
-	// 位置取得
-	const DirectX::XMFLOAT3& GetPosition() const { return position; }
+	/*****************************************************************************************************************************/
+		/*! ゲッター */
+#if 1
 
 	// 方向取得
 	const DirectX::XMFLOAT3& GetDirection() const { return direction; }
 
-	// スケール取得
-	const DirectX::XMFLOAT3& GetScale() const { return scale; }
+	//-----------------------------------------------------------------------------//
 
-	// 半径取得
-	float GetRadius() const { return radius; }
+		// 不透明度を変えているかを取得
+	bool GetOpacityChange() { return opacityChange; }
+
+	// エミッシブの色を変えているかを取得
+	bool GetEmissiveColorChange() { return emissiveColorChange; }
+
+	// エミッシブの強さを変えているかを取得
+	bool GetEmissiveStrengthChange() { return emissiveStrengthChange; }
+
+#endif
 
 protected:
-	// 行列更新処理
-	void UpdateTransform();
-
-protected:
-	DirectX::XMFLOAT3 position = { 0, 0, 0 };
-	DirectX::XMFLOAT3 direction = { 0, 0, 1 };
-	DirectX::XMFLOAT3 scale = { 1, 1, 1 };
-	DirectX::XMFLOAT4X4 transform = { 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1 };
 	ProjectileManager* manager = nullptr;
-	float radius = 0.5f;
 
-	DirectX::XMFLOAT3 collisionPos    = { 0, 0, 0 };    // 当たり判定の位置
-	DirectX::XMFLOAT3 collisionOffset = { 0, 0, 0 }; // 判定位置ずらし用のオフセット
+	float lifeTimer = 1.0f; // 生存時間
 };

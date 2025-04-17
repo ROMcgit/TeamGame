@@ -30,12 +30,10 @@ Player4_OssanTataki::Player4_OssanTataki()
 	// ヒットエフェクト読み込み
 	hitEffect = std::make_unique <Effect>("Data/Effect/Hit.efk");
 
-	// 重力
-	gravity = 0.0f;
+	debugPrimitiveColor = { 0, 0, 1 };
 
-	// 当たり判定
-	radius = 2.3f;
-	height = 15.6f;
+	radius = 0.6f;
+	height = 5.0f;
 
 	// 待機ステートへ遷移
 	TransitionWaitState();

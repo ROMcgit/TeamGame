@@ -42,8 +42,10 @@ Player0_Onigokko::Player0_Onigokko()
 	// d—Í
 	gravity = 0;
 
-	radius = 2.3f;
-	height = 15.6f;
+	debugPrimitiveColor = { 0, 0, 1 };
+
+	radius = 0.6f;
+	height = 5.0f;
 
 	// ˆÚ“®‘¬“x
 	moveSpeed = 20.0f;

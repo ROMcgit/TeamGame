@@ -60,7 +60,7 @@ void G0_Onigokko::Initialize()
 
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
-	cameraController->SetRange(30);
+	cameraController->SetRange(20);
 	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(10), 0, 0));
 
 	// 背景
@@ -104,8 +104,8 @@ void G0_Onigokko::Update(float elapsedTime)
 	if (!movieScene)
 	{
 		target = player->GetPosition();
-		target.y += 0.5f;
-		cameraController->SetRange(110);
+		target.y += 0.2f;
+		
 		cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(40), 0, 0));
 	}
 	
@@ -117,18 +117,8 @@ void G0_Onigokko::Update(float elapsedTime)
 
 	if(!movieScene)
 	{
-		if(EnemyManager::Instance().GetEnemyCount() < 50)
-		{
-			// 鬼
-			std::unique_ptr<EnemyOni> oni = std::make_unique<EnemyOni>();
-			{
-				oni->SetPosition(DirectX::XMFLOAT3(100, 5, 200));
-				EnemyManager::Instance().Register(std::move(oni));
-			}
-		}
-
 		// タイマーの更新処理
-		timer->Update(elapsedTime);
+		//timer->Update(elapsedTime);
 	}
 
 	// ステージ更新処理

@@ -1,6 +1,8 @@
 #include "Game/Character/Enemy/EnemyManager.h"
 #include "Other/Collision.h"
 
+bool EnemyManager::enemyStop = false;
+
 EnemyManager::EnemyManager()
 {
 }
@@ -15,6 +17,7 @@ void EnemyManager::Update(float elapsedTime)
 {
 	for (auto& enemy : enemies)
 	{
+		if(!enemyStop)
 		enemy->Update(elapsedTime);
 	}
 

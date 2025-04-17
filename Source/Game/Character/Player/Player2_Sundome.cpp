@@ -305,36 +305,14 @@ void Player2_Sundome::DrawDebugPrimitive()
 {
 	DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
 
-	//// 衝突判定用のデバッグ球を描画
-	//debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4(0, 0, 0, 1));
-
+#ifndef _DEBUG
 	// 衝突判定用のデバッグ円柱を描画
-	debugRenderer->DrawCylinder(collisionPos, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));
+	debugRenderer->DrawCylinder(collisionPos, radius, height, { debugPrimitiveColor.x, debugPrimitiveColor.y, debugPrimitiveColor.z, 1 });
 
 	// 弾丸デバッグプリミティブ描画
 	projectileManager.DrawDebugPrimitive();
 
-	//Model::Node* leftHandBone = model->FindNode("mixamorig:LeftHand");
-	//debugRenderer->DrawSphere(DirectX::XMFLOAT3(
-	//	leftHandBone->worldTransform._41,
-	//	leftHandBone->worldTransform._42,
-	//	leftHandBone->worldTransform._43),
-	//	leftHandRadius,
-	//	DirectX::XMFLOAT4(1, 0, 0, 1)
-	//);
-
-	// 攻撃衝突用の左手ノードのデバッグ球を描画
-	if (attackCollisionFlag)
-	{
-		Model::Node* leftHandBone = model->FindNode("mixamorig:LeftHand");
-		debugRenderer->DrawSphere(DirectX::XMFLOAT3(
-			leftHandBone->worldTransform._41,
-			leftHandBone->worldTransform._42,
-			leftHandBone->worldTransform._43),
-			leftHandRadius,
-			DirectX::XMFLOAT4(1, 0, 0, 1)
-		);
-	}
+#endif // !_DEBUG
 }
 
 // 着地した時に呼ばれる

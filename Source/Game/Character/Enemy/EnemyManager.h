@@ -58,6 +58,9 @@ public:
 	void Clear();
 
 public:
+	static bool enemyStop; // “G‚ðŽ~‚ß‚é‚©
+
+public:
 
 	std::vector<std::unique_ptr<Enemy>> enemies;
 	std::vector<Enemy*> removes;

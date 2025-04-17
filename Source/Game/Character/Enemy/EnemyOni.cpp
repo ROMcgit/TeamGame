@@ -16,7 +16,7 @@ EnemyOni::EnemyOni()
 	model = std::make_unique<Model>("Data/Model/Oni/Oni.mdl");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.1f;
+	scale.x = scale.y = scale.z = 0.03f;
 
 	gravity = 0;
 

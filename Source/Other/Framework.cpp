@@ -9,6 +9,8 @@
 
 #include "Game/Stage/StageManager.h"
 
+#include "Game/Character/Enemy/EnemyManager.h"
+
 #include "Game/Scene/SceneManager.h"
 #include "Game/Scene/SceneTitle.h"
 #include "Game/Scene/SceneGameSelect.h"
@@ -311,6 +313,16 @@ void Framework::SceneSelectGUI()
 			ImGui::TreePop();
 		}
 #endif
+		//! 敵
+		if (ImGui::TreeNode(u8"敵"))
+		{
+			//! 敵を止めるか
+			ImGui::Checkbox(u8"敵を止める", &EnemyManager::enemyStop);
+
+			//! 敵のデバッグGUI
+			EnemyManager::Instance().DrawDebugGUI();
+		}
+
 		//! ステージ
 		if (ImGui::TreeNode(u8"ステージ"))
 			StageManager::Instance().DrawDebugGUI();

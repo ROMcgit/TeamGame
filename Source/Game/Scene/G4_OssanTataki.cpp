@@ -51,7 +51,7 @@ void G4_OssanTataki::Initialize()
 	cameraController = std::make_unique <CameraController>();
 	cameraController->SetTarget(DirectX::XMFLOAT3(10, 40, 0));
 	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(90), 0, 0));
-	cameraController->SetRange(85.0f);
+	cameraController->SetRange(40.0f);
 
 	// îwåi
 	backGround = std::make_unique<Sprite>();

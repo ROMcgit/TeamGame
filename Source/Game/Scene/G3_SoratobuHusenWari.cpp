@@ -50,8 +50,9 @@ void G3_SoratobuHusenWari::Initialize()
 
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
-	cameraController->SetTarget(DirectX::XMFLOAT3(0, 19.0f, 0));
-	cameraController->SetRange(23.0f);
+	cameraController->SetTarget(DirectX::XMFLOAT3(0, 10.0f, 0));
+	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(3), 0, 0));
+	cameraController->SetRange(21.0f);
 
 	// 背景
 	backGround = std::make_unique<Sprite>();
@@ -73,10 +74,6 @@ void G3_SoratobuHusenWari::Finalize()
 // 更新処理
 void G3_SoratobuHusenWari::Update(float elapsedTime)
 {
-	DirectX::XMFLOAT3 target = player->GetPosition();
-	target.y = 19.0f;
-	cameraController->SetTarget(target);
-
 	Camera::Instance().Update(elapsedTime);
 	cameraController->Update(elapsedTime);
 

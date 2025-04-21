@@ -98,6 +98,9 @@ void Player3_SoratobuHusenWari::Update(float elapsedTime)
 	// ’eŠÛXVˆ—
 	projectileManager.Update(elapsedTime);
 
+	// Õ“ËUŒ‚XVˆ—
+	collisionAttackManager.Update(elapsedTime);
+
 	// ƒvƒŒƒCƒ„[‚Æ“G‚Æ‚ÌÕ“Ëˆ—
 	CollisionPlayer3_SoratobuHusenWariVsEnemies();
 
@@ -115,6 +118,9 @@ void Player3_SoratobuHusenWari::Render(ID3D11DeviceContext* dc, Shader* shader)
 
 	// ’eŠÛ•`‰æˆ—
 	projectileManager.Render(dc, shader);
+
+	// Õ“ËUŒ‚•`‰æˆ—
+	collisionAttackManager.Render(dc, shader);
 }
 
 // HP‚È‚Ç‚ÌUI•`‰æ
@@ -152,8 +158,8 @@ void Player3_SoratobuHusenWari::UpdateMoveState(float elapsedTime)
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
-	float move = 5;
-	float angleZ = 10;
+	float move             = 5;
+	float angleZ           = 10;
 	float angleZChangeTime = 0.2f;
 	if ((gamePad.GetButtonHeld() & GamePad::BTN_LEFT) && !(gamePad.GetButtonHeld() & GamePad::BTN_RIGHT))
 	{

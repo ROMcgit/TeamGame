@@ -5,6 +5,7 @@
 #include "Game/Character/Character.h"
 #include "Game/Character/Projectile/ProjectileManager.h"
 #include "Game/Effect/Effect.h"
+#include "Game/Character/CollisionAttack/CollisionAttackManager.h"
 
 // ƒvƒŒƒCƒ„[
 class Player3_SoratobuHusenWari : public Character
@@ -94,6 +95,9 @@ private:
 
 private:
 	std::unique_ptr<Model> model;
+
+	// Õ“ËUŒ‚
+	CollisionAttackManager collisionAttackManager;
 
 	float turnSpeed = DirectX::XMConvertToRadians(720);
 

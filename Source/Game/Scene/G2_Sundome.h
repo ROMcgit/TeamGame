@@ -28,10 +28,19 @@ public:
 	void Render() override;
 
 private:
+	// ムービー更新処理
+	void UpdateMove(float elapsedTime);
+
+private:
 	std::unique_ptr <Player2_Sundome> player;
 	std::unique_ptr <CameraController> cameraController;
 
 	std::unique_ptr<RenderTarget>  renderTarget; //! レンダーターゲット
 	ShadowMap                      shadowMap;    // シャドウマップの実体
 	std::unique_ptr<Sprite> backGround;
+
+	bool movieScene = false; // ムービー中か
+
+	int movieStep   = 0;
+	float movieTime = 0.0f;
 };

@@ -95,10 +95,10 @@ void G3_SoratobuHusenWari::Render()
 {
 	lightPosition.x = CameraController::target.x;
 	lightPosition.y = 5.0f;
-	lightPosition.z = CameraController::target.z - 25.0f;
+	lightPosition.z = 27.8f;
 	lightRange = 20000.0f;
 
-	shadowMapEyeOffset = { 4.0f, 17.0f, 9.0f };
+	shadowMapEyeOffset = { 7.0f, 15.0f, 5.5f };
 
 	//! ÉtÉHÉO
 	fogStart = 2000.0f;

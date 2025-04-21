@@ -31,6 +31,7 @@ void G2_Sundome::Initialize()
 
 	// プレイヤー初期化
 	player = std::make_unique<Player2_Sundome>();
+	player->SetPosition(DirectX::XMFLOAT3(215.0f, 60.8f, -2.0f));
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
@@ -49,6 +50,11 @@ void G2_Sundome::Initialize()
 
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
+	cameraController->SetTarget(DirectX::XMFLOAT3(-233.5, 61.5f, -2.8f));
+	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(45), 0, 0));
+	cameraController->SetRange(42.5f);
+
+	movieScene = true;
 
 	// 背景
 	backGround = std::make_unique<Sprite>();
@@ -70,10 +76,15 @@ void G2_Sundome::Finalize()
 // 更新処理
 void G2_Sundome::Update(float elapsedTime)
 {
-	// カメラコントローラー更新処理
-	DirectX::XMFLOAT3 target = player->GetPosition();
-	target.y += 0.5f;
-	cameraController->SetTarget(target);
+	UpdateMove(elapsedTime);
+
+	if(!movieScene)
+	{
+		// カメラコントローラー更新処理
+		DirectX::XMFLOAT3 target = player->GetPosition();
+		target.y += 0.5f;
+		cameraController->SetTarget(target);
+	}
 	Camera::Instance().Update(elapsedTime);
 	cameraController->Update(elapsedTime);
 
@@ -94,11 +105,11 @@ void G2_Sundome::Update(float elapsedTime)
 void G2_Sundome::Render()
 {
 	lightPosition.x = CameraController::target.x;
-	lightPosition.y = 5.0f;
+	lightPosition.y = 15.0f;
 	lightPosition.z = CameraController::target.z - 25.0f;
 	lightRange = 20000.0f;
 
-	shadowMapEyeOffset = { 4.0f, 17.0f, 9.0f };
+	shadowMapEyeOffset = { -18.0f, 53.0f, 9.0f };
 
 	//! フォグ
 	fogStart = 2000.0f;
@@ -245,5 +256,46 @@ void G2_Sundome::Render()
 			EnemyManager::Instance().DrawDebugGUI();
 		}
 		ImGui::End();
+	}
+}
+
+// ムービー更新処理
+void G2_Sundome::UpdateMove(float elapsedTime)
+{
+	if (!movieScene) return;
+
+	switch (movieStep)
+	{
+	case 0:
+
+		movieTime += elapsedTime;
+
+		if (movieTime > 2.0f)
+		{
+			// カメラの位置を変数する
+			cameraController->SetTargetChange(
+				DirectX::XMFLOAT3(
+					Player2_Sundome::Instance().GetPosition().x - 20.0f, 
+					CameraController::target.y,
+					CameraController::target.z),
+					8.0f);
+
+			movieTime = 0.0f;
+
+			movieStep++;
+		}
+		break;
+	case 1:
+
+
+
+		break;
+	case 2:
+
+
+
+		break;
+	default:
+		break;
 	}
 }

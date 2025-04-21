@@ -102,8 +102,12 @@ void Framework::SceneSelectGUI()
 
 	//! ˆÊ’uİ’è
 	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
-	//! ‘å‚«‚³İ’è
-	ImGui::SetNextWindowSize(ImVec2(320, 720), ImGuiCond_Always);
+
+	if(!setSize)
+	{
+		//! ‘å‚«‚³İ’è
+		ImGui::SetNextWindowSize(ImVec2(320, 720), ImGuiCond_Always);
+	}
 
 	/*! ImGuiİ’è */
 #if 1
@@ -333,8 +337,14 @@ void Framework::SceneSelectGUI()
 
 	//! ˆÊ’uİ’è
 	ImGui::SetNextWindowPos(ImVec2(1050, 0), ImGuiCond_Always);
-	//! ‘å‚«‚³İ’è
-	ImGui::SetNextWindowSize(ImVec2(230, 500), ImGuiCond_Always);
+
+	if(!setSize)
+	{
+		//! ‘å‚«‚³İ’è
+		ImGui::SetNextWindowSize(ImVec2(230, 500), ImGuiCond_Always);
+
+		setSize = true;
+	}
 
 	if (ImGui::Begin("Scene"))
 	{

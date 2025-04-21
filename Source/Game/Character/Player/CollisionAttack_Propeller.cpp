@@ -17,13 +17,8 @@ CollisionAttack_Propeller::CollisionAttack_Propeller(CollisionAttackManager* man
 	// 大きさ
 	scale.x = scale.y = scale.z = 0.01f;
 
-	// 不透明度
-	opacity = 0;
-	// 不透明度を変える
-	SetOpacityChange(0.9f, 0.5f);
-
 	// 当たり判定
-	radius = 1.2f;
+	radius = 0.0f;
 
 	// 当たり判定の調整
 	collisionOffset = { 0.0f, 0.0f, 0.0f };

@@ -33,5 +33,7 @@ private:
 	Audio					audio;
 	Graphics				graphics;
 	Input					input;
+
+	bool setSize = false;
 };
 

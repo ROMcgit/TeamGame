@@ -7,6 +7,7 @@
 #include "Graphics/Sprite.h"
 #include "Graphics/RenderTarget.h"
 #include "Graphics/ShadowMap.h"
+#include "Game/Character/CollisionAttack/CollisionAttackManager.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 class G4_OssanTataki : public Scene
@@ -28,6 +29,8 @@ public:
 	void Render() override;
 
 private:
+	CollisionAttackManager collisionAttackManager;
+
 	std::unique_ptr <Player4_OssanTataki> player;
 	std::unique_ptr <CameraController> cameraController;
 

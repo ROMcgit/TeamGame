@@ -7,8 +7,13 @@ G2_StageSundome::G2_StageSundome()
 	// ステージモデルを読み込み
 	model = std::make_unique <Model>("Data/Model/Stage/2.Sundome/StageSundome.mdl");
 
-	scale.x = scale.z = 0.5f;
+	angle.y = DirectX::XMConvertToRadians(180);
+
+	position.y = 58.0f;
+
+	scale.x = 0.5f;
 	scale.y = 0.15f;
+	scale.z = 0.2f;
 }
 
 G2_StageSundome::~G2_StageSundome()

@@ -30,6 +30,8 @@ Player2_Sundome::Player2_Sundome()
 
 	debugPrimitiveColor = { 0, 0, 1 };
 
+	gravity = 0.5f;
+
 	radius = 0.6f;
 	height = 5.0f;
 

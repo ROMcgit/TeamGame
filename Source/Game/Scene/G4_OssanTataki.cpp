@@ -8,6 +8,7 @@
 #include "Game/Stage/StageManager.h"
 #include "Game/Stage/G4_StageOssanTataki.h"
 #include "Game/Stage/StageMoveFloor.h"
+#include "Game/Character/CollisionAttack/CollisionAttack_Hole.h"
 
 // 初期化
 void G4_OssanTataki::Initialize()
@@ -49,9 +50,42 @@ void G4_OssanTataki::Initialize()
 
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
-	cameraController->SetTarget(DirectX::XMFLOAT3(10, 40, 0));
+	cameraController->SetTarget(DirectX::XMFLOAT3(10, 56, 0));
 	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(90), 0, 0));
 	cameraController->SetRange(40.0f);
+
+	for (int i = 0; i < 4; i++)
+	{
+		// 穴
+		std::unique_ptr<CollisionAttack_Hole> hole = std::make_unique<CollisionAttack_Hole>(&collisionAttackManager);
+		//! 位置
+		DirectX::XMFLOAT3 pos = { CameraController::target.x, 21.5f, CameraController::target.z };
+
+		float offsetX = 31.0f;
+		float offsetZ = 17.5f;
+		switch (i + 1)
+		{
+		case 1:
+			pos.x -= offsetX;
+			break;
+		case 2:
+			pos.x += offsetX;
+			break;
+		case 3:
+			pos.z += offsetZ;
+			break;
+		case 4:
+			pos.z -= offsetZ;
+			break;
+		default:
+			break;
+		}
+
+		//! 位置を設定
+		hole->SetPosition(pos);
+
+		collisionAttackManager.Register(std::move(hole));
+	}
 
 	// 背景
 	backGround = std::make_unique<Sprite>();
@@ -73,6 +107,9 @@ void G4_OssanTataki::Finalize()
 // 更新処理
 void G4_OssanTataki::Update(float elapsedTime)
 {
+	// 衝突攻撃の更新処理
+	collisionAttackManager.Update(elapsedTime);
+
 	// カメラコントローラー更新処理
 	Camera::Instance().Update(elapsedTime);
 	cameraController->Update(elapsedTime);
@@ -93,12 +130,12 @@ void G4_OssanTataki::Update(float elapsedTime)
 // 描画処理
 void G4_OssanTataki::Render()
 {
-	lightPosition.x = CameraController::target.x;
-	lightPosition.y = 5.0f;
+	lightPosition.x = 8.8f;
+	lightPosition.y = 37.0f;
 	lightPosition.z = CameraController::target.z - 25.0f;
 	lightRange = 20000.0f;
 
-	shadowMapEyeOffset = { 4.0f, 17.0f, 9.0f };
+	shadowMapEyeOffset = { 5.1f, 12.5f, 9.0f };
 
 	//! フォグ
 	fogStart = 2000.0f;
@@ -123,6 +160,9 @@ void G4_OssanTataki::Render()
 				EnemyManager::Instance().Render(dc, shadowMapShader);
 				// プレイヤー描画
 				player->Render(dc, shadowMapShader);
+
+				// 衝突攻撃の描画処理
+				collisionAttackManager.Render(dc, shadowMapShader);
 
 				shadowMapShader->End(dc);
 			}
@@ -171,6 +211,9 @@ void G4_OssanTataki::Render()
 
 		cameraController->RenderCameraTarget(dc, shader);
 
+		// 衝突攻撃の描画処理
+		collisionAttackManager.Render(dc, shader);
+
 		//エネミー描画
 		EnemyManager::Instance().Render(dc, shader);
 		shader->End(dc);
@@ -212,6 +255,7 @@ void G4_OssanTataki::Render()
 	{
 		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
 		{
+			collisionAttackManager.DrawDebugGUI();
 			// プレイヤーデバッグ描画
 			player->DrawDebugGUI();
 			//-----------------------------------------------------------------------------------------------------//

@@ -9,21 +9,16 @@
 CollisionAttack_Hole::CollisionAttack_Hole(CollisionAttackManager* manager)
 	: CollisionAttack(manager)
 {
-	model = std::make_unique<Model>("Data/Model/1.Character/1.CuppyHunters/1.Boss/0.FrolicOcean/1.Beamman/Projectile/BeamWaveBullet.mdl");
+	model = std::make_unique<Model>("Data/Model/4.OssanTataki/Hole/Hole.mdl");
 
 	// 角度
 	angle.x = DirectX::XMConvertToRadians(180);
 
 	// 大きさ
-	scale.x = scale.y = scale.z = 0.01f;
-
-	// 不透明度
-	opacity = 0;
-	// 不透明度を変える
-	SetOpacityChange(0.9f, 0.5f);
+	scale.x = scale.y = scale.z = 0.03f;
 
 	// 当たり判定
-	radius = 1.2f;
+	radius = 0.0f;
 
 	// 当たり判定の調整
 	collisionOffset = { 0.0f, 0.0f, 0.0f };

@@ -56,6 +56,11 @@ void G3_SoratobuHusenWari::Initialize()
 
 	// 背景
 	backGround = std::make_unique<Sprite>();
+
+	//! フェードを設定
+	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+		1.0f, 0.0f,
+		1.0f, 0.5f);
 }
 
 // 終了化
@@ -74,6 +79,9 @@ void G3_SoratobuHusenWari::Finalize()
 // 更新処理
 void G3_SoratobuHusenWari::Update(float elapsedTime)
 {
+	//! フェードの更新処理
+	fade->Update(elapsedTime);
+
 	Camera::Instance().Update(elapsedTime);
 	cameraController->Update(elapsedTime);
 
@@ -225,6 +233,11 @@ void G3_SoratobuHusenWari::Render()
 
 		// デバッグレンダラ描画実行
 		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
+	}
+
+	{
+		//! フェードの描画処理
+		fade->Render(dc, graphics);
 	}
 
 	// 2DデバッグGUI描画

@@ -8,6 +8,7 @@
 #include "Graphics/RenderTarget.h"
 #include "Graphics/ShadowMap.h"
 #include "Game/Character/CollisionAttack/CollisionAttackManager.h"
+#include "Graphics/Fade.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 class G4_OssanTataki : public Scene
@@ -30,6 +31,8 @@ public:
 
 private:
 	CollisionAttackManager collisionAttackManager;
+
+	std::unique_ptr<Fade> fade;
 
 	std::unique_ptr <Player4_OssanTataki> player;
 	std::unique_ptr <CameraController> cameraController;

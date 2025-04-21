@@ -7,6 +7,7 @@
 #include "Graphics/Sprite.h"
 #include "Graphics/RenderTarget.h"
 #include "Graphics/ShadowMap.h"
+#include "Graphics/Fade.h"
 
 // ゲームシーン
 class G2_Sundome : public Scene
@@ -29,9 +30,13 @@ public:
 
 private:
 	// ムービー更新処理
-	void UpdateMove(float elapsedTime);
+	void UpdateMovie(float elapsedTime);
+
+	// 
 
 private:
+	std::unique_ptr<Fade> fade; // フェード
+
 	std::unique_ptr <Player2_Sundome> player;
 	std::unique_ptr <CameraController> cameraController;
 

@@ -58,6 +58,12 @@ void G2_Sundome::Initialize()
 
 	// 背景
 	backGround = std::make_unique<Sprite>();
+
+	//! フェード
+	fade = std::make_unique<Fade>();
+	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+		1.0f, 0.0f,
+		0.5f, 0.2f);
 }
 
 // 終了化
@@ -76,13 +82,17 @@ void G2_Sundome::Finalize()
 // 更新処理
 void G2_Sundome::Update(float elapsedTime)
 {
-	UpdateMove(elapsedTime);
+	//! フェードの更新処理
+	fade->Update(elapsedTime);
+
+	//! ムービー更新処理
+	UpdateMovie(elapsedTime);
 
 	if(!movieScene)
 	{
 		// カメラコントローラー更新処理
 		DirectX::XMFLOAT3 target = player->GetPosition();
-		target.y += 0.5f;
+		target.y += player->GetHeight() * 0.5f;
 		cameraController->SetTarget(target);
 	}
 	Camera::Instance().Update(elapsedTime);
@@ -220,6 +230,11 @@ void G2_Sundome::Render()
 		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 	}
 
+	{
+		//! フェードの描画処理
+		fade->Render(dc, graphics);
+	}
+
 	// 2DデバッグGUI描画
 	{
 		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
@@ -260,39 +275,75 @@ void G2_Sundome::Render()
 }
 
 // ムービー更新処理
-void G2_Sundome::UpdateMove(float elapsedTime)
+void G2_Sundome::UpdateMovie(float elapsedTime)
 {
 	if (!movieScene) return;
 
 	switch (movieStep)
 	{
+	//! カメラの位置を変更する
 	case 0:
 
+		//! ムービー時間を計測
 		movieTime += elapsedTime;
 
 		if (movieTime > 2.0f)
 		{
-			// カメラの位置を変数する
+			// カメラの位置を変更する
 			cameraController->SetTargetChange(
 				DirectX::XMFLOAT3(
-					Player2_Sundome::Instance().GetPosition().x - 20.0f, 
+					Player2_Sundome::Instance().GetPosition().x - 10.0f, 
 					CameraController::target.y,
 					CameraController::target.z),
-					8.0f);
+					5.0f);
 
+			//! ムービー時間を0にする
 			movieTime = 0.0f;
 
 			movieStep++;
 		}
 		break;
+	//! プレイヤーに近づける
 	case 1:
 
+		//! カメラのターゲットの変更が終わったら
+		if (!CameraController::targetChange)
+		{
+			//! ムービー時間を計測
+			movieTime += elapsedTime;
 
+			//! ムービー時間が1より大きいなら
+			if(movieTime > 1.0f)
+			{
+				DirectX::XMFLOAT3 pos = player->GetPosition();
+				pos.y += player->GetHeight() * 0.5f;
 
+				//! カメラの位置を変更する
+				cameraController->SetTargetChange(pos, 2.0f);
+
+				//! カメラの範囲を変更する
+				cameraController->SetRangeChange(14.0f, 2.0f);
+
+				//! ムービー時間を0にする
+				movieTime = 0.0f;
+
+				movieStep++;
+			}
+		}
 		break;
+	//! ムービーを終わる
 	case 2:
 
+		if (!CameraController::targetChange)
+		{
+			//! ムービー時間を計測
+			movieTime += elapsedTime;
 
+			if (movieTime > 1.0f)
+			{
+				movieScene = false;
+			}
+		}
 
 		break;
 	default:

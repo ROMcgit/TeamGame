@@ -61,6 +61,13 @@ void G1_DarumasangaKoronda::Initialize()
 
 	// 背景
 	backGround = std::make_unique<Sprite>();
+
+	//! フェード
+	fade = std::make_unique<Fade>();
+	//! フェードを設定
+	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+		1.0f, 0.0f,
+		1.0f, 0.5f);
 }
 
 // 終了化
@@ -79,6 +86,9 @@ void G1_DarumasangaKoronda::Finalize()
 // 更新処理
 void G1_DarumasangaKoronda::Update(float elapsedTime)
 {
+	//! フェードを更新処理
+	fade->Update(elapsedTime);
+
 	// カメラコントローラー更新処理
 	DirectX::XMFLOAT3 target = player->GetPosition();
 	target.x = 0;
@@ -217,6 +227,11 @@ void G1_DarumasangaKoronda::Render()
 
 		// デバッグレンダラ描画実行
 		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
+	}
+
+	{
+		//! フェードの描画処理
+		fade->Render(dc, graphics);
 	}
 
 	// 2DデバッグGUI描画

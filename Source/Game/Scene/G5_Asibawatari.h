@@ -7,6 +7,7 @@
 #include "Graphics/Sprite.h"
 #include "Graphics/RenderTarget.h"
 #include "Graphics/ShadowMap.h"
+#include "Graphics/Fade.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 class G5_Asibawatari : public Scene
@@ -28,6 +29,8 @@ public:
 	void Render() override;
 
 private:
+	std::unique_ptr<Fade> fade;
+
 	std::unique_ptr <Player5_AsibaWatari> player;
 	std::unique_ptr <CameraController> cameraController;
 

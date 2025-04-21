@@ -89,6 +89,13 @@ void G4_OssanTataki::Initialize()
 
 	// 背景
 	backGround = std::make_unique<Sprite>();
+
+	//! フェード
+	fade = std::make_unique<Fade>();
+	//! フェードを設定
+	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+		1.0f, 0.0f,
+		1.0f, 0.5f);
 }
 
 // 終了化

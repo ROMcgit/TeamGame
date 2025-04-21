@@ -71,6 +71,8 @@ void G0_Onigokko::Initialize()
 	oni->SetPosition(DirectX::XMFLOAT3(0, 5, 250));
 	EnemyManager::Instance().Register(std::move(oni));
 
+
+	//! フェード
 	fade = std::make_unique<Fade>();
 	//! フェードを設定
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),

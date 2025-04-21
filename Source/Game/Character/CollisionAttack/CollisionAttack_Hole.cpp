@@ -1,4 +1,4 @@
-#include "CollisionAttack_Propeller.h"
+#include "CollisionAttack_Hole.h"
 #include "Audio/SoundManager.h"
 #include "Game/Effect/EffectManager.h"
 #include "Game/Character/Player/Player3_SoratobuHusenWari.h"
@@ -6,7 +6,7 @@
 #include <imgui.h>
 
 // コンストラクタ
-CollisionAttack_Propeller::CollisionAttack_Propeller(CollisionAttackManager* manager)
+CollisionAttack_Hole::CollisionAttack_Hole(CollisionAttackManager* manager)
 	: CollisionAttack(manager)
 {
 	model = std::make_unique<Model>("Data/Model/1.Character/1.CuppyHunters/1.Boss/0.FrolicOcean/1.Beamman/Projectile/BeamWaveBullet.mdl");
@@ -30,33 +30,30 @@ CollisionAttack_Propeller::CollisionAttack_Propeller(CollisionAttackManager* man
 }
 
 // デストラクタ
-CollisionAttack_Propeller::~CollisionAttack_Propeller()
+CollisionAttack_Hole::~CollisionAttack_Hole()
 {
 }
 
 // 更新処理
-void CollisionAttack_Propeller::Update(float elapsedTime)
+void CollisionAttack_Hole::Update(float elapsedTime)
 {
 	// 状態更新処理
 	UpdateGameObjectBaseState(elapsedTime);
 
 	// モデル行列更新
 	model->UpdateTransform(transform);
-
-	// 位置更新処理
-	UpdatePosition(elapsedTime);
 }
 
 // 描画処理
-void CollisionAttack_Propeller::Render(ID3D11DeviceContext* dc, Shader* shader)
+void CollisionAttack_Hole::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	shader->Draw(dc, model.get(), materialColor, opacity);
 }
 
 // デバッグGUI描画
-void CollisionAttack_Propeller::DrawDebugGUI()
+void CollisionAttack_Hole::DrawDebugGUI()
 {
-	if (ImGui::TreeNode("Propeller"))
+	if (ImGui::TreeNode("Hole"))
 	{
 		// トランスフォーム
 		if (ImGui::CollapsingHeader("Transform_CollisionAttack"))
@@ -121,36 +118,25 @@ void CollisionAttack_Propeller::DrawDebugGUI()
 				break;
 			}
 
-//-------------------------------------------------------------------------------------------------------//
+			//-------------------------------------------------------------------------------------------------------//
 			ImGui::Spacing(); // 一行空ける
 			ImGui::Separator(); // セクションの間に区切り線を表示
 			ImGui::Spacing(); // 一行空ける
-//-------------------------------------------------------------------------------------------------------//
-			// デバッグプリミティブ描画の色
+			//-------------------------------------------------------------------------------------------------------//
+						// デバッグプリミティブ描画の色
 			ImGui::ColorEdit3("DebugPrimitiveColor", &debugPrimitiveColor.x);
 			// デバッグプリミティブ描画の色の数値
 			ImGui::InputFloat3("Color", &debugPrimitiveColor.x);
-//-------------------------------------------------------------------------------------------------------//
+			//-------------------------------------------------------------------------------------------------------//
 			ImGui::Spacing(); // 一行空ける
 			ImGui::Separator(); // セクションの間に区切り線を表示
 			ImGui::Spacing(); // 一行空ける
-//-------------------------------------------------------------------------------------------------------//
-			// 当たり判定をどれくらいずらすか
+			//-------------------------------------------------------------------------------------------------------//
+						// 当たり判定をどれくらいずらすか
 			ImGui::DragFloat3("CollisionOffset", &collisionOffset.x, 0.01f);
 #endif
 		}
 
 		ImGui::TreePop();
 	}
-}
-
-// 移動更新処理
-void CollisionAttack_Propeller::UpdatePosition(float elapsedTime)
-{
-	angle.y += DirectX::XMConvertToRadians(300) * elapsedTime;
-
-	Player3_SoratobuHusenWari& player = Player3_SoratobuHusenWari::Instance();
-
-	position = player.GetPosition();
-	position.y += player.GetHeight() * 0.7f;
 }

@@ -13,7 +13,7 @@
 // コンストラクタ
 EnemyOni::EnemyOni()
 {
-	model = std::make_unique<Model>("Data/Model/Oni/Oni.mdl");
+	model = std::make_unique<Model>("Data/Model/0.Onigokko/Oni/Oni.mdl");
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.03f;
@@ -108,7 +108,7 @@ void EnemyOni::Render(ID3D11DeviceContext* dc, Shader* shader)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if ((dist < 8000 || G0_Onigokko::Instance().GetMovieScene()) && opacity > 0)
+	if ((dist < 7000 || G0_Onigokko::Instance().GetMovieScene()) && opacity > 0)
 		shader->Draw(dc, model.get(), materialColor, opacity);
 }
 
@@ -218,7 +218,7 @@ void EnemyOni::UpdateWaitState(float elapsedTime)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < 4100 && player.GetInvincibleTimer() <= 0)
+	if (dist < 2000 && player.GetInvincibleTimer() <= 0)
 		//! 威嚇ステートへ遷移
 		TransitionLaughState();
 	else if (stateChangeWaitTimer <= 0.0f)
@@ -270,7 +270,7 @@ void EnemyOni::UpdateMoveState(float elapsedTime)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < 4100 && player.GetInvincibleTimer() <= 0)
+	if (dist < 2000 && player.GetInvincibleTimer() <= 0)
 		//! 威嚇ステートへ遷移
 		TransitionLaughState();
 	else if (stateChangeWaitTimer <= 0.0f)
@@ -330,7 +330,7 @@ void EnemyOni::UpdateTrackingState(float elapsedTime)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < 3000)
+	if (dist < 1500)
 		//! プレイヤーに向かって移動する
 		MoveToTarget(elapsedTime, 5);
 	else

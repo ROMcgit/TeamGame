@@ -30,6 +30,8 @@ Player5_AsibaWatari::Player5_AsibaWatari()
 
 	debugPrimitiveColor = { 0, 0, 1 };
 
+	gravity = 0.4f;
+
 	radius = 0.6f;
 	height = 5.0f;
 

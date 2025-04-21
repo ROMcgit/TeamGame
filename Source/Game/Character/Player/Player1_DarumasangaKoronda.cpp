@@ -29,7 +29,7 @@ Player1_DarumasangaKoronda::Player1_DarumasangaKoronda()
 	scale.x = scale.y = scale.z = 0.03f;
 
 	// 重力
-	gravity = 0.0f;
+	gravity = 0.45f;
 
 	// 当たり判定
 	radius = 2.3f;
@@ -253,6 +253,9 @@ void Player1_DarumasangaKoronda::UpdateJumpState(float elapsedTime)
 {
 	if (isGround)
 		TransitionWaitState();
+
+	// 移動入力処理
+	InputMove(elapsedTime);
 }
 
 // ダメージステートへ遷移

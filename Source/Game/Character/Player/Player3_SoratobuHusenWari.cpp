@@ -153,7 +153,7 @@ void Player3_SoratobuHusenWari::UpdateMoveState(float elapsedTime)
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
 	float move = 5;
-	float angleZ = 25;
+	float angleZ = 10;
 	float angleZChangeTime = 0.2f;
 	if ((gamePad.GetButtonHeld() & GamePad::BTN_LEFT) && !(gamePad.GetButtonHeld() & GamePad::BTN_RIGHT))
 	{
@@ -164,7 +164,7 @@ void Player3_SoratobuHusenWari::UpdateMoveState(float elapsedTime)
 		SetAngleChangeUnlock();
 
 		//! 角度Zを変更する
-		SetAngleZChange(DirectX::XMConvertToRadians(-angleZ), angleZChangeTime);
+		SetAngleZChange(DirectX::XMConvertToRadians(angleZ), angleZChangeTime);
 #endif
 	}
 	else if ((gamePad.GetButtonHeld() & GamePad::BTN_RIGHT) && !(gamePad.GetButtonHeld() & GamePad::BTN_LEFT))
@@ -176,7 +176,7 @@ void Player3_SoratobuHusenWari::UpdateMoveState(float elapsedTime)
 		SetAngleChangeUnlock();
 
 		//! 角度Zを変更する
-		SetAngleZChange(DirectX::XMConvertToRadians(angleZ), angleZChangeTime);
+		SetAngleZChange(DirectX::XMConvertToRadians(-angleZ), angleZChangeTime);
 #endif
 	}
 	else
@@ -196,7 +196,7 @@ void Player3_SoratobuHusenWari::UpdateMoveState(float elapsedTime)
 	GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
 	if (gamePad.GetButtonHeld() & button)
 	{
-		velocity.y += 20 * elapsedTime;
+		velocity.y += 100 * elapsedTime;
 	}
 
 	velocity.y = std::clamp(velocity.y, -5.0f, 5.0f);

@@ -23,8 +23,8 @@ public:
 	void DrawDebugGUI() override;
 
 private:
-	// 行列更新処理
-	void UpdateTransform();
+	// 位置更新処理
+	void UpdatePosition(float elapsedTime);
 
 private:
 	std::unique_ptr<Model> model;

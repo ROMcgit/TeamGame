@@ -25,13 +25,24 @@ void G3_SoratobuHusenWari::Initialize()
 /********************************************************************************/
 
 	// ステージ初期化
-	StageManager& stageManager = StageManager::Instance();
-	std::unique_ptr<G3_StageSoratobuHusenWari> stageMain = std::make_unique<G3_StageSoratobuHusenWari>();
-	stageManager.Register(std::move(stageMain));
+	for(int i = 0; i < 3; i++)
+	{
+		StageManager& stageManager = StageManager::Instance();
+		std::unique_ptr<G3_StageSoratobuHusenWari> stageMain = std::make_unique<G3_StageSoratobuHusenWari>();
+	
+		if (i == 0)
+			stageMain->SetPositionZ(60.0f);
+		else if(i == 1)
+			stageMain->SetPositionZ(170.0f);
+		else
+			stageMain->SetPositionZ(280.0f);
+
+		stageManager.Register(std::move(stageMain));
+	}
 
 	// プレイヤー初期化
 	player = std::make_unique<Player3_SoratobuHusenWari>();
-	player->SetPosition(DirectX::XMFLOAT3(0, 12, 0));
+	player->SetPosition(DirectX::XMFLOAT3(0, 20, 0));
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
@@ -50,13 +61,14 @@ void G3_SoratobuHusenWari::Initialize()
 
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
-	cameraController->SetTarget(DirectX::XMFLOAT3(0, 10.0f, 0));
+	cameraController->SetTarget(DirectX::XMFLOAT3(0, 21.0f, 0));
 	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(3), 0, 0));
 	cameraController->SetRange(21.0f);
 
 	// 背景
 	backGround = std::make_unique<Sprite>();
 
+	fade = std::make_unique<Fade>();
 	//! フェードを設定
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 		1.0f, 0.0f,
@@ -103,14 +115,14 @@ void G3_SoratobuHusenWari::Render()
 {
 	lightPosition.x = CameraController::target.x;
 	lightPosition.y = 5.0f;
-	lightPosition.z = 27.8f;
+	lightPosition.z = 20.0f;
 	lightRange = 20000.0f;
 
 	shadowMapEyeOffset = { 7.0f, 15.0f, 5.5f };
 
 	//! フォグ
-	fogStart = 2000.0f;
-	fogEnd = 2100.0f;
+	fogStart = 30.0f;
+	fogEnd   = 130.0f;
 
 	Graphics& graphics = Graphics::Instance();
 

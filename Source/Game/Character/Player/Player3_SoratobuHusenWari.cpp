@@ -23,15 +23,15 @@ Player3_SoratobuHusenWari::Player3_SoratobuHusenWari()
 	instance = this;
 
 	// モデル読み込み
-	model = std::make_unique <Model>("Data/Model/Ai/Ai.mdl");
+	model = std::make_unique <Model>("Data/Model/3.SoratobuHusenWari/Player/Player.mdl");
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.03f;
 
 	debugPrimitiveColor = { 0, 0, 1 };
 
-	radius = 0.6f;
-	height = 5.0f;
+	radius = 1.35f;
+	height = 4.4f;
 
 	// 重力
 	gravity = 0.3f;
@@ -48,6 +48,8 @@ Player3_SoratobuHusenWari::~Player3_SoratobuHusenWari()
 // 更新処理
 void Player3_SoratobuHusenWari::Update(float elapsedTime)
 {
+	position.z = 0.0f;
+
 	if (CameraController::debugCamera) return;
 
 	// ムービー中なら待機ステートへ遷移
@@ -318,7 +320,7 @@ void Player3_SoratobuHusenWari::DrawDebugPrimitive()
 
 #ifndef _DEBUG
 	// 衝突判定用のデバッグ円柱を描画
-	debugRenderer->DrawCylinder(collisionPos, radius, height, { debugPrimitiveColor.x, debugPrimitiveColor.y, debugPrimitiveColor.z, 1 });
+	debugRenderer->DrawCylinder(collisionPos, radius, height,{ debugPrimitiveColor.x, debugPrimitiveColor.y, debugPrimitiveColor.z, 1 });
 
 	// 弾丸デバッグプリミティブ描画
 	projectileManager.DrawDebugPrimitive();

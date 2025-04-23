@@ -7,6 +7,8 @@ G3_StageSoratobuHusenWari::G3_StageSoratobuHusenWari()
 	// ステージモデルを読み込み
 	model = std::make_unique <Model>("Data/Model/Stage/3.SoratobuHusenWari/StageSoratobuHusenWari.mdl");
 
+	position.y = 13.0f;
+
 	scale.x = scale.z = 0.5f;
 	scale.y = 0.2f;
 }
@@ -20,6 +22,9 @@ void G3_StageSoratobuHusenWari::Update(float elapsedTime)
 {
 	// ステージの状態更新処理
 	UpdateGameObjectBaseState(elapsedTime, Object::Stage);
+
+	// 位置更新処理
+	UpdatePosition(elapsedTime);
 
 	//レイキャストようにモデル空間行列にするために単位行列を渡す
 	const DirectX::XMFLOAT4X4 transformIdentity = { 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
@@ -112,4 +117,13 @@ void G3_StageSoratobuHusenWari::DrawDebugGUI()
 
 		ImGui::TreePop();
 	}
+}
+
+// 位置更新処理
+void G3_StageSoratobuHusenWari::UpdatePosition(float elapsedTime)
+{
+	position.z -= 10 * elapsedTime;
+
+	if (position.z < -80.0f)
+		position.z = 200.0f;
 }

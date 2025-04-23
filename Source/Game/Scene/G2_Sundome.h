@@ -32,8 +32,6 @@ private:
 	// ムービー更新処理
 	void UpdateMovie(float elapsedTime);
 
-	// 
-
 private:
 	std::unique_ptr<Fade> fade; // フェード
 

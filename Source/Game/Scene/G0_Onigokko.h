@@ -17,13 +17,6 @@ public:
 	G0_Onigokko() {}
 	~G0_Onigokko() override {}
 
-	// 唯一のインスタンス取得
-	static G0_Onigokko& Instance()
-	{
-		static G0_Onigokko instance;
-		return instance;
-	}
-
 	// 初期化
 	void Initialize() override;
 
@@ -49,6 +42,8 @@ private:
 	// カメラのムービー更新処理
 	void UpdateCameraMovie(float elapsedTime);
 
+public:
+	static bool  movieScene; // ムービーシーンか
 private:
 	DirectX::XMFLOAT3 target = { 0, 0, 0 };
 
@@ -61,7 +56,7 @@ private:
 	std::unique_ptr<Sprite> backGround;
 	std::unique_ptr<Timer>  timer;
 
-	static bool  movieScene; // ムービーシーンか
+	
 	float cameraMovieTime = 0.0f; // カメラのムービー時間
 
 	bool movieFade = false;

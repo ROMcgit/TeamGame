@@ -9,6 +9,7 @@
 #include "Graphics/Timer.h"
 
 #include <algorithm>
+#include "EnemyDarumasangaKoronda.h"
 
 // コンストラクタ
 EnemyOni::EnemyOni()
@@ -108,7 +109,7 @@ void EnemyOni::Render(ID3D11DeviceContext* dc, Shader* shader)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if ((dist < 7000 || G0_Onigokko::Instance().GetMovieScene()) && opacity > 0)
+	if ((dist < 7000 || G0_Onigokko::movieScene) && opacity > 0)
 		shader->Draw(dc, model.get(), materialColor, opacity);
 }
 
@@ -208,7 +209,7 @@ void EnemyOni::TransitionWaitState()
 void EnemyOni::UpdateWaitState(float elapsedTime)
 {
 	//! ムービーシーンでないなら、待ち時間を減らす
-	if (!G0_Onigokko::Instance().GetMovieScene())
+	if (!G0_Onigokko::movieScene)
 		stateChangeWaitTimer -= elapsedTime;
 
 	Player0_Onigokko& player = Player0_Onigokko::Instance();
@@ -369,7 +370,7 @@ void EnemyOni::TransitionAttackState()
 {
 	state = State::Attack;
 
-	G0_Onigokko::Instance().SetMovieScene(true);
+	G0_Onigokko::movieScene = true;
 
 	stateChangeWaitTimer = 2.2f;
 

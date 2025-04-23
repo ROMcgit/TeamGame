@@ -29,6 +29,13 @@ public:
 	void Render() override;
 
 private:
+	// ムービー更新処理
+	void UpdateMovie(float elapsedTime);
+
+public:
+	static bool movieScene; // ムービー中か
+
+private:
 	std::unique_ptr<Fade> fade;
 
 	std::unique_ptr <Player1_DarumasangaKoronda> player;
@@ -37,4 +44,7 @@ private:
 	std::unique_ptr<RenderTarget>  renderTarget; //! レンダーターゲット
 	ShadowMap                      shadowMap;    // シャドウマップの実体
 	std::unique_ptr<Sprite> backGround;
+
+	float movieTime = 0.0f; // ムービー時間
+	int   movieStep = 0;    // ムービーステップ
 };

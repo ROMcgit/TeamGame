@@ -187,6 +187,9 @@
     <Filter Include="Source\0_Settings 《🔧》\Graphics\ShadowMap">
       <UniqueIdentifier>{a7f85467-71cd-44b3-b260-8852b00ac60e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Character\Enemy\Onigokko">
+      <UniqueIdentifier>{41de558d-6eac-4104-b0b6-9486fe8553a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -239,9 +242,6 @@
     </ClInclude>
     <ClInclude Include="Source\Game\Camera\CameraController.h">
       <Filter>Source\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Character\Enemy\EnemyOni.h">
-      <Filter>Source\Character\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Character\Projectile\Projectile.h">
       <Filter>Source\Projectile</Filter>
@@ -502,6 +502,12 @@
       <Filter>Source\Scene\GameScene\4.おっさん叩き</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Character\Enemy\EnemyEye.h">
+      <Filter>Source\Character\Enemy\Onigokko</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Enemy\EnemyOni.h">
+      <Filter>Source\Character\Enemy\Onigokko</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Enemy\EnemyDarumasangaKoronda.h">
       <Filter>Source\Character\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
@@ -550,9 +556,6 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Camera\CameraController.cpp">
       <Filter>Source\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Character\Enemy\EnemyOni.cpp">
-      <Filter>Source\Character\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Projectile\Projectile.cpp">
       <Filter>Source\Projectile</Filter>
@@ -807,6 +810,12 @@
       <Filter>Source\Scene\GameScene\4.おっさん叩き</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Enemy\EnemyEye.cpp">
+      <Filter>Source\Character\Enemy\Onigokko</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Enemy\EnemyOni.cpp">
+      <Filter>Source\Character\Enemy\Onigokko</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Enemy\EnemyDarumasangaKoronda.cpp">
       <Filter>Source\Character\Enemy</Filter>
     </ClCompile>
   </ItemGroup>

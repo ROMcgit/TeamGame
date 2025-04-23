@@ -9,9 +9,14 @@
 #include "Game/Stage/G1_StageDarumasangaKoronda.h"
 #include "Game/Stage/StageMoveFloor.h"
 
+//! ムービー中か
+bool G1_DarumasangaKoronda::movieScene = false;
+
 // 初期化
 void G1_DarumasangaKoronda::Initialize()
 {
+	movieScene = true;
+
 	ID3D11Device* device = Graphics::Instance().GetDevice();
 	float screenWidth = Graphics::Instance().GetScreenWidth();
 	float screenHeight = Graphics::Instance().GetScreenHeight();
@@ -89,11 +94,17 @@ void G1_DarumasangaKoronda::Update(float elapsedTime)
 	//! フェードを更新処理
 	fade->Update(elapsedTime);
 
+	//! ムービー更新処理
+	UpdateMovie(elapsedTime);
+
 	// カメラコントローラー更新処理
-	DirectX::XMFLOAT3 target = player->GetPosition();
-	target.x = 0;
-	target.y += player->GetHeight() * 0.5f;
-	cameraController->SetTarget(target);
+	if(!movieScene)
+	{
+		DirectX::XMFLOAT3 target = player->GetPosition();
+		target.x = 0;
+		target.y += player->GetHeight() * 0.5f;
+		cameraController->SetTarget(target);
+	}
 	Camera::Instance().Update(elapsedTime);
 	cameraController->Update(elapsedTime);
 
@@ -270,5 +281,23 @@ void G1_DarumasangaKoronda::Render()
 			EnemyManager::Instance().DrawDebugGUI();
 		}
 		ImGui::End();
+	}
+}
+
+// ムービー更新処理
+void G1_DarumasangaKoronda::UpdateMovie(float elapsedTime)
+{
+	if (!movieScene) return;
+
+	switch (movieStep)
+	{
+	case 0:
+		break;
+	case 1:
+		break;
+	case 2:
+		break;
+	default:
+		break;
 	}
 }

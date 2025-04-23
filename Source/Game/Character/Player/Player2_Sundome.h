@@ -147,7 +147,6 @@ private:
 
 	float playerAnimeCount = 0.0f;
 
-	float leftHandRadius = 0.4f;
-
-	bool attackCollisionFlag = false;
+	bool velocityDown = false; // ‰Á‘¬“x‚ð‰º‚°‚é‚©
+	float setVelocityX = 10.0f;
 };

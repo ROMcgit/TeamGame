@@ -9,6 +9,9 @@
 #include "Game/Stage/G2_StageSundome.h"
 #include "Game/Stage/StageMoveFloor.h"
 
+//! ムービー中か
+bool G2_Sundome::movieScene = false;
+
 // 初期化
 void G2_Sundome::Initialize()
 {
@@ -54,6 +57,7 @@ void G2_Sundome::Initialize()
 	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(45), 0, 0));
 	cameraController->SetRange(42.5f);
 
+	//! ムービーにする
 	movieScene = true;
 
 	// 背景

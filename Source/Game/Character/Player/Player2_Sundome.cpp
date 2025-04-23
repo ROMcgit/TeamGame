@@ -5,9 +5,8 @@
 #include "Graphics/Graphics.h"
 #include "Game/Character/Enemy/EnemyManager.h"
 #include "Other/Collision.h"
-#include "Game/Character/Projectile/ProjectileStraight.h"
-#include "Game/Character/Projectile/ProjectileHoming.h"
 #include "Game/Camera/CameraController.h"
+#include "Game/Scene/G2_Sundome.h"
 
 static Player2_Sundome* instance = nullptr;
 
@@ -153,23 +152,29 @@ void Player2_Sundome::TransitionWaitState()
 // 待機ステート更新処理
 void Player2_Sundome::UpdateWaitState(float elapsedTime)
 {
-	// 移動入力処理
-	// 移動入力されたら移動ステートへ遷移
+	//! ムービー中なら
+	if (G2_Sundome::movieScene) return;
 
-	const GamePadButton ArrowButton =
-		GamePad::BTN_UP |
-		GamePad::BTN_LEFT |
-		GamePad::BTN_RIGHT |
-		GamePad::BTN_DOWN;
+	setVelocityX += (10 * elapsedTime) * (velocityDown ? -1 : 1);
 
-	GamePad& gamePad = Input::Instance().GetGamePad();
-	if (gamePad.GetAxisLX() != 0 || gamePad.GetAxisLY() != 0)
+	if (setVelocityX < 10 || setVelocityX > 50)
 	{
-		// 移動ステートへ遷移
-		TransitionMoveState();
+		setVelocityX = std::clamp(setVelocityX, 10.0f, 50.0f);
+	
+		//! 加速度を反転
+		velocityDown = velocityDown;
 	}
 
-	InputMove(elapsedTime);
+	GamePad& gamePad = Input::Instance().GetGamePad();
+
+	GamePadButton button =
+		GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
+
+	if (gamePad.GetButtonDown() & button)
+	{
+		//! 移動ステートに遷移
+		TransitionMoveState();
+	}
 }
 
 // 移動ステートへ遷移
@@ -184,22 +189,21 @@ void Player2_Sundome::TransitionMoveState()
 // 移動ステート更新処理
 void Player2_Sundome::UpdateMoveState(float elapsedTime)
 {
-	// 移動入力処理
-	const GamePadButton ArrowButton =
-		GamePad::BTN_UP |
-		GamePad::BTN_LEFT |
-		GamePad::BTN_RIGHT |
-		GamePad::BTN_DOWN;
+	velocity.x = (setVelocityX * -1) * elapsedTime;
 
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
-	if (gamePad.GetAxisLX() == 0 && gamePad.GetAxisLY() == 0)
-	{
-		// 待機ステートへ遷移
-		TransitionWaitState();
-	}
+	GamePadButton button =
+		GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
 
-	InputMove(elapsedTime);
+	if (gamePad.GetButtonHeld() & button)
+		setVelocityX -= elapsedTime;
+
+	if (position.y < 40.0f)
+	{
+		//! 死亡ステートへ遷移
+		TransitionDeathState();
+	}
 }
 
 // ダメージステートへ遷移
@@ -233,6 +237,8 @@ void Player2_Sundome::TransitionDeathState()
 // 死亡ステート更新処理
 void Player2_Sundome::UpdateDeathState(float elapsedTimae)
 {
+	float scale = 0.0f;
+	SetScaleAllChange(DirectX::XMFLOAT3(scale, scale, scale), 1.0f);
 }
 
 // プレイヤーとエネミーとの衝突処理

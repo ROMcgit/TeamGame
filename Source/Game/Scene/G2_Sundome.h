@@ -32,6 +32,9 @@ private:
 	// ムービー更新処理
 	void UpdateMovie(float elapsedTime);
 
+public:
+	static bool movieScene; // ムービー中か
+
 private:
 	std::unique_ptr<Fade> fade; // フェード
 
@@ -42,7 +45,6 @@ private:
 	ShadowMap                      shadowMap;    // シャドウマップの実体
 	std::unique_ptr<Sprite> backGround;
 
-	bool movieScene = false; // ムービー中か
 
 	int movieStep   = 0;
 	float movieTime = 0.0f;

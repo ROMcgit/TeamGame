@@ -501,6 +501,9 @@
     <ClInclude Include="Source\Game\Character\CollisionAttack\CollisionAttack_Hole.h">
       <Filter>Source\Scene\GameScene\4.おっさん叩き</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Character\Enemy\EnemyEye.h">
+      <Filter>Source\Character\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -802,6 +805,9 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Character\CollisionAttack\CollisionAttack_Hole.cpp">
       <Filter>Source\Scene\GameScene\4.おっさん叩き</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Enemy\EnemyEye.cpp">
+      <Filter>Source\Character\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

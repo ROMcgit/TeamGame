@@ -159,6 +159,7 @@
     <ClInclude Include="Source\Game\Character\CollisionAttack\CollisionAttack.h" />
     <ClInclude Include="Source\Game\Character\CollisionAttack\CollisionAttackManager.h" />
     <ClInclude Include="Source\Game\Character\CollisionAttack\CollisionAttack_Hole.h" />
+    <ClInclude Include="Source\Game\Character\Enemy\EnemyEye.h" />
     <ClInclude Include="Source\Game\Character\Director\CameraTarget.h" />
     <ClInclude Include="Source\Game\Character\Director\Director.h" />
     <ClInclude Include="Source\Game\Character\Director\DirectorManager.h" />
@@ -263,6 +264,7 @@
     <ClCompile Include="Source\Game\Character\CollisionAttack\CollisionAttack.cpp" />
     <ClCompile Include="Source\Game\Character\CollisionAttack\CollisionAttackManager.cpp" />
     <ClCompile Include="Source\Game\Character\CollisionAttack\CollisionAttack_Hole.cpp" />
+    <ClCompile Include="Source\Game\Character\Enemy\EnemyEye.cpp" />
     <ClCompile Include="Source\Game\Character\Director\CameraTarget.cpp" />
     <ClCompile Include="Source\Game\Character\Director\Director.cpp" />
     <ClCompile Include="Source\Game\Character\Director\DirectorManager.cpp" />

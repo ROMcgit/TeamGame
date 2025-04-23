@@ -1,0 +1,368 @@
+#include "EnemyEye.h"
+#include <imgui.h>
+#include "Graphics/Graphics.h"
+#include "Other/Mathf.h"
+#include "Game/Character/Player/Player0_Onigokko.h"
+#include "Other/Collision.h"
+#include "Game/Scene/G0_Onigokko.h"
+#include "Game/Camera/Camera.h"
+#include "Graphics/Timer.h"
+
+#include <algorithm>
+
+// コンストラクタ
+EnemyEye::EnemyEye()
+{
+	model = std::make_unique<Model>("Data/Model/0.Eyegokko/Eye/Eye.mdl");
+
+	// モデルが大きいのでスケーリング
+	scale.x = scale.y = scale.z = 0.03f;
+
+	gravity = 0;
+
+	angle.y = DirectX::XMConvertToRadians(180);
+
+	debugPrimitiveColor = { 0, 0, 1 };
+
+	radius = 0.6f;
+	height = 5.0f;
+
+	opacity = 0;
+	SetOpacityChange(1.0f, 0.8f);
+
+	TransitionEntryState();
+}
+
+// デストラクタ
+EnemyEye::~EnemyEye()
+{
+	//delete model;
+}
+
+// 更新処理
+void EnemyEye::Update(float elapsedTime)
+{
+	if (Timer::GetTimeM_Int() <= 0 && Timer::GetTimeS_Int() <= 0 && !deathState)
+	{
+		TransitionDeathState();
+		deathState = true;
+	}
+
+	// ステート毎の更新処理
+	switch (state)
+	{
+		// 登場
+	case State::Entry:
+		UpdateEntryState(elapsedTime);
+		break;
+		// 待機
+	case State::Wait:
+		UpdateWaitState(elapsedTime);
+		break;
+		// 移動
+	case State::Move:
+		UpdateMoveState(elapsedTime);
+		break;
+		// 笑う
+	case State::Laugh:
+		UpdateLaughState(elapsedTime);
+		break;
+		// 死亡
+	case State::Death:
+		UpdateDeathState(elapsedTime);
+		break;
+	}
+
+	// 速力処理更新
+	UpdateVelocity(elapsedTime);
+
+	// キャラクターの状態更新処理
+	UpdateGameObjectBaseState(elapsedTime);
+
+	// モデルアニメーション更新
+	model->UpdateAnimation(elapsedTime);
+
+	// モデル行列更新
+	model->UpdateTransform(transform);
+}
+
+// 描画処理
+void EnemyEye::Render(ID3D11DeviceContext* dc, Shader* shader)
+{
+	targetPosition = Player0_Onigokko::Instance().GetPosition();
+	float vx = targetPosition.x - position.x;
+	float vz = targetPosition.z - position.z;
+	dist = vx * vx + vz * vz;
+	if ((dist < 7000 || G0_Onigokko::Instance().GetMovieScene()) && opacity > 0)
+		shader->Draw(dc, model.get(), materialColor, opacity);
+}
+
+// HPなどの描画
+void EnemyEye::SpriteRender(ID3D11DeviceContext* dc, Graphics& graphics)
+{
+}
+
+// デバッグプリミティブ描画
+void EnemyEye::DrawDebugPrimitive()
+{
+	// 基底クラスのデバッグプリミティブ描画
+	Enemy::DrawDebugPrimitive();
+
+	DebugRenderer* debugRender = Graphics::Instance().GetDebugRenderer();
+
+	// 縄張り範囲をデバッグ円柱描画
+	//debugRender->DrawCylinder(territoryOrigin, territoryRange, 1.0f,
+	//	DirectX::XMFLOAT4(0, 1, 0, 1));
+
+	//// ターゲット位置をデバッグ球描画
+	//debugRender->DrawSphere(targetPosition, radius, DirectX::XMFLOAT4(1, 1, 0, 1));
+
+	//// 索敵範囲をデバッグ円柱描画
+	//debugRender->DrawCylinder(position, searchRange, 1.0f, DirectX::XMFLOAT4(0, 0, 1, 1));
+
+	//// 攻撃範囲をデバッグ円柱描画
+	//debugRender->DrawCylinder(position, attackRange, 1.0f, DirectX::XMFLOAT4(1, 0, 0, 1));
+}
+
+void EnemyEye::DrawDebugGUI()
+{
+	if (ImGui::TreeNode("EnemyEye"))
+	{
+		ImGui::InputFloat("Dist", &dist);
+		ImGui::InputFloat3("Velocity", &velocity.x);
+
+		// トランスフォーム
+		if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			// 位置
+			ImGui::DragFloat3("Position", &position.x, 0.01f);
+			// 回転
+			DirectX::XMFLOAT3 a;
+			a.x = DirectX::XMConvertToDegrees(angle.x);
+			a.y = DirectX::XMConvertToDegrees(angle.y);
+			a.z = DirectX::XMConvertToDegrees(angle.z);
+			ImGui::DragFloat3("Angle", &a.x, 0.01f);
+			angle.x = DirectX::XMConvertToRadians(a.x);
+			angle.y = DirectX::XMConvertToRadians(a.y);
+			angle.z = DirectX::XMConvertToRadians(a.z);
+			// スケール
+			ImGui::DragFloat3("Scale", &scale.x, 0.01f);
+		}
+		if (ImGui::CollapsingHeader("Collision"))
+		{
+			ImGui::DragFloat("Radius", &radius, 0.01f);
+			ImGui::DragFloat("Height", &height, 0.01f);
+		}
+
+		ImGui::TreePop();
+	}
+}
+
+// 登場ステートへ遷移
+void EnemyEye::TransitionEntryState()
+{
+	state = State::Entry;
+
+	stateChangeWaitTimer = 1.0f;
+}
+
+// 登場ステート更新処理
+void EnemyEye::UpdateEntryState(float elapsedTime)
+{
+	if (!model->IsPlayAnimation())
+		stateChangeWaitTimer -= elapsedTime;
+
+	if (stateChangeWaitTimer <= 0.0f)
+		TransitionWaitState();
+}
+
+// 待機ステートへ遷移
+void EnemyEye::TransitionWaitState()
+{
+	state = State::Wait;
+
+	stateChangeWaitTimer = 1.0f;
+}
+
+// 待機ステート更新処理
+void EnemyEye::UpdateWaitState(float elapsedTime)
+{
+	//! ムービーシーンでないなら、待ち時間を減らす
+	if (!G0_Onigokko::Instance().GetMovieScene())
+		stateChangeWaitTimer -= elapsedTime;
+
+	Player0_Onigokko& player = Player0_Onigokko::Instance();
+
+	targetPosition = player.GetPosition();
+
+	float vx = targetPosition.x - position.x;
+	float vz = targetPosition.z - position.z;
+	dist = vx * vx + vz * vz;
+	if (SearchPlayer() && player.GetInvincibleTimer() <= 0)
+		//! 威嚇ステートへ遷移
+		TransitionLaughState();
+	else if (stateChangeWaitTimer <= 0.0f)
+		TransitionMoveState();
+}
+
+// 移動ステートへ遷移
+void EnemyEye::TransitionMoveState()
+{
+	state = State::Move;
+
+	stateChangeWaitTimer = 10.0f;
+
+	setMoveTarget = false;
+}
+
+// 移動ステート更新処理
+void EnemyEye::UpdateMoveState(float elapsedTime)
+{
+	if (!setMoveTarget)
+	{
+		moveTarget.x = position.x + (rand() % 50 * (rand() % 2 == 1 ? -1 : 1));
+		moveTarget.z = position.z + (rand() % 50 * (rand() % 2 == 1 ? -1 : 1));
+
+		moveTarget.x = std::clamp(moveTarget.x, -445.0f, 445.0f);
+		moveTarget.z = std::clamp(moveTarget.z, -445.0f, 445.0f);
+
+		setMoveTarget = true;
+	}
+
+	// 移動位置に移動
+	MoveTarget(elapsedTime, 10);
+
+	float vx = moveTarget.x - position.x;
+	float vz = moveTarget.z - position.z;
+	float d = vx * vx + vz * vz;
+	if (d < (radius * radius))
+	{
+		MoveTarget(elapsedTime, 0);
+		// 待機ステートへ遷移
+		TransitionWaitState();
+	}
+
+	Player0_Onigokko& player = Player0_Onigokko::Instance();
+	targetPosition = player.GetPosition();
+
+	if (SearchPlayer() && player.GetInvincibleTimer() <= 0)
+		//! 威嚇ステートへ遷移
+		TransitionLaughState();
+	else if (stateChangeWaitTimer <= 0.0f)
+		//! 待機ステートへ遷移
+		TransitionWaitState();
+}
+
+// 威嚇ステートへ遷移
+void EnemyEye::TransitionLaughState()
+{
+	state = State::Laugh;
+
+	stateChangeWaitTimer = 0.5f;
+
+	velocity.x = velocity.z = 0;
+
+	//! コントラスト
+	SetContrastChange(1.5f, 0.5f);
+
+	//! サチュレーション
+	SetSaturationChange(1.0f, 0.5f);
+
+	//! カラーフィルター
+	SetColorFilterChange(DirectX::XMFLOAT3(3.0f, 1.3f, 1.35f), 0.5f);
+
+	//! クロマティックアベレーション
+	SetChromaticAberrationChange(0.03f, 1.5f);
+}
+
+// 威嚇ステート更新処理
+void EnemyEye::UpdateLaughState(float elapsedTime)
+{
+	if (!model->IsPlayAnimation())
+		stateChangeWaitTimer -= elapsedTime;
+
+	if (stateChangeWaitTimer <= 0.0f)
+		TransitionWaitState();
+}
+
+// 死亡ステートへ遷移
+void EnemyEye::TransitionDeathState()
+{
+	state = State::Death;
+
+	angle.y = DirectX::XMConvertToRadians(180);
+
+	stateChangeWaitTimer = 2.0f;
+}
+
+// 死亡ステート更新処理
+void EnemyEye::UpdateDeathState(float elapsedTime)
+{
+	stateChangeWaitTimer -= elapsedTime;
+
+	if (!playAnimation && stateChangeWaitTimer <= 0.0f)
+	{
+
+		playAnimation = true;
+	}
+
+	if (!model->IsPlayAnimation() && playAnimation)
+		SetOpacityChange(0.0f, 1.5f);
+}
+
+// ダメージ受けた時に呼ばれる
+void EnemyEye::OnDamaged()
+{
+}
+
+// 死亡しと時に呼ばれる
+void EnemyEye::OnDead()
+{
+	// 死亡ステートへ遷移
+	TransitionDeathState();
+}
+
+// プレイヤーを探す
+bool EnemyEye::SearchPlayer()
+{
+	// プレイヤーとの高低差を考慮して3Dで距離判定をする
+	const DirectX::XMFLOAT3& playerPosition = Player0_Onigokko::Instance().GetPosition();
+	float vx = playerPosition.x - position.x;
+	float vy = playerPosition.y - position.y;
+	float vz = playerPosition.z - position.z;
+	float dist = sqrtf(vx * vx + vy * vy + vz * vz);
+
+	if (dist < searchRange)
+	{
+		float distXZ = sqrtf(vx * vx + vz * vz);
+		// 単位ベクトル化
+		vx /= distXZ;
+		vz /= distXZ;
+
+		// 方向ベクトル化
+		float frontX = sinf(angle.y);
+		float frontZ = cosf(angle.y);
+		// 2つのベクトルの内積値で前後判定
+		float dot = (frontX * vx) + (frontZ * vz);
+		if (dot > 0.0f)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+// 移動位置に移動
+void EnemyEye::MoveTarget(float elapsedTime, float speedRate)
+{
+	// ターゲット方向への進行ベクトルを算出
+	float vx = moveTarget.x - position.x;
+	float vz = moveTarget.z - position.z;
+	float dist = sqrtf(vx * vx + vz * vz);
+	vx /= dist;
+	vz /= dist;
+
+	// 移動処理
+	Move3D(vx, vz, moveSpeed * speedRate);
+	Turn3DNotCancel(elapsedTime, vx, vz, turnSpeed * speedRate);
+}

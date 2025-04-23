@@ -85,6 +85,9 @@ void G5_Asibawatari::Update(float elapsedTime)
 	//! フェードの更新処理
 	fade->Update(elapsedTime);
 
+	//! ムービー更新処理
+	UpdateMovie(elapsedTime);
+
 	// カメラコントローラー更新処理
 	Camera::Instance().Update(elapsedTime);
 	cameraController->Update(elapsedTime);
@@ -262,5 +265,23 @@ void G5_Asibawatari::Render()
 			EnemyManager::Instance().DrawDebugGUI();
 		}
 		ImGui::End();
+	}
+}
+
+// ムービー更新処理
+void G5_Asibawatari::UpdateMovie(float elapsedTime)
+{
+	if (!movieScene) return;
+
+	switch (movieStep)
+	{
+	case 0:
+		break;
+	case 1:
+		break;
+	case 2:
+		break;
+	default:
+		break;
 	}
 }

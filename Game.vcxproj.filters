@@ -103,9 +103,6 @@
     <Filter Include="Source\Character\Player\3_空飛ぶ風船割り">
       <UniqueIdentifier>{bfaca576-6d02-4839-8a5d-c71b66c6f685}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Scene\GameScene\3.空飛ぶ風船割り">
-      <UniqueIdentifier>{ea44a145-8f79-44a4-b071-eb892cdddb4e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Character\Player\4_おっさんたたき">
       <UniqueIdentifier>{e9534b39-e7db-4471-b85c-4e7dc19920ae}</UniqueIdentifier>
     </Filter>
@@ -189,6 +186,9 @@
     </Filter>
     <Filter Include="Source\Character\Enemy\Onigokko">
       <UniqueIdentifier>{41de558d-6eac-4104-b0b6-9486fe8553a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\GameScene\3.空飛ぶ風船割り">
+      <UniqueIdentifier>{ea44a145-8f79-44a4-b071-eb892cdddb4e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

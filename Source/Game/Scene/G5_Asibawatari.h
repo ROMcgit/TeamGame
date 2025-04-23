@@ -29,6 +29,10 @@ public:
 	void Render() override;
 
 private:
+	// ムービー更新処理
+	void UpdateMovie(float elapsedTime);
+
+private:
 	std::unique_ptr<Fade> fade;
 
 	std::unique_ptr <Player5_AsibaWatari> player;
@@ -37,4 +41,8 @@ private:
 	std::unique_ptr<RenderTarget>  renderTarget; //! レンダーターゲット
 	ShadowMap                      shadowMap;    // シャドウマップの実体
 	std::unique_ptr<Sprite> backGround;
+
+	bool movieScene = false; // ムービー中か
+	float movieTime = 0.0f;  // ムービー時間
+	int   movieStep = 0;     // ムービーステップ
 };

@@ -114,6 +114,12 @@ void G4_OssanTataki::Finalize()
 // 更新処理
 void G4_OssanTataki::Update(float elapsedTime)
 {
+	//! フェードの更新処理
+	fade->Update(elapsedTime);
+
+	//! ムービー更新処理
+	UpdateMovie(elapsedTime);
+
 	// 衝突攻撃の更新処理
 	collisionAttackManager.Update(elapsedTime);
 
@@ -258,6 +264,11 @@ void G4_OssanTataki::Render()
 		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 	}
 
+	{
+		//! フェードの描画処理
+		fade->Render(dc, graphics);
+	}
+
 	// 2DデバッグGUI描画
 	{
 		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
@@ -295,5 +306,23 @@ void G4_OssanTataki::Render()
 			EnemyManager::Instance().DrawDebugGUI();
 		}
 		ImGui::End();
+	}
+}
+
+// ムービー更新処理
+void G4_OssanTataki::UpdateMovie(float elapsedTime)
+{
+	if (!movieScene) return;
+
+	switch (movieStep)
+	{
+	case 0:
+		break;
+	case 1:
+		break;
+	case 2:
+		break;
+	default:
+		break;
 	}
 }

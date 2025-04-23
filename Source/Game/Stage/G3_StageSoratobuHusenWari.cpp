@@ -122,7 +122,7 @@ void G3_StageSoratobuHusenWari::DrawDebugGUI()
 // ˆÊ’uXVˆ—
 void G3_StageSoratobuHusenWari::UpdatePosition(float elapsedTime)
 {
-	position.z -= 10 * elapsedTime;
+	position.z -= 5 * elapsedTime;
 
 	if (position.z < -80.0f)
 		position.z = 200.0f;

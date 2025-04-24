@@ -3,6 +3,7 @@
 #include "Game/Stage/StageManager.h"
 #include "Graphics/Graphics.h"
 #include "Other/Easing.h"
+#include "Game/Character/Player/Player3_SoratobuHusenWari.h"
 #include <algorithm>
 
 //! 衝突攻撃を止めるか(行列更新処理以外)
@@ -47,4 +48,25 @@ void CollisionAttack::DrawDebugPrimitive()
 void CollisionAttack::Destroy()
 {
 	manager->Remove(this);
+}
+
+//! プレイヤー3との接触処理
+bool CollisionAttack::CollisionVsPlayer3()
+{
+	Player3_SoratobuHusenWari& player = Player3_SoratobuHusenWari::Instance();
+
+	DirectX::XMFLOAT3 outPosition;
+	if (Collision::IntersectCylinderVsCylinder(
+		collisionPos,
+		radius,
+		height,
+		player.GetCollisionPos(),
+		player.GetRadius(),
+		player.GetHeight(),
+		outPosition))
+	{
+		return true;
+	}
+
+	return false;
 }

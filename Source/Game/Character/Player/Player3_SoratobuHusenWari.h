@@ -93,6 +93,9 @@ private:
 		Anim_Death,
 	};
 
+public:
+	bool isDamage = false;
+
 private:
 	std::unique_ptr<Model> model;
 

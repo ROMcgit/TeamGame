@@ -148,8 +148,11 @@ void Balloon_Plus::UpdateMoveState(float elapsedTime)
 	SetPositionYChange(posY, 0.5f);
 
 	//! プレイヤーと当たったら
-	if (CollisionVsPlayer3() || position.z < -10.0f)
+	if (CollisionVsPlayer3())
 		TransitionBreakState();
+
+	if (position.z < -10.0f)
+		Destroy();
 }
 
 // 死亡ステートへ遷移

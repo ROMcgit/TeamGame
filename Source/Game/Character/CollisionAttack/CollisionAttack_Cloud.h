@@ -24,6 +24,9 @@ private:
 	// 状態更新処理
 	void UpdateState();
 
+	// プレイヤーとの接触
+	void CollisionVsPlayer();
+
 private:
 	std::unique_ptr<Model>  model;
 };

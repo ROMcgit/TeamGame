@@ -133,26 +133,26 @@ void Camera::SetPostEffectStatusOnce()
 		blurStrengthChange = false; // ブラーの強度の変更
 
 		//! ポストエフェクト
-		postEffect.contrast = contrastReset = Scene::contrastStatic;            // コントラスト
-		postEffect.saturation = saturationReset = Scene::saturationStatic;          // サチュレーション
-		postEffect.colorFilter = colorFilterReset = Scene::colorFilterStatic;         // カラーフィルター
+		postEffect.contrast            = contrastReset            = Scene::contrastStatic;            // コントラスト
+		postEffect.saturation          = saturationReset          = Scene::saturationStatic;          // サチュレーション
+		postEffect.colorFilter         = colorFilterReset         = Scene::colorFilterStatic;         // カラーフィルター
 		postEffect.chromaticAberration = chromaticAberrationReset = Scene::chromaticAberrationStatic; // クロマティックアベレーション
-		postEffect.hueShift = hueShiftRest = Scene::hueShiftStatic;            // 色相シフト 
+		postEffect.hueShift            = hueShiftRest             = Scene::hueShiftStatic;            // 色相シフト 
 
 		postEffect.vignetteIntensity = Scene::vignetteIntensityStatic;                    // ビネットの強度
-		postEffect.vignetteOpacity = Scene::vignetteOpacityStatic;                      // ビネットの不透明度
-		postEffect.blurStrength = blurStrengthReset = Scene::blurStrengthStatic;   // ブラーの強度
-		postEffect.bloomThreshold = bloomThresholdReset = Scene::bloomThresholdStatic; // グレアの閾値
-		postEffect.bloomIntensity = bloomIntensityReset = Scene::bloomIntensityStatic; // グレアの強度
+		postEffect.vignetteOpacity   = Scene::vignetteOpacityStatic;                      // ビネットの不透明度
+		postEffect.blurStrength      = blurStrengthReset              = Scene::blurStrengthStatic;   // ブラーの強度
+		postEffect.bloomThreshold    = bloomThresholdReset            = Scene::bloomThresholdStatic; // グレアの閾値
+		postEffect.bloomIntensity    = bloomIntensityReset            = Scene::bloomIntensityStatic; // グレアの強度
 
-		postEffect.focusDistance = focusDistanceReset = Scene::focusDistanceStatic;   // ピントを合わせる距離
-		postEffect.focusRange = focusRangeReset = Scene::focusRangeStatic;      // ピントが合う範囲
+		postEffect.focusDistance   = focusDistanceReset  = Scene::focusDistanceStatic;   // ピントを合わせる距離
+		postEffect.focusRange      = focusRangeReset     = Scene::focusRangeStatic;      // ピントが合う範囲
 		postEffect.dofBlurStrength = dofBlurStrengthRest = Scene::dofBlurStrengthStatic; // 被写界深度のブラー強度
 
-		postEffect.shakeOffset = { 0.0f, 0.0f }; // カメラシェイク(シェーダー)のずらす位置
+		postEffect.shakeOffset   = { 0.0f, 0.0f }; // カメラシェイク(シェーダー)のずらす位置
 		postEffect.shakeStrength = 0.0f;           // カメラシェイク(シェーダー)の強さ
-		postEffect.shakeTime = 0.0f;           // カメラシェイク(シェーダー)の時間
-		postEffect.shakeSpeed = 0.0f;           // カメラシェイク(シェーダー)の速さ
+		postEffect.shakeTime     = 0.0f;           // カメラシェイク(シェーダー)の時間
+		postEffect.shakeSpeed    = 0.0f;           // カメラシェイク(シェーダー)の速さ
 
 		setPostEffectStatusOnce = true; // ポストエフェクトのステータスの設定(一回だけ)をした
 	}

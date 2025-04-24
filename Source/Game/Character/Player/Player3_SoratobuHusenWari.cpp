@@ -33,6 +33,8 @@ Player3_SoratobuHusenWari::Player3_SoratobuHusenWari()
 	radius = 1.35f;
 	height = 4.4f;
 
+	opacity = 0.8f;
+
 	// 重力
 	gravity = 0.3f;
 
@@ -116,7 +118,7 @@ void Player3_SoratobuHusenWari::Update(float elapsedTime)
 // 描画処理
 void Player3_SoratobuHusenWari::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	shader->Draw(dc, model.get());
+	shader->Draw(dc, model.get(), materialColor, opacity, emissiveColor, emissiveStrength);
 
 	// 弾丸描画処理
 	projectileManager.Render(dc, shader);
@@ -208,6 +210,10 @@ void Player3_SoratobuHusenWari::UpdateMoveState(float elapsedTime)
 	}
 
 	velocity.y = std::clamp(velocity.y, -5.0f, 5.0f);
+
+
+	if (isDamage)
+		TransitionDamageState();
 }
 
 // ダメージステートへ遷移
@@ -217,15 +223,31 @@ void Player3_SoratobuHusenWari::TransitionDamageState()
 
 	// ダメージアニメーション再生
 	model->PlayAnimation(Anim_Damage, false);
+
+	//! カラーフィルターを変更する
+	SetColorFilterChange(DirectX::XMFLOAT3(Camera::colorFilterReset.x + 1.0f, Camera::colorFilterReset.y, Camera::colorFilterReset.z));
+
+	//! カメラシェイク
+	SetCameraShake(0.2f, DirectX::XMINT3(10, 70, 0));
+
+	stateChangeWaitTimer = 1.5f;
 }
 
 // ダメージステート更新処理
 void Player3_SoratobuHusenWari::UpdateDamageState(float elapsedTime)
 {
+	stateChangeWaitTimer -= elapsedTime;
+
 	// ダメージアニメーションが終わったら待機ステートへ遷移
-	if (!model->IsPlayAnimation())
+	if (stateChangeWaitTimer <= 0.0f)
 	{
+		//! カラーフィルターを戻す
+		SetColorFilterResetChange();
+
+		//! 移動ステートに遷移
 		TransitionMoveState();
+
+		isDamage = false;
 	}
 }
 

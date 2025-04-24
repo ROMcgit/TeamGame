@@ -115,12 +115,11 @@ void G3_SoratobuHusenWari::Finalize()
 // 更新処理
 void G3_SoratobuHusenWari::Update(float elapsedTime)
 {
-	//! スコア更新処理
-	UpdateScore();
-
 	//! フェードの更新処理
 	fade->Update(elapsedTime);
 
+	//! ターゲットを設定
+	cameraController->SetTarget(DirectX::XMFLOAT3(0, 21.0f, 4.8f));
 	Camera::Instance().Update(elapsedTime);
 	cameraController->Update(elapsedTime);
 
@@ -147,6 +146,9 @@ void G3_SoratobuHusenWari::Update(float elapsedTime)
 
 	//! 雲生成処理
 	NewCloud(elapsedTime);
+
+	//! スコア更新処理
+	UpdateScore();
 }
 
 // 描画処理
@@ -227,11 +229,11 @@ void G3_SoratobuHusenWari::Render()
 		// ステージ描画
 		StageManager::Instance().Render(dc, shader);
 
-		// プレイヤー描画
-		player->Render(dc, shader);
-
 		// アイテム描画処理
 		ItemManager::Instance().Render(dc, shader);
+
+		// プレイヤー描画
+		player->Render(dc, shader);
 
 		// 衝突攻撃の描画
 		collisionAttackManager.Render(dc, shader);
@@ -356,7 +358,7 @@ void G3_SoratobuHusenWari::NewBalloon(float elapsedTime)
 		int itemRansu = rand() % 2 + 1;
 
 		DirectX::XMFLOAT3 pos;
-		pos.x = rand() % 13 * (rand() % 2 == 1 ? -1 : 1);
+		pos.x = rand() % 11 * (rand() % 2 == 1 ? -1 : 1);
 		pos.y = rand() % 8 + 17.0f;
 		pos.z = 100.0f;
 
@@ -420,8 +422,12 @@ void G3_SoratobuHusenWari::NewCloud(float elapsedTime)
 void G3_SoratobuHusenWari::UpdateScore()
 {
 	//! スコアが最大値を超えないようにする
-	if (score >= scoreText->GetMaxOku())
+	if (score > scoreText->GetMaxOku())
 	{
 		score = scoreText->GetMaxOku();
+	}
+	else if (score < scoreText->GetMin())
+	{
+		score = scoreText->GetMin();
 	}
 }

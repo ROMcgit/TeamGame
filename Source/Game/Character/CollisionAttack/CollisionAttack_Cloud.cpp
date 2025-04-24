@@ -165,3 +165,15 @@ void CollisionAttack_Cloud::UpdateState()
 	//! エミシッブの強さを変更
 	SetEmissiveStrengthChange(DirectX::XMFLOAT3(1, 1, 1), emissive, 0.2f);
 }
+
+// プレイヤーとの接触
+void CollisionAttack_Cloud::CollisionVsPlayer()
+{
+	Player3_SoratobuHusenWari& player = Player3_SoratobuHusenWari::Instance();
+
+	//! プレイヤーと接触したら
+	if (CollisionVsPlayer3() && !player.isDamage)
+	{
+		player.isDamage = true;
+	}
+}

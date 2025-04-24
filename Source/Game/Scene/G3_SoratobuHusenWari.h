@@ -29,6 +29,13 @@ public:
 	void Render() override;
 
 private:
+	// •—‘D¶¬ˆ—
+	void NewBalloon();
+
+public:
+	static bool movieScene;
+
+private:
 	std::unique_ptr<Fade> fade;
 
 	std::unique_ptr <Player3_SoratobuHusenWari> player;

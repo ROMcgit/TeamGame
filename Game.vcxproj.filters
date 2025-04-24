@@ -510,6 +510,12 @@
     <ClInclude Include="Source\Game\Character\Enemy\EnemyDarumasangaKoronda.h">
       <Filter>Source\Character\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Character\Item\Balloon_Plus.h">
+      <Filter>Source\Character\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Item\Balloon_Minus.h">
+      <Filter>Source\Character\Item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -817,6 +823,12 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Enemy\EnemyDarumasangaKoronda.cpp">
       <Filter>Source\Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Item\Balloon_Plus.cpp">
+      <Filter>Source\Character\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Item\Balloon_Minus.cpp">
+      <Filter>Source\Character\Item</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

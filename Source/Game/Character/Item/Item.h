@@ -27,4 +27,7 @@ public:
 	virtual void DrawDebugPrimitive();
 
 	void Destroy();
+
+	// ƒvƒŒƒCƒ„[3‚Æ‚ÌÕ“Ëˆ—
+	bool CollisionVsPlayer3();
 };

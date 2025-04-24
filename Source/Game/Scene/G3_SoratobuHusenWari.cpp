@@ -2,12 +2,17 @@
 #include "G3_SoratobuHusenWari.h"
 #include "Game/Camera/Camera.h"
 #include "Game/Character/Enemy/EnemyManager.h"
-#include "Game/Character/Enemy/EnemyOni.h"
 #include "Game/Effect/EffectManager.h"
 #include "Input/Input.h"
 #include "Game/Stage/StageManager.h"
 #include "Game/Stage/G3_StageSoratobuHusenWari.h"
 #include "Game/Stage/StageMoveFloor.h"
+#include "Game/Character/Item/Balloon_Plus.h"
+#include "Game/Character/Item/Balloon_Minus.h"
+#include "Game/Character/Item/ItemManager.h"
+
+//! ムービー中か
+bool G3_SoratobuHusenWari::movieScene = false;
 
 // 初期化
 void G3_SoratobuHusenWari::Initialize()
@@ -30,12 +35,21 @@ void G3_SoratobuHusenWari::Initialize()
 		StageManager& stageManager = StageManager::Instance();
 		std::unique_ptr<G3_StageSoratobuHusenWari> stageMain = std::make_unique<G3_StageSoratobuHusenWari>();
 	
+		float posZ = 0.0f;
 		if (i == 0)
-			stageMain->SetPositionZ(60.0f);
+		{
+			posZ = 50.0f;
+		}
 		else if(i == 1)
-			stageMain->SetPositionZ(170.0f);
+		{
+			posZ = 160.0f;
+		}
 		else
-			stageMain->SetPositionZ(280.0f);
+		{
+			posZ = 270.0f;
+		}
+
+		stageMain->SetPositionZ(posZ);
 
 		stageManager.Register(std::move(stageMain));
 	}
@@ -106,8 +120,14 @@ void G3_SoratobuHusenWari::Update(float elapsedTime)
 	// エネミー更新処理
 	EnemyManager::Instance().Update(elapsedTime);
 
+	// アイテムの更新処理
+	ItemManager::Instance().Update(elapsedTime);
+
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
+
+	//! バルーン生成処理
+	NewBalloon();
 }
 
 // 描画処理
@@ -115,10 +135,10 @@ void G3_SoratobuHusenWari::Render()
 {
 	lightPosition.x = CameraController::target.x;
 	lightPosition.y = 5.0f;
-	lightPosition.z = 20.0f;
+	lightPosition.z = CameraController::target.x + 20.0f;
 	lightRange = 20000.0f;
 
-	shadowMapEyeOffset = { 7.0f, 15.0f, 5.5f };
+	shadowMapEyeOffset = { 0.0f, 55.0f, 5.5f };
 
 	//! フォグ
 	fogStart = 30.0f;
@@ -139,6 +159,8 @@ void G3_SoratobuHusenWari::Render()
 				Shader* shadowMapShader = graphics.GetShadowMapShader();
 				shadowMapShader->Begin(dc, rc);
 
+				// アイテム描画処理
+				ItemManager::Instance().Render(dc, shadowMapShader);
 				//エネミー描画
 				EnemyManager::Instance().Render(dc, shadowMapShader);
 				// プレイヤー描画
@@ -186,6 +208,9 @@ void G3_SoratobuHusenWari::Render()
 		// ステージ描画
 		StageManager::Instance().Render(dc, shader);
 
+		// アイテム描画処理
+		ItemManager::Instance().Render(dc, shader);
+
 		// プレイヤー描画
 		player->Render(dc, shader);
 
@@ -195,7 +220,6 @@ void G3_SoratobuHusenWari::Render()
 		//エネミー描画
 		EnemyManager::Instance().Render(dc, shader);
 		shader->End(dc);
-
 	}
 
 	// 3Dエフェクト描画
@@ -212,6 +236,9 @@ void G3_SoratobuHusenWari::Render()
 
 		// エネミーデバッグプリミティブ描画
 		EnemyManager::Instance().DrawDebugPrimitive();
+
+		// アイテム
+		ItemManager::Instance().DrawDebugPrimitive();
 
 		// ラインレンダラ描画実行
 		graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
@@ -232,21 +259,6 @@ void G3_SoratobuHusenWari::Render()
 		renderTarget->Render();
 	}
 
-	// 3Dデバッグ描画
-	{
-		// プレイヤーデバッグプリミティブ描画
-		player->DrawDebugPrimitive();
-
-		// エネミーデバッグプリミティブ描画
-		EnemyManager::Instance().DrawDebugPrimitive();
-
-		// ラインレンダラ描画実行
-		graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
-
-		// デバッグレンダラ描画実行
-		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
-	}
-
 	{
 		//! フェードの描画処理
 		fade->Render(dc, graphics);
@@ -256,6 +268,8 @@ void G3_SoratobuHusenWari::Render()
 	{
 		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
 		{
+			ItemManager::Instance().DrawDebugGUI();
+
 			// プレイヤーデバッグ描画
 			player->DrawDebugGUI();
 			//-----------------------------------------------------------------------------------------------------//
@@ -288,5 +302,48 @@ void G3_SoratobuHusenWari::Render()
 			EnemyManager::Instance().DrawDebugGUI();
 		}
 		ImGui::End();
+	}
+}
+
+// 風船生成処理
+void G3_SoratobuHusenWari::NewBalloon()
+{
+	ItemManager& itemManager = ItemManager::Instance();
+	int ItemCount = itemManager.GetItemCount();
+	if (ItemCount < 3)
+	{
+		int itemRansu = rand() % 2 + 1;
+
+		DirectX::XMFLOAT3 pos;
+		pos.x = rand() % 13 * (rand() % 2 == 1 ? -1 : 1);
+		pos.y = rand() % 8 + 17.0f;
+		pos.z = 100.0f;
+
+		switch (itemRansu)
+		{
+		case 1:
+		{
+			std::unique_ptr<Balloon_Plus> balloon_Plus = std::make_unique<Balloon_Plus>();
+
+			balloon_Plus->SetPosition(pos);
+			balloon_Plus->SetPositionResetY(pos.y);
+
+			itemManager.Register(std::move(balloon_Plus));
+		}
+			break;
+		case 2:
+		{
+			std::unique_ptr<Balloon_Minus> balloon_Minus = std::make_unique<Balloon_Minus>();
+
+			balloon_Minus->SetPosition(pos);
+			balloon_Minus->SetPositionResetY(pos.y);
+
+			itemManager.Register(std::move(balloon_Minus));
+		}
+			break;
+		default:
+			break;
+		}
+		
 	}
 }

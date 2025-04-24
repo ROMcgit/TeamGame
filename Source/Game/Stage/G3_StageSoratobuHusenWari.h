@@ -22,10 +22,15 @@ public:
 	// デバッグGUI
 	void DrawDebugGUI() override;
 
+	//! 位置Zの初期状態
+	void SetPositionZInit(float positionZInit) { this->positionZInit = positionZInit; }
+
 private:
 	// 位置更新処理
 	void UpdatePosition(float elapsedTime);
 
 private:
 	std::unique_ptr<Model> model;
+
+	float positionZInit = 0.0f; //　初期の位置Z
 };

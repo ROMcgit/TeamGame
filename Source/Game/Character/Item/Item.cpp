@@ -1,6 +1,8 @@
 #include "Item.h"
 #include "Graphics/Graphics.h"
 #include "Game/Character/Item/ItemManager.h"
+#include "Game/Character/Player/Player3_SoratobuHusenWari.h"
+#include "Other/Collision.h"
 
 // デバッグプリミティブ描画
 void Item::DrawDebugPrimitive()
@@ -15,5 +17,25 @@ void Item::DrawDebugPrimitive()
 void Item::Destroy()
 {
 	ItemManager::Instance().Remove(this);
-	//enemyManager->Remove(this);
+}
+
+// プレイヤー3との衝突処理
+bool Item::CollisionVsPlayer3()
+{
+	Player3_SoratobuHusenWari& player = Player3_SoratobuHusenWari::Instance();
+
+	DirectX::XMFLOAT3 outPosition;
+	if (Collision::IntersectCylinderVsCylinder(
+		collisionPos,
+		radius,
+		height,
+		player.GetCollisionPos(),
+		player.GetRadius(),
+		player.GetHeight(),
+		outPosition))
+	{
+		return true;
+	}
+
+		return false;
 }

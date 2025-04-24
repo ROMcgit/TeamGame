@@ -168,6 +168,8 @@
     <ClInclude Include="Source\Game\Character\GameSelect\GameSelect.h" />
     <ClInclude Include="Source\Game\Character\GameSelect\GameSelectManager.h" />
     <ClInclude Include="Source\Game\Character\GameSelect\GS0_Onigokko.h" />
+    <ClInclude Include="Source\Game\Character\Item\Balloon_Minus.h" />
+    <ClInclude Include="Source\Game\Character\Item\Balloon_Plus.h" />
     <ClInclude Include="Source\Game\Character\Item\Item.h" />
     <ClInclude Include="Source\Game\Character\Item\ItemManager.h" />
     <ClInclude Include="Source\Game\Character\Obstacle\Obstacle.h" />
@@ -274,6 +276,8 @@
     <ClCompile Include="Source\Game\Character\GameSelect\GameSelect.cpp" />
     <ClCompile Include="Source\Game\Character\GameSelect\GameSelectManager.cpp" />
     <ClCompile Include="Source\Game\Character\GameSelect\GS0_Onigokko.cpp" />
+    <ClCompile Include="Source\Game\Character\Item\Balloon_Minus.cpp" />
+    <ClCompile Include="Source\Game\Character\Item\Balloon_Plus.cpp" />
     <ClCompile Include="Source\Game\Character\Item\Item.cpp" />
     <ClCompile Include="Source\Game\Character\Item\ItemManager.cpp" />
     <ClCompile Include="Source\Game\Character\Obstacle\Obstacle.cpp" />

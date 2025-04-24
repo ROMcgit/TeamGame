@@ -30,7 +30,7 @@ public:
 
 private:
 	// 風船生成処理
-	void NewBalloon();
+	void NewBalloon(float elapsedTime);
 
 public:
 	static bool movieScene;
@@ -44,4 +44,6 @@ private:
 	std::unique_ptr<RenderTarget>  renderTarget; //! レンダーターゲット
 	ShadowMap                      shadowMap;    // シャドウマップの実体
 	std::unique_ptr<Sprite> backGround;
+
+	float newBalloonWaitTime = 0.0f; 
 };

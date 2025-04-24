@@ -127,7 +127,7 @@ void G3_SoratobuHusenWari::Update(float elapsedTime)
 	EffectManager::Instance().Update(elapsedTime);
 
 	//! ƒoƒ‹[ƒ“¶¬ˆ—
-	NewBalloon();
+	NewBalloon(elapsedTime);
 }
 
 // •`‰æˆ—
@@ -306,8 +306,14 @@ void G3_SoratobuHusenWari::Render()
 }
 
 // •—‘D¶¬ˆ—
-void G3_SoratobuHusenWari::NewBalloon()
+void G3_SoratobuHusenWari::NewBalloon(float elapsedTime)
 {
+	if (newBalloonWaitTime > 0.0f)
+	{
+		newBalloonWaitTime -= elapsedTime;
+		return;
+	}
+
 	ItemManager& itemManager = ItemManager::Instance();
 	int ItemCount = itemManager.GetItemCount();
 	if (ItemCount < 3)
@@ -329,6 +335,8 @@ void G3_SoratobuHusenWari::NewBalloon()
 			balloon_Plus->SetPositionResetY(pos.y);
 
 			itemManager.Register(std::move(balloon_Plus));
+
+			newBalloonWaitTime = 1.3f;
 		}
 			break;
 		case 2:
@@ -339,6 +347,8 @@ void G3_SoratobuHusenWari::NewBalloon()
 			balloon_Minus->SetPositionResetY(pos.y);
 
 			itemManager.Register(std::move(balloon_Minus));
+
+			newBalloonWaitTime = 1.3f;
 		}
 			break;
 		default:

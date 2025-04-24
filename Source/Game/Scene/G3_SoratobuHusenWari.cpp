@@ -316,7 +316,7 @@ void G3_SoratobuHusenWari::NewBalloon(float elapsedTime)
 
 	ItemManager& itemManager = ItemManager::Instance();
 	int ItemCount = itemManager.GetItemCount();
-	if (ItemCount < 3)
+	if (ItemCount < 5)
 	{
 		int itemRansu = rand() % 2 + 1;
 

@@ -543,6 +543,15 @@
     <ClInclude Include="Source\Game\Character\Enemy\EnemyManager3.h">
       <Filter>Source\Character\Enemy\Setting</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Character\Enemy\EnemyOssan1.h">
+      <Filter>Source\Character\Enemy\4.おっさん叩き</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Enemy\EnemyOssan2.h">
+      <Filter>Source\Character\Enemy\4.おっさん叩き</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Character\Enemy\EnemyOssan3.h">
+      <Filter>Source\Character\Enemy\4.おっさん叩き</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -871,6 +880,15 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Enemy\EnemyManager3.cpp">
       <Filter>Source\Character\Enemy\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Enemy\EnemyOssan1.cpp">
+      <Filter>Source\Character\Enemy\4.おっさん叩き</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Enemy\EnemyOssan2.cpp">
+      <Filter>Source\Character\Enemy\4.おっさん叩き</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\Enemy\EnemyOssan3.cpp">
+      <Filter>Source\Character\Enemy\4.おっさん叩き</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

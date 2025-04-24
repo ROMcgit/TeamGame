@@ -1,6 +1,9 @@
 #include "Enemy.h"
 #include "Graphics/Graphics.h"
 #include "Game/Character/Enemy/EnemyManager.h"
+#include "Game/Character/Enemy/EnemyManager1.h"
+#include "Game/Character/Enemy/EnemyManager2.h"
+#include "Game/Character/Enemy/EnemyManager3.h"
 
 // デバッグプリミティブ描画
 void Enemy::DrawDebugPrimitive()
@@ -15,7 +18,21 @@ void Enemy::DrawDebugPrimitive()
 void Enemy::Destroy()
 {
 	EnemyManager::Instance().Remove(this);
-	//enemyManager->Remove(this);
+}
+
+void Enemy::Destroy1()
+{
+	EnemyManager1::Instance().Remove(this);
+}
+
+void Enemy::Destroy2()
+{
+	EnemyManager2::Instance().Remove(this);
+}
+
+void Enemy::Destroy3()
+{
+	EnemyManager3::Instance().Remove(this);
 }
 
 // ターゲットの方を向く

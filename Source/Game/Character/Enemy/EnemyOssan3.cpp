@@ -1,4 +1,4 @@
-#include "EnemyOssan.h"
+#include "EnemyOssan3.h"
 #include <imgui.h>
 #include "Graphics/Graphics.h"
 #include "Other/Mathf.h"
@@ -14,7 +14,7 @@
 #include <random>
 
 // コンストラクタ
-EnemyOssan::EnemyOssan()
+EnemyOssan3::EnemyOssan3()
 {
 	model = std::make_unique<Model>("Data/Model/4.OssanTataki/Ossan/Ossan.mdl");
 
@@ -38,18 +38,18 @@ EnemyOssan::EnemyOssan()
 }
 
 // デストラクタ
-EnemyOssan::~EnemyOssan()
+EnemyOssan3::~EnemyOssan3()
 {
 	//delete model;
 }
 
 // 更新処理
-void EnemyOssan::Update(float elapsedTime)
+void EnemyOssan3::Update(float elapsedTime)
 {
 	// ステート毎の更新処理
 	switch (state)
 	{
-	// 上昇
+		// 上昇
 	case State::Up:
 		UpdateUpState(elapsedTime);
 		break;
@@ -75,18 +75,18 @@ void EnemyOssan::Update(float elapsedTime)
 }
 
 // 描画処理
-void EnemyOssan::Render(ID3D11DeviceContext* dc, Shader* shader)
+void EnemyOssan3::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	shader->Draw(dc, model.get(), materialColor, opacity);
 }
 
 // HPなどの描画
-void EnemyOssan::SpriteRender(ID3D11DeviceContext* dc, Graphics& graphics)
+void EnemyOssan3::SpriteRender(ID3D11DeviceContext* dc, Graphics& graphics)
 {
 }
 
 // デバッグプリミティブ描画
-void EnemyOssan::DrawDebugPrimitive()
+void EnemyOssan3::DrawDebugPrimitive()
 {
 	// 基底クラスのデバッグプリミティブ描画
 	Enemy::DrawDebugPrimitive();
@@ -107,9 +107,9 @@ void EnemyOssan::DrawDebugPrimitive()
 	//debugRender->DrawCylinder(position, attackRange, 1.0f, DirectX::XMFLOAT4(1, 0, 0, 1));
 }
 
-void EnemyOssan::DrawDebugGUI()
+void EnemyOssan3::DrawDebugGUI()
 {
-	if (ImGui::TreeNode("EnemyOssan"))
+	if (ImGui::TreeNode("EnemyOssan3"))
 	{
 		ImGui::InputFloat3("Velocity", &velocity.x);
 
@@ -141,17 +141,17 @@ void EnemyOssan::DrawDebugGUI()
 }
 
 // ダメージ受けた時に呼ばれる
-void EnemyOssan::OnDamaged()
+void EnemyOssan3::OnDamaged()
 {
 }
 
 // 死亡しと時に呼ばれる
-void EnemyOssan::OnDead()
+void EnemyOssan3::OnDead()
 {
 }
 
 // 上昇ステートへ遷移
-void EnemyOssan::TransitionUpState()
+void EnemyOssan3::TransitionUpState()
 {
 	state = State::Up;
 
@@ -166,10 +166,10 @@ void EnemyOssan::TransitionUpState()
 }
 
 // 上昇ステート更新処理
-void EnemyOssan::UpdateUpState(float elapsedTime)
+void EnemyOssan3::UpdateUpState(float elapsedTime)
 {
 	//! 位置Yの変更が終わったら
-	if(!positionChange.y)
+	if (!positionChange.y)
 	{
 		stateChangeWaitTimer -= elapsedTime;
 
@@ -182,7 +182,7 @@ void EnemyOssan::UpdateUpState(float elapsedTime)
 }
 
 // 下降ステートへ遷移
-void EnemyOssan::TransitionDownState()
+void EnemyOssan3::TransitionDownState()
 {
 	state = State::Down;
 
@@ -194,17 +194,17 @@ void EnemyOssan::TransitionDownState()
 }
 
 // 下降ステートへ遷移
-void EnemyOssan::UpdateDownState(float elapsedTime)
+void EnemyOssan3::UpdateDownState(float elapsedTime)
 {
 	//! 位置Yの変更が終わったら
 	if (!positionChange.y)
 	{
-		Destroy();
+		Destroy3();
 	}
 }
 
 // ダメージステートへ遷移
-void EnemyOssan::TransitionDamageState()
+void EnemyOssan3::TransitionDamageState()
 {
 	state = State::Damage;
 
@@ -212,7 +212,7 @@ void EnemyOssan::TransitionDamageState()
 }
 
 // ダメージステート更新処理
-void EnemyOssan::UpdateDamageState(float elapsedTime)
+void EnemyOssan3::UpdateDamageState(float elapsedTime)
 {
 
 }

@@ -56,5 +56,5 @@ private:
 	float movieTime = 0.0f; // ムービー時間
 	int   movieStep = 0;    // ムービーステップ
 
-	float newEnemyWaitTime = 0.0f; // 敵の生成の待ち時間
+	float newEnemyWaitTime[4]; // 敵の生成の待ち時間
 };

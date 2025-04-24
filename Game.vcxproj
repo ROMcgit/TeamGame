@@ -169,6 +169,9 @@
     <ClInclude Include="Source\Game\Character\Enemy\EnemyManager2.h" />
     <ClInclude Include="Source\Game\Character\Enemy\EnemyManager3.h" />
     <ClInclude Include="Source\Game\Character\Enemy\EnemyOssan.h" />
+    <ClInclude Include="Source\Game\Character\Enemy\EnemyOssan1.h" />
+    <ClInclude Include="Source\Game\Character\Enemy\EnemyOssan2.h" />
+    <ClInclude Include="Source\Game\Character\Enemy\EnemyOssan3.h" />
     <ClInclude Include="Source\Game\Character\GameObjectBase.h" />
     <ClInclude Include="Source\Game\Character\GameSelect\GameSelect.h" />
     <ClInclude Include="Source\Game\Character\GameSelect\GameSelectManager.h" />
@@ -282,6 +285,9 @@
     <ClCompile Include="Source\Game\Character\Enemy\EnemyManager2.cpp" />
     <ClCompile Include="Source\Game\Character\Enemy\EnemyManager3.cpp" />
     <ClCompile Include="Source\Game\Character\Enemy\EnemyOssan.cpp" />
+    <ClCompile Include="Source\Game\Character\Enemy\EnemyOssan1.cpp" />
+    <ClCompile Include="Source\Game\Character\Enemy\EnemyOssan2.cpp" />
+    <ClCompile Include="Source\Game\Character\Enemy\EnemyOssan3.cpp" />
     <ClCompile Include="Source\Game\Character\GameObjectBase.cpp" />
     <ClCompile Include="Source\Game\Character\GameSelect\GameSelect.cpp" />
     <ClCompile Include="Source\Game\Character\GameSelect\GameSelectManager.cpp" />

@@ -28,6 +28,12 @@ public:
 
 	void Destroy();
 
+	void Destroy1();
+
+	void Destroy2();
+
+	void Destroy3();
+
 	// ターゲットの方を向く
 	void DirectionToTarget(float elapsedTime, float speedRate);
 

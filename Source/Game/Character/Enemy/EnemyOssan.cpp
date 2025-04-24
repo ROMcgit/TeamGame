@@ -4,7 +4,7 @@
 #include "Other/Mathf.h"
 #include "Game/Character/Player/Player0_Onigokko.h"
 #include "Other/Collision.h"
-#include "Game/Scene/G0_Onigokko.h"
+#include "Game/Scene/G4_OssanTataki.h"
 #include "Game/Camera/Camera.h"
 #include "Graphics/Timer.h"
 
@@ -16,10 +16,10 @@
 // コンストラクタ
 EnemyOssan::EnemyOssan()
 {
-	model = std::make_unique<Model>("Data/Model/0.Onigokko/Oni/Oni.mdl");
+	model = std::make_unique<Model>("Data/Model/4.OssanTataki/Ossan/Ossan.mdl");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.03f;
+	scale.x = scale.y = scale.z = 0.15f;
 
 	gravity = 0;
 
@@ -27,14 +27,24 @@ EnemyOssan::EnemyOssan()
 
 	debugPrimitiveColor = { 0, 0, 1 };
 
-	radius = 0.6f;
-	height = 5.0f;
+	radius = 2.9f;
+	height = 25.5f;
 
 	opacity = 0;
-	SetOpacityChange(1.0f, 0.8f);
+	SetOpacityChange(1.0f, 0.5f);
 
 	// 上昇ステートへ遷移
 	TransitionUpState();
+
+	for (int i = 0; i < 4; i++)
+	{
+		if (!G4_OssanTataki::isEnemy[i]) break;
+
+		if(i < 3)
+		enemyNum++;
+	}
+
+	G4_OssanTataki::isEnemy[enemyNum] = true;
 }
 
 // デストラクタ
@@ -160,7 +170,7 @@ void EnemyOssan::TransitionUpState()
 
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> dist(0.5f, 2.5f);
+	std::uniform_int_distribution<> dist(1.3f, 3.0f);
 
 	stateChangeWaitTimer = dist(gen);
 }
@@ -185,18 +195,32 @@ void EnemyOssan::UpdateUpState(float elapsedTime)
 void EnemyOssan::TransitionDownState()
 {
 	state = State::Down;
+
+	//! 位置Yを変更する
+	SetPositionYChange(-4.5f, 1.0f);
+
+	//! 不透明度を変更する
+	SetOpacityChange(0.0f, 0.6f);
 }
 
 // 下降ステートへ遷移
 void EnemyOssan::UpdateDownState(float elapsedTime)
 {
+	//! 位置Yの変更が終わったら
+	if (!positionChange.y)
+	{
+		G4_OssanTataki::isEnemy[enemyNum] = false;
 
+		Destroy();
+	}
 }
 
 // ダメージステートへ遷移
 void EnemyOssan::TransitionDamageState()
 {
 	state = State::Damage;
+
+	positionChange.y = false;
 }
 
 // ダメージステート更新処理

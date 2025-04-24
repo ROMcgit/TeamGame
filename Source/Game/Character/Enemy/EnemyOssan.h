@@ -80,4 +80,6 @@ private:
 
 private:
 	std::unique_ptr<Model> model;
+
+	int enemyNum = 0;
 };

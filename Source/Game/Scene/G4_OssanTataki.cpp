@@ -11,9 +11,16 @@
 #include "Game/Character/CollisionAttack/CollisionAttack_Hole.h"
 #include "Game/Character/Enemy/EnemyOssan.h"
 
+bool G4_OssanTataki::isEnemy[4] = { false, false, false, false };
+
 // 初期化
 void G4_OssanTataki::Initialize()
 {
+	for (int i = 0; i < 4; i++)
+	{
+		isEnemy[i] = false;
+	}
+
 	ID3D11Device* device = Graphics::Instance().GetDevice();
 	float screenWidth = Graphics::Instance().GetScreenWidth();
 	float screenHeight = Graphics::Instance().GetScreenHeight();
@@ -51,18 +58,18 @@ void G4_OssanTataki::Initialize()
 
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
-	cameraController->SetTarget(DirectX::XMFLOAT3(10, 56, 0));
-	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(90), 0, 0));
-	cameraController->SetRange(40.0f);
+	cameraController->SetTarget(DirectX::XMFLOAT3(10, 56, -39.0f));
+	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(63), 0, 0));
+	cameraController->SetRange(56.0f);
 
 	for (int i = 0; i < 4; i++)
 	{
 		// 穴
 		std::unique_ptr<CollisionAttack_Hole> hole = std::make_unique<CollisionAttack_Hole>(&collisionAttackManager);
 		//! 位置
-		DirectX::XMFLOAT3 pos = { CameraController::target.x, 21.5f, CameraController::target.z };
+		DirectX::XMFLOAT3 pos = { 10.0f, 21.5f, -19.0f };
 
-		float offsetX = 31.0f;
+		float offsetX = 32.0f;
 		float offsetZ = 17.5f;
 		switch (i + 1)
 		{
@@ -147,12 +154,14 @@ void G4_OssanTataki::Update(float elapsedTime)
 // 描画処理
 void G4_OssanTataki::Render()
 {
-	lightPosition.x = 8.8f;
-	lightPosition.y = 37.0f;
-	lightPosition.z = CameraController::target.z - 25.0f;
+	lightPosition.x = 2.8f;
+	lightPosition.y = 43.5f;
+	lightPosition.z = -43.8f;
 	lightRange = 20000.0f;
 
-	shadowMapEyeOffset = { 5.1f, 12.5f, 9.0f };
+	shadowMapEyeOffset = { 0.7f, 23.0f, 6.0f };
+
+	shadowMapBias = 0.015f;
 
 	//! フォグ
 	fogStart = 2000.0f;
@@ -242,17 +251,6 @@ void G4_OssanTataki::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-	//! シェーダーを出す
-	{
-		//! レンダーターゲットへ描画終了
-		renderTarget->End();
-		//! スクリーンをポストエフェクトシェーダーで描画
-		Camera::Instance().CreatePostEffect();
-		Camera::Instance().SetPostEffectStatusOnce();
-		//! スクリーンをポストエフェクトシェーダーで描画
-		renderTarget->Render();
-	}
-
 	// 3Dデバッグ描画
 	{
 		// プレイヤーデバッグプリミティブ描画
@@ -266,6 +264,17 @@ void G4_OssanTataki::Render()
 
 		// デバッグレンダラ描画実行
 		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
+	}
+
+	//! シェーダーを出す
+	{
+		//! レンダーターゲットへ描画終了
+		renderTarget->End();
+		//! スクリーンをポストエフェクトシェーダーで描画
+		Camera::Instance().CreatePostEffect();
+		Camera::Instance().SetPostEffectStatusOnce();
+		//! スクリーンをポストエフェクトシェーダーで描画
+		renderTarget->Render();
 	}
 
 	{
@@ -334,36 +343,46 @@ void G4_OssanTataki::UpdateMovie(float elapsedTime)
 // 敵生成処理
 void G4_OssanTataki::NewEnemy(float elapsedTime)
 {
-	EnemyManager& enemyManager = EnemyManager::Instance();
-	int enemyCount = enemyManager.GetEnemyCount();
+	EnemyManager& enemyManager0 = EnemyManager::Instance();
+	int enemyCount0 = enemyManager0.GetEnemyCount();
 
-	if (enemyCount < 1)
+	if (enemyCount0 < 1)
 	{
+#if 1
 		int posRansu = rand() % 4 + 1;
 
 		CollisionAttack* collisionAttack = collisionAttackManager.GetCollisionAttack(posRansu - 1);
 
 		// 位置
-		DirectX::XMFLOAT3 pos;
+		DirectX::XMFLOAT3 pos = { 0, 0, 0 };
+		pos.y = -4.5f;
 		switch (posRansu)
 		{
 		case 1: 
-		case 2: 
+		case 2:
+
 			pos.x = collisionAttack->GetPosition().x;
-			pos.z = 0;
+			pos.z = collisionAttack->GetPosition().z;
 			break;
 		case 3:
 		case 4:
-			pos.x = 0;
+
+			pos.x = collisionAttack->GetPosition().x;
 			pos.z = collisionAttack->GetPosition().z;
 			break;
 		default:
 			break;
 		}
 
-
 		std::unique_ptr<EnemyOssan> ossan = std::make_unique<EnemyOssan>();
+		ossan->SetPosition(pos);
 
+		//! おっさんを登録
+		EnemyManager::Instance().Register(std::move(ossan));
+
+		newEnemyWaitTime = 1.0f;
+#endif
 	}
+
 
 }

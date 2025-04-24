@@ -9,7 +9,7 @@ G4_StageOssanTataki::G4_StageOssanTataki()
 	
 	position.y = 16.0f;
 
-	scale.x = scale.z = 0.5f;
+	scale.x = scale.z = 0.8f;
 	scale.y = 0.2f;
 }
 

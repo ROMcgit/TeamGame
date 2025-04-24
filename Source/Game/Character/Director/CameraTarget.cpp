@@ -66,7 +66,8 @@ void CameraTarget::Update(float elapsedTime)
 // •`‰æˆ—
 void CameraTarget::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	shader->Draw(dc, model.get(), materialColor, opacity, emissiveColor, emissiveStrength);
+	if(opacity > 0.2f)
+		shader->Draw(dc, model.get(), materialColor, opacity, emissiveColor, emissiveStrength);
 }
 
 // HP‚È‚Ç‚Ì•`‰æ

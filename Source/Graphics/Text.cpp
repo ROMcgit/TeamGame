@@ -318,9 +318,9 @@ void Text::RenderOku(ID3D11DeviceContext* dc,
 	// エラーメッセージ //
 
 	// 0より小さいまたは1億以上の時
-	if (oneNum < 0 || oneNum >= 100000000)
+	if (oneNum < limit.min || oneNum > limit.maxOku)
 	{
-		std::cerr << "Error: 一の位に当たる数値が「0」未満または「1億」以上です: " << std::endl;
+		std::cerr << "Error: 一の位に当たる数値が「0」未満または「10億」以上です: " << std::endl;
 		throw std::runtime_error("値が許容範囲を超えました！0～1億未満までの範囲にしてください。");
 	}
 	// 数値が範囲外の時

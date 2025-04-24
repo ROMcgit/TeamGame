@@ -8,6 +8,17 @@ public:
 	Text();
 	~Text();
 
+	/*! ゲッター */
+
+	// 最小値
+	int GetMin() const { return limit.min; }
+
+	// 最大値(千の位までの場合)
+	int GetMaxTho() const { return limit.maxTho; }
+
+	// 最大値(億の位までの場合)
+	int GetMaxOku() const { return limit.maxOku; }
+
 	// 描画処理(千の位まで対応(タイムなど用))
 	// 【タイムなどの測定として利用する場合】
 	// 「measure」を【true】、「oneNum」に変数などを割り当てる。他の位は「0」にしておく。
@@ -61,4 +72,11 @@ private:
 	std::unique_ptr<Sprite> textH[10];      // 百の位
 	std::unique_ptr<Sprite> textT[10];      // 十の位
 	std::unique_ptr<Sprite> textO[10];      // 一の位
+
+	struct Limit
+	{
+		int min    = 0;         // 最小値
+		int maxTho = 9999;      // 最大値(千の位までの場合)
+		int maxOku = 999999999; // 最大値(億の位までの場合)
+	}limit;
 };

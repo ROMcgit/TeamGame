@@ -10,13 +10,23 @@
 #include "Game/Character/Item/Balloon_Plus.h"
 #include "Game/Character/Item/Balloon_Minus.h"
 #include "Game/Character/Item/ItemManager.h"
+#include "Game/Character/CollisionAttack/CollisionAttack_Cloud.h"
 
 //! ムービー中か
 bool G3_SoratobuHusenWari::movieScene = false;
 
+//! スコア
+int G3_SoratobuHusenWari::score = 0;
+
 // 初期化
 void G3_SoratobuHusenWari::Initialize()
 {
+	//! スコア
+	score = 0;
+
+	//! スコアの画像
+	scoreText = std::make_unique<Text>();
+
 	ID3D11Device* device = Graphics::Instance().GetDevice();
 	float screenWidth = Graphics::Instance().GetScreenWidth();
 	float screenHeight = Graphics::Instance().GetScreenHeight();
@@ -75,7 +85,7 @@ void G3_SoratobuHusenWari::Initialize()
 
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
-	cameraController->SetTarget(DirectX::XMFLOAT3(0, 21.0f, 0));
+	cameraController->SetTarget(DirectX::XMFLOAT3(0, 21.0f, 4.8f));
 	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(3), 0, 0));
 	cameraController->SetRange(21.0f);
 
@@ -105,6 +115,9 @@ void G3_SoratobuHusenWari::Finalize()
 // 更新処理
 void G3_SoratobuHusenWari::Update(float elapsedTime)
 {
+	//! スコア更新処理
+	UpdateScore();
+
 	//! フェードの更新処理
 	fade->Update(elapsedTime);
 
@@ -126,8 +139,14 @@ void G3_SoratobuHusenWari::Update(float elapsedTime)
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
 
+	// 衝突攻撃の更新処理
+	collisionAttackManager.Update(elapsedTime);
+
 	//! バルーン生成処理
 	NewBalloon(elapsedTime);
+
+	//! 雲生成処理
+	NewCloud(elapsedTime);
 }
 
 // 描画処理
@@ -208,11 +227,14 @@ void G3_SoratobuHusenWari::Render()
 		// ステージ描画
 		StageManager::Instance().Render(dc, shader);
 
+		// プレイヤー描画
+		player->Render(dc, shader);
+
 		// アイテム描画処理
 		ItemManager::Instance().Render(dc, shader);
 
-		// プレイヤー描画
-		player->Render(dc, shader);
+		// 衝突攻撃の描画
+		collisionAttackManager.Render(dc, shader);
 
 		// カメラの位置を描画
 		cameraController->RenderCameraTarget(dc, shader);
@@ -240,6 +262,9 @@ void G3_SoratobuHusenWari::Render()
 		// アイテム
 		ItemManager::Instance().DrawDebugPrimitive();
 
+		// 衝突攻撃
+		collisionAttackManager.DrawDebugPrimitive();
+
 		// ラインレンダラ描画実行
 		graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
 
@@ -260,6 +285,10 @@ void G3_SoratobuHusenWari::Render()
 	}
 
 	{
+		//! スコアの画像
+		scoreText->RenderOku(dc, false, score, false,
+			scoreTextPos.x, scoreTextPos.y);
+
 		//! フェードの描画処理
 		fade->Render(dc, graphics);
 	}
@@ -268,6 +297,12 @@ void G3_SoratobuHusenWari::Render()
 	{
 		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
 		{
+			//! スコアの位置
+			ImGui::DragFloat2("ScorePos", &scoreTextPos.x);
+			//! スコア
+			ImGui::DragInt("Score", &score);
+
+			collisionAttackManager.DrawDebugGUI();
 			ItemManager::Instance().DrawDebugGUI();
 
 			// プレイヤーデバッグ描画
@@ -335,8 +370,6 @@ void G3_SoratobuHusenWari::NewBalloon(float elapsedTime)
 			balloon_Plus->SetPositionResetY(pos.y);
 
 			itemManager.Register(std::move(balloon_Plus));
-
-			newBalloonWaitTime = 1.3f;
 		}
 			break;
 		case 2:
@@ -347,13 +380,48 @@ void G3_SoratobuHusenWari::NewBalloon(float elapsedTime)
 			balloon_Minus->SetPositionResetY(pos.y);
 
 			itemManager.Register(std::move(balloon_Minus));
-
-			newBalloonWaitTime = 1.3f;
 		}
 			break;
 		default:
 			break;
 		}
-		
+		newBalloonWaitTime = 1.3f;
+	}
+}
+
+// 雲生成処理
+void G3_SoratobuHusenWari::NewCloud(float elapsedTime)
+{
+	if (newCloudWaitTime > 0.0f)
+	{
+		newCloudWaitTime -= elapsedTime;
+		return;
+	}
+
+	int collisionAttackCount = collisionAttackManager.GetCollisionAttackCount();
+	if (collisionAttackCount < 2)
+	{
+		DirectX::XMFLOAT3 pos;
+		pos.x = rand() % 13 * (rand() % 2 == 1 ? -1 : 1);
+		pos.y = rand() % 8 + 18.5f;
+		pos.z = 100.0f;
+
+		//! 雲
+		std::unique_ptr<CollisionAttack_Cloud> cloud = std::make_unique<CollisionAttack_Cloud>(&collisionAttackManager);
+		cloud->SetPosition(pos);
+
+		collisionAttackManager.Register(std::move(cloud));
+
+		newCloudWaitTime = 5.0f;
+	}
+}
+
+// スコア更新処理
+void G3_SoratobuHusenWari::UpdateScore()
+{
+	//! スコアが最大値を超えないようにする
+	if (score >= scoreText->GetMaxOku())
+	{
+		score = scoreText->GetMaxOku();
 	}
 }

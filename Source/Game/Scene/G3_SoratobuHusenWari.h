@@ -8,6 +8,8 @@
 #include "Graphics/RenderTarget.h"
 #include "Graphics/ShadowMap.h"
 #include "Graphics/Fade.h"
+#include "Game/Character/CollisionAttack/CollisionAttackManager.h"
+#include "Graphics/Text.h"
 
 // ゲームシーン
 class G3_SoratobuHusenWari : public Scene
@@ -33,12 +35,21 @@ private:
 	void NewBalloon(float elapsedTime);
 
 	// 雲生成処理
-	void New
+	void NewCloud(float elapsedTime);
+
+	// スコア更新処理
+	void UpdateScore();
 
 public:
 	static bool movieScene;
+	static int score;
 
 private:
+	CollisionAttackManager collisionAttackManager;
+
+	std::unique_ptr<Text> scoreText;
+	DirectX::XMFLOAT2 scoreTextPos = { 1240.0f, 0.0f };
+
 	std::unique_ptr<Fade> fade;
 
 	std::unique_ptr <Player3_SoratobuHusenWari> player;
@@ -48,5 +59,6 @@ private:
 	ShadowMap                      shadowMap;    // シャドウマップの実体
 	std::unique_ptr<Sprite> backGround;
 
-	float newBalloonWaitTime = 0.0f; 
+	float newBalloonWaitTime = 0.0f;
+	float newCloudWaitTime = 0.0f;
 };

@@ -156,6 +156,8 @@ void Balloon_Plus::UpdateMoveState(float elapsedTime)
 void Balloon_Plus::TransitionBreakState()
 {
 	state = State::Break;
+
+	G3_SoratobuHusenWari::score += 5;
 }
 
 // 死亡ステート更新処理

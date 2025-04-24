@@ -516,6 +516,9 @@
     <ClInclude Include="Source\Other\Collision.h">
       <Filter>Source\Other</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Character\CollisionAttack\CollisionAttack_Cloud.h">
+      <Filter>Source\Scene\GameScene\3.空飛ぶ風船割り</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -829,6 +832,9 @@
     </ClCompile>
     <ClCompile Include="Source\Other\Collision.cpp">
       <Filter>Source\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\CollisionAttack\CollisionAttack_Cloud.cpp">
+      <Filter>Source\Scene\GameScene\3.空飛ぶ風船割り</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

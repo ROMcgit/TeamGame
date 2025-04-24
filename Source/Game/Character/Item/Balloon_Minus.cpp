@@ -19,7 +19,7 @@ Balloon_Minus::Balloon_Minus()
 	positionResetY = position.y;
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.015f;
+	scale.x = scale.y = scale.z = 0.008f;
 
 	gravity = 0;
 
@@ -27,10 +27,10 @@ Balloon_Minus::Balloon_Minus()
 
 	debugPrimitiveColor = { 0, 0, 1 };
 
-	radius = 1.45f;
-	height = 3.55f;
+	radius = 0.8f;
+	height = 1.95f;
 
-	collisionOffset.y = -0.95f;
+	collisionOffset.y = -0.55f;
 
 	TransitionMoveState();
 }
@@ -148,7 +148,7 @@ void Balloon_Minus::UpdateMoveState(float elapsedTime)
 	SetPositionYChange(posY, 0.5f);
 
 	//! プレイヤーと当たったら
-	if (CollisionVsPlayer3() || position.z < -10.0f)
+	if (CollisionVsPlayer3() || position.z < -20.0f)
 		TransitionBreakState();
 }
 
@@ -156,6 +156,8 @@ void Balloon_Minus::UpdateMoveState(float elapsedTime)
 void Balloon_Minus::TransitionBreakState()
 {
 	state = State::Break;
+
+	G3_SoratobuHusenWari::score -= 3;
 }
 
 // 死亡ステート更新処理

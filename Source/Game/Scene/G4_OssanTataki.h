@@ -33,6 +33,9 @@ private:
 	// ムービー更新処理
 	void UpdateMovie(float elapsedTime);
 
+	// 敵生成処理
+	void NewEnemy(float elapsedTime);
+
 private:
 	CollisionAttackManager collisionAttackManager;
 

@@ -53,6 +53,9 @@ void CollisionAttack_Cloud::Update(float elapsedTime)
 	// 状態更新処理
 	UpdateState();
 
+	// プレイヤーとの接触処理
+	CollisionVsPlayer();
+
 	// モデル行列更新
 	model->UpdateTransform(transform);
 }

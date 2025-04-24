@@ -9,6 +9,7 @@
 #include "Game/Stage/G4_StageOssanTataki.h"
 #include "Game/Stage/StageMoveFloor.h"
 #include "Game/Character/CollisionAttack/CollisionAttack_Hole.h"
+#include "Game/Character/Enemy/EnemyOssan.h"
 
 // 初期化
 void G4_OssanTataki::Initialize()
@@ -138,6 +139,9 @@ void G4_OssanTataki::Update(float elapsedTime)
 
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
+
+	// 敵生成処理
+	NewEnemy(elapsedTime);
 }
 
 // 描画処理
@@ -325,4 +329,41 @@ void G4_OssanTataki::UpdateMovie(float elapsedTime)
 	default:
 		break;
 	}
+}
+
+// 敵生成処理
+void G4_OssanTataki::NewEnemy(float elapsedTime)
+{
+	EnemyManager& enemyManager = EnemyManager::Instance();
+	int enemyCount = enemyManager.GetEnemyCount();
+
+	if (enemyCount < 1)
+	{
+		int posRansu = rand() % 4 + 1;
+
+		CollisionAttack* collisionAttack = collisionAttackManager.GetCollisionAttack(posRansu - 1);
+
+		// 位置
+		DirectX::XMFLOAT3 pos;
+		switch (posRansu)
+		{
+		case 1: 
+		case 2: 
+			pos.x = collisionAttack->GetPosition().x;
+			pos.z = 0;
+			break;
+		case 3:
+		case 4:
+			pos.x = 0;
+			pos.z = collisionAttack->GetPosition().z;
+			break;
+		default:
+			break;
+		}
+
+
+		std::unique_ptr<EnemyOssan> ossan = std::make_unique<EnemyOssan>();
+
+	}
+
 }

@@ -36,7 +36,7 @@ Player3_SoratobuHusenWari::Player3_SoratobuHusenWari()
 	opacity = 0.8f;
 
 	// 重力
-	gravity = 0.3f;
+	gravity = gravityReset = 0.3f;
 
 	// 移動ステートへ遷移
 	TransitionMoveState();
@@ -224,13 +224,17 @@ void Player3_SoratobuHusenWari::TransitionDamageState()
 	// ダメージアニメーション再生
 	model->PlayAnimation(Anim_Damage, false);
 
+	velocity.y = 0.0f;
+
+	gravity = 0.13f;
+
 	//! カラーフィルターを変更する
-	SetColorFilterChange(DirectX::XMFLOAT3(Camera::colorFilterReset.x + 1.0f, Camera::colorFilterReset.y, Camera::colorFilterReset.z));
+	SetColorFilterChange(DirectX::XMFLOAT3(Camera::colorFilterReset.x + 2.0f, Camera::colorFilterReset.y, Camera::colorFilterReset.z));
 
 	//! カメラシェイク
-	SetCameraShake(0.2f, DirectX::XMINT3(10, 70, 0));
+	SetCameraShake(0.2f, DirectX::XMINT3(10, 60, 0));
 
-	stateChangeWaitTimer = 1.5f;
+	stateChangeWaitTimer = 1.2f;
 }
 
 // ダメージステート更新処理
@@ -241,6 +245,8 @@ void Player3_SoratobuHusenWari::UpdateDamageState(float elapsedTime)
 	// ダメージアニメーションが終わったら待機ステートへ遷移
 	if (stateChangeWaitTimer <= 0.0f)
 	{
+		gravity = gravityReset;
+
 		//! カラーフィルターを戻す
 		SetColorFilterResetChange();
 

@@ -234,9 +234,6 @@
     <ClInclude Include="Source\Input\Mouse.h">
       <Filter>Source\0_Settings 《🔧》\Input</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Other\Collision.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Game\Camera\Camera.h">
       <Filter>Source\Camera</Filter>
     </ClInclude>
@@ -516,6 +513,9 @@
     <ClInclude Include="Source\Game\Character\Item\Balloon_Minus.h">
       <Filter>Source\Character\Item</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Other\Collision.h">
+      <Filter>Source\Other</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -553,9 +553,6 @@
     </ClCompile>
     <ClCompile Include="Source\Input\Mouse.cpp">
       <Filter>Source\0_Settings 《🔧》\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Other\Collision.cpp">
-      <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Camera\Camera.cpp">
       <Filter>Source\Camera</Filter>
@@ -829,6 +826,9 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Item\Balloon_Minus.cpp">
       <Filter>Source\Character\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Other\Collision.cpp">
+      <Filter>Source\Other</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

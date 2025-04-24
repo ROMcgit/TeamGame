@@ -32,6 +32,9 @@ private:
 	// •—‘D¶¬ˆ—
 	void NewBalloon(float elapsedTime);
 
+	// ‰_¶¬ˆ—
+	void New
+
 public:
 	static bool movieScene;
 

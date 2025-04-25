@@ -36,6 +36,18 @@ protected:
 
 private:
 
+	// ムービー上昇ステートへ遷移
+	void TransitionMovieUpState();
+
+	// ムービー上昇ステート更新処理
+	void UpdateMovieUpState(float elapsedTime);
+
+	// ムービーダウンステートへ遷移
+	void TransitionMovieDownState();
+
+	// ムービーダウンステート更新処理
+	void UpdateMovieDownState(float elapsedTime);
+
 	// 上昇ステートへ遷移
 	void TransitionUpState();
 
@@ -58,12 +70,14 @@ private:
 	// ステート
 	enum class State
 	{
+		MovieUp,
+		MovieDown,
 		Up,
 		Down,
 		Damage,
 	};
 
-	State state = State::Up;
+	State state = State::MovieUp;
 
 	// アニメーション
 	enum Animation
@@ -81,5 +95,5 @@ private:
 private:
 	std::unique_ptr<Model> model;
 
-	int enemyNum = 0;
+	int modelNum = 0;
 };

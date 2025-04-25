@@ -2,9 +2,6 @@
 #include "G4_OssanTataki.h"
 #include "Game/Camera/Camera.h"
 #include "Game/Character/Enemy/EnemyManager.h"
-#include "Game/Character/Enemy/EnemyManager1.h"
-#include "Game/Character/Enemy/EnemyManager2.h"
-#include "Game/Character/Enemy/EnemyManager3.h"
 
 #include "Game/Effect/EffectManager.h"
 #include "Input/Input.h"
@@ -13,19 +10,16 @@
 #include "Game/Stage/StageMoveFloor.h"
 #include "Game/Character/CollisionAttack/CollisionAttack_Hole.h"
 #include "Game/Character/Enemy/EnemyOssan.h"
-#include "Game/Character/Enemy/EnemyOssan1.h"
-#include "Game/Character/Enemy/EnemyOssan2.h"
-#include "Game/Character/Enemy/EnemyOssan3.h"
 
-bool G4_OssanTataki::isEnemy[4] = { false, false, false, false };
+//! スコア
+bool G4_OssanTataki::score = 0;
 
 // 初期化
 void G4_OssanTataki::Initialize()
 {
-	for (int i = 0; i < 4; i++)
-	{
-		isEnemy[i] = false;
-	}
+	score = 0;
+
+	scoreText = std::make_unique<Text>();
 
 	ID3D11Device* device = Graphics::Instance().GetDevice();
 	float screenWidth = Graphics::Instance().GetScreenWidth();
@@ -149,15 +143,15 @@ void G4_OssanTataki::Update(float elapsedTime)
 
 	// エネミー更新処理
 	EnemyManager::Instance().Update(elapsedTime);
-	EnemyManager1::Instance().Update(elapsedTime);
-	EnemyManager2::Instance().Update(elapsedTime);
-	EnemyManager3::Instance().Update(elapsedTime);
 
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
 
 	// 敵生成処理
 	NewEnemy(elapsedTime);
+
+	// スコア更新処理
+	UpdateScore();
 }
 
 // 描画処理
@@ -193,9 +187,6 @@ void G4_OssanTataki::Render()
 
 				//エネミー描画
 				EnemyManager::Instance().Render(dc, shadowMapShader);
-				EnemyManager1::Instance().Render(dc, shadowMapShader);
-				EnemyManager2::Instance().Render(dc, shadowMapShader);
-				EnemyManager3::Instance().Render(dc, shadowMapShader);
 				// プレイヤー描画
 				player->Render(dc, shadowMapShader);
 
@@ -254,9 +245,6 @@ void G4_OssanTataki::Render()
 
 		//エネミー描画
 		EnemyManager::Instance().Render(dc, shader);
-		EnemyManager1::Instance().Render(dc, shader);
-		EnemyManager2::Instance().Render(dc, shader);
-		EnemyManager3::Instance().Render(dc, shader);
 		shader->End(dc);
 
 	}
@@ -273,9 +261,6 @@ void G4_OssanTataki::Render()
 
 		// エネミーデバッグプリミティブ描画
 		EnemyManager::Instance().DrawDebugPrimitive();
-		EnemyManager1::Instance().DrawDebugPrimitive();
-		EnemyManager2::Instance().DrawDebugPrimitive();
-		EnemyManager3::Instance().DrawDebugPrimitive();
 
 		// ラインレンダラ描画実行
 		graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
@@ -296,6 +281,10 @@ void G4_OssanTataki::Render()
 	}
 
 	{
+		//! スコアの画像
+		scoreText->RenderOku(dc, false, score, false,
+			scoreTextPos.x, scoreTextPos.y);
+
 		//! フェードの描画処理
 		fade->Render(dc, graphics);
 	}
@@ -335,9 +324,6 @@ void G4_OssanTataki::Render()
 			ImGui::Spacing(); // 一行空ける
 			//-----------------------------------------------------------------------------------------------------//
 			EnemyManager::Instance().DrawDebugGUI();
-			EnemyManager1::Instance().DrawDebugGUI();
-			EnemyManager2::Instance().DrawDebugGUI();
-			EnemyManager3::Instance().DrawDebugGUI();
 		}
 		ImGui::End();
 	}
@@ -364,103 +350,44 @@ void G4_OssanTataki::UpdateMovie(float elapsedTime)
 // 敵生成処理
 void G4_OssanTataki::NewEnemy(float elapsedTime)
 {
-	for (int i = 0; i < 4; i++)
-	{
-		if (newEnemyWaitTime[i] > 0.0f)
-			newEnemyWaitTime[i] -= elapsedTime;
-	}
+	EnemyManager& enemyManager = EnemyManager::Instance();
+	int enemyCount = enemyManager.GetEnemyCount();
 
-	EnemyManager& enemyManager0 = EnemyManager::Instance();
-	int enemyCount0 = enemyManager0.GetEnemyCount();
-
-	if (enemyCount0 < 1 && newEnemyWaitTime[0] <= 0.0f)
+	if (!newEnemy)
 	{
 #if 1
-		CollisionAttack* collisionAttack = collisionAttackManager.GetCollisionAttack(0);
+		for(int i = 0; i < 4; i++)
+		{
+			CollisionAttack* collisionAttack = collisionAttackManager.GetCollisionAttack(i);
 
-		// 位置
-		DirectX::XMFLOAT3 pos = { 0, 0, 0 };
-		pos.x = collisionAttack->GetPosition().x;
-		pos.y = -4.5f;
-		pos.z = collisionAttack->GetPosition().z;
+			// 位置
+			DirectX::XMFLOAT3 pos = { 0, 0, 0 };
+			pos.x = collisionAttack->GetPosition().x;
+			pos.y = -4.5f;
+			pos.z = collisionAttack->GetPosition().z;
 
-		std::unique_ptr<EnemyOssan> ossan = std::make_unique<EnemyOssan>();
-		ossan->SetPosition(pos);
+			std::unique_ptr<EnemyOssan> ossan = std::make_unique<EnemyOssan>();
+			ossan->SetPosition(pos);
 
-		//! おっさんを登録
-		EnemyManager::Instance().Register(std::move(ossan));
+			//! おっさんを登録
+			EnemyManager::Instance().Register(std::move(ossan));
+		}
 
-		newEnemyWaitTime[0] = 1.0f;
+		newEnemy = true;
 #endif
 	}
+}
 
-	EnemyManager1& enemyManager1 = EnemyManager1::Instance();
-	int enemyCount1 = enemyManager1.GetEnemyCount();
-
-	if (enemyCount1 < 1 && newEnemyWaitTime[1] <= 0.0f)
+// スコア更新処理
+void G4_OssanTataki::UpdateScore()
+{
+	//! スコアが最大値を超えないようにする
+	if (score > scoreText->GetMaxOku())
 	{
-#if 1
-		CollisionAttack* collisionAttack = collisionAttackManager.GetCollisionAttack(1);
-
-		// 位置
-		DirectX::XMFLOAT3 pos = { 0, 0, 0 };
-		pos.x = collisionAttack->GetPosition().x;
-		pos.y = -4.5f;
-		pos.z = collisionAttack->GetPosition().z;
-
-		std::unique_ptr<EnemyOssan1> ossan = std::make_unique<EnemyOssan1>();
-		ossan->SetPosition(pos);
-
-		//! おっさんを登録
-		EnemyManager1::Instance().Register(std::move(ossan));
-
-		newEnemyWaitTime[1] = 1.0f;
-#endif
+		score = scoreText->GetMaxOku();
 	}
-
-	EnemyManager2& enemyManager2 = EnemyManager2::Instance();
-	int enemyCount2 = enemyManager2.GetEnemyCount();
-
-	if (enemyCount2 < 1 && newEnemyWaitTime[2] <= 0.0f)
+	else if (score < scoreText->GetMin())
 	{
-#if 1
-		CollisionAttack* collisionAttack = collisionAttackManager.GetCollisionAttack(2);
-
-		// 位置
-		DirectX::XMFLOAT3 pos = { 0, 0, 0 };
-		pos.x = collisionAttack->GetPosition().x;
-		pos.y = -4.5f;
-		pos.z = collisionAttack->GetPosition().z;
-
-		std::unique_ptr<EnemyOssan2> ossan = std::make_unique<EnemyOssan2>();
-		ossan->SetPosition(pos);
-
-		//! おっさんを登録
-		EnemyManager2::Instance().Register(std::move(ossan));
-
-		newEnemyWaitTime[2] = 1.0f;
-#endif
-	}
-
-	EnemyManager3& enemyManager3 = EnemyManager3::Instance();
-	int enemyCount3 = enemyManager3.GetEnemyCount();
-
-	if (enemyCount3 < 1 && newEnemyWaitTime[3] <= 0.0f)
-	{
-		CollisionAttack* collisionAttack = collisionAttackManager.GetCollisionAttack(3);
-
-		// 位置
-		DirectX::XMFLOAT3 pos = { 0, 0, 0 };
-		pos.x = collisionAttack->GetPosition().x;
-		pos.y = -4.5f;
-		pos.z = collisionAttack->GetPosition().z;
-
-		std::unique_ptr<EnemyOssan3> ossan = std::make_unique<EnemyOssan3>();
-		ossan->SetPosition(pos);
-
-		//! おっさんを登録
-		EnemyManager3::Instance().Register(std::move(ossan));
-
-		newEnemyWaitTime[3] = 1.0f;
+		score = scoreText->GetMin();
 	}
 }

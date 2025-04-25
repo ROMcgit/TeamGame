@@ -9,6 +9,7 @@
 #include "Graphics/ShadowMap.h"
 #include "Game/Character/CollisionAttack/CollisionAttackManager.h"
 #include "Graphics/Fade.h"
+#include "Graphics/Text.h"
 
 // ゲームシーン
 class G4_OssanTataki : public Scene
@@ -36,10 +37,16 @@ private:
 	// 敵生成処理
 	void NewEnemy(float elapsedTime);
 
+	// スコア更新処理
+	void UpdateScore();
+
 public:
-	static bool isEnemy[4];
+	static bool score;
 
 private:
+	std::unique_ptr<Text> scoreText;
+	DirectX::XMFLOAT2 scoreTextPos = { 1240.0f, 0.0f };
+
 	CollisionAttackManager collisionAttackManager;
 
 	std::unique_ptr<Fade> fade;
@@ -56,5 +63,5 @@ private:
 	float movieTime = 0.0f; // ムービー時間
 	int   movieStep = 0;    // ムービーステップ
 
-	float newEnemyWaitTime[4]; // 敵の生成の待ち時間
+	bool newEnemy = false;
 };

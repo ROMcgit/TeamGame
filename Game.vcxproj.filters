@@ -531,7 +531,7 @@
     <ClInclude Include="Source\Game\Character\Enemy\EnemyDarumasangaKoronda.h">
       <Filter>Source\Character\Enemy\1.だるまさんが転んだ</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Character\Enemy\EnemyOssan.h">
+    <ClInclude Include="Source\Game\Character\Enemy\EnemyChara.h">
       <Filter>Source\Character\Enemy\4.おっさん叩き</Filter>
     </ClInclude>
   </ItemGroup>
@@ -851,7 +851,7 @@
     <ClCompile Include="Source\Game\Character\Enemy\EnemyDarumasangaKoronda.cpp">
       <Filter>Source\Character\Enemy\1.だるまさんが転んだ</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Character\Enemy\EnemyOssan.cpp">
+    <ClCompile Include="Source\Game\Character\Enemy\EnemyChara.cpp">
       <Filter>Source\Character\Enemy\4.おっさん叩き</Filter>
     </ClCompile>
   </ItemGroup>

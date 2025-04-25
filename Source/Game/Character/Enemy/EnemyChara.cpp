@@ -1,4 +1,4 @@
-#include "EnemyOssan.h"
+#include "EnemyChara.h"
 #include <imgui.h>
 #include "Graphics/Graphics.h"
 #include "Other/Mathf.h"
@@ -14,7 +14,7 @@
 #include <random>
 
 // コンストラクタ
-EnemyOssan::EnemyOssan()
+EnemyChara::EnemyChara()
 {
 	models[0] = std::make_unique<Model>("Data/Model/4.OssanTataki/Ossan/Ossan.mdl");
 	models[1] = std::make_unique<Model>("Data/Model/4.OssanTataki/Girl/Girl.mdl");
@@ -32,20 +32,19 @@ EnemyOssan::EnemyOssan()
 	height = 25.5f;
 
 	opacity = 0;
-	SetOpacityChange(1.0f, 0.5f);
 
 	// ムービー上昇ステートへ遷移
 	TransitionMovieUpState();
 }
 
 // デストラクタ
-EnemyOssan::~EnemyOssan()
+EnemyChara::~EnemyChara()
 {
 	//delete model;
 }
 
 // 更新処理
-void EnemyOssan::Update(float elapsedTime)
+void EnemyChara::Update(float elapsedTime)
 {
 	// ステート毎の更新処理
 	switch (state)
@@ -79,27 +78,26 @@ void EnemyOssan::Update(float elapsedTime)
 	UpdateGameObjectBaseState(elapsedTime);
 
 	// モデルアニメーション更新
-	for(int i = 0; i < 2; i++)
-		models[i]->UpdateAnimation(elapsedTime);
+	models[modelNum]->UpdateAnimation(elapsedTime);
 
 	// モデル行列更新
-	for (int i = 0; i < 2; i++)
-		models[i]->UpdateTransform(transform);
+	models[modelNum]->UpdateTransform(transform);
 }
 
 // 描画処理
-void EnemyOssan::Render(ID3D11DeviceContext* dc, Shader* shader)
+void EnemyChara::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
+	if(opacity > 0.0f)
 	shader->Draw(dc, models[modelNum].get(), materialColor, opacity);
 }
 
 // HPなどの描画
-void EnemyOssan::SpriteRender(ID3D11DeviceContext* dc, Graphics& graphics)
+void EnemyChara::SpriteRender(ID3D11DeviceContext* dc, Graphics& graphics)
 {
 }
 
 // デバッグプリミティブ描画
-void EnemyOssan::DrawDebugPrimitive()
+void EnemyChara::DrawDebugPrimitive()
 {
 	// 基底クラスのデバッグプリミティブ描画
 	Enemy::DrawDebugPrimitive();
@@ -120,9 +118,9 @@ void EnemyOssan::DrawDebugPrimitive()
 	//debugRender->DrawCylinder(position, attackRange, 1.0f, DirectX::XMFLOAT4(1, 0, 0, 1));
 }
 
-void EnemyOssan::DrawDebugGUI()
+void EnemyChara::DrawDebugGUI()
 {
-	if (ImGui::TreeNode("EnemyOssan"))
+	if (ImGui::TreeNode("EnemyChara"))
 	{
 		ImGui::InputFloat3("Velocity", &velocity.x);
 
@@ -156,28 +154,31 @@ void EnemyOssan::DrawDebugGUI()
 }
 
 // ダメージ受けた時に呼ばれる
-void EnemyOssan::OnDamaged()
+void EnemyChara::OnDamaged()
 {
 }
 
 // 死亡しと時に呼ばれる
-void EnemyOssan::OnDead()
+void EnemyChara::OnDead()
 {
 }
 
 // ムービー上昇ステートへ遷移
-void EnemyOssan::TransitionMovieUpState()
+void EnemyChara::TransitionMovieUpState()
 {
 	state = State::MovieUp;
 
 	//! 位置Yを変更する
 	SetPositionYChange(21.5f, 1.0f);
 
+	//! 不透明度を変更する
+	SetOpacityChange(1.0f, 0.5f);
+
 	stateChangeWaitTimer = 2.0f;
 }
 
 // ムービー上昇ステート更新処理
-void EnemyOssan::UpdateMovieUpState(float elapsedTime)
+void EnemyChara::UpdateMovieUpState(float elapsedTime)
 {
 	if (!positionChange.y)
 	{
@@ -190,18 +191,21 @@ void EnemyOssan::UpdateMovieUpState(float elapsedTime)
 }
 
 // ムービーダウンステートへ遷移
-void EnemyOssan::TransitionMovieDownState()
+void EnemyChara::TransitionMovieDownState()
 {
 	state = State::MovieDown;
 
 	//! 位置Yを変更する
 	SetPositionYChange(-4.5f, 1.0f);
 
+	//! 不透明度を変更する
+	SetOpacityChange(0.0f, 0.5f);
+
 	stateChangeWaitTimer = 4.0f;
 }
 
 // ムービーダウンステート更新処理
-void EnemyOssan::UpdateMovieDownState(float elapsedTime)
+void EnemyChara::UpdateMovieDownState(float elapsedTime)
 {
 	if (!positionChange.y)
 	{
@@ -209,17 +213,20 @@ void EnemyOssan::UpdateMovieDownState(float elapsedTime)
 
 		//! ステート変更の待ち時間が終わったら
 		if (stateChangeWaitTimer <= 0.0f)
-			TransitionMovieUpState();
+			TransitionUpState();
 	}
 }
 
 // 上昇ステートへ遷移
-void EnemyOssan::TransitionUpState()
+void EnemyChara::TransitionUpState()
 {
 	state = State::Up;
 
 	//! 位置Yを変更する
 	SetPositionYChange(21.5f, 1.0f);
+
+	//! 不透明度を変更する
+	SetOpacityChange(1.0f, 0.5f);
 
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -229,7 +236,7 @@ void EnemyOssan::TransitionUpState()
 }
 
 // 上昇ステート更新処理
-void EnemyOssan::UpdateUpState(float elapsedTime)
+void EnemyChara::UpdateUpState(float elapsedTime)
 {
 	//! 位置Yの変更が終わったら
 	if(!positionChange.y)
@@ -238,8 +245,6 @@ void EnemyOssan::UpdateUpState(float elapsedTime)
 
 		if (stateChangeWaitTimer <= 0.0f)
 		{
-			modelNum = rand() % 2;
-
 			//! 下降ステートへ遷移
 			TransitionDownState();
 		}
@@ -247,7 +252,7 @@ void EnemyOssan::UpdateUpState(float elapsedTime)
 }
 
 // 下降ステートへ遷移
-void EnemyOssan::TransitionDownState()
+void EnemyChara::TransitionDownState()
 {
 	state = State::Down;
 
@@ -255,7 +260,7 @@ void EnemyOssan::TransitionDownState()
 	SetPositionYChange(-4.5f, 1.0f);
 
 	//! 不透明度を変更する
-	SetOpacityChange(0.0f, 0.6f);
+	SetOpacityChange(0.0f, 0.5f);
 
 	std::random_device rd;
 	std::mt19937 gen(rd());
@@ -265,7 +270,7 @@ void EnemyOssan::TransitionDownState()
 }
 
 // 下降ステートへ遷移
-void EnemyOssan::UpdateDownState(float elapsedTime)
+void EnemyChara::UpdateDownState(float elapsedTime)
 {
 	//! 位置Yの変更が終わったら
 	if (!positionChange.y)
@@ -274,6 +279,8 @@ void EnemyOssan::UpdateDownState(float elapsedTime)
 
 		if(stateChangeWaitTimer <= 0.0f)
 		{
+			modelNum = rand() % 2;
+
 			//! 上昇ステートへ遷移
 			TransitionUpState();
 		}
@@ -281,7 +288,7 @@ void EnemyOssan::UpdateDownState(float elapsedTime)
 }
 
 // ダメージステートへ遷移
-void EnemyOssan::TransitionDamageState()
+void EnemyChara::TransitionDamageState()
 {
 	state = State::Damage;
 
@@ -291,7 +298,7 @@ void EnemyOssan::TransitionDamageState()
 }
 
 // ダメージステート更新処理
-void EnemyOssan::UpdateDamageState(float elapsedTime)
+void EnemyChara::UpdateDamageState(float elapsedTime)
 {
 	if (!models[modelNum]->IsPlayAnimation())
 	{

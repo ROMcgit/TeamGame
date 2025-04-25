@@ -6,11 +6,11 @@
 #include "Other/Mathf.h"
 
 // ‚¨‚Á‚³‚ñ
-class EnemyOssan : public Enemy
+class EnemyChara : public Enemy
 {
 public:
-	EnemyOssan();
-	~EnemyOssan() override;
+	EnemyChara();
+	~EnemyChara() override;
 
 	// XVˆ—
 	void Update(float elapsedTime) override;

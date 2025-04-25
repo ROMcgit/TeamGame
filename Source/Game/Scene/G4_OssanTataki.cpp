@@ -9,7 +9,7 @@
 #include "Game/Stage/G4_StageOssanTataki.h"
 #include "Game/Stage/StageMoveFloor.h"
 #include "Game/Character/CollisionAttack/CollisionAttack_Hole.h"
-#include "Game/Character/Enemy/EnemyOssan.h"
+#include "Game/Character/Enemy/EnemyChara.h"
 
 //! スコア
 bool G4_OssanTataki::score = 0;
@@ -58,8 +58,8 @@ void G4_OssanTataki::Initialize()
 
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
-	cameraController->SetTarget(DirectX::XMFLOAT3(10, 56, -39.0f));
-	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(63), 0, 0));
+	cameraController->SetTarget(DirectX::XMFLOAT3(10, 56, -44.0f));
+	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(49), 0, 0));
 	cameraController->SetRange(56.0f);
 
 	for (int i = 0; i < 4; i++)
@@ -350,32 +350,31 @@ void G4_OssanTataki::UpdateMovie(float elapsedTime)
 // 敵生成処理
 void G4_OssanTataki::NewEnemy(float elapsedTime)
 {
+	if (newEnemy) return;
+
 	EnemyManager& enemyManager = EnemyManager::Instance();
 	int enemyCount = enemyManager.GetEnemyCount();
 
-	if (!newEnemy)
-	{
 #if 1
-		for(int i = 0; i < 4; i++)
-		{
-			CollisionAttack* collisionAttack = collisionAttackManager.GetCollisionAttack(i);
+	for(int i = 0; i < 4; i++)
+	{
+		CollisionAttack* collisionAttack = collisionAttackManager.GetCollisionAttack(i);
 
-			// 位置
-			DirectX::XMFLOAT3 pos = { 0, 0, 0 };
-			pos.x = collisionAttack->GetPosition().x;
-			pos.y = -4.5f;
-			pos.z = collisionAttack->GetPosition().z;
+		// 位置
+		DirectX::XMFLOAT3 pos = { 0, 0, 0 };
+		pos.x = collisionAttack->GetPosition().x;
+		pos.y = -4.5f;
+		pos.z = collisionAttack->GetPosition().z;
 
-			std::unique_ptr<EnemyOssan> ossan = std::make_unique<EnemyOssan>();
-			ossan->SetPosition(pos);
+		std::unique_ptr<EnemyChara> chara = std::make_unique<EnemyChara>();
+		chara->SetPosition(pos);
 
-			//! おっさんを登録
-			EnemyManager::Instance().Register(std::move(ossan));
-		}
-
-		newEnemy = true;
-#endif
+		//! おっさんを登録
+		EnemyManager::Instance().Register(std::move(chara));
 	}
+#endif
+
+	newEnemy = true;
 }
 
 // スコア更新処理

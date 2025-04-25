@@ -295,6 +295,14 @@ void EnemyChara::TransitionDamageState()
 	positionChange.y = false;
 
 	stateChangeWaitTimer = 1.0f;
+
+	switch (modelNum)
+	{
+	case 0: G4_OssanTataki::score += 5; break;
+	case 1: G4_OssanTataki::score -= 3; break;
+	default:
+		break;
+	}
 }
 
 // ダメージステート更新処理

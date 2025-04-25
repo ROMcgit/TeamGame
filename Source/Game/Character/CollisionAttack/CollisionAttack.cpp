@@ -56,10 +56,11 @@ bool CollisionAttack::CollisionVsPlayer3()
 	Player3_SoratobuHusenWari& player = Player3_SoratobuHusenWari::Instance();
 
 	DirectX::XMFLOAT3 outPosition;
-	if (Collision::IntersectCylinderVsCylinder(
+	if (Collision::IntersectBoxVsCylinder(
 		collisionPos,
-		radius,
+		width,
 		height,
+		depth,
 		player.GetCollisionPos(),
 		player.GetRadius(),
 		player.GetHeight(),

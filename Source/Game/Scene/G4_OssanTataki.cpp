@@ -104,6 +104,9 @@ void G4_OssanTataki::Initialize()
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 		1.0f, 0.0f,
 		1.0f, 0.5f);
+
+	//! タイマー
+	timer = std::make_unique<Timer>(true, 1, 30);
 }
 
 // 終了化
@@ -124,6 +127,9 @@ void G4_OssanTataki::Update(float elapsedTime)
 {
 	//! フェードの更新処理
 	fade->Update(elapsedTime);
+
+	//! タイマーの更新処理
+	timer->Update(elapsedTime);
 
 	//! ムービー更新処理
 	UpdateMovie(elapsedTime);
@@ -283,6 +289,15 @@ void G4_OssanTataki::Render()
 		//! スコアの画像
 		scoreText->RenderOku(dc, false, score, false,
 			scoreTextPos.x, scoreTextPos.y);
+
+		//! タイマー
+		DirectX::XMFLOAT3 color;
+		if (timer->GetTimeM_Int() >= 0 && timer->GetTimeS_Int() > 30)
+			color = { 1, 1, 1 };
+		else
+			color = { 1, 0, 0 };
+
+		timer->Render(dc, graphics, DirectX::XMFLOAT2(30.0f, 0.0f), DirectX::XMFLOAT4(color.x, color.y, color.z, 1.0f));
 
 		//! フェードの描画処理
 		fade->Render(dc, graphics);

@@ -10,6 +10,7 @@
 #include "Game/Character/CollisionAttack/CollisionAttackManager.h"
 #include "Graphics/Fade.h"
 #include "Graphics/Text.h"
+#include "Graphics/Timer.h"
 
 // ゲームシーン
 class G4_OssanTataki : public Scene
@@ -64,4 +65,6 @@ private:
 	int   movieStep = 0;    // ムービーステップ
 
 	bool newEnemy = false;
+
+	std::unique_ptr<Timer> timer;
 };

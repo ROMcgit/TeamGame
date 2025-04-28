@@ -150,9 +150,11 @@ private:
 	}velocityLimit;
 
 	bool velocityDown = false; // ‰Á‘¬“x‚ð‰º‚°‚é‚©
-	float setVelocityX = 10.0f;
+	float setVelocityX = 0.0f;
 
 	float brake = 0;
 
 	int round = 1;
+
+	float boundTimer = 0.0f;
 };

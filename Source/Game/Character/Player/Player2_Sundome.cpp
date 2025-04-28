@@ -189,6 +189,8 @@ void Player2_Sundome::TransitionMovieWaitState()
 	{
 		angle.x = DirectX::XMConvertToRadians(-90);
 		angle.y = DirectX::XMConvertToRadians(90);
+
+		scale.x = scale.y = scale.z = 0.05f;
 	}
 		break;
 	default:
@@ -292,15 +294,21 @@ void Player2_Sundome::UpdateMoveState(float elapsedTime)
 	GamePadButton button =
 		GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
 
-	if (gamePad.GetButtonHeld() & button && position.x < 205.0f
+	if ((gamePad.GetButtonHeld() & button && position.x < 205.0f
 		&& ((setVelocityX > 0.0f && velocityXSyosuten >= 0.0f) || (setVelocityX <= 0.0f && velocityXSyosuten > 0.0f)) && isGround)
+		|| setVelocityX <= 13.0f && ((setVelocityX > 0.0f && velocityXSyosuten >= 0.0f) || (setVelocityX <= 0.0f && velocityXSyosuten > 0.0f)))
 		setVelocityX -= brake * elapsedTime;
 	else if ((int)setVelocityX <= 0.0f && velocityXSyosuten <= 0.0f)
 		setVelocityX = 0.0f;
 
 	//! ラウンドが2で着地しているなら
-	if (round == 2 && isGround)
+	if (round == 2 && isGround && boundTimer > 0.7f && setVelocityX > 0.0f)
+	{
+		boundTimer = 0.0f;
 		velocity.y = 5.0f;
+	}
+	else
+		boundTimer += elapsedTime;
 
 	//! 位置が30より小さいなら
 	if (position.y < 30.0f)
@@ -323,6 +331,8 @@ void Player2_Sundome::UpdateMoveState(float elapsedTime)
 void Player2_Sundome::TransitionReturnState()
 {
 	state = State::Return;
+
+	setVelocityX = 0.0f;
 
 	//! フェードを設定
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
@@ -360,6 +370,8 @@ void Player2_Sundome::UpdateReturnState(float elapsedTime)
 void Player2_Sundome::TransitionDamageState()
 {
 	state = State::Damage;
+
+	setVelocityX = 0.0f;
 }
 
 // ダメージステート更新処理
@@ -377,6 +389,7 @@ void Player2_Sundome::TransitionDeathState()
 {
 	state = State::Death;
 
+	setVelocityX = 0.0f;
 
 	DirectX::XMFLOAT3 colorF = Camera::postEffect.colorFilter;
 	colorF.x += 2.0f;
@@ -409,6 +422,10 @@ void Player2_Sundome::UpdateDeathState(float elapsedTimae)
 			fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 				1.0f, 0.0f,
 				1.0f, 0.6f);
+
+			DirectX::XMFLOAT3 colorF = Camera::colorFilterReset;
+			// カラーフィルターを変更する
+			SetColorFilterChange(DirectX::XMFLOAT3(colorF), 0.5f);
 
 			if (round < 3)
 				round++;

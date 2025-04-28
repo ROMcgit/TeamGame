@@ -92,14 +92,11 @@ void G2_Sundome::Update(float elapsedTime)
 	//! ムービー更新処理
 	UpdateMovie(elapsedTime);
 
-	if(!movieScene)
+	if(!movieScene || (movieScene && player->GetRound() >= 2))
 	{
 		// カメラコントローラー更新処理
 		DirectX::XMFLOAT3 target = player->GetPosition();
-		target.y += player->GetHeight() * 0.5f;
-
-		if (target.x < -240.0f)
-			target.x = -240.0f;
+		target.y = 63.75f;
 
 		cameraController->SetTarget(target);
 	}
@@ -326,7 +323,7 @@ void G2_Sundome::UpdateMovie(float elapsedTime)
 			if(movieTime > 1.0f)
 			{
 				DirectX::XMFLOAT3 pos = player->GetPosition();
-				pos.y += player->GetHeight() * 0.5f;
+				pos.y = 63.75f;
 
 				//! カメラの位置を変更する
 				cameraController->SetTargetChange(pos, 2.0f);

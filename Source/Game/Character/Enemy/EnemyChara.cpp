@@ -24,6 +24,8 @@ EnemyChara::EnemyChara()
 
 	gravity = 0;
 
+	hp = 99;
+
 	angle.y = DirectX::XMConvertToRadians(180);
 
 	debugPrimitiveColor = { 0, 0, 1 };
@@ -156,6 +158,12 @@ void EnemyChara::DrawDebugGUI()
 // ダメージ受けた時に呼ばれる
 void EnemyChara::OnDamaged()
 {
+	emissiveColor = { 1, 0, 0 };
+
+	emissiveStrength = 0.7f;
+
+	//! ダメージステートに遷移
+	TransitionDamageState();
 }
 
 // 死亡しと時に呼ばれる
@@ -175,6 +183,9 @@ void EnemyChara::TransitionMovieUpState()
 	SetOpacityChange(1.0f, 0.5f);
 
 	stateChangeWaitTimer = 2.0f;
+
+	//! 待機アニメーションを再生
+	models[modelNum]->PlayAnimation(Anim_Wait, true);
 }
 
 // ムービー上昇ステート更新処理
@@ -222,17 +233,26 @@ void EnemyChara::TransitionUpState()
 {
 	state = State::Up;
 
+	invincibleTimer = 0.0f;
+
+	hp = 99;
+
+	emissiveStrength = 0.0f;
+
 	//! 位置Yを変更する
-	SetPositionYChange(21.5f, 1.0f);
+	SetPositionYChange(21.5f, 0.7f);
 
 	//! 不透明度を変更する
 	SetOpacityChange(1.0f, 0.5f);
 
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> dist(1.3f, 3.0f);
+	std::uniform_int_distribution<> dist(1.0f, 2.0f);
 
 	stateChangeWaitTimer = dist(gen);
+
+	//! 待機アニメーションを再生
+	models[modelNum]->PlayAnimation(Anim_Wait, true);
 }
 
 // 上昇ステート更新処理
@@ -257,14 +277,14 @@ void EnemyChara::TransitionDownState()
 	state = State::Down;
 
 	//! 位置Yを変更する
-	SetPositionYChange(-4.5f, 1.0f);
+	SetPositionYChange(-4.5f, 0.5f);
 
 	//! 不透明度を変更する
 	SetOpacityChange(0.0f, 0.5f);
 
 	std::random_device rd;
 	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> dist(0.8f, 2.6f);
+	std::uniform_int_distribution<> dist(0.8f, 2.0f);
 
 	stateChangeWaitTimer = dist(gen);
 }
@@ -272,6 +292,8 @@ void EnemyChara::TransitionDownState()
 // 下降ステートへ遷移
 void EnemyChara::UpdateDownState(float elapsedTime)
 {
+	invincibleTimer = 0.1f;
+
 	//! 位置Yの変更が終わったら
 	if (!positionChange.y)
 	{
@@ -303,11 +325,16 @@ void EnemyChara::TransitionDamageState()
 	default:
 		break;
 	}
+
+	//! ダメージアニメーションを再生
+	models[modelNum]->PlayAnimation(Anim_Damage, false);
 }
 
 // ダメージステート更新処理
 void EnemyChara::UpdateDamageState(float elapsedTime)
 {
+	invincibleTimer = 1.0f;
+
 	if (!models[modelNum]->IsPlayAnimation())
 	{
 		//! 下降ステートへ遷移

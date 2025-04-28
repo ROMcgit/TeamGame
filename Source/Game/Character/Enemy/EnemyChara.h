@@ -89,6 +89,7 @@ private:
 		Anim_Tracking,
 		Anim_Tired,
 		Anim_Attack,
+		Anim_Damage,
 		Anim_Death
 	};
 

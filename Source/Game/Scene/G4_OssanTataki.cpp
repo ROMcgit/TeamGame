@@ -12,7 +12,7 @@
 #include "Game/Character/Enemy/EnemyChara.h"
 
 //! スコア
-bool G4_OssanTataki::score = 0;
+int G4_OssanTataki::score = 0;
 
 // 初期化
 void G4_OssanTataki::Initialize()
@@ -293,6 +293,8 @@ void G4_OssanTataki::Render()
 	{
 		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
 		{
+			ImGui::DragInt("Score", &score);
+
 			collisionAttackManager.DrawDebugGUI();
 			// プレイヤーデバッグ描画
 			player->DrawDebugGUI();

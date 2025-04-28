@@ -173,6 +173,11 @@ void RenderTarget::Render()
 {
 	ID3D11DeviceContext* dc = Graphics::Instance().GetDeviceContext();
 
+	dc->PSSetSamplers(0, 1, Graphics::Instance().GetSamplerStateAddressOf_Shader());
+	dc->PSSetSamplers(1, 1, Graphics::Instance().GetSamplerStateAddressOf_EnvironmentMap());
+	dc->PSSetSamplers(2, 1, Graphics::Instance().GetSamplerStateAddressOf_Shader());
+	dc->PSSetSamplers(3, 1, Graphics::Instance().GetSamplerStateAddressOf_ShadowMap());
+
 	// GPU‚É•`‰æ‚·‚é‚½‚ß‚Ìƒf[ƒ^‚ğ“n‚·
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;

@@ -163,7 +163,7 @@ ShadowMapShader::ShadowMapShader(ID3D11Device* device)
 		desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 		desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 
-		HRESULT hr = device->CreateSamplerState(&desc, samplerState.GetAddressOf());
+		HRESULT hr = device->CreateSamplerState(&desc, Graphics::Instance().GetSamplerStateAddressOf_ShadowMap());
 		_ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
 	}
 }
@@ -188,7 +188,7 @@ void ShadowMapShader::Begin(ID3D11DeviceContext* dc, const RenderContext& rc)
 	dc->OMSetBlendState(blendState.Get(), blend_factor, 0xFFFFFFFF);
 	dc->OMSetDepthStencilState(depthStencilState.Get(), 0);
 	dc->RSSetState(rasterizerState.Get());
-	dc->PSSetSamplers(0, 1, samplerState.GetAddressOf());
+	dc->PSSetSamplers(0, 1, Graphics::Instance().GetSamplerStateAddressOf_ShadowMap());
 
 	// シーン用定数バッファ更新
 	CbScene cbScene;
@@ -218,17 +218,7 @@ void ShadowMapShader::Begin(ID3D11DeviceContext* dc, const RenderContext& rc)
 // 更新処理
 void ShadowMapShader::Update(ID3D11DeviceContext* dc, const ModelResource::Material& material)
 {
-	// スロット0 ベースカラー
-	dc->PSSetShaderResources(0, 1, material.shaderResourceView.GetAddressOf());
 
-	// スロット1 ノーマルマップ
-	dc->PSSetShaderResources(1, 1, material.SRV_Normal.GetAddressOf());
-
-	// スロット2 ラフネスマップ
-	dc->PSSetShaderResources(2, 1, material.SRV_Roughness.GetAddressOf());
-
-	// スロット3 メタリックマップ
-	dc->PSSetShaderResources(3, 1, material.SRV_Metallic.GetAddressOf());
 }
 
 // 描画

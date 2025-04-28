@@ -534,6 +534,9 @@
     <ClInclude Include="Source\Game\Character\Enemy\EnemyChara.h">
       <Filter>Source\Character\Enemy\4.おっさん叩き</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Character\CollisionAttack\CollisionAttack_Tataki.h">
+      <Filter>Source\Character\Player\4_おっさんたたき</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -853,6 +856,9 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Character\Enemy\EnemyChara.cpp">
       <Filter>Source\Character\Enemy\4.おっさん叩き</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\CollisionAttack\CollisionAttack_Tataki.cpp">
+      <Filter>Source\Character\Player\4_おっさんたたき</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -163,7 +163,7 @@ DefaltLitShader::DefaltLitShader(ID3D11Device* device)
 		desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 		desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 
-		HRESULT hr = device->CreateSamplerState(&desc, samplerState.GetAddressOf());
+		HRESULT hr = device->CreateSamplerState(&desc, Graphics::Instance().GetSamplerStateAddressOf_Shader());
 		_ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
 	}
 }
@@ -188,7 +188,7 @@ void DefaltLitShader::Begin(ID3D11DeviceContext* dc, const RenderContext& rc)
 	dc->OMSetBlendState(blendState.Get(), blend_factor, 0xFFFFFFFF);
 	dc->OMSetDepthStencilState(depthStencilState.Get(), 0);
 	dc->RSSetState(rasterizerState.Get());
-	dc->PSSetSamplers(0, 1, samplerState.GetAddressOf());
+	dc->PSSetSamplers(0, 1, Graphics::Instance().GetSamplerStateAddressOf_Shader());
 
 	// シーン用定数バッファ更新
 	CbScene cbScene;
@@ -277,7 +277,7 @@ void DefaltLitShader::Draw(ID3D11DeviceContext* dc, const Model* model, DirectX:
 			cbSubset.emissiveStrength = emissiveStrength; //! エミッシブの強さ
 
 			dc->UpdateSubresource(subsetConstantBuffer.Get(), 0, 0, &cbSubset, 0, 0);
-			dc->PSSetSamplers(0, 1, samplerState.GetAddressOf());
+			dc->PSSetSamplers(0, 1, Graphics::Instance().GetSamplerStateAddressOf_Shader());
 
 			Update(dc, *subset.material);
 			dc->DrawIndexed(subset.indexCount, subset.startIndex, 0);

@@ -41,7 +41,7 @@ private:
 	void UpdateScore();
 
 public:
-	static bool score;
+	static int score;
 
 private:
 	std::unique_ptr<Text> scoreText;

@@ -5,8 +5,7 @@
 #include "Graphics/Graphics.h"
 #include "Game/Character/Enemy/EnemyManager.h"
 #include "Other/Collision.h"
-#include "Game/Character/Projectile/ProjectileStraight.h"
-#include "Game/Character/Projectile/ProjectileHoming.h"
+#include "Game/Character/CollisionAttack/CollisionAttack_Tataki.h"
 #include "Game/Camera/CameraController.h"
 
 static Player4_OssanTataki* instance = nullptr;
@@ -30,8 +29,9 @@ Player4_OssanTataki::Player4_OssanTataki()
 
 	debugPrimitiveColor = { 0, 0, 1 };
 
-	radius = 0.6f;
-	height = 5.0f;
+	//! 衝突攻撃を生成
+	std::unique_ptr<CollisionAttack_Tataki> tataki = std::make_unique<CollisionAttack_Tataki>(&collisionAttackManager);
+	collisionAttackManager.Register(std::move(tataki));
 
 	// 待機ステートへ遷移
 	TransitionWaitState();
@@ -47,31 +47,6 @@ void Player4_OssanTataki::Update(float elapsedTime)
 {
 	if (CameraController::debugCamera) return;
 
-	// ムービー中なら待機ステートへ遷移
-	if (movieScene)
-	{
-		// 全ての弾を破棄する
-		int projectileCount = projectileManager.GetProjectileCount();
-		for (int i = 0; i < projectileCount; ++i)
-		{
-			Projectile* projectile = projectileManager.GetProjectile(i);
-
-			// 弾破棄
-			projectile->Destroy();
-		}
-
-		// ムービー中のアニメーション
-		if (!movieAnimation)
-		{
-			state = State::Wait; // ステートを待機に変更
-			model->PlayAnimation(movieAnimNum, movieAnimLoop);
-			movieAnimation = true;
-		}
-	}
-	// ムービー中では無い時
-	else
-		movieAnimation = false; // ムービー中に待機ステートかどうか
-
 	if (!movieScene)
 	{
 		// ステート毎の処理
@@ -80,8 +55,8 @@ void Player4_OssanTataki::Update(float elapsedTime)
 		case State::Wait:
 			UpdateWaitState(elapsedTime);
 			break;
-		case State::Move:
-			UpdateMoveState(elapsedTime);
+		case State::Attack:
+			UpdateAttackState(elapsedTime);
 			break;
 		case State::Damage:
 			UpdateDamageState(elapsedTime);
@@ -95,8 +70,8 @@ void Player4_OssanTataki::Update(float elapsedTime)
 	// キャラクター状態更新処理
 	UpdateGameObjectBaseState(elapsedTime);
 
-	// 弾丸更新処理
-	projectileManager.Update(elapsedTime);
+	// 衝突攻撃更新処理
+	collisionAttackManager.Update(elapsedTime);
 
 	// プレイヤーと敵との衝突処理
 	CollisionPlayer4_OssanTatakiVsEnemies();
@@ -113,8 +88,8 @@ void Player4_OssanTataki::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	//shader->Draw(dc, model.get());
 
-	// 弾丸描画処理
-	projectileManager.Render(dc, shader);
+	// 衝突攻撃描画処理
+	collisionAttackManager.Render(dc, shader);
 }
 
 // HPなどのUI描画
@@ -134,47 +109,59 @@ void Player4_OssanTataki::TransitionWaitState()
 // 待機ステート更新処理
 void Player4_OssanTataki::UpdateWaitState(float elapsedTime)
 {
-	// 移動入力処理
-	// 移動入力されたら移動ステートへ遷移
-
-	const GamePadButton ArrowButton =
-		GamePad::BTN_UP |
-		GamePad::BTN_LEFT |
-		GamePad::BTN_RIGHT |
-		GamePad::BTN_DOWN;
-
 	GamePad& gamePad = Input::Instance().GetGamePad();
-	if (gamePad.GetAxisLX() != 0 || gamePad.GetAxisLY() != 0)
+
+	CollisionAttack* tataki = collisionAttackManager.GetCollisionAttack(0);
+
+	GamePadButton button = GamePad::BTN_UP | GamePad::BTN_DOWN | GamePad::BTN_LEFT | GamePad::BTN_RIGHT;
+
+	int buttonState = gamePad.GetButtonDown();
+
+	DirectX::XMFLOAT3 pos = { 10.0f, 21.5f, -19.0f };
+
+	float offsetX = 32.0f;
+	float offsetZ = 17.5f;
+
+	switch (buttonState)
 	{
-		// 移動ステートへ遷移
-		TransitionMoveState();
+	case GamePad::BTN_UP:    pos.z += offsetZ; break;
+	case GamePad::BTN_DOWN:  pos.z -= offsetZ; break;
+	case GamePad::BTN_LEFT:  pos.x -= offsetX; break;
+	case GamePad::BTN_RIGHT: pos.x += offsetX; break;
+	default:
+		break;
+	}
+
+	tataki->SetPosition(pos);
+
+	if (gamePad.GetButtonDown() & button)
+	{
+		tataki->SetRadius(3.0f);
+
+		//! 攻撃ステートへ遷移
+		TransitionAttackState();
 	}
 }
 
-// 移動ステートへ遷移
-void Player4_OssanTataki::TransitionMoveState()
+// 攻撃ステートへ遷移
+void Player4_OssanTataki::TransitionAttackState()
 {
-	state = State::Move;
+	state = State::Attack;
 
-	// 走りアニメーション再生
-	model->PlayAnimation(Anim_Move, true);
+	stateChangeWaitTimer = 0.5f;
 }
 
-// 移動ステート更新処理
-void Player4_OssanTataki::UpdateMoveState(float elapsedTime)
+// 攻撃ステート更新処理
+void Player4_OssanTataki::UpdateAttackState(float elapsedTime)
 {
-	// 移動入力処理
-	const GamePadButton ArrowButton =
-		GamePad::BTN_UP |
-		GamePad::BTN_LEFT |
-		GamePad::BTN_RIGHT |
-		GamePad::BTN_DOWN;
+	stateChangeWaitTimer -= elapsedTime;
 
-	GamePad& gamePad = Input::Instance().GetGamePad();
-
-	if (gamePad.GetAxisLX() == 0 && gamePad.GetAxisLY() == 0)
+	if (stateChangeWaitTimer <= 0.0f)
 	{
-		// 待機ステートへ遷移
+		CollisionAttack* tataki = collisionAttackManager.GetCollisionAttack(0);
+		tataki->SetRadius(0.0f);
+
+		//! 待機ステートへ遷移
 		TransitionWaitState();
 	}
 }
@@ -291,8 +278,8 @@ void Player4_OssanTataki::DrawDebugPrimitive()
 	// 衝突判定用のデバッグ円柱を描画
 	debugRenderer->DrawCylinder(collisionPos, radius, height, { debugPrimitiveColor.x, debugPrimitiveColor.y, debugPrimitiveColor.z, 1 });
 
-	// 弾丸デバッグプリミティブ描画
-	projectileManager.DrawDebugPrimitive();
+	// 衝突攻撃デバッグプリミティブ描画
+	collisionAttackManager.DrawDebugPrimitive();
 
 #endif // !_DEBUG
 }

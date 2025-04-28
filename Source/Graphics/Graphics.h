@@ -43,6 +43,29 @@ public:
 	// デプスステンシルステートのゲッター
 	ID3D11DepthStencilState* GetDepthStencilState() const { return depthStencilState.Get(); }
 
+	/*! サンプラーステート */
+#if 1 
+
+	// サンプラーステート(シェーダー)の取得
+	ID3D11SamplerState* GetSamplerState_Shader() { return samplerState_Shader.Get(); }
+
+	// サンプラーステート(シェーダー)のアドレス取得
+	ID3D11SamplerState** GetSamplerStateAddressOf_Shader() { return samplerState_Shader.GetAddressOf(); }
+
+	// サンプラーステート(シャドウマップ)の取得
+	ID3D11SamplerState* GetSamplerState_ShadowMap() { return samplerState_ShadowMap.Get(); }
+
+	// サンプラーステート(シャドウマップ)のアドレス取得
+	ID3D11SamplerState** GetSamplerStateAddressOf_ShadowMap() { return samplerState_ShadowMap.GetAddressOf(); }
+
+	// サンプラーステート(環境マップ)の取得
+	ID3D11SamplerState* GetSamplerState_EnvironmentMap() { return samplerState_EnvironmentMap.Get(); }
+
+	// サンプラーステート(環境マップ)のアドレス取得
+	ID3D11SamplerState** GetSamplerStateAddressOf_EnvironmentMap() { return samplerState_EnvironmentMap.GetAddressOf(); }
+
+#endif
+
 	// 深度無効
 	ID3D11DepthStencilState* GetDepthDisabledState() const { return depthDisabledState.Get(); }
 
@@ -95,6 +118,10 @@ private:
 	std::unique_ptr<ImGuiRenderer>					imguiRenderer;
 
 	std::unique_ptr<HDRTexture>                     environmentMap; // HDRテクスチャ
+
+	Microsoft::WRL::ComPtr<ID3D11SamplerState>		samplerState_Shader;         // サンプラーステート(シェーダー)
+	Microsoft::WRL::ComPtr<ID3D11SamplerState>		samplerState_ShadowMap;      // サンプラーステート(シャドウマップ)
+	Microsoft::WRL::ComPtr<ID3D11SamplerState>		samplerState_EnvironmentMap; // サンプラーステート(環境マップ)
 
 	float	screenWidth;
 	float	screenHeight;

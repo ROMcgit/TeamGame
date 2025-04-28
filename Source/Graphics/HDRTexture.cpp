@@ -59,10 +59,10 @@ bool HDRTexture::Load(const char* filename)
 		ssdesc.MaxLOD = FLT_MAX;
 		ssdesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
 
-		HRESULT hr = device->CreateSamplerState(&ssdesc, EnvironmentSS.GetAddressOf());
+		HRESULT hr = device->CreateSamplerState(&ssdesc, Graphics::Instance().GetSamplerStateAddressOf_EnvironmentMap());
 
 		//サンプラーステートのSlot4にセット
-		dc->PSSetSamplers(15, 1, EnvironmentSS.GetAddressOf());
+		dc->PSSetSamplers(15, 1, Graphics::Instance().GetSamplerStateAddressOf_EnvironmentMap());
 	}
 
 	return true;

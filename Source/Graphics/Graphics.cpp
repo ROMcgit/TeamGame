@@ -195,4 +195,16 @@ Graphics::Graphics(HWND hWnd)
 // デストラクタ
 Graphics::~Graphics()
 {
+	ID3D11DeviceContext* dc = Graphics::Instance().GetDeviceContext();
+
+	ID3D11SamplerState* nullSampler = nullptr;
+	dc->PSSetSamplers(0, 1, &nullSampler);
+	dc->PSSetSamplers(1, 1, &nullSampler);
+	dc->PSSetSamplers(2, 1, &nullSampler);
+	dc->PSSetSamplers(3, 1, &nullSampler);
+
+	dc->OMSetRenderTargets(0, nullptr, nullptr); // RTV/DSV解除
+
+	dc->ClearState();
+	dc->Flush();
 }

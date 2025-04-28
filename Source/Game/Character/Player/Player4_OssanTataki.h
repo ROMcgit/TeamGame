@@ -3,7 +3,7 @@
 #include "Graphics/Shader.h"
 #include "Graphics/Model.h"
 #include "Game/Character/Character.h"
-#include "Game/Character/Projectile/ProjectileManager.h"
+#include "Game/Character/CollisionAttack/CollisionAttackManager.h"
 #include "Game/Effect/Effect.h"
 
 // プレイヤー
@@ -31,28 +31,6 @@ public:
 	// デバッグプリミティブ描画
 	void DrawDebugPrimitive();
 
-	/*! 加速度 */
-
-	// 加速度Xを設定
-	void SetVelocityX(float velocityX) { this->velocity.x = velocityX; }
-
-	// 加速度Yを設定
-	void SetVelocityY(float velocityY) { this->velocity.y = velocityY; }
-
-	// 加速度Zを設定
-	void SetVelocityZ(float velocityZ) { this->velocity.z = velocityZ; }
-
-	/*! 位置 */
-
-	// 位置Xを設定
-	void SetPositionX(float positionX) { this->position.x = positionX; }
-
-	// 位置Yを設定
-	void SetPositionY(float positionY) { this->position.y = positionY; }
-
-	// 位置Zを設定
-	void SetPositionZ(float positionZ) { this->position.z = positionZ; }
-
 protected:
 	// 着地した時に呼ばれる
 	void OnLanding() override;
@@ -74,23 +52,23 @@ private:
 
 	/*! 行動制御 */
 
-		// 待機ステートへ遷移
+	// 待機ステートへ遷移
 	void TransitionWaitState();
 
 	// 待機ステート更新処理
 	void UpdateWaitState(float elapsedTime);
 
-	//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//
 
-			// 移動ステートへ遷移
-	void TransitionMoveState();
+	// 攻撃ステートへ遷移
+	void TransitionAttackState();
 
-	// 移動ステート更新処理
-	void UpdateMoveState(float elapsedTime);
+	// 攻撃ステート更新処理
+	void UpdateAttackState(float elapsedTime);
 
-	//-----------------------------------------------------------------//
+//-----------------------------------------------------------------//
 
-		// ダメージステートへ遷移
+	// ダメージステートへ遷移
 	void TransitionDamageState();
 
 	// ダメージステート更新処理
@@ -109,7 +87,7 @@ private:
 	enum class State
 	{
 		Wait,
-		Move,
+		Attack,
 		Damage,
 		Death,
 	};
@@ -135,7 +113,7 @@ private:
 	bool jumpFlipAnimation = false;
 	int jumpLimit = 2;
 
-	ProjectileManager projectileManager;
+	CollisionAttackManager collisionAttackManager;
 
 	std::unique_ptr<Effect> hitEffect;
 

@@ -124,6 +124,7 @@ void G2_Sundome::Render()
 	lightPosition.z = CameraController::target.z - 25.0f;
 	lightRange = 20000.0f;
 
+	//! シャドウマップ
 	shadowMapEyeOffset = { -18.0f, 53.0f, 9.0f };
 
 	//! フォグ

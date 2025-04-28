@@ -5,6 +5,8 @@
 #include "Game/Character/Character.h"
 #include "Game/Character/Projectile/ProjectileManager.h"
 #include "Game/Effect/Effect.h"
+#include "Graphics/Fade.h"
+#include "Graphics/Text.h"
 
 // プレイヤー
 class Player2_Sundome : public Character
@@ -23,7 +25,7 @@ public:
 	void Render(ID3D11DeviceContext* dc, Shader* shader);
 
 	// HPなどのUI描画
-	void SpriteRender(ID3D11DeviceContext* dc);
+	void SpriteRender(ID3D11DeviceContext* dc, Graphics& graphics);
 
 	// デバッグ用GUI描画
 	void DrawDebugGUI();
@@ -31,27 +33,8 @@ public:
 	// デバッグプリミティブ描画
 	void DrawDebugPrimitive();
 
-	/*! 加速度 */
-
-	// 加速度Xを設定
-	void SetVelocityX(float velocityX) { this->velocity.x = velocityX; }
-
-	// 加速度Yを設定
-	void SetVelocityY(float velocityY) { this->velocity.y = velocityY; }
-
-	// 加速度Zを設定
-	void SetVelocityZ(float velocityZ) { this->velocity.z = velocityZ; }
-
-	/*! 位置 */
-
-	// 位置Xを設定
-	void SetPositionX(float positionX) { this->position.x = positionX; }
-
-	// 位置Yを設定
-	void SetPositionY(float positionY) { this->position.y = positionY; }
-
-	// 位置Zを設定
-	void SetPositionZ(float positionZ) { this->position.z = positionZ; }
+	//! ラウンドを取得
+	int GetRound() { return round; }
 
 protected:
 	// 着地した時に呼ばれる
@@ -77,6 +60,12 @@ private:
 
 	/*! 行動制御 */
 
+	// ムービー待機ステートへ遷移
+	void TransitionMovieWaitState();
+
+	// ムービー待機ステート更新処理
+	void UpdateMovieWaitState(float elapsedTime);
+
 	// 待機ステートへ遷移
 	void TransitionWaitState();
 
@@ -90,6 +79,12 @@ private:
 
 	// 移動ステート更新処理
 	void UpdateMoveState(float elapsedTime);
+
+	// 戻るステートへ遷移
+	void TransitionReturnState();
+
+	// 戻るステート更新処理
+	void UpdateReturnState(float elapsedTime);
 
 //-----------------------------------------------------------------//
 
@@ -111,25 +106,18 @@ private:
 
 	enum class State
 	{
+		MovieWait,
 		Wait,
 		Move,
+		Return,
 		Jump,
 		Damage,
 		Death
 	};
 
-	// アニメーション
-	enum Animation
-	{
-		Anim_Wait,
-		Anim_Move,
-		Anim_Jump,
-		Anim_Damage,
-		Anim_Death,
-	};
-
 private:
-	std::unique_ptr<Model> model;
+	std::unique_ptr<Model> models[3];
+	std::unique_ptr<Fade> fade;
 
 	float turnSpeed = DirectX::XMConvertToRadians(720);
 
@@ -148,15 +136,23 @@ private:
 	float playerAnimeCount = 0.0f;
 
 	std::unique_ptr<Sprite> velocitySprite;
-	DirectX::XMFLOAT2 spritePos = { 0, 0 };
-	DirectX::XMFLOAT2 spriteScale;
+	DirectX::XMFLOAT2 spritePos   = { 1170.0f, 680.0f };
+	DirectX::XMFLOAT2 spriteScale = { 76.0f, -400.0f };
+
+	std::unique_ptr<Text> velocityText;
+	std::unique_ptr<Text> velocityTextSyosuten;
+	DirectX::XMFLOAT2 velocityTextPos = { 1150.0f, 0.0f };
 
 	struct VelocityLimit
 	{
-		float min = 10;
-		float max = 50;
+		float min = 0.0f;
+		float max = 60.0f;
 	}velocityLimit;
 
 	bool velocityDown = false; // 加速度を下げるか
 	float setVelocityX = 10.0f;
+
+	float brake = 0;
+
+	int round = 1;
 };

@@ -22,22 +22,34 @@ Player2_Sundome::Player2_Sundome()
 	instance = this;
 
 	// モデル読み込み
-	model = std::make_unique <Model>("Data/Model/Ai/Ai.mdl");
+	models[0] = std::make_unique <Model>("Data/Model/2.Sundome/Suika/Suika.mdl");
+	models[1] = std::make_unique <Model>("Data/Model/2.Sundome/TogeBall/TogeBall.mdl");
+	models[2] = std::make_unique <Model>("Data/Model/2.Sundome/Person/Person.mdl");
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.03f;
+	scaleReset = scale;
 
-	debugPrimitiveColor = { 0, 0, 1 };
+	debugPrimitiveColor = { 1, 0, 0 };
+
+	collisionType = CollisionType::Sphere;
+
+	radius = 3.03f;
 
 	gravity = 0.5f;
 
-	radius = 0.6f;
-	height = 5.0f;
+	// フェード
+	fade = std::make_unique<Fade>();
 
+	// 加速度の数値
+	velocityText = std::make_unique<Text>();
+	velocityTextSyosuten = std::make_unique<Text>();
+
+	// 加速度の画像
 	velocitySprite = std::make_unique<Sprite>();
 
 	// 待機ステートへ遷移
-	TransitionWaitState();
+	TransitionMovieWaitState();
 }
 
 // デストラクタ
@@ -50,50 +62,29 @@ void Player2_Sundome::Update(float elapsedTime)
 {
 	if (CameraController::debugCamera) return;
 
+	fade->Update(elapsedTime);
 
-	// ムービー中なら待機ステートへ遷移
-	if (movieScene)
+	// ステート毎の処理
+	switch (state)
 	{
-		// 全ての弾を破棄する
-		int projectileCount = projectileManager.GetProjectileCount();
-		for (int i = 0; i < projectileCount; ++i)
-		{
-			Projectile* projectile = projectileManager.GetProjectile(i);
-
-			// 弾破棄
-			projectile->Destroy();
-		}
-
-		// ムービー中のアニメーション
-		if (!movieAnimation)
-		{
-			state = State::Wait; // ステートを待機に変更
-			model->PlayAnimation(movieAnimNum, movieAnimLoop);
-			movieAnimation = true;
-		}
-	}
-	// ムービー中では無い時
-	else
-		movieAnimation = false; // ムービー中に待機ステートかどうか
-
-	if (!movieScene)
-	{
-		// ステート毎の処理
-		switch (state)
-		{
-		case State::Wait:
-			UpdateWaitState(elapsedTime);
-			break;
-		case State::Move:
-			UpdateMoveState(elapsedTime);
-			break;
-		case State::Damage:
-			UpdateDamageState(elapsedTime);
-			break;
-		case State::Death:
-			UpdateDeathState(elapsedTime);
-			break;
-		}
+	case State::MovieWait:
+		UpdateMovieWaitState(elapsedTime);
+		break;
+	case State::Wait:
+		UpdateWaitState(elapsedTime);
+		break;
+	case State::Move:
+		UpdateMoveState(elapsedTime);
+		break;
+	case State::Return:
+		UpdateReturnState(elapsedTime);
+		break;
+	case State::Damage:
+		UpdateDamageState(elapsedTime);
+		break;
+	case State::Death:
+		UpdateDeathState(elapsedTime);
+		break;
 	}
 
 	// キャラクター状態更新処理
@@ -105,38 +96,57 @@ void Player2_Sundome::Update(float elapsedTime)
 	// プレイヤーと敵との衝突処理
 	CollisionPlayer2_SundomeVsEnemies();
 
-	// モデルアニメーション更新処理
-	model->UpdateAnimation(elapsedTime);
-
 	// モデル更新処理
-	model->UpdateTransform(transform);
+	for(int i = 0; i < 3; i++)
+		models[i]->UpdateTransform(transform);
 }
 
 // 描画処理
 void Player2_Sundome::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	shader->Draw(dc, model.get());
+	shader->Draw(dc, models[round - 1].get());
 
 	// 弾丸描画処理
 	projectileManager.Render(dc, shader);
 }
 
 // HPなどのUI描画
-void Player2_Sundome::SpriteRender(ID3D11DeviceContext* dc)
+void Player2_Sundome::SpriteRender(ID3D11DeviceContext* dc, Graphics& graphics)
 {
 	float textureWidth = static_cast<float>(velocitySprite->GetTextureWidth());
 	float textureHeight = static_cast<float>(velocitySprite->GetTextureHeight());
 
 	float velocityHeight = (setVelocityX / velocityLimit.max) * spriteScale.y;
 
-	//! 加速度の描画
-	velocitySprite->Render(dc,
-		spritePos.x, spritePos.y,
-		spriteScale.x, velocityHeight,
-		0, 0,
-		textureWidth, textureHeight,
-		0,
-		1, 0, 0, 1);
+	if(!G2_Sundome::movieScene)
+	{
+		//! 加速度の描画
+		if(state == State::Wait)
+		{
+			velocitySprite->Render(dc,
+				spritePos.x, spritePos.y,
+				spriteScale.x, velocityHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 0, 0, 1);
+		}
+
+		float velocityX = abs((int)velocity.x);
+		double velocityXSyosuten = abs(velocity.x) - velocityX;
+		velocityXSyosuten = (int)(velocityXSyosuten * 10);
+
+		//! 加速度の数値の描画
+		velocityText->RenderOku(dc, false, velocityX, false,
+			velocityTextPos.x, velocityTextPos.y);
+
+		//! 加速度の数値(小数点)の描画
+		velocityTextSyosuten->RenderOku(dc, false, velocityXSyosuten, false,
+			velocityTextPos.x + 50.0f, velocityTextPos.y);
+	}
+
+	//! フェード
+	fade->Render(dc, graphics);
 }
 
 // 移動入力処理
@@ -155,35 +165,67 @@ bool Player2_Sundome::InputMove(float elapsedTime)
 	return !(moveVec.x == 0.0f && moveVec.z == 0.0f);
 }
 
+// ムービー待機ステートへ遷移
+void Player2_Sundome::TransitionMovieWaitState()
+{
+	state = State::MovieWait;
+
+	position = { 215.0f, 70.0f, -2.0f };
+
+	scale = scaleReset;
+
+	angle = { 0, 0, 0 };
+
+	switch (round)
+	{
+	case 1: break;
+	case 2:
+	{
+		angle.x = DirectX::XMConvertToRadians(-90);
+		angle.y = DirectX::XMConvertToRadians(90);
+	}
+		break;
+	case 3:
+	{
+		angle.x = DirectX::XMConvertToRadians(-90);
+		angle.y = DirectX::XMConvertToRadians(90);
+	}
+		break;
+	default:
+		break;
+	}
+}
+
+// ムービー待機ステート更新処理
+void Player2_Sundome::UpdateMovieWaitState(float elapsedTime)
+{
+	if (!G2_Sundome::movieScene)
+		TransitionWaitState();
+}
+
 // 待機ステートへ遷移
 void Player2_Sundome::TransitionWaitState()
 {
 	state = State::Wait;
-
-	// 待機アニメーション再生
-	model->PlayAnimation(Anim_Wait, true);
 }
 
 // 待機ステート更新処理
 void Player2_Sundome::UpdateWaitState(float elapsedTime)
 {
-	//! ムービー中なら
-	if (G2_Sundome::movieScene) return;
+	setVelocityX += (30 * elapsedTime) * (velocityDown ? -1 : 1);
 
-	setVelocityX += (10 * elapsedTime) * (velocityDown ? -1 : 1);
-
-	if (setVelocityX < 10 || setVelocityX > 50)
+	if (setVelocityX < velocityLimit.min || setVelocityX > velocityLimit.max)
 	{
 		setVelocityX = std::clamp(setVelocityX, velocityLimit.min, velocityLimit.max);
 	
 		//! 加速度を反転
-		velocityDown = velocityDown;
+		velocityDown = !velocityDown;
 	}
 
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
 	GamePadButton button =
-		GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
+	GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
 
 	if (gamePad.GetButtonDown() & button)
 	{
@@ -197,27 +239,120 @@ void Player2_Sundome::TransitionMoveState()
 {
 	state = State::Move;
 
-	// 走りアニメーション再生
-	model->PlayAnimation(Anim_Move, true);
+	//! ブレーキ
+	switch (round)
+	{
+	case 1: brake = 8.0f; break;
+	case 2: brake = 25.0f; break;
+	case 3: brake = 30.0f; break;
+	default:
+		break;
+	}
+
+	stateChangeWaitTimer = 1.0f;
 }
 
 // 移動ステート更新処理
 void Player2_Sundome::UpdateMoveState(float elapsedTime)
 {
-	velocity.x = (setVelocityX * -1) * elapsedTime;
+	if (round == 3)
+		brake = rand() % 30 + 13.0f;
+
+	velocity.x = setVelocityX * -1;
+
+	float rotationSpeed = setVelocityX / velocityLimit.max * 600;
+
+	switch (round)
+	{
+	case 1:
+	{
+		angle.z += DirectX::XMConvertToRadians(rotationSpeed) * elapsedTime;
+	}
+		break;
+	case 2:
+	{
+		angle.x -= DirectX::XMConvertToRadians(rotationSpeed) * elapsedTime;
+	}
+		break;
+	case 3:
+	{
+		angle.x -= DirectX::XMConvertToRadians(rotationSpeed) * elapsedTime;
+	}
+		break;
+	default:
+		break;
+	}
 
 	GamePad& gamePad = Input::Instance().GetGamePad();
+
+	float velocityX = abs((int)velocity.x);
+	double velocityXSyosuten = abs(velocity.x) - velocityX;
+	velocityXSyosuten = (int)(velocityXSyosuten * 10);
 
 	GamePadButton button =
 		GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
 
-	if (gamePad.GetButtonHeld() & button)
-		setVelocityX -= elapsedTime;
+	if (gamePad.GetButtonHeld() & button && position.x < 205.0f
+		&& ((setVelocityX > 0.0f && velocityXSyosuten >= 0.0f) || (setVelocityX <= 0.0f && velocityXSyosuten > 0.0f)) && isGround)
+		setVelocityX -= brake * elapsedTime;
+	else if ((int)setVelocityX <= 0.0f && velocityXSyosuten <= 0.0f)
+		setVelocityX = 0.0f;
 
-	if (position.y < 40.0f)
+	//! ラウンドが2で着地しているなら
+	if (round == 2 && isGround)
+		velocity.y = 5.0f;
+
+	//! 位置が30より小さいなら
+	if (position.y < 30.0f)
 	{
 		//! 死亡ステートへ遷移
 		TransitionDeathState();
+	}
+	else if (setVelocityX == 0)
+	{
+		stateChangeWaitTimer -= elapsedTime;
+
+		if(stateChangeWaitTimer <= 0.0f)
+		{
+			TransitionReturnState();
+		}
+	}
+}
+
+// 戻るステートへ遷移
+void Player2_Sundome::TransitionReturnState()
+{
+	state = State::Return;
+
+	//! フェードを設定
+	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+		0.0f, 1.0f,
+		1.0f, 0.2f);
+
+	stateChangeWaitTimer = 0.5f;
+}
+
+// 戻るステート更新処理
+void Player2_Sundome::UpdateReturnState(float elapsedTime)
+{
+	if (!fade->GetFade())
+	{
+		stateChangeWaitTimer -= elapsedTime;
+
+		if (stateChangeWaitTimer <= 0.0f)
+		{
+			G2_Sundome::movieScene = true;
+
+			fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+				1.0f, 0.0f,
+				1.0f, 0.6f);
+
+			if (round < 3)
+				round++;
+
+			//! ムービー待機ステートへ遷移
+			TransitionMovieWaitState();
+		}
 	}
 }
 
@@ -225,9 +360,6 @@ void Player2_Sundome::UpdateMoveState(float elapsedTime)
 void Player2_Sundome::TransitionDamageState()
 {
 	state = State::Damage;
-
-	// ダメージアニメーション再生
-	model->PlayAnimation(Anim_Damage, false);
 }
 
 // ダメージステート更新処理
@@ -245,15 +377,46 @@ void Player2_Sundome::TransitionDeathState()
 {
 	state = State::Death;
 
-	// 死亡アニメーション再生
-	model->PlayAnimation(Anim_Death, false);
+
+	DirectX::XMFLOAT3 colorF = Camera::postEffect.colorFilter;
+	colorF.x += 2.0f;
+	
+	// カラーフィルターを変更する
+	SetColorFilterChange(DirectX::XMFLOAT3(colorF), 0.5f);
+
+	//! フェードを設定
+	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+		0.0f, 1.0f,
+		1.0f, 0.5f);
+
+	stateChangeWaitTimer = 1.0f;
 }
 
 // 死亡ステート更新処理
 void Player2_Sundome::UpdateDeathState(float elapsedTimae)
 {
 	float scale = 0.0f;
-	SetScaleAllChange(DirectX::XMFLOAT3(scale, scale, scale), 1.0f);
+	SetScaleAllChange(DirectX::XMFLOAT3(scale, scale, scale), 1.5f);
+
+	if (!scaleChange.all && !fade->GetFade())
+	{
+		stateChangeWaitTimer -= elapsedTimae;
+
+		if (stateChangeWaitTimer <= 0.0f)
+		{
+			G2_Sundome::movieScene = true;
+
+			fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+				1.0f, 0.0f,
+				1.0f, 0.6f);
+
+			if (round < 3)
+				round++;
+
+			//! ムービー待機ステートへ遷移
+			TransitionMovieWaitState();
+		}
+	}
 }
 
 // プレイヤーとエネミーとの衝突処理
@@ -333,7 +496,7 @@ void Player2_Sundome::DrawDebugPrimitive()
 
 #ifndef _DEBUG
 	// 衝突判定用のデバッグ円柱を描画
-	debugRenderer->DrawCylinder(collisionPos, radius, height, { debugPrimitiveColor.x, debugPrimitiveColor.y, debugPrimitiveColor.z, 1 });
+	debugRenderer->DrawSphere(collisionPos, radius, { debugPrimitiveColor.x, debugPrimitiveColor.y, debugPrimitiveColor.z, 1 });
 
 	// 弾丸デバッグプリミティブ描画
 	projectileManager.DrawDebugPrimitive();
@@ -366,6 +529,7 @@ void Player2_Sundome::DrawDebugGUI()
 	if (ImGui::TreeNode("Player2_Sundome"))
 	{
 		ImGui::DragFloat2("SpritePos", &spritePos.x, 0.1f);
+		ImGui::DragFloat2("SpriteScale", &spriteScale.x);
 
 		ImGui::InputFloat3("Velocity", &velocity.x);
 
@@ -386,11 +550,64 @@ void Player2_Sundome::DrawDebugGUI()
 			// スケール
 			ImGui::DragFloat3("Scale", &scale.x, 0.01f);
 		}
-		if (ImGui::CollapsingHeader("Collision", ImGuiTreeNodeFlags_DefaultOpen))
+		// 当たり判定
+		if (ImGui::CollapsingHeader("Collision"))
 		{
-			ImGui::DragFloat("Radius", &radius, 0.01f);
-			ImGui::DragFloat("Height", &height, 0.01f);
+#if 1
+			static const char* items[] = { "Box", "Sphere", "Cylinder" };
+			int currentItem = static_cast<int>(collisionType);
+
+			if (ImGui::Combo("Collision Type", &currentItem, items, static_cast<int>(CollisionType::Count))) {
+				collisionType = static_cast<CollisionType>(currentItem);
+			}
+
+			switch (collisionType)
+			{
+			case CollisionType::Box:
+			{
+				// 幅
+				ImGui::DragFloat("Width", &width, 0.01f);
+				// 高さ
+				ImGui::DragFloat("Height", &height, 0.01f);
+				// 奥行
+				ImGui::DragFloat("Depth", &depth, 0.01f);
+			}
+			break;
+			case CollisionType::Sphere:
+			{
+				// 半径
+				ImGui::DragFloat("Radius", &radius, 0.01f);
+			}
+			break;
+			case CollisionType::Cylinder:
+			{
+				// 半径
+				ImGui::DragFloat("Radius", &radius, 0.01f);
+				// 高さ
+				ImGui::DragFloat("Height", &height, 0.01f);
+			}
+			break;
+			default:
+				break;
+			}
+
+			//-------------------------------------------------------------------------------------------------------//
+			ImGui::Spacing(); // 一行空ける
+			ImGui::Separator(); // セクションの間に区切り線を表示
+			ImGui::Spacing(); // 一行空ける
+			//-------------------------------------------------------------------------------------------------------//
+							// デバッグプリミティブ描画の色
+			ImGui::ColorEdit3("DebugPrimitiveColor", &debugPrimitiveColor.x);
+			// デバッグプリミティブ描画の色の数値
+			ImGui::InputFloat3("Color", &debugPrimitiveColor.x);
+			//-------------------------------------------------------------------------------------------------------//
+			ImGui::Spacing(); // 一行空ける
+			ImGui::Separator(); // セクションの間に区切り線を表示
+			ImGui::Spacing(); // 一行空ける
+			//-------------------------------------------------------------------------------------------------------//
+							// 当たり判定をどれくらいずらすか
 			ImGui::DragFloat3("CollisionOffset", &collisionOffset.x, 0.01f);
+#endif
 		}
 		ImGui::TreePop();
 	}

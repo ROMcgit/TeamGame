@@ -34,7 +34,7 @@ void G2_Sundome::Initialize()
 
 	// プレイヤー初期化
 	player = std::make_unique<Player2_Sundome>();
-	player->SetPosition(DirectX::XMFLOAT3(215.0f, 60.8f, -2.0f));
+	player->SetPosition(DirectX::XMFLOAT3(215.0f, 70.0f, -2.0f));
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
@@ -97,6 +97,10 @@ void G2_Sundome::Update(float elapsedTime)
 		// カメラコントローラー更新処理
 		DirectX::XMFLOAT3 target = player->GetPosition();
 		target.y += player->GetHeight() * 0.5f;
+
+		if (target.x < -240.0f)
+			target.x = -240.0f;
+
 		cameraController->SetTarget(target);
 	}
 	Camera::Instance().Update(elapsedTime);
@@ -208,17 +212,6 @@ void G2_Sundome::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-	//! シェーダーを出す
-	{
-		//! レンダーターゲットへ描画終了
-		renderTarget->End();
-		//! スクリーンをポストエフェクトシェーダーで描画
-		Camera::Instance().CreatePostEffect();
-		Camera::Instance().SetPostEffectStatusOnce();
-		//! スクリーンをポストエフェクトシェーダーで描画
-		renderTarget->Render();
-	}
-
 	// 3Dデバッグ描画
 	{
 		// プレイヤーデバッグプリミティブ描画
@@ -234,7 +227,20 @@ void G2_Sundome::Render()
 		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 	}
 
+	//! シェーダーを出す
 	{
+		//! レンダーターゲットへ描画終了
+		renderTarget->End();
+		//! スクリーンをポストエフェクトシェーダーで描画
+		Camera::Instance().CreatePostEffect();
+		Camera::Instance().SetPostEffectStatusOnce();
+		//! スクリーンをポストエフェクトシェーダーで描画
+		renderTarget->Render();
+	}
+
+	{
+		player->SpriteRender(dc, graphics);
+
 		//! フェードの描画処理
 		fade->Render(dc, graphics);
 	}
@@ -326,7 +332,7 @@ void G2_Sundome::UpdateMovie(float elapsedTime)
 				cameraController->SetTargetChange(pos, 2.0f);
 
 				//! カメラの範囲を変更する
-				cameraController->SetRangeChange(14.0f, 2.0f);
+				cameraController->SetRangeChange(18.0f, 2.0f);
 
 				//! ムービー時間を0にする
 				movieTime = 0.0f;
@@ -346,7 +352,26 @@ void G2_Sundome::UpdateMovie(float elapsedTime)
 			if (movieTime > 1.0f)
 			{
 				movieScene = false;
+				movieStep++;
 			}
+		}
+		break;
+	//! 戻るムービー
+	case 3:
+
+		movieTime = 0.0f;
+		movieStep++;
+
+		break;
+	//! ムービー待ち時間
+	case 4:
+
+		movieTime += elapsedTime;
+
+		if (movieTime > 2.3f)
+		{
+			movieStep = 3;
+			movieScene = false;
 		}
 
 		break;

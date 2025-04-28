@@ -34,6 +34,8 @@ Player2_Sundome::Player2_Sundome()
 	radius = 0.6f;
 	height = 5.0f;
 
+	velocitySprite = std::make_unique<Sprite>();
+
 	// 待機ステートへ遷移
 	TransitionWaitState();
 }
@@ -122,6 +124,19 @@ void Player2_Sundome::Render(ID3D11DeviceContext* dc, Shader* shader)
 // HPなどのUI描画
 void Player2_Sundome::SpriteRender(ID3D11DeviceContext* dc)
 {
+	float textureWidth = static_cast<float>(velocitySprite->GetTextureWidth());
+	float textureHeight = static_cast<float>(velocitySprite->GetTextureHeight());
+
+	float velocityHeight = (setVelocityX / velocityLimit.max) * spriteScale.y;
+
+	//! 加速度の描画
+	velocitySprite->Render(dc,
+		spritePos.x, spritePos.y,
+		spriteScale.x, velocityHeight,
+		0, 0,
+		textureWidth, textureHeight,
+		0,
+		1, 0, 0, 1);
 }
 
 // 移動入力処理
@@ -159,7 +174,7 @@ void Player2_Sundome::UpdateWaitState(float elapsedTime)
 
 	if (setVelocityX < 10 || setVelocityX > 50)
 	{
-		setVelocityX = std::clamp(setVelocityX, 10.0f, 50.0f);
+		setVelocityX = std::clamp(setVelocityX, velocityLimit.min, velocityLimit.max);
 	
 		//! 加速度を反転
 		velocityDown = velocityDown;
@@ -350,6 +365,8 @@ void Player2_Sundome::DrawDebugGUI()
 {
 	if (ImGui::TreeNode("Player2_Sundome"))
 	{
+		ImGui::DragFloat2("SpritePos", &spritePos.x, 0.1f);
+
 		ImGui::InputFloat3("Velocity", &velocity.x);
 
 		// トランスフォーム

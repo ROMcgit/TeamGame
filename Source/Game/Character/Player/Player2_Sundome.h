@@ -147,6 +147,16 @@ private:
 
 	float playerAnimeCount = 0.0f;
 
+	std::unique_ptr<Sprite> velocitySprite;
+	DirectX::XMFLOAT2 spritePos = { 0, 0 };
+	DirectX::XMFLOAT2 spriteScale;
+
+	struct VelocityLimit
+	{
+		float min = 10;
+		float max = 50;
+	}velocityLimit;
+
 	bool velocityDown = false; // ‰Á‘¬“x‚ð‰º‚°‚é‚©
 	float setVelocityX = 10.0f;
 };

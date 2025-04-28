@@ -1,4 +1,5 @@
 #include "Game/Stage/G1_StageDarumasangaKoronda.h"
+#include "Game/Character/Player/Player1_DarumasangaKoronda.h"
 #include <imgui.h>
 
 // コンストラクタ
@@ -7,7 +8,8 @@ G1_StageDarumasangaKoronda::G1_StageDarumasangaKoronda()
 	// ステージモデルを読み込み
 	model = std::make_unique <Model>("Data/Model/Stage/1.DarumasangaKoronda/StageDarumasangaKoronda.mdl");
 
-	position.x = position.y = 0;
+	position.x = 0.0f;
+	position.y = 110.0f;
 	position.z = 54.0f;
 
 	scale.x = scale.y = scale.z = 0.5f;
@@ -34,8 +36,14 @@ void G1_StageDarumasangaKoronda::Render(ID3D11DeviceContext* dc, Shader* shader)
 	// 表示用のためワールド行列を更新する
 	model->UpdateTransform(transform);
 
+	// プレイヤーのインスタンス取得
+	Player1_DarumasangaKoronda& player = Player1_DarumasangaKoronda::Instance();
+	// 距離
+	dist = abs(player.GetPosition().z - position.z);
+
 	// シェーダーにモデルを描画してもらう
-	shader->Draw(dc, model.get());
+	if(dist < 170)
+		shader->Draw(dc, model.get());
 }
 
 // レイキャスト
@@ -96,6 +104,8 @@ void G1_StageDarumasangaKoronda::DrawDebugGUI()
 {
 	if (ImGui::TreeNode(u8"ステージだるまさんが転んだ"))
 	{
+		ImGui::InputFloat(u8"距離", &dist);
+
 		// 位置
 		ImGui::DragFloat3(u8"位置", &position.x);
 

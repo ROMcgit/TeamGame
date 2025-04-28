@@ -23,9 +23,7 @@ public:
 	void DrawDebugGUI() override;
 
 private:
-	// s—ñXVˆ—
-	void UpdateTransform();
-
-private:
 	std::unique_ptr<Model> model;
+
+	float dist = 0; // ‹——£
 };

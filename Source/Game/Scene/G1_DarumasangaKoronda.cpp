@@ -31,20 +31,20 @@ void G1_DarumasangaKoronda::Initialize()
 
 	float posZ = 54.0f;
 	// ステージ初期化
-	for(int i = 0; i < 3; i ++)
+	for(int i = 0; i < 5; i ++)
 	{
 		StageManager& stageManager = StageManager::Instance();
 		std::unique_ptr<G1_StageDarumasangaKoronda> stageMain = std::make_unique<G1_StageDarumasangaKoronda>();
 		
-		float posZ = 54.0f + (i * 90.0f);
+		float posZ = 54.0f + (i * 110.0f);
 
-		stageMain->SetPosition(DirectX::XMFLOAT3(0, 0, posZ));
+		stageMain->SetPosition(DirectX::XMFLOAT3(0, 110.0f, posZ));
 		stageManager.Register(std::move(stageMain));
 	}
 
 	// プレイヤー初期化
 	player = std::make_unique<Player1_DarumasangaKoronda>();
-	player->SetPosition(DirectX::XMFLOAT3(0, 3.0f, 0));
+	player->SetPosition(DirectX::XMFLOAT3(0, 113.0f, 0));
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
@@ -127,7 +127,7 @@ void G1_DarumasangaKoronda::Update(float elapsedTime)
 void G1_DarumasangaKoronda::Render()
 {
 	lightPosition.x = CameraController::target.x;
-	lightPosition.y = 5.0f;
+	lightPosition.y = 150.0f;
 	lightPosition.z = CameraController::target.z - 25.0f;
 	lightRange = 20000.0f;
 

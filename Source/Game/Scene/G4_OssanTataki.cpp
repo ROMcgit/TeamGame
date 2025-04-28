@@ -164,11 +164,10 @@ void G4_OssanTataki::Render()
 
 	shadowMapEyeOffset = { 0.7f, 23.0f, 6.0f };
 
-	shadowMapBias = 0.015f;
-
 	//! フォグ
-	fogStart = 2000.0f;
-	fogEnd = 2100.0f;
+	fogStart = 10.0f;
+	fogEnd   = 380.0f;
+	fogColor = { 0, 0.9f, 1.0f };
 
 	Graphics& graphics = Graphics::Instance();
 
@@ -186,12 +185,12 @@ void G4_OssanTataki::Render()
 				shadowMapShader->Begin(dc, rc);
 
 				//エネミー描画
-				EnemyManager::Instance().Render(dc, shadowMapShader);
+				//EnemyManager::Instance().Render(dc, shadowMapShader);
 				// プレイヤー描画
-				player->Render(dc, shadowMapShader);
+				//player->Render(dc, shadowMapShader);
 
 				// 衝突攻撃の描画処理
-				collisionAttackManager.Render(dc, shadowMapShader);
+				//collisionAttackManager.Render(dc, shadowMapShader);
 
 				shadowMapShader->End(dc);
 			}
@@ -303,7 +302,7 @@ void G4_OssanTataki::Render()
 			ImGui::Separator(); // セクションの間に区切り線を表示
 			ImGui::Spacing(); // 一行空ける
 			//-----------------------------------------------------------------------------------------------------//
-						// !カメラのデバッグ描画
+			// !カメラのデバッグ描画
 			if (ImGui::TreeNode("Cameras"))
 			{
 				//-------------------------------------------------------------------------------------------------------

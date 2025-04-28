@@ -230,6 +230,7 @@ void Framework::SceneSelectGUI()
 			if (ImGui::CollapsingHeader(u8"フォグ"))
 			{
 				ImGui::ColorEdit3(u8"色(フォグ)", &Scene::debugFogColor.x);
+				ImGui::InputFloat3(u8"色の数値(フォグ)", &Scene::debugFogColor.x);
 				ImGui::DragFloat(u8"開始(フォグ)", &Scene::debugFogStart);
 				ImGui::DragFloat(u8"終了(フォグ)", &Scene::debugFogEnd);
 			}

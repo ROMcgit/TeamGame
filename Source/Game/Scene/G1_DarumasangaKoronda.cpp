@@ -15,7 +15,7 @@ bool G1_DarumasangaKoronda::movieScene = false;
 // 初期化
 void G1_DarumasangaKoronda::Initialize()
 {
-	movieScene = true;
+	//movieScene = true;
 
 	ID3D11Device* device = Graphics::Instance().GetDevice();
 	float screenWidth = Graphics::Instance().GetScreenWidth();
@@ -31,12 +31,14 @@ void G1_DarumasangaKoronda::Initialize()
 
 	float posZ = 54.0f;
 	// ステージ初期化
-	for(int i = 0; i < 2; i ++)
+	for(int i = 0; i < 3; i ++)
 	{
 		StageManager& stageManager = StageManager::Instance();
 		std::unique_ptr<G1_StageDarumasangaKoronda> stageMain = std::make_unique<G1_StageDarumasangaKoronda>();
 		
-		stageMain->SetPosition(DirectX::XMFLOAT3(0, 0, 54.0f));
+		float posZ = 54.0f + (i * 90.0f);
+
+		stageMain->SetPosition(DirectX::XMFLOAT3(0, 0, posZ));
 		stageManager.Register(std::move(stageMain));
 	}
 

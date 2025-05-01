@@ -1,6 +1,6 @@
 #include "Graphics/Graphics.h"
 #include "Game/Scene/G4_OssanTataki_Tutorial.h"
-#include "Game/Scene/G0_Onigokko.h"
+#include "Game/Scene/G4_OssanTataki.h"
 #include "SceneGameSelect.h"
 #include "Game/Scene/SceneManager.h"
 #include "Input/Input.h"
@@ -24,9 +24,6 @@ void G4_OssanTataki_Tutorial::Initialize()
 
 		tutorialSpritePos[i].y = screenHeight * 0.5f;
 	}
-	tutorialSpriteColor[0] = { 1, 1, 1 };
-	tutorialSpriteColor[1] = { 1, 0, 0 };
-	tutorialSpriteColor[2] = { 0, 1, 0 };
 
 	fade = std::make_unique<Fade>();
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
@@ -53,7 +50,7 @@ void G4_OssanTataki_Tutorial::Update(float elapsedTime)
 	//! チュートリアルを終わるなら
 	if (tutorialFinish && !fade->GetFade())
 	{
-		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G0_Onigokko>());
+		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G4_OssanTataki>());
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示
 		SceneManager::Instance().ChangeScene(std::move(loadingScene));
@@ -89,7 +86,7 @@ void G4_OssanTataki_Tutorial::Render()
 				screenWidth * 0.5f, screenHeight * 0.5f,
 				0, 0, textureWidth, textureHeight,
 				0,
-				tutorialSpriteColor[i].x, tutorialSpriteColor[i].y, tutorialSpriteColor[i].z, 1);
+				1, 1, 1, 1);
 		}
 
 		fade->Render(dc, graphics);

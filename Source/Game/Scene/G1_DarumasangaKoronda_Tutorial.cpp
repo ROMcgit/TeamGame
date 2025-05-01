@@ -1,6 +1,6 @@
 #include "Graphics/Graphics.h"
 #include "Game/Scene/G1_DarumasangaKoronda_Tutorial.h"
-#include "Game/Scene/G0_Onigokko.h"
+#include "Game/Scene/G1_DarumasangaKoronda.h"
 #include "SceneGameSelect.h"
 #include "Game/Scene/SceneManager.h"
 #include "Input/Input.h"
@@ -50,7 +50,7 @@ void G1_DarumasangaKoronda_Tutorial::Update(float elapsedTime)
 	//! チュートリアルを終わるなら
 	if (tutorialFinish && !fade->GetFade())
 	{
-		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G0_Onigokko>());
+		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G1_DarumasangaKoronda>());
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示
 		SceneManager::Instance().ChangeScene(std::move(loadingScene));

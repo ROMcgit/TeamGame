@@ -19,7 +19,10 @@ void G4_OssanTataki::Initialize()
 {
 	score = 0;
 
+	movieScene = true;
+
 	scoreText = std::make_unique<Text>();
+
 
 	ID3D11Device* device = Graphics::Instance().GetDevice();
 	float screenWidth = Graphics::Instance().GetScreenWidth();
@@ -129,7 +132,8 @@ void G4_OssanTataki::Update(float elapsedTime)
 	fade->Update(elapsedTime);
 
 	//! タイマーの更新処理
-	timer->Update(elapsedTime);
+	if(!movieScene)
+		timer->Update(elapsedTime);
 
 	//! ムービー更新処理
 	UpdateMovie(elapsedTime);
@@ -292,7 +296,7 @@ void G4_OssanTataki::Render()
 
 		//! タイマー
 		DirectX::XMFLOAT3 color;
-		if (timer->GetTimeM_Int() >= 0 && timer->GetTimeS_Int() > 30)
+		if (timer->GetTimeM_Int() > 0 || (timer->GetTimeM_Int() == 0 && timer->GetTimeS_Int() > 30))
 			color = { 1, 1, 1 };
 		else
 			color = { 1, 0, 0 };
@@ -353,12 +357,14 @@ void G4_OssanTataki::UpdateMovie(float elapsedTime)
 	switch (movieStep)
 	{
 	case 0:
-		break;
-	case 1:
-		break;
-	case 2:
-		break;
-	default:
+
+		movieTime += elapsedTime;
+
+		if (movieTime > 6.0f)
+		{
+			movieScene = false;
+		}
+
 		break;
 	}
 }

@@ -537,6 +537,24 @@
     <ClInclude Include="Source\Game\Character\CollisionAttack\CollisionAttack_Tataki.h">
       <Filter>Source\Character\Player\4_おっさんたたき</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G4_OssanTataki_Tutorial.h">
+      <Filter>Source\Scene\GameScene\4.おっさん叩き</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G3_SoratobuHusenWari_Tutorial.h">
+      <Filter>Source\Scene\GameScene\3.空飛ぶ風船割り</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G2_Sundome_Tutorial.h">
+      <Filter>Source\Scene\GameScene\2.寸止め</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G1_DarumasangaKoronda_Tutorial.h">
+      <Filter>Source\Scene\GameScene\1.だるまさんが転んだ</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G0_Onigokko_Tutorial.h">
+      <Filter>Source\Scene\GameScene\0.おにごっこ</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Scene\G5_Asibawatari_Tutorial.h">
+      <Filter>Source\Scene\GameScene\5.足場渡り</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -859,6 +877,24 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Character\CollisionAttack\CollisionAttack_Tataki.cpp">
       <Filter>Source\Character\Player\4_おっさんたたき</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G4_OssanTataki_Tutorial.cpp">
+      <Filter>Source\Scene\GameScene\4.おっさん叩き</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G3_SoratobuHusenWari_Tutorial.cpp">
+      <Filter>Source\Scene\GameScene\3.空飛ぶ風船割り</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G2_Sundome_Tutorial.cpp">
+      <Filter>Source\Scene\GameScene\2.寸止め</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G1_DarumasangaKoronda_Tutorial.cpp">
+      <Filter>Source\Scene\GameScene\1.だるまさんが転んだ</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G0_Onigokko_Tutorial.cpp">
+      <Filter>Source\Scene\GameScene\0.おにごっこ</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Scene\G5_Asibawatari_Tutorial.cpp">
+      <Filter>Source\Scene\GameScene\5.足場渡り</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

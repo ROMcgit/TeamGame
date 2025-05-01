@@ -95,7 +95,7 @@ void EnemyDarumasangaKoronda::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	targetPosition = Player1_DarumasangaKoronda::Instance().GetPosition();
 	dist = abs(targetPosition.x - position.x);
-	if ((dist < 180 || G1_DarumasangaKoronda::movieScene) && opacity > 0)
+	if ((dist < 180 || G1_DarumasangaKoronda::movieScene))
 		shader->Draw(dc, model.get(), materialColor, opacity);
 }
 
@@ -173,11 +173,13 @@ void EnemyDarumasangaKoronda::TransitionEntryState()
 // 登場ステート更新処理
 void EnemyDarumasangaKoronda::UpdateEntryState(float elapsedTime)
 {
-	if (!model->IsPlayAnimation())
+	if (!G1_DarumasangaKoronda::movieScene)
+	{
 		stateChangeWaitTimer -= elapsedTime;
 
-	if (stateChangeWaitTimer <= 0.0f)
-		TransitionWaitState();
+		if(stateChangeWaitTimer <= 0.0f)
+			TransitionWaitState();
+	}
 }
 
 // 待機ステートへ遷移
@@ -194,11 +196,6 @@ void EnemyDarumasangaKoronda::TransitionWaitState()
 	std::uniform_real_distribution<> dist(5.0f, 8.0f);
 	float time = dist(gen);
 	
-	//! カラーフィルターを変更する
-	DirectX::XMFLOAT3 color = Camera::postEffect.colorFilter;
-	color.x += 3.0f;
-	SetColorFilterChange(color, time);
-
 	//! ステート切り替えまでの待ち時間
 	stateChangeWaitTimer = time;
 
@@ -217,6 +214,13 @@ void EnemyDarumasangaKoronda::UpdateWaitState(float elapsedTime)
 		//! 見るステートへ遷移
 		TransitionLookState();
 	}
+	else if (stateChangeWaitTimer < 1.0f)
+	{
+		//! カラーフィルターを変更する
+		DirectX::XMFLOAT3 color = Camera::postEffect.colorFilter;
+		color.x += 1.5f;
+		SetColorFilterChange(color, 1.0f);
+	}
 }
 
 // 見るステート
@@ -224,8 +228,11 @@ void EnemyDarumasangaKoronda::TransitionLookState()
 {
 	state = State::Look;
 
+	//! コントラスト
+	SetContrast(Camera::postEffect.contrast + 0.1f);
+
 	//! 色収差
-	SetChromaticAberration(Camera::postEffect.chromaticAberration + 0.01f);
+	SetChromaticAberration(Camera::postEffect.chromaticAberration + 0.05f);
 
 	stateChangeWaitTimer = 1.8f;
 }
@@ -237,6 +244,12 @@ void EnemyDarumasangaKoronda::UpdateLookState(float elapsedTime)
 
 	if (stateChangeWaitTimer <= 0.0f)
 	{
+		//! カラーフィルターを戻す
+		SetColorFilterResetChange(0.3f);
+
+		//! コントラストを戻す
+		SetContrastResetChange(0.3f);
+
 		//! 色収差を戻す
 		SetChromaticAberrationResetChange(0.3f);
 

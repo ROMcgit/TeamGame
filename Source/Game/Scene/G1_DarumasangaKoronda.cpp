@@ -105,6 +105,10 @@ void G1_DarumasangaKoronda::Update(float elapsedTime)
 	//! フェードを更新処理
 	fade->Update(elapsedTime);
 
+	//! タイマーの更新処理
+	if (!movieScene)
+		timer->Update(elapsedTime);
+
 	//! ムービー更新処理
 	UpdateMovie(elapsedTime);
 
@@ -329,7 +333,7 @@ void G1_DarumasangaKoronda::UpdateMovie(float elapsedTime)
 
 		movieTime += elapsedTime;
 
-		if (movieTime > 5.0f)
+		if (movieTime > 3.5f)
 		{
 			movieScene = false;
 			movieTime = 0.0f;

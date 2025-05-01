@@ -42,7 +42,7 @@ void G1_StageDarumasangaKoronda::Render(ID3D11DeviceContext* dc, Shader* shader)
 	dist = abs(player.GetPosition().z - position.z);
 
 	// シェーダーにモデルを描画してもらう
-	if(dist < 170)
+	if(dist < 185)
 		shader->Draw(dc, model.get());
 }
 

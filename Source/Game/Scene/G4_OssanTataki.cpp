@@ -149,6 +149,7 @@ void G4_OssanTataki::Update(float elapsedTime)
 	StageManager::Instance().Update(elapsedTime);
 
 	// プレイヤー更新処理
+	if(!movieScene)
 	player->Update(elapsedTime);
 
 	// エネミー更新処理

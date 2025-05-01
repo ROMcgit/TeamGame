@@ -2,7 +2,7 @@
 #include "G1_DarumasangaKoronda.h"
 #include "Game/Camera/Camera.h"
 #include "Game/Character/Enemy/EnemyManager.h"
-#include "Game/Character/Enemy/EnemyOni.h"
+#include "Game/Character/Enemy/EnemyDarumasangaKoronda.h"
 #include "Game/Effect/EffectManager.h"
 #include "Input/Input.h"
 #include "Game/Stage/StageManager.h"
@@ -15,7 +15,7 @@ bool G1_DarumasangaKoronda::movieScene = false;
 // 初期化
 void G1_DarumasangaKoronda::Initialize()
 {
-	//movieScene = true;
+	movieScene = true;
 
 	ID3D11Device* device = Graphics::Instance().GetDevice();
 	float screenWidth = Graphics::Instance().GetScreenWidth();
@@ -46,6 +46,12 @@ void G1_DarumasangaKoronda::Initialize()
 	player = std::make_unique<Player1_DarumasangaKoronda>();
 	player->SetPosition(DirectX::XMFLOAT3(0, 113.0f, 0));
 
+	//! 敵
+	std::unique_ptr<EnemyDarumasangaKoronda> oni = std::make_unique<EnemyDarumasangaKoronda>();
+	oni->SetPosition(DirectX::XMFLOAT3(0.0f, 11.227f, 538.45f));
+	//! 鬼を登録
+	EnemyManager::Instance().Register(std::move(oni));
+
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
 	Camera& camera = Camera::Instance();
@@ -75,6 +81,9 @@ void G1_DarumasangaKoronda::Initialize()
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 		1.0f, 0.0f,
 		1.0f, 0.5f);
+
+	//! タイマー
+	timer = std::make_unique<Timer>(true, 3, 0);
 }
 
 // 終了化
@@ -105,6 +114,18 @@ void G1_DarumasangaKoronda::Update(float elapsedTime)
 		DirectX::XMFLOAT3 target = player->GetPosition();
 		target.x = 0;
 		target.y += player->GetHeight() * 0.5f;
+		target.z -= 2.0f;
+		cameraController->SetTarget(target);
+		cameraController->SetRange(20.0f);
+	}
+	else
+	{
+		std::unique_ptr<Enemy>& oni = EnemyManager::Instance().GetEnemy(0);
+
+		DirectX::XMFLOAT3 target = oni->GetPosition();
+		target.x = 0;
+		target.y += oni->GetHeight() * 0.3f;
+		target.z -= 2.0f;
 		cameraController->SetTarget(target);
 	}
 	Camera::Instance().Update(elapsedTime);
@@ -243,6 +264,15 @@ void G1_DarumasangaKoronda::Render()
 	}
 
 	{
+		//! タイマー
+		DirectX::XMFLOAT3 color;
+		if (timer->GetTimeM_Int() > 0 || (timer->GetTimeM_Int() == 0 && timer->GetTimeS_Int() > 30))
+			color = { 1, 1, 1 };
+		else
+			color = { 1, 0, 0 };
+
+		timer->Render(dc, graphics, DirectX::XMFLOAT2(30.0f, 0.0f), DirectX::XMFLOAT4(color.x, color.y, color.z, 1.0f));
+
 		//! フェードの描画処理
 		fade->Render(dc, graphics);
 	}
@@ -291,11 +321,24 @@ void G1_DarumasangaKoronda::UpdateMovie(float elapsedTime)
 {
 	if (!movieScene) return;
 
+	player->SetMovieTime(0.1f);
+
 	switch (movieStep)
 	{
 	case 0:
+
+		movieTime += elapsedTime;
+
+		if (movieTime > 5.0f)
+		{
+			movieScene = false;
+			movieTime = 0.0f;
+			movieStep++;
+		}
+
 		break;
 	case 1:
+
 		break;
 	case 2:
 		break;

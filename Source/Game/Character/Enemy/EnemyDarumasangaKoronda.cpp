@@ -2,14 +2,14 @@
 #include <imgui.h>
 #include "Graphics/Graphics.h"
 #include "Other/Mathf.h"
-#include "Game/Character/Player/Player0_Onigokko.h"
+#include "Game/Character/Player/Player1_DarumasangaKoronda.h"
 #include "Other/Collision.h"
-#include "Game/Scene/G0_Onigokko.h"
+#include "Game/Scene/G1_DarumasangaKoronda.h"
 #include "Game/Camera/Camera.h"
 #include "Graphics/Timer.h"
 
+#include <random>
 #include <algorithm>
-#include "EnemyDarumasangaKoronda.h"
 
 // コンストラクタ
 EnemyDarumasangaKoronda::EnemyDarumasangaKoronda()
@@ -21,7 +21,7 @@ EnemyDarumasangaKoronda::EnemyDarumasangaKoronda()
 
 	gravity = 0;
 
-	angle.y = DirectX::XMConvertToRadians(180);
+	angle.y = DirectX::XMConvertToRadians(0);
 
 	debugPrimitiveColor = { 0, 0, 1 };
 
@@ -93,11 +93,9 @@ void EnemyDarumasangaKoronda::Update(float elapsedTime)
 // 描画処理
 void EnemyDarumasangaKoronda::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	targetPosition = Player0_Onigokko::Instance().GetPosition();
-	float vx = targetPosition.x - position.x;
-	float vz = targetPosition.z - position.z;
-	dist = vx * vx + vz * vz;
-	if ((dist < 7000 || G0_Onigokko::movieScene) && opacity > 0)
+	targetPosition = Player1_DarumasangaKoronda::Instance().GetPosition();
+	dist = abs(targetPosition.x - position.x);
+	if ((dist < 180 || G1_DarumasangaKoronda::movieScene) && opacity > 0)
 		shader->Draw(dc, model.get(), materialColor, opacity);
 }
 
@@ -187,7 +185,22 @@ void EnemyDarumasangaKoronda::TransitionWaitState()
 {
 	state = State::Wait;
 
-	stateChangeWaitTimer = 3.0f;
+	//! 角度Yを変更する
+	SetAngleYChange(DirectX::XMConvertToRadians(0), 0.5f);
+	
+	std::random_device rd;
+	std::mt19937 gen(rd());
+
+	std::uniform_real_distribution<> dist(5.0f, 8.0f);
+	float time = dist(gen);
+	
+	//! カラーフィルターを変更する
+	DirectX::XMFLOAT3 color = Camera::postEffect.colorFilter;
+	color.x += 3.0f;
+	SetColorFilterChange(color, time);
+
+	//! ステート切り替えまでの待ち時間
+	stateChangeWaitTimer = time;
 
 	// 待機アニメーション再生
 	model->PlayAnimation(Anim_Wait, true);
@@ -197,8 +210,13 @@ void EnemyDarumasangaKoronda::TransitionWaitState()
 void EnemyDarumasangaKoronda::UpdateWaitState(float elapsedTime)
 {
 	//! ムービーシーンでないなら、待ち時間を減らす
-	if (!G0_Onigokko::movieScene)
-		stateChangeWaitTimer -= elapsedTime;
+	stateChangeWaitTimer -= elapsedTime;
+
+	if (stateChangeWaitTimer <= 0.0f)
+	{
+		//! 見るステートへ遷移
+		TransitionLookState();
+	}
 }
 
 // 見るステート
@@ -206,7 +224,10 @@ void EnemyDarumasangaKoronda::TransitionLookState()
 {
 	state = State::Look;
 
-	stateChangeWaitTimer = 2.0f;
+	//! 色収差
+	SetChromaticAberration(Camera::postEffect.chromaticAberration + 0.01f);
+
+	stateChangeWaitTimer = 1.8f;
 }
 
 // 見るステート更新処理
@@ -215,14 +236,20 @@ void EnemyDarumasangaKoronda::UpdateLookState(float elapsedTime)
 	stateChangeWaitTimer -= elapsedTime;
 
 	if (stateChangeWaitTimer <= 0.0f)
+	{
+		//! 色収差を戻す
+		SetChromaticAberrationResetChange(0.3f);
+
+		//! 待機ステートへ遷移
 		TransitionWaitState();
+	}
 }
 
 // 攻撃ステートへ遷移
 void EnemyDarumasangaKoronda::TransitionAttackState()
 {
 	state = State::Attack;
-
+	
 	//! コントラスト
 	SetContrastChange(1.5f, 0.5f);
 
@@ -297,22 +324,6 @@ void EnemyDarumasangaKoronda::OnDead()
 // プレイヤーとの当たり判定
 void EnemyDarumasangaKoronda::CollisionVsPlayer()
 {
-	Player0_Onigokko& player = Player0_Onigokko::Instance();
-
-	DirectX::XMFLOAT3 outPosition;
-	if (Collision::IntersectCylinderVsCylinder(
-		position,
-		radius,
-		height,
-		player.GetPosition(),
-		player.GetRadius(),
-		player.GetHeight(),
-		outPosition
-	) && player.GetInvincibleTimer() <= 0)
-	{
-		TransitionAttackState();
-		player.ApplyDamage(1, 10, 0);
-	}
 }
 
 // 移動位置に移動

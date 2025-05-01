@@ -82,15 +82,8 @@ private:
 	// アニメーション
 	enum Animation
 	{
-		Anim_Entry,
 		Anim_Wait,
-		Anim_Move,
-		Anim_Laugh,
-		Anim_Tracking,
-		Anim_Tired,
-		Anim_Attack,
 		Anim_Damage,
-		Anim_Death
 	};
 
 private:

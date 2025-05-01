@@ -8,6 +8,7 @@
 #include "Graphics/RenderTarget.h"
 #include "Graphics/ShadowMap.h"
 #include "Graphics/Fade.h"
+#include "Graphics/Timer.h"
 
 // ゲームシーン
 class G1_DarumasangaKoronda : public Scene
@@ -47,4 +48,6 @@ private:
 
 	float movieTime = 0.0f; // ムービー時間
 	int   movieStep = 0;    // ムービーステップ
+
+	std::unique_ptr<Timer> timer;
 };

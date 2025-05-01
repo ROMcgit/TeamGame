@@ -229,7 +229,7 @@ void EnemyDarumasangaKoronda::TransitionLookState()
 	state = State::Look;
 
 	//! コントラスト
-	SetContrast(Camera::postEffect.contrast + 0.1f);
+	SetContrast(Camera::postEffect.contrast + 0.05f);
 
 	//! 色収差
 	SetChromaticAberration(Camera::postEffect.chromaticAberration + 0.05f);

@@ -25,7 +25,18 @@ public:
 	void Render() override;
 
 private:
-	std::unique_ptr<Sprite> sprite;
+	// 画像の更新処理
+	void SpriteDirector(float elapsedTime);
+
+private:
+	std::unique_ptr<Sprite> tutorialSprite[3];
+	DirectX::XMFLOAT2       tutorialSpritePos[3];
+
+	int   directorStep = 0;    // 演出のステップ
+	float directorTime = 0.0f; // 演出の時間
+
 	std::unique_ptr<Fade> fade;
 	bool setFade = false; // フェードを設定したか
+
+	bool tutorialFinish = false;
 };

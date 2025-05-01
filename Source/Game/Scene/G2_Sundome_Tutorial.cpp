@@ -1,16 +1,29 @@
 #include "Graphics/Graphics.h"
 #include "Game/Scene/G2_Sundome_Tutorial.h"
+#include "Game/Scene/G0_Onigokko.h"
 #include "SceneGameSelect.h"
 #include "Game/Scene/SceneManager.h"
 #include "Input/Input.h"
 #include "SceneLoading.h"
 #include "Graphics/Fade.h"
+#include "Other/Easing.h"
 
 // 初期化
 void G2_Sundome_Tutorial::Initialize()
 {
-	// スプライト初期化
-	sprite = std::make_unique<Sprite>("Data/Sprite/Title.png");
+	float screenWidth = Graphics::Instance().GetScreenWidth();
+	float screenHeight = Graphics::Instance().GetScreenHeight();
+
+	// チュートリアル画像
+	float posX = screenWidth * 1.3f;
+	for (int i = 0; i < 3; i++)
+	{
+		tutorialSprite[i] = std::make_unique<Sprite>();
+		tutorialSpritePos[i].x = posX;
+		posX += screenWidth;
+
+		tutorialSpritePos[i].y = screenHeight * 0.5f;
+	}
 
 	fade = std::make_unique<Fade>();
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
@@ -28,23 +41,16 @@ void G2_Sundome_Tutorial::Update(float elapsedTime)
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
+	//! フェードの更新処理
 	fade->Update(elapsedTime);
 
-	// なにかボタンを押したらローディングシーンを挟んでゲームシーンへ切り替え
-	const GamePadButton anyButton =
-		GamePad::BTN_A |
-		GamePad::BTN_B;
-	if (gamePad.GetButtonDown() & anyButton && !setFade && !fade->GetFade())
-	{
-		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
-			0.0f, 1.0f,
-			0.5f, 0.2f);
+	// 画像の演出
+	SpriteDirector(elapsedTime);
 
-		setFade = true;
-	}
-	else if (setFade && !fade->GetFade())
+	//! チュートリアルを終わるなら
+	if (tutorialFinish && !fade->GetFade())
 	{
-		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGameSelect>());
+		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G0_Onigokko>());
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示
 		SceneManager::Instance().ChangeScene(std::move(loadingScene));
@@ -69,15 +75,172 @@ void G2_Sundome_Tutorial::Render()
 	{
 		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
 		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
-		float textureWidth = static_cast<float>(sprite->GetTextureWidth());
-		float textureHeight = static_cast<float>(sprite->GetTextureHeight());
-		// タイトルスプライト描画
-		sprite->Render(dc,
-			0, 0, screenWidth, screenHeight,
-			0, 0, textureWidth, textureHeight,
-			0,
-			1, 1, 1, 1);
+
+		for (int i = 0; i < 3; i++)
+		{
+			float textureWidth = static_cast<float>(tutorialSprite[i]->GetTextureWidth());
+			float textureHeight = static_cast<float>(tutorialSprite[i]->GetTextureHeight());
+			// チュートリアル画像
+			tutorialSprite[i]->RenderCenter(dc,
+				tutorialSpritePos[i].x, tutorialSpritePos[i].y,
+				screenWidth * 0.5f, screenHeight * 0.5f,
+				0, 0, textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+		}
 
 		fade->Render(dc, graphics);
+	}
+}
+
+// 画像の更新処理
+void G2_Sundome_Tutorial::SpriteDirector(float elapsedTime)
+{
+	if (tutorialFinish) return;
+
+	GamePad& gamePad = Input::Instance().GetGamePad();
+	GamePadButton button = GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
+
+	if (gamePad.GetButtonDown() & GamePad::BTN_START)
+	{
+		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+			0.0f, 1.0f,
+			0.5f, 0.2f);
+
+		tutorialFinish = true;
+	}
+
+	switch (directorStep)
+	{
+		//! 待ち時間
+	case 0:
+
+		directorTime += elapsedTime;
+
+		if (directorTime > 2.0f)
+		{
+			directorTime = 0.0f;
+			directorStep++;
+		}
+
+		break;
+	case 1:
+	{
+
+		directorTime += elapsedTime;
+
+		float t = directorTime / 1.0f;
+
+		float screenWidth = Graphics::Instance().GetScreenWidth();
+		float screenHeight = Graphics::Instance().GetScreenHeight();
+
+		if (t < 1.0f)
+		{
+			tutorialSpritePos[0].x = Easing::EaseOut(screenWidth * 1.3f, (screenWidth * 0.5f), t);
+			tutorialSpritePos[1].x = Easing::EaseOut(screenWidth * 1.3f + screenWidth, screenWidth * 1.3f, t);
+			tutorialSpritePos[2].x = Easing::EaseOut((screenWidth * 1.3f) + (screenWidth * 2), screenWidth * 1.3f + screenWidth, t);
+		}
+		else
+		{
+			if (gamePad.GetButtonDown() & button)
+			{
+				directorTime = 0.0f;
+				directorStep++;
+			}
+		}
+	}
+	break;
+	case 2:
+	{
+
+		directorTime += elapsedTime;
+
+		float t = directorTime / 1.0f;
+
+		float screenWidth = Graphics::Instance().GetScreenWidth();
+		float screenHeight = Graphics::Instance().GetScreenHeight();
+
+		if (t < 1.0f)
+		{
+			tutorialSpritePos[0].x = Easing::EaseOut(screenWidth * 0.5f, screenWidth * -0.3f, t);
+			tutorialSpritePos[1].x = Easing::EaseOut(screenWidth * 1.3f, screenWidth * 0.5f, t);
+			tutorialSpritePos[2].x = Easing::EaseOut(screenWidth * 1.3f + screenWidth, screenWidth * 1.3f, t);
+		}
+		else
+		{
+			if (gamePad.GetButtonDown() & button)
+			{
+				directorTime = 0.0f;
+				directorStep++;
+			}
+		}
+	}
+	break;
+	case 3:
+	{
+
+		directorTime += elapsedTime;
+
+		float t = directorTime / 1.0f;
+
+		float screenWidth = Graphics::Instance().GetScreenWidth();
+		float screenHeight = Graphics::Instance().GetScreenHeight();
+
+		if (t < 1.0f)
+		{
+			tutorialSpritePos[1].x = Easing::EaseOut(screenWidth * 0.5f, screenWidth * -0.3f, t);
+			tutorialSpritePos[2].x = Easing::EaseOut(screenWidth * 1.3f, screenWidth * 0.5f, t);
+		}
+		else
+		{
+			if (gamePad.GetButtonDown() & button)
+			{
+				directorTime = 0.0f;
+				directorStep++;
+			}
+		}
+	}
+	break;
+	case 4:
+	{
+
+		directorTime += elapsedTime;
+
+		float t = directorTime / 1.0f;
+
+		float screenWidth = Graphics::Instance().GetScreenWidth();
+		float screenHeight = Graphics::Instance().GetScreenHeight();
+
+		// チュートリアル画像
+		float posX = screenWidth * 1.3f;
+
+		if (t < 1.0f)
+		{
+			tutorialSpritePos[2].x = Easing::EaseOut(screenWidth * 0.5f, screenWidth * -0.3f, t);
+		}
+		else
+		{
+			directorTime = 0.0f;
+			directorStep++;
+
+		}
+	}
+	break;
+	case 5:
+
+		directorTime += elapsedTime;
+
+		if (directorTime > 0.5f)
+		{
+			fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+				0.0f, 1.0f,
+				0.5f, 0.2f);
+
+			tutorialFinish = true;
+		}
+
+		break;
+	default:
+		break;
 	}
 }

@@ -355,6 +355,23 @@ void Sprite::Render(ID3D11DeviceContext *immediate_context,
 	}
 }
 
+//! 中心位置を変更可能(真ん中はcenterX(Y) = 0.5f)
+void Sprite::RenderCenter(ID3D11DeviceContext* dc, float dx, float dy, float dw, float dh, float sx, float sy, float sw, float sh, float angle, float r, float g, float b, float a, float centerX, float centerY) const
+{
+	//! スプライト中心に調整するため、dx、dyからスプライトの半分の幅を引く
+	dx -= dw * centerX;
+	dy -= dh * centerY;
+
+	//! 描画処理
+	Render(dc,
+		dx, dy,
+		dw, dh,
+		sx, sy,
+		sw, sh,
+		angle,
+		r, g, b, a);
+}
+
 // シェーダーリソースビューの設定
 void Sprite::SetShaderResourceView(const Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>& srv, int width, int height)
 {

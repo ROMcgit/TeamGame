@@ -14,11 +14,23 @@
 #include "Game/Scene/SceneManager.h"
 #include "Game/Scene/SceneTitle.h"
 #include "Game/Scene/SceneGameSelect.h"
+
+#include "Game/Scene/G0_Onigokko_Tutorial.h"
 #include "Game/Scene/G0_Onigokko.h"
+
+#include "Game/Scene/G1_DarumasangaKoronda_Tutorial.h"
 #include "Game/Scene/G1_DarumasangaKoronda.h"
+
+#include "Game/Scene/G2_Sundome_Tutorial.h"
 #include "Game/Scene/G2_Sundome.h"
+
+#include "Game/Scene/G3_SoratobuHusenWari_Tutorial.h"
 #include "Game/Scene/G3_SoratobuHusenWari.h"
+
+#include "Game/Scene/G4_OssanTataki_Tutorial.h"
 #include "Game/Scene/G4_OssanTataki.h"
+
+#include "Game/Scene/G5_Asibawatari_Tutorial.h"
 #include "Game/Scene/G5_Asibawatari.h"
 
 //static SceneGameSelect sceneGame;
@@ -354,12 +366,53 @@ void Framework::SceneSelectGUI()
 
 		if (ImGui::TreeNodeEx(u8"ゲームシーン", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			ChangeSceneButtonGUI<G0_Onigokko>          (u8"00.おにごっこ");
-			ChangeSceneButtonGUI<G1_DarumasangaKoronda>(u8"01.だるまさんが転んだ");
-			ChangeSceneButtonGUI<G2_Sundome>           (u8"02.寸止め");
-			ChangeSceneButtonGUI<G3_SoratobuHusenWari> (u8"03.空飛ぶ風船割り");
-			ChangeSceneButtonGUI<G4_OssanTataki>       (u8"04.おっさん叩き");
-			ChangeSceneButtonGUI<G5_Asibawatari>       (u8"05.足場渡り");
+			if(ImGui::TreeNode(u8"00.おにごっこ"))
+			{
+				ChangeSceneButtonGUI<G0_Onigokko_Tutorial>(u8"00.おにごっこ(チュートリアル)");
+				ChangeSceneButtonGUI<G0_Onigokko>         (u8"01.おにごっこ");
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode(u8"だるまさんが転んだ"))
+			{
+				ChangeSceneButtonGUI<G1_DarumasangaKoronda_Tutorial>(u8"00.だるまさんが転んだ(チュートリアル)");
+				ChangeSceneButtonGUI<G1_DarumasangaKoronda>         (u8"01.だるまさんが転んだ");
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode(u8"寸止め"))
+			{
+				ChangeSceneButtonGUI<G2_Sundome_Tutorial>(u8"00.寸止め(チュートリアル)");
+				ChangeSceneButtonGUI<G2_Sundome>         (u8"01.寸止め");
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode(u8"空飛ぶ風船割り"))
+			{
+				ChangeSceneButtonGUI<G3_SoratobuHusenWari_Tutorial>(u8"00.空飛ぶ風船割り(チュートリアル)");
+				ChangeSceneButtonGUI<G3_SoratobuHusenWari>         (u8"01.空飛ぶ風船割り");
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode(u8"おっさん叩き"))
+			{
+				ChangeSceneButtonGUI<G4_OssanTataki_Tutorial>(u8"00.おっさん叩き(チュートリアル)");
+				ChangeSceneButtonGUI<G4_OssanTataki>         (u8"00.おっさん叩き");
+
+				ImGui::TreePop();
+			}
+
+			if (ImGui::TreeNode(u8"足場渡り"))
+			{
+				//ChangeSceneButtonGUI<G5_Asibawatari_Tutorial>(u8"00.足場渡り(チュートリアル)");
+				ChangeSceneButtonGUI<G5_Asibawatari>         (u8"01.足場渡り");
+
+				ImGui::TreePop();
+			}
 
 			ImGui::TreePop();
 		}

@@ -28,6 +28,17 @@ public:
 		float angle,
 		float r, float g, float b, float a) const;
 
+	//! 中心位置を変更可能(真ん中はcenterX(Y) = 0.5f)
+	void RenderCenter(
+		ID3D11DeviceContext* dc,
+		float dx, float dy,
+		float dw, float dh,
+		float sx, float sy,
+		float sw, float sh,
+		float angle = 0,
+		float r = 1, float g = 1, float b = 1, float a = 1,
+		float centerX = 0.5f, float centerY = 0.5f) const;
+
 	// シェーダーリソースビューの設定
 	void SetShaderResourceView(const Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>& srv, int width, int height);
 

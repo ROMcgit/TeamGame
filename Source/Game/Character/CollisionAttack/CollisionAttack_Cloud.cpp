@@ -15,13 +15,13 @@ CollisionAttack_Cloud::CollisionAttack_Cloud(CollisionAttackManager* manager)
 	angle.x = DirectX::XMConvertToRadians(180);
 
 	// 大きさ
-	scale.x = scale.y = scale.z = 0.01f;
+	scale.x = scale.y = scale.z = 0.005f;
 	scaleReset = scale;
 
 	collisionType = CollisionType::Box;
 
-	width  = 6.5f;
-	height = 4.6f;
+	width  = 3.85f;
+	height = 2.3f;
 	depth  = 1.4f;
 
 	// マテリアルの色
@@ -40,7 +40,7 @@ CollisionAttack_Cloud::~CollisionAttack_Cloud()
 void CollisionAttack_Cloud::Update(float elapsedTime)
 {
 	velocity.z = -8.0f;
-
+	//position.z = Player3_SoratobuHusenWari::Instance().GetPosition().z + 3;
 	if (Player3_SoratobuHusenWari::Instance().GetPosition().z - 0.5f > position.z)
 		SetOpacityChange(0.5f, 0.3f);
 

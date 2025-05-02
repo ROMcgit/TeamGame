@@ -33,11 +33,16 @@ private:
 	// ムービー更新処理
 	void UpdateMovie(float elapsedTime);
 
+	// シーン切り替え処理
+	void SceneChange();
+
 public:
 	static bool movieScene; // ムービー中か
 
 private:
 	std::unique_ptr<Fade> fade;
+	bool setFade = false;
+	bool sceneChange = false;
 
 	std::unique_ptr <Player1_DarumasangaKoronda> player;
 	std::unique_ptr <CameraController> cameraController;

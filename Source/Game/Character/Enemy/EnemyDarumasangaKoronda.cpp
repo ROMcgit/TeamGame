@@ -49,6 +49,17 @@ void EnemyDarumasangaKoronda::Update(float elapsedTime)
 		deathState = true;
 	}
 
+	if (CollisionVsPlayer() && !deathState)
+	{
+		//! ムービーにする
+		G1_DarumasangaKoronda::movieScene = true;
+
+		deathState = true;
+
+		//! 死亡ステートへ遷移
+		TransitionDeathState();
+	}
+
 	// ステート毎の更新処理
 	switch (state)
 	{
@@ -338,8 +349,23 @@ void EnemyDarumasangaKoronda::OnDead()
 }
 
 // プレイヤーとの当たり判定
-void EnemyDarumasangaKoronda::CollisionVsPlayer()
+bool EnemyDarumasangaKoronda::CollisionVsPlayer()
 {
+	Player1_DarumasangaKoronda& player = Player1_DarumasangaKoronda::Instance();
+
+	DirectX::XMFLOAT3 outPosition;
+	if (Collision::IntersectCylinderVsCylinder(
+		collisionPos,
+		radius,
+		height,
+		player.GetCollisionPos(),
+		player.GetRadius(),
+		player.GetHeight(), outPosition))
+	{
+		return true;
+	}
+
+	return false;
 }
 
 // 移動位置に移動

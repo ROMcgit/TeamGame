@@ -8,6 +8,10 @@
 #include "Game/Stage/StageManager.h"
 #include "Game/Stage/G1_StageDarumasangaKoronda.h"
 #include "Game/Stage/StageMoveFloor.h"
+#include "SceneManager.h"
+#include "SceneLoading.h"
+#include "G1_DarumasangaKoronda_Clear.h"
+#include "G1_DarumasangaKoronda_GameOver.h"
 
 //! ムービー中か
 bool G1_DarumasangaKoronda::movieScene = false;
@@ -146,6 +150,9 @@ void G1_DarumasangaKoronda::Update(float elapsedTime)
 
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
+
+	// シーン切り替え処理
+	SceneChange();
 }
 
 // 描画処理
@@ -180,7 +187,8 @@ void G1_DarumasangaKoronda::Render()
 				//エネミー描画
 				EnemyManager::Instance().Render(dc, shadowMapShader);
 				// プレイヤー描画
-				player->Render(dc, shadowMapShader);
+				if (!movieScene)
+					player->Render(dc, shadowMapShader);
 
 				shadowMapShader->End(dc);
 			}
@@ -225,7 +233,8 @@ void G1_DarumasangaKoronda::Render()
 		StageManager::Instance().Render(dc, shader);
 
 		// プレイヤー描画
-		player->Render(dc, shader);
+		if(!movieScene)
+			player->Render(dc, shader);
 
 		// カメラの位置を描画
 		cameraController->RenderCameraTarget(dc, shader);
@@ -341,12 +350,47 @@ void G1_DarumasangaKoronda::UpdateMovie(float elapsedTime)
 		}
 
 		break;
+	//! 敵死亡
 	case 1:
+
+		movieTime += elapsedTime;
+
+		if (movieTime > 3.5f)
+		{
+
+		}
 
 		break;
 	case 2:
 		break;
 	default:
 		break;
+	}
+}
+
+// シーン切り替え処理
+void G1_DarumasangaKoronda::SceneChange()
+{
+	if (!sceneChange && (timer->GetTimeM_Int() > 0 || (timer->GetTimeM_Int() == 0 && timer->GetTimeS_Int() > 0))) return;
+
+	if (!setFade)
+	{
+		//! フェードを設定
+		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+			0.0f, 1.0f,
+			1.0f, 0.5f);
+
+		setFade = true;
+	}
+	else if (!fade->GetFade())
+	{
+		std::unique_ptr<SceneLoading> loadingScene;
+		if((timer->GetTimeM_Int() > 0 || (timer->GetTimeM_Int() == 0 && timer->GetTimeS_Int() > 0)))
+			loadingScene = std::make_unique<SceneLoading>(std::make_unique<G1_DarumasangaKoronda_Clear>());
+		else
+			loadingScene = std::make_unique<SceneLoading>(std::make_unique<G1_DarumasangaKoronda_GameOver>());
+
+		// シーンマネージャーにローディングシーンへの切り替えを指示
+		SceneManager::Instance().ChangeScene(std::move(loadingScene));
 	}
 }

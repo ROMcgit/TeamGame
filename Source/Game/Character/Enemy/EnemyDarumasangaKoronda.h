@@ -37,7 +37,7 @@ protected:
 private:
 
 	// プレイヤーとの当たり判定
-	void CollisionVsPlayer();
+	bool CollisionVsPlayer();
 
 	// 移動位置に移動
 	void MoveTarget(float elapsedTime, float speedRate);

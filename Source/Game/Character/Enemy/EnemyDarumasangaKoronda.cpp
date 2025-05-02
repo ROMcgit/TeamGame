@@ -19,7 +19,7 @@ EnemyDarumasangaKoronda::EnemyDarumasangaKoronda()
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.03f;
 
-	gravity = 0;
+	gravity = 0.3f;
 
 	angle.y = DirectX::XMConvertToRadians(180);
 
@@ -227,6 +227,9 @@ void EnemyDarumasangaKoronda::UpdateWaitState(float elapsedTime)
 void EnemyDarumasangaKoronda::TransitionLookState()
 {
 	state = State::Look;
+
+	//! 角度Yを変更する
+	SetAngleYChange(DirectX::XMConvertToRadians(180), 0.3f);
 
 	//! コントラスト
 	SetContrast(Camera::postEffect.contrast + 0.05f);

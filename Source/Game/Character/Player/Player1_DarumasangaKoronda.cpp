@@ -51,10 +51,6 @@ void Player1_DarumasangaKoronda::Update(float elapsedTime)
 
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
-	// 移動した事が証明されているなら、待機ステートへ遷移する
-	if ((gamePad.GetAxisLX() == 0 && gamePad.GetAxisLY() == 0))
-		velocity.x = velocity.z = 0;
-
 	// ムービー中なら待機ステートへ遷移
 	if (movieScene)
 	{
@@ -90,6 +86,9 @@ void Player1_DarumasangaKoronda::Update(float elapsedTime)
 			break;
 		case State::Move:
 			UpdateMoveState(elapsedTime);
+			break;
+		case State::Dash:
+			UpdateDashState(elapsedTime);
 			break;
 		case State::Jump:
 			UpdateJumpState(elapsedTime);
@@ -200,6 +199,15 @@ void Player1_DarumasangaKoronda::UpdateWaitState(float elapsedTime)
 		TransitionJumpState();
 	}
 
+	GamePadButton button = GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
+
+	//! ダッシュ処理
+	if (gamePad.GetButtonDown() & button)
+	{
+		//! ダッシュステートへ遷移
+		TransitionDashState();
+	}
+
 	InputMove(elapsedTime);
 }
 
@@ -209,7 +217,8 @@ void Player1_DarumasangaKoronda::TransitionMoveState()
 	state = State::Move;
 
 	// 走りアニメーション再生
-	model->PlayAnimation(Anim_Move, true);
+	if (model->GetAnimationNum() != Anim_Move)
+		model->PlayAnimation(Anim_Move, true);
 }
 
 // 移動ステート更新処理
@@ -226,6 +235,8 @@ void Player1_DarumasangaKoronda::UpdateMoveState(float elapsedTime)
 
 	if (gamePad.GetAxisLX() == 0 && gamePad.GetAxisLY() == 0)
 	{
+		velocity.x = velocity.z = 0;
+
 		// 待機ステートへ遷移
 		TransitionWaitState();
 	}
@@ -235,6 +246,15 @@ void Player1_DarumasangaKoronda::UpdateMoveState(float elapsedTime)
 	{
 		InputJump();
 		TransitionJumpState();
+	}
+
+	GamePadButton button = GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
+
+	//! ダッシュ処理
+	if (gamePad.GetButtonDown() & button)
+	{
+		//! ダッシュステートへ遷移
+		TransitionDashState();
 	}
 
 	InputMove(elapsedTime);
@@ -256,6 +276,46 @@ void Player1_DarumasangaKoronda::UpdateJumpState(float elapsedTime)
 
 	// 移動入力処理
 	InputMove(elapsedTime);
+}
+
+// ダッシュステートへ遷移
+void Player1_DarumasangaKoronda::TransitionDashState()
+{
+	state = State::Dash;
+
+	stateChangeWaitTimer = 1.0f;
+
+	// 走りアニメーション再生
+	if(model->GetAnimationNum() != Anim_Move)
+		model->PlayAnimation(Anim_Move, true);
+}
+
+// ダッシュステート更新処理
+void Player1_DarumasangaKoronda::UpdateDashState(float elapsedTime)
+{
+	// 前方向
+	DirectX::XMFLOAT3 dir;
+
+	dir.x = transform._31;
+	dir.y = transform._32;
+	dir.z = transform._33;
+
+	DirectX::XMVECTOR DIR;
+	DIR = DirectX::XMLoadFloat3(&dir);
+	DIR = DirectX::XMVector3Normalize(DIR);
+	DirectX::XMStoreFloat3(&dir, DIR);
+
+	// 移動する
+	Move3D(dir.x, dir.z, 30.0f);
+
+	stateChangeWaitTimer -= elapsedTime;
+
+	//! 待ち時間が0なら
+	if (stateChangeWaitTimer <= 0.0f)
+	{
+		//! 待機ステートへ遷移
+		TransitionWaitState();
+	}
 }
 
 // ダメージステートへ遷移

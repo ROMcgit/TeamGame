@@ -95,7 +95,7 @@ void EnemyDarumasangaKoronda::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	targetPosition = Player1_DarumasangaKoronda::Instance().GetPosition();
 	dist = abs(targetPosition.x - position.x);
-	if ((dist < 180 || G1_DarumasangaKoronda::movieScene))
+	if ((dist > 180 || G1_DarumasangaKoronda::movieScene))
 		shader->Draw(dc, model.get(), materialColor, opacity);
 }
 

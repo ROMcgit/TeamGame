@@ -20,7 +20,7 @@ void G4_OssanTataki_Result::Initialize()
 	float screenWidth = static_cast<float>(Graphics::Instance().GetScreenWidth());
 	float screenHeight = static_cast<float>(Graphics::Instance().GetScreenHeight());
 
-	scorePos = { screenWidth * 1.5f, 320 };
+	scorePos = { screenWidth * 2.0f, 273.0f };
 
 	startScorePosX = scorePos.x;
 

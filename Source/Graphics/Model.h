@@ -14,8 +14,8 @@ public:
 
 	struct Node
 	{
-		const char*			name;
-		Node*				parent;
+		const char* name;
+		Node* parent;
 		DirectX::XMFLOAT3	scale;
 		DirectX::XMFLOAT4	rotate;
 		DirectX::XMFLOAT3	translate;
@@ -25,8 +25,7 @@ public:
 		std::vector<Node*>	children;
 	};
 
-	// 行列計算
-	void UpdateTransform(const DirectX::XMFLOAT4X4& transform);
+	/*! ゲッター */
 
 	// ノードリスト取得
 	const std::vector<Node>& GetNodes() const { return nodes; }
@@ -35,19 +34,31 @@ public:
 	// リソース取得
 	const ModelResource* GetResource() const { return resource.get(); }
 
-	// アニメーション更新処理
-	void UpdateAnimation(float elapsedTime);
-
-	// アニメーション再生
-	void PlayAnimation(int index, bool loop, float blendSeconds = 0.2f);
+	// ノード検索
+	Node* FindNode(const char* name);
 
 	// アニメーション再生中か
 	bool IsPlayAnimation() const;
 
-	// ノード検索
-	Node* FindNode(const char* name);
+	// アニメーション番号を取得
+	int GetAnimationNum() { return animationNum; }
 
+	// アニメーションの時間を取得
 	float GetCurrentAnimationSeconds() const { return currentAnimationSeconds; }
+
+	/*! セッター */
+
+	// アニメーション再生
+	void PlayAnimation(int index, bool loop, float blendSeconds = 0.2f);
+
+	/*****************************************************************************************************************/
+		/*! 更新処理 */
+
+		// 行列計算
+	void UpdateTransform(const DirectX::XMFLOAT4X4& transform);
+
+	// アニメーション更新処理
+	void UpdateAnimation(float elapsedTime);
 
 private:
 	std::shared_ptr<ModelResource>	resource;
@@ -61,4 +72,6 @@ private:
 
 	float animationBlendTime = 0.0f;
 	float animationBlendSeconds = 0.0f;
+
+	int animationNum = 0;
 };

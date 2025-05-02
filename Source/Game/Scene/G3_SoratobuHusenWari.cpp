@@ -464,7 +464,7 @@ void G3_SoratobuHusenWari::SceneChange()
 		{
 			//! フェードを設定
 			fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
-				1.0f, 0.0f,
+				0.0f, 1.0f,
 				1.0f, 0.5f);
 
 			setFade = true;

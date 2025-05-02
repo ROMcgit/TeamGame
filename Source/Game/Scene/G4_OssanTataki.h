@@ -41,6 +41,9 @@ private:
 	// スコア更新処理
 	void UpdateScore();
 
+	// シーン切り替え処理
+	void SceneChange();
+
 public:
 	static int score;
 
@@ -51,6 +54,7 @@ private:
 	CollisionAttackManager collisionAttackManager;
 
 	std::unique_ptr<Fade> fade;
+	bool setFade = false;
 
 	std::unique_ptr <Player4_OssanTataki> player;
 	std::unique_ptr <CameraController> cameraController;

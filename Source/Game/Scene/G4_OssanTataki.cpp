@@ -10,6 +10,9 @@
 #include "Game/Stage/StageMoveFloor.h"
 #include "Game/Character/CollisionAttack/CollisionAttack_Hole.h"
 #include "Game/Character/Enemy/EnemyChara.h"
+#include "SceneManager.h"
+#include "SceneLoading.h"
+#include "G4_OssanTataki_Result.h"
 
 //! スコア
 int G4_OssanTataki::score = 0;
@@ -153,7 +156,8 @@ void G4_OssanTataki::Update(float elapsedTime)
 	player->Update(elapsedTime);
 
 	// エネミー更新処理
-	EnemyManager::Instance().Update(elapsedTime);
+	if(timer->GetTimeM_Int() > 0 || (timer->GetTimeM_Int() == 0 && timer->GetTimeS_Int() > 0))
+		EnemyManager::Instance().Update(elapsedTime);
 
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
@@ -163,6 +167,9 @@ void G4_OssanTataki::Update(float elapsedTime)
 
 	// スコア更新処理
 	UpdateScore();
+
+	// シーン切り替え処理
+	SceneChange();
 }
 
 // 描画処理
@@ -411,5 +418,29 @@ void G4_OssanTataki::UpdateScore()
 	else if (score < scoreText->GetMin())
 	{
 		score = scoreText->GetMin();
+	}
+}
+
+// シーン切り替え処理
+void G4_OssanTataki::SceneChange()
+{
+	if (timer->GetTimeM_Int() <= 0 && timer->GetTimeS_Int() <= 0)
+	{
+		if (!setFade)
+		{
+			//! フェードを設定
+			fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+				0.0f, 1.0f,
+				1.0f, 0.5f);
+
+			setFade = true;
+		}
+		else if (setFade && !fade->GetFade())
+		{
+			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G4_OssanTataki_Result>());
+
+			// シーンマネージャーにローディングシーンへの切り替えを指示
+			SceneManager::Instance().ChangeScene(std::move(loadingScene));
+		}
 	}
 }

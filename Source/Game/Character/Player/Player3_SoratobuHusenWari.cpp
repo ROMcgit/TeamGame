@@ -329,7 +329,7 @@ void Player3_SoratobuHusenWari::TransitionDamageState()
 	gravity = 0.13f;
 
 	//! カラーフィルターを変更する
-	SetColorFilterChange(DirectX::XMFLOAT3(Camera::colorFilterReset.x + 2.0f, Camera::colorFilterReset.y, Camera::colorFilterReset.z));
+	SetColorFilterChange(DirectX::XMFLOAT3(Camera::colorFilterReset.x + 1.7f, Camera::colorFilterReset.y, Camera::colorFilterReset.z), 0.5f);
 
 	//! カメラシェイク
 	SetCameraShake(0.2f, DirectX::XMINT3(10, 60, 0));
@@ -348,7 +348,7 @@ void Player3_SoratobuHusenWari::UpdateDamageState(float elapsedTime)
 		gravity = gravityReset;
 
 		//! カラーフィルターを戻す
-		SetColorFilterResetChange();
+		SetColorFilterResetChange(0.3f);
 
 		//! 移動ステートに遷移
 		TransitionMoveState();

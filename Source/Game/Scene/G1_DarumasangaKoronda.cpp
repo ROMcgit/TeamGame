@@ -48,7 +48,7 @@ void G1_DarumasangaKoronda::Initialize()
 
 	//! “G
 	std::unique_ptr<EnemyDarumasangaKoronda> oni = std::make_unique<EnemyDarumasangaKoronda>();
-	oni->SetPosition(DirectX::XMFLOAT3(0.0f, 11.227f, 538.45f));
+	oni->SetPosition(DirectX::XMFLOAT3(0.0f, 113.227f, 538.45f));
 	//! ‹S‚ð“o˜^
 	EnemyManager::Instance().Register(std::move(oni));
 

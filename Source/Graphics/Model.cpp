@@ -167,26 +167,10 @@ void Model::UpdateAnimation(float elapsedTime)
     }
 }
 
-
-// アニメーション再生
-//void Model::PlayAnimation(int index)
-//{
-//	currentAnimationIndex = index;
-//	currentAnimationSeconds = 0.0f;
-//}
-
-//void Model::PlayAnimation(int index, bool loop)
-//{
-//	currentAnimationIndex = index;
-//	currentAnimationSeconds = 0.0f;
-//	animationLoopFlag = loop;
-//	animationEndFlag = false;
-//}
-
 // アニメーション再生
 void Model::PlayAnimation(int index, bool loop, float blendSeconds)
 {
-    currentAnimationIndex = index;
+    currentAnimationIndex = animationNum = index;
     currentAnimationSeconds = 0.0f;
     animationLoopFlag = loop;
     animationEndFlag = false;

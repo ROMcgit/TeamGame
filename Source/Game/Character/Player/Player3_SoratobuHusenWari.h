@@ -43,6 +43,8 @@ protected:
 	void OnDead() override;
 
 private:
+	// ˆÊ’u§ŒÀ
+	void PositionControll(float elapsedTime);
 
 	// ˆÚ“®“ü—Íˆ—
 	bool InputMove(float elapsedTime);
@@ -98,6 +100,8 @@ public:
 
 private:
 	std::unique_ptr<Model> model;
+
+	std::unique_ptr<Sprite> uiSprite[4];
 
 	// Õ“ËUŒ‚
 	CollisionAttackManager collisionAttackManager;

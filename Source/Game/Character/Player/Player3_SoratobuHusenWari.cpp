@@ -38,6 +38,26 @@ Player3_SoratobuHusenWari::Player3_SoratobuHusenWari()
 	// 重力
 	gravity = gravityReset = 0.3f;
 
+	//! プレイヤーUI
+	//uiSprite[0] = std::make_unique <Sprite>("Data/Sprite/5.UI/CuppyUI.png");
+	for (int i = 0; i < 3; i++)
+	{
+		uiSprite[i + 1] = std::make_unique <Sprite>(); // HPゲージ
+		//[1] 灰色
+		//[2] 赤色
+		//[3] 緑色
+	}
+
+	hp = maxHp = hpDamage = 200;
+
+	hpImagePos = { 8.0f, 20 };
+	hpImageShakePosY = hpImagePos.y;
+
+	hpSpritePos = { 10, 20 };
+	hpSpriteShakePosY = hpSpritePos.y;
+
+	playerHpSpriteWidth = 200;
+
 	// 移動ステートへ遷移
 	TransitionMoveState();
 }
@@ -108,6 +128,9 @@ void Player3_SoratobuHusenWari::Update(float elapsedTime)
 	// プレイヤーと敵との衝突処理
 	CollisionPlayer3_SoratobuHusenWariVsEnemies();
 
+	// 位置制限
+	PositionControll(elapsedTime);
+
 	// モデルアニメーション更新処理
 	model->UpdateAnimation(elapsedTime);
 
@@ -130,6 +153,73 @@ void Player3_SoratobuHusenWari::Render(ID3D11DeviceContext* dc, Shader* shader)
 // HPなどのUI描画
 void Player3_SoratobuHusenWari::SpriteRender(ID3D11DeviceContext* dc)
 {
+	float textureWidth = static_cast<float>(uiSprite[1]->GetTextureWidth());
+	float textureHeight = static_cast<float>(uiSprite[1]->GetTextureHeight());
+
+	if (!hideSprites)
+	{
+		// ゲージの裏(灰色)
+		uiSprite[1]->Render(dc,
+			hpSpritePos.x, hpSpritePos.y,
+			playerHpSpriteWidth, 40,
+			0, 0, textureWidth, textureHeight,
+			0,
+			0.3f, 0.3f, 0.3f, 1);
+
+		float hpWidth = (static_cast<float>(hp) / maxHp) * playerHpSpriteWidth; // HPの横の長さ
+		float hpDamageWidth = (static_cast<float>(hpDamage) / maxHp) * playerHpSpriteWidth; // HPダメージの横の長さ
+
+		// ダメージ(赤色)
+		uiSprite[2]->Render(dc,
+			hpSpritePos.x, hpSpritePos.y,
+			hpDamageWidth, 40,
+			0, 0, textureWidth, textureHeight,
+			0,
+			1, 0, 0, 1);
+
+		// HPゲージ
+		uiSprite[3]->Render(dc,
+			hpSpritePos.x, hpSpritePos.y,
+			hpWidth, 40,
+			0, 0, textureWidth, textureHeight,
+			0,
+			hpSpriteColorP.x,
+			hpSpriteColorP.y,
+			hpSpriteColorP.z,
+			1);
+
+		textureWidth = static_cast<float>(uiSprite[0]->GetTextureWidth());
+		textureHeight = static_cast<float>(uiSprite[0]->GetTextureHeight());
+
+		// プレイヤーUI画像
+		/*uiSprite[0]->Render(dc,
+			hpImagePos.x, hpImagePos.y,
+			241, 84,
+			0, 0, textureWidth, textureHeight,
+			0,
+			hpImageColor.x,
+			hpImageColor.y,
+			hpImageColor.z,
+			1);*/
+	}
+}
+
+// 位置制限
+void Player3_SoratobuHusenWari::PositionControll(float elapsedTime)
+{
+	//! 位置Xを制限
+	if (position.x < -10.2f || position.x > 10.2f)
+	{
+		velocity.x = 0;
+		position.x = std::clamp(position.x, -10.2f, 10.2f);
+	}
+
+	if (position.y > 25.0f)
+	{
+		position.y = 25.0f;
+
+		velocity.y -= 5 * elapsedTime;
+	}
 }
 
 // 移動入力処理
@@ -364,6 +454,11 @@ void Player3_SoratobuHusenWari::OnLanding()
 // ダメージを受けた時に呼ばれる
 void Player3_SoratobuHusenWari::OnDamaged()
 {
+	hpShake = true;
+
+	if (isGround)
+		velocity.y = 12.0f;
+
 	// ダメージステートへ遷移
 	TransitionDamageState();
 }
@@ -381,6 +476,8 @@ void Player3_SoratobuHusenWari::DrawDebugGUI()
 	if (ImGui::TreeNode("Player3_SoratobuHusenWari"))
 	{
 		ImGui::InputFloat3("Velocity", &velocity.x);
+
+		ImGui::DragFloat("HPWidth", &playerHpSpriteWidth, 0.2f);
 
 		// トランスフォーム
 		if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen))

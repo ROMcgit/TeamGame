@@ -1,16 +1,30 @@
 #include "Graphics/Graphics.h"
 #include "Game/Scene/G4_OssanTataki_Result.h"
+#include "Game/Scene/G4_OssanTataki.h"
 #include "SceneGameSelect.h"
 #include "Game/Scene/SceneManager.h"
-#include "Input/Input.h"
 #include "SceneLoading.h"
+#include "Input/Input.h"
 #include "Graphics/Fade.h"
+#include "Other/Easing.h"
 
 // 初期化
 void G4_OssanTataki_Result::Initialize()
 {
 	// スプライト初期化
-	sprite = std::make_unique<Sprite>("Data/Sprite/Title.png");
+	backGround = std::make_unique<Sprite>("Data/Sprite/Title.png");
+
+	// スコア
+	score = std::make_unique<Text>();
+
+	float screenWidth = static_cast<float>(Graphics::Instance().GetScreenWidth());
+	float screenHeight = static_cast<float>(Graphics::Instance().GetScreenHeight());
+
+	scorePos = { screenWidth * 1.5f, 320 };
+
+	startScorePosX = scorePos.x;
+
+	scoreDirector = true;
 
 	fade = std::make_unique<Fade>();
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
@@ -30,11 +44,17 @@ void G4_OssanTataki_Result::Update(float elapsedTime)
 
 	fade->Update(elapsedTime);
 
+	//! スコア画像の更新処理
+	UpdateScoreSprite(elapsedTime);
+
+	if (G4_OssanTataki::score > score->GetMaxOku())
+		G4_OssanTataki::score = score->GetMaxOku();
+
 	// なにかボタンを押したらローディングシーンを挟んでゲームシーンへ切り替え
 	const GamePadButton anyButton =
 		GamePad::BTN_A |
 		GamePad::BTN_B;
-	if (gamePad.GetButtonDown() & anyButton && !setFade && !fade->GetFade())
+	if ((gamePad.GetButtonDown() & anyButton && !setFade && !fade->GetFade()) && !scoreDirector)
 	{
 		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 			0.0f, 1.0f,
@@ -69,15 +89,85 @@ void G4_OssanTataki_Result::Render()
 	{
 		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
 		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
-		float textureWidth = static_cast<float>(sprite->GetTextureWidth());
-		float textureHeight = static_cast<float>(sprite->GetTextureHeight());
+		float textureWidth = static_cast<float>(backGround->GetTextureWidth());
+		float textureHeight = static_cast<float>(backGround->GetTextureHeight());
 		// タイトルスプライト描画
-		sprite->Render(dc,
+		backGround->Render(dc,
 			0, 0, screenWidth, screenHeight,
 			0, 0, textureWidth, textureHeight,
 			0,
 			1, 1, 1, 1);
 
+		// スコア
+		score->RenderOku(dc, left, G4_OssanTataki::score, false,
+			scorePos.x, scorePos.y, scoreScale.x, scoreScale.y, 0, space);
+
 		fade->Render(dc, graphics);
+	}
+
+#ifndef _DEBUG
+	{
+		if (ImGui::Begin("Debug"))
+		{
+			ImGui::DragInt("Score", &G4_OssanTataki::score, 1000);
+			ImGui::Checkbox("Left", &left);
+			ImGui::DragFloat2("ScorePos", &scorePos.x, 0.1f);
+			ImGui::DragFloat2("ScoreScale", &scoreScale.x, 0.1f);
+			ImGui::DragFloat("Space", &space, 0.1f);
+		}
+		ImGui::End();
+	}
+#endif // !_DEBUG
+
+}
+
+// スコア画像の更新処理
+void G4_OssanTataki_Result::UpdateScoreSprite(float elapsedTime)
+{
+	switch (scoreStep)
+	{
+	case 0:
+
+		scoreTimer += elapsedTime;
+
+		if (scoreTimer > 4.0f)
+		{
+			scoreTimer = 0.0f;
+			scoreStep++;
+		}
+
+		break;
+	case 1:
+	{
+		scoreTimer += elapsedTime;
+
+		float screenWidth = static_cast<float>(Graphics::Instance().GetScreenWidth());
+		float screenHeight = static_cast<float>(Graphics::Instance().GetScreenHeight());
+
+		float t = scoreTimer / 1.0f;
+
+		if (t < 1.0f)
+		{
+			scorePos.x = Easing::EaseOut(startScorePosX, 973.5f, t);
+		}
+		else
+		{
+			scoreTimer = 0.0f;
+			scoreStep++;
+		}
+	}
+	break;
+	case 2:
+
+		scoreTimer += elapsedTime;
+
+		if (scoreTimer > 2.0f)
+		{
+			scoreDirector = false;
+		}
+
+		break;
+	default:
+		break;
 	}
 }

@@ -3,8 +3,8 @@
 #include "Game/Scene/G3_SoratobuHusenWari.h"
 #include "SceneGameSelect.h"
 #include "Game/Scene/SceneManager.h"
-#include "Input/Input.h"
 #include "SceneLoading.h"
+#include "Input/Input.h"
 #include "Graphics/Fade.h"
 #include "Other/Easing.h"
 
@@ -20,7 +20,7 @@ void G3_SoratobuHusenWari_Result::Initialize()
 	float screenWidth = static_cast<float>(Graphics::Instance().GetScreenWidth());
 	float screenHeight = static_cast<float>(Graphics::Instance().GetScreenHeight());
 
-	scorePos = { screenWidth * 1.5f, screenHeight * 0.48f };
+	scorePos = { screenWidth * 1.5f, 320 };
 
 	startScorePosX = scorePos.x;
 
@@ -46,6 +46,9 @@ void G3_SoratobuHusenWari_Result::Update(float elapsedTime)
 
 	//! スコア画像の更新処理
 	UpdateScoreSprite(elapsedTime);
+
+	if (G3_SoratobuHusenWari::score > score->GetMaxOku())
+		G3_SoratobuHusenWari::score = score->GetMaxOku();
 
 	// なにかボタンを押したらローディングシーンを挟んでゲームシーンへ切り替え
 	const GamePadButton anyButton =
@@ -96,11 +99,26 @@ void G3_SoratobuHusenWari_Result::Render()
 			1, 1, 1, 1);
 
 		// スコア
-		score->RenderOku(dc, false, G3_SoratobuHusenWari::score, false,
-			scorePos.x, scorePos.y);
+		score->RenderOku(dc, left, G3_SoratobuHusenWari::score, false,
+			scorePos.x, scorePos.y, scoreScale.x, scoreScale.y, 0, space);
 
 		fade->Render(dc, graphics);
 	}
+
+#ifndef _DEBUG
+	{
+		if (ImGui::Begin("Debug"))
+		{
+			ImGui::DragInt("Score", &G3_SoratobuHusenWari::score, 1000);
+			ImGui::Checkbox("Left", &left);
+			ImGui::DragFloat2("ScorePos", &scorePos.x, 0.1f);
+			ImGui::DragFloat2("ScoreScale", &scoreScale.x, 0.1f);
+			ImGui::DragFloat("Space", &space, 0.1f);
+		}
+		ImGui::End();
+	}
+#endif // !_DEBUG
+
 }
 
 // スコア画像の更新処理
@@ -120,23 +138,24 @@ void G3_SoratobuHusenWari_Result::UpdateScoreSprite(float elapsedTime)
 
 		break;
 	case 1:
-
+	{
 		scoreTimer += elapsedTime;
 
-		float screenWidth  = static_cast<float>(Graphics::Instance().GetScreenWidth());
+		float screenWidth = static_cast<float>(Graphics::Instance().GetScreenWidth());
 		float screenHeight = static_cast<float>(Graphics::Instance().GetScreenHeight());
 
 		float t = scoreTimer / 1.0f;
 
 		if (t < 1.0f)
 		{
-			scorePos.x = Easing::EaseOut(startScorePosX, screenHeight * 0.3f, t);
+			scorePos.x = Easing::EaseOut(startScorePosX, 973.5f, t);
 		}
 		else
 		{
 			scoreTimer = 0.0f;
 			scoreStep++;
 		}
+	}
 		break;
 	case 2:
 

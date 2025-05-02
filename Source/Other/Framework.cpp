@@ -26,9 +26,11 @@
 
 #include "Game/Scene/G3_SoratobuHusenWari_Tutorial.h"
 #include "Game/Scene/G3_SoratobuHusenWari.h"
+#include "Game/Scene/G3_SoratobuHusenWari_Result.h"
 
 #include "Game/Scene/G4_OssanTataki_Tutorial.h"
 #include "Game/Scene/G4_OssanTataki.h"
+#include "Game/Scene/G4_OssanTataki_Result.h"
 
 #include "Game/Scene/G5_Asibawatari_Tutorial.h"
 #include "Game/Scene/G5_Asibawatari.h"
@@ -394,6 +396,7 @@ void Framework::SceneSelectGUI()
 			{
 				ChangeSceneButtonGUI<G3_SoratobuHusenWari_Tutorial>(u8"00.空飛ぶ風船割り(チュートリアル)");
 				ChangeSceneButtonGUI<G3_SoratobuHusenWari>         (u8"01.空飛ぶ風船割り");
+				ChangeSceneButtonGUI<G3_SoratobuHusenWari_Result>  (u8"02.空飛ぶ風船割り(リザルト)");
 
 				ImGui::TreePop();
 			}
@@ -401,14 +404,15 @@ void Framework::SceneSelectGUI()
 			if (ImGui::TreeNode(u8"おっさん叩き"))
 			{
 				ChangeSceneButtonGUI<G4_OssanTataki_Tutorial>(u8"00.おっさん叩き(チュートリアル)");
-				ChangeSceneButtonGUI<G4_OssanTataki>         (u8"00.おっさん叩き");
+				ChangeSceneButtonGUI<G4_OssanTataki>         (u8"01.おっさん叩き");
+				ChangeSceneButtonGUI<G4_OssanTataki_Result>  (u8"02.おっさん叩き(リザルト)");
 
 				ImGui::TreePop();
 			}
 
 			if (ImGui::TreeNode(u8"足場渡り"))
 			{
-				//ChangeSceneButtonGUI<G5_Asibawatari_Tutorial>(u8"00.足場渡り(チュートリアル)");
+				ChangeSceneButtonGUI<G5_Asibawatari_Tutorial>(u8"00.足場渡り(チュートリアル)");
 				ChangeSceneButtonGUI<G5_Asibawatari>         (u8"01.足場渡り");
 
 				ImGui::TreePop();

@@ -32,6 +32,9 @@ private:
 	int   scoreStep = 0;
 	float scoreTimer = 0.0f;
 	bool scoreDirector = false;
+	DirectX::XMFLOAT2 scoreScale = { 30, 30 };
+	float space = 100.0f;
+	bool left = false;
 
 private:
 	std::unique_ptr<Sprite> backGround;

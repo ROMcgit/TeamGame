@@ -482,6 +482,7 @@ void Player3_SoratobuHusenWari::DrawDebugGUI()
 	{
 		ImGui::InputFloat3("Velocity", &velocity.x);
 
+		ImGui::DragInt("HP", &hp);
 		ImGui::DragFloat2("HPPos", &hpSpritePos.x, 0.2f);
 		ImGui::DragFloat("HPWidth", &playerHpSpriteWidth, 0.2f);
 

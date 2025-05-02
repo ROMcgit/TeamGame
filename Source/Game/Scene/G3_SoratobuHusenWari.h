@@ -40,6 +40,9 @@ private:
 	// スコア更新処理
 	void UpdateScore();
 
+	// シーン変更処理
+	void SceneChange();
+
 public:
 	static bool movieScene;
 	static int score;
@@ -51,6 +54,7 @@ private:
 	DirectX::XMFLOAT2 scoreTextPos = { 1240.0f, 0.0f };
 
 	std::unique_ptr<Fade> fade;
+	bool setFade = false;
 
 	std::unique_ptr <Player3_SoratobuHusenWari> player;
 	std::unique_ptr <CameraController> cameraController;

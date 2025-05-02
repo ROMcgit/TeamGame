@@ -11,6 +11,9 @@
 #include "Game/Character/Item/Balloon_Minus.h"
 #include "Game/Character/Item/ItemManager.h"
 #include "Game/Character/CollisionAttack/CollisionAttack_Cloud.h"
+#include "SceneManager.h"
+#include "SceneLoading.h"
+#include "G3_SoratobuHusenWari_Result.h"
 
 //! ムービー中か
 bool G3_SoratobuHusenWari::movieScene = false;
@@ -149,6 +152,9 @@ void G3_SoratobuHusenWari::Update(float elapsedTime)
 
 	//! スコア更新処理
 	UpdateScore();
+
+	//! シーン切り替え
+	SceneChange();
 }
 
 // 描画処理
@@ -156,7 +162,7 @@ void G3_SoratobuHusenWari::Render()
 {
 	lightPosition.x = CameraController::target.x;
 	lightPosition.y = 5.0f;
-	lightPosition.z = CameraController::target.x + 20.0f;
+	lightPosition.z = CameraController::target.z + 20.0f;
 	lightRange = 20000.0f;
 
 	shadowMapEyeOffset = { 0.0f, 55.0f, 5.5f };
@@ -446,5 +452,29 @@ void G3_SoratobuHusenWari::UpdateScore()
 	else if (score < scoreText->GetMin())
 	{
 		score = scoreText->GetMin();
+	}
+}
+
+// シーン変更処理
+void G3_SoratobuHusenWari::SceneChange()
+{
+	if(player->GetHp() <= 0)
+	{
+		if (!setFade)
+		{
+			//! フェードを設定
+			fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+				1.0f, 0.0f,
+				1.0f, 0.5f);
+
+			setFade = true;
+		}
+		else if(setFade && !fade->GetFade())
+		{
+			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G3_SoratobuHusenWari_Result>());
+
+			// シーンマネージャーにローディングシーンへの切り替えを指示
+			SceneManager::Instance().ChangeScene(std::move(loadingScene));
+		}
 	}
 }

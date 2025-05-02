@@ -26,12 +26,12 @@ Player3_SoratobuHusenWari::Player3_SoratobuHusenWari()
 	model = std::make_unique <Model>("Data/Model/3.SoratobuHusenWari/Player/Player.mdl");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.03f;
+	scale.x = scale.y = scale.z = 0.022f;
 
 	debugPrimitiveColor = { 0, 0, 1 };
 
-	radius = 1.35f;
-	height = 4.4f;
+	radius = 1.1f;
+	height = 3.35f;
 
 	opacity = 0.8f;
 
@@ -50,10 +50,10 @@ Player3_SoratobuHusenWari::Player3_SoratobuHusenWari()
 
 	hp = maxHp = hpDamage = 200;
 
-	hpImagePos = { 8.0f, 20 };
+	hpImagePos = { 8.0f, 15 };
 	hpImageShakePosY = hpImagePos.y;
 
-	hpSpritePos = { 10, 20 };
+	hpSpritePos = { 15, 15 };
 	hpSpriteShakePosY = hpSpritePos.y;
 
 	playerHpSpriteWidth = 200;
@@ -302,8 +302,13 @@ void Player3_SoratobuHusenWari::UpdateMoveState(float elapsedTime)
 	velocity.y = std::clamp(velocity.y, -5.0f, 5.0f);
 
 
-	if (isDamage)
+	if (isDamage || isGround)
+	{
+		//! ダメージを与える
+		ApplyDamage(10, 0.1f);
+
 		TransitionDamageState();
+	}
 }
 
 // ダメージステートへ遷移
@@ -314,7 +319,12 @@ void Player3_SoratobuHusenWari::TransitionDamageState()
 	// ダメージアニメーション再生
 	model->PlayAnimation(Anim_Damage, false);
 
-	velocity.y = 0.0f;
+	hpShake = true;
+
+	if(!isGround)
+		velocity.y = 0.0f;
+	else
+		velocity.y = 10.0f;
 
 	gravity = 0.13f;
 
@@ -454,11 +464,6 @@ void Player3_SoratobuHusenWari::OnLanding()
 // ダメージを受けた時に呼ばれる
 void Player3_SoratobuHusenWari::OnDamaged()
 {
-	hpShake = true;
-
-	if (isGround)
-		velocity.y = 12.0f;
-
 	// ダメージステートへ遷移
 	TransitionDamageState();
 }
@@ -477,6 +482,7 @@ void Player3_SoratobuHusenWari::DrawDebugGUI()
 	{
 		ImGui::InputFloat3("Velocity", &velocity.x);
 
+		ImGui::DragFloat2("HPPos", &hpSpritePos.x, 0.2f);
 		ImGui::DragFloat("HPWidth", &playerHpSpriteWidth, 0.2f);
 
 		// トランスフォーム

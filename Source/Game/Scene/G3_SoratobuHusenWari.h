@@ -61,4 +61,5 @@ private:
 
 	float newBalloonWaitTime = 0.0f;
 	float newCloudWaitTime = 0.0f;
+	float gameTimer = 0.0f;
 };

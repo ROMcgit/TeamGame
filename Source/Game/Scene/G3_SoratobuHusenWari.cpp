@@ -291,6 +291,9 @@ void G3_SoratobuHusenWari::Render()
 		scoreText->RenderOku(dc, false, score, false,
 			scoreTextPos.x, scoreTextPos.y);
 
+		//! プレイヤーのスプライト描画
+		player->SpriteRender(dc);
+
 		//! フェードの描画処理
 		fade->Render(dc, graphics);
 	}
@@ -353,7 +356,8 @@ void G3_SoratobuHusenWari::NewBalloon(float elapsedTime)
 
 	ItemManager& itemManager = ItemManager::Instance();
 	int ItemCount = itemManager.GetItemCount();
-	if (ItemCount < 5)
+
+	if (ItemCount < 10)
 	{
 		int itemRansu = rand() % 2 + 1;
 
@@ -394,6 +398,8 @@ void G3_SoratobuHusenWari::NewBalloon(float elapsedTime)
 // 雲生成処理
 void G3_SoratobuHusenWari::NewCloud(float elapsedTime)
 {
+	gameTimer += elapsedTime;
+
 	if (newCloudWaitTime > 0.0f)
 	{
 		newCloudWaitTime -= elapsedTime;
@@ -401,7 +407,18 @@ void G3_SoratobuHusenWari::NewCloud(float elapsedTime)
 	}
 
 	int collisionAttackCount = collisionAttackManager.GetCollisionAttackCount();
-	if (collisionAttackCount < 2)
+	int maxCollisionAttackCount = 0;
+
+	if (gameTimer > 60.0f)
+		maxCollisionAttackCount = 1;
+	else if(gameTimer > 120.0f)
+		maxCollisionAttackCount = 2;
+	else if(gameTimer > 240.0f)
+		maxCollisionAttackCount = 3;
+	else if (gameTimer > 360.0f)
+		maxCollisionAttackCount = 4;
+
+	if (collisionAttackCount < maxCollisionAttackCount)
 	{
 		DirectX::XMFLOAT3 pos;
 		pos.x = rand() % 13 * (rand() % 2 == 1 ? -1 : 1);

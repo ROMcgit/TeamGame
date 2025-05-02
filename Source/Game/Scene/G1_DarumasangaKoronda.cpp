@@ -117,7 +117,7 @@ void G1_DarumasangaKoronda::Update(float elapsedTime)
 	UpdateMovie(elapsedTime);
 
 	// カメラコントローラー更新処理
-	if(!movieScene)
+	if (!movieScene || (movieStep == 1 || movieStep == 2))
 	{
 		DirectX::XMFLOAT3 target = player->GetPosition();
 		target.x = 0;
@@ -132,9 +132,10 @@ void G1_DarumasangaKoronda::Update(float elapsedTime)
 
 		DirectX::XMFLOAT3 target = oni->GetPosition();
 		target.x = 0;
-		target.y += oni->GetHeight() * 0.3f;
+		target.y += oni->GetHeight() * 0.5f;
 		target.z -= 2.0f;
 		cameraController->SetTarget(target);
+		cameraController->SetRange(15.0f);
 	}
 	Camera::Instance().Update(elapsedTime);
 	cameraController->Update(elapsedTime);
@@ -185,7 +186,10 @@ void G1_DarumasangaKoronda::Render()
 				shadowMapShader->Begin(dc, rc);
 
 				//エネミー描画
-				EnemyManager::Instance().Render(dc, shadowMapShader);
+				std::unique_ptr<Enemy>& oni = EnemyManager::Instance().GetEnemy(0);
+
+				if(oni->GetOpacity() > 0.5f)
+					EnemyManager::Instance().Render(dc, shadowMapShader);
 				// プレイヤー描画
 				if (!movieScene)
 					player->Render(dc, shadowMapShader);
@@ -353,15 +357,42 @@ void G1_DarumasangaKoronda::UpdateMovie(float elapsedTime)
 	//! 敵死亡
 	case 1:
 
-		movieTime += elapsedTime;
+		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+			0.0f, 1.0f,
+			1.0f, 0.2f);
 
-		if (movieTime > 3.5f)
-		{
-
-		}
+		movieStep++;
 
 		break;
+	//! フェードを終わる
 	case 2:
+
+		if (!fade->GetFade())
+		{
+			movieTime += elapsedTime;
+
+			if (movieTime > 1.0f)
+			{
+				fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+					1.0f, 0.0f,
+					1.0f, 0.2f);
+
+				movieStep++;
+			}
+		}
+		break;
+	case 3:
+
+		if (!fade->GetFade())
+		{
+			movieTime += elapsedTime;
+
+			if (movieTime > 3.5f)
+			{
+				sceneChange = true;
+			}
+		}
+
 		break;
 	default:
 		break;

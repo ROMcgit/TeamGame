@@ -316,7 +316,7 @@ void EnemyDarumasangaKoronda::TransitionDeathState()
 
 	angle.y = DirectX::XMConvertToRadians(180);
 
-	stateChangeWaitTimer = 2.0f;
+	stateChangeWaitTimer = 3.0f;
 }
 
 // 死亡ステート更新処理

@@ -12,7 +12,7 @@ void G5_Asibawatari_Clear::Initialize()
 	// îwåi
 	backGround = std::make_unique<Sprite>();
 	// ÉQÅ[ÉÄÉNÉäÉA
-	gameClear = std::make_unique<Sprite>("Data/Sprite/0.Onigokko/GameClear.png");
+	gameClear = std::make_unique<Sprite>("Data/Sprite/5.Asibawatari/GameClear.png");
 
 	fade = std::make_unique<Fade>();
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),

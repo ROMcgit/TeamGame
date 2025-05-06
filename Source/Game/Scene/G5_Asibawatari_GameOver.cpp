@@ -12,7 +12,7 @@ void G5_Asibawatari_GameOver::Initialize()
 	// îwåi
 	backGround = std::make_unique<Sprite>();
 	// ÉQÅ[ÉÄÉIÅ[ÉoÅ[
-	gameOver = std::make_unique<Sprite>("Data/Sprite/0.Onigokko/GameOver.png");
+	gameOver = std::make_unique<Sprite>("Data/Sprite/5.Asibawatari/GameOver.png");
 
 	fade = std::make_unique<Fade>();
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),

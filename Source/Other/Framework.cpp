@@ -17,12 +17,17 @@
 
 #include "Game/Scene/G0_Onigokko_Tutorial.h"
 #include "Game/Scene/G0_Onigokko.h"
+#include "Game/Scene/G0_Onigokko_GameOver.h"
+#include "Game/Scene/G0_Onigokko_Clear.h"
 
 #include "Game/Scene/G1_DarumasangaKoronda_Tutorial.h"
 #include "Game/Scene/G1_DarumasangaKoronda.h"
+#include "Game/Scene/G1_DarumasangaKoronda_GameOver.h"
+#include "Game/Scene/G1_DarumasangaKoronda_Clear.h"
 
 #include "Game/Scene/G2_Sundome_Tutorial.h"
 #include "Game/Scene/G2_Sundome.h"
+#include "Game/Scene/G2_Sundome_Result.h"
 
 #include "Game/Scene/G3_SoratobuHusenWari_Tutorial.h"
 #include "Game/Scene/G3_SoratobuHusenWari.h"
@@ -34,6 +39,8 @@
 
 #include "Game/Scene/G5_Asibawatari_Tutorial.h"
 #include "Game/Scene/G5_Asibawatari.h"
+#include "Game/Scene/G5_Asibawatari_GameOver.h"
+#include "Game/Scene/G5_Asibawatari_Clear.h"
 
 //static SceneGameSelect sceneGame;
 
@@ -370,50 +377,57 @@ void Framework::SceneSelectGUI()
 		{
 			if(ImGui::TreeNode(u8"00.おにごっこ"))
 			{
-				ChangeSceneButtonGUI<G0_Onigokko_Tutorial>(u8"00.おにごっこ(チュートリアル)");
-				ChangeSceneButtonGUI<G0_Onigokko>         (u8"01.おにごっこ");
+				ChangeSceneButtonGUI<G0_Onigokko_Tutorial>(u8"00.チュートリアル");
+				ChangeSceneButtonGUI<G0_Onigokko>         (u8"01.ゲーム");
+				ChangeSceneButtonGUI<G0_Onigokko_GameOver>(u8"02.ゲームオーバー");
+				ChangeSceneButtonGUI<G0_Onigokko_Clear>   (u8"03.ゲームクリア");
 
 				ImGui::TreePop();
 			}
 
 			if (ImGui::TreeNode(u8"だるまさんが転んだ"))
 			{
-				ChangeSceneButtonGUI<G1_DarumasangaKoronda_Tutorial>(u8"00.だるまさんが転んだ(チュートリアル)");
-				ChangeSceneButtonGUI<G1_DarumasangaKoronda>         (u8"01.だるまさんが転んだ");
+				ChangeSceneButtonGUI<G1_DarumasangaKoronda_Tutorial>(u8"00.チュートリアル");
+				ChangeSceneButtonGUI<G1_DarumasangaKoronda>         (u8"01.ゲーム");
+				ChangeSceneButtonGUI<G1_DarumasangaKoronda_GameOver>(u8"02.ゲームオーバー");
+				ChangeSceneButtonGUI<G1_DarumasangaKoronda_Clear>   (u8"03.ゲームクリア");
 
 				ImGui::TreePop();
 			}
 
 			if (ImGui::TreeNode(u8"寸止め"))
 			{
-				ChangeSceneButtonGUI<G2_Sundome_Tutorial>(u8"00.寸止め(チュートリアル)");
-				ChangeSceneButtonGUI<G2_Sundome>         (u8"01.寸止め");
+				ChangeSceneButtonGUI<G2_Sundome_Tutorial>(u8"00.チュートリアル");
+				ChangeSceneButtonGUI<G2_Sundome>         (u8"01.ゲーム");
+				ChangeSceneButtonGUI<G2_Sundome_Result>  (u8"02.リザルト");
 
 				ImGui::TreePop();
 			}
 
 			if (ImGui::TreeNode(u8"空飛ぶ風船割り"))
 			{
-				ChangeSceneButtonGUI<G3_SoratobuHusenWari_Tutorial>(u8"00.空飛ぶ風船割り(チュートリアル)");
-				ChangeSceneButtonGUI<G3_SoratobuHusenWari>         (u8"01.空飛ぶ風船割り");
-				ChangeSceneButtonGUI<G3_SoratobuHusenWari_Result>  (u8"02.空飛ぶ風船割り(リザルト)");
+				ChangeSceneButtonGUI<G3_SoratobuHusenWari_Tutorial>(u8"00.チュートリアル");
+				ChangeSceneButtonGUI<G3_SoratobuHusenWari>         (u8"01.ゲーム");
+				ChangeSceneButtonGUI<G3_SoratobuHusenWari_Result>  (u8"02.リザルト");
 
 				ImGui::TreePop();
 			}
 
 			if (ImGui::TreeNode(u8"おっさん叩き"))
 			{
-				ChangeSceneButtonGUI<G4_OssanTataki_Tutorial>(u8"00.おっさん叩き(チュートリアル)");
-				ChangeSceneButtonGUI<G4_OssanTataki>         (u8"01.おっさん叩き");
-				ChangeSceneButtonGUI<G4_OssanTataki_Result>  (u8"02.おっさん叩き(リザルト)");
+				ChangeSceneButtonGUI<G4_OssanTataki_Tutorial>(u8"00.チュートリアル");
+				ChangeSceneButtonGUI<G4_OssanTataki>         (u8"01.ゲーム");
+				ChangeSceneButtonGUI<G4_OssanTataki_Result>  (u8"02.リザルト");
 
 				ImGui::TreePop();
 			}
 
 			if (ImGui::TreeNode(u8"足場渡り"))
 			{
-				ChangeSceneButtonGUI<G5_Asibawatari_Tutorial>(u8"00.足場渡り(チュートリアル)");
-				ChangeSceneButtonGUI<G5_Asibawatari>         (u8"01.足場渡り");
+				ChangeSceneButtonGUI<G5_Asibawatari_Tutorial>(u8"00.チュートリアル");
+				ChangeSceneButtonGUI<G5_Asibawatari>         (u8"01.ゲーム");
+				ChangeSceneButtonGUI<G5_Asibawatari_GameOver>(u8"02.ゲームオーバー");
+				ChangeSceneButtonGUI<G5_Asibawatari_Clear>   (u8"03.ゲームクリア");
 
 				ImGui::TreePop();
 			}

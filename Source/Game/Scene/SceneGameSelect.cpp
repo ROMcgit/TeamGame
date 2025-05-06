@@ -50,6 +50,10 @@ void SceneGameSelect::Initialize()
 	// プレイヤー初期化
 	player = std::make_unique<Player0_Onigokko>();
 	player->SetPosition(DirectX::XMFLOAT3(0, -5.35f, 0));
+	player->SetScale(DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f));
+	player->SetMoveSpeed(20.0f);
+	player->SetRadius(1.9f);
+	player->SetHeight(16.0f);
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
@@ -71,7 +75,7 @@ void SceneGameSelect::Initialize()
 
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
-	cameraController->SetRange(110);
+	cameraController->SetRange(85.5f);
 	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(40), 0, 0));
 
 	// 背景
@@ -107,7 +111,7 @@ void SceneGameSelect::Update(float elapsedTime)
 {
 	// カメラコントローラー更新処理
 	DirectX::XMFLOAT3 target = player->GetPosition();
-	target.y += 0.5f;
+	target.y = player->GetHeight() * 0.5f;
 	cameraController->SetTarget(target);
 	Camera::Instance().Update(elapsedTime);
 	cameraController->Update(elapsedTime);

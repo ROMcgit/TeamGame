@@ -12,6 +12,9 @@
 //! ムービー中か
 bool G2_Sundome::movieScene = false;
 
+//! スコア
+float G2_Sundome::score[3] = { 0, 0, 0 };
+
 // 初期化
 void G2_Sundome::Initialize()
 {

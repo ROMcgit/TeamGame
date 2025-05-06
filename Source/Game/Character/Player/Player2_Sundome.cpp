@@ -7,6 +7,9 @@
 #include "Other/Collision.h"
 #include "Game/Camera/CameraController.h"
 #include "Game/Scene/G2_Sundome.h"
+#include "Game/Scene/SceneManager.h"
+#include "Game/Scene/SceneLoading.h"
+#include "Game/Scene/G2_Sundome_Result.h"
 
 static Player2_Sundome* instance = nullptr;
 
@@ -359,6 +362,13 @@ void Player2_Sundome::UpdateReturnState(float elapsedTime)
 
 			if (round < 3)
 				round++;
+			else
+			{
+				std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G2_Sundome_Result>());
+
+				// シーンマネージャーにローディングシーンへの切り替えを指示
+				SceneManager::Instance().ChangeScene(std::move(loadingScene));
+			}
 
 			//! ムービー待機ステートへ遷移
 			TransitionMovieWaitState();
@@ -429,6 +439,13 @@ void Player2_Sundome::UpdateDeathState(float elapsedTimae)
 
 			if (round < 3)
 				round++;
+			else
+			{
+				std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G2_Sundome_Result>());
+
+				// シーンマネージャーにローディングシーンへの切り替えを指示
+				SceneManager::Instance().ChangeScene(std::move(loadingScene));
+			}
 
 			//! ムービー待機ステートへ遷移
 			TransitionMovieWaitState();

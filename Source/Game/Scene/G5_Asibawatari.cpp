@@ -8,6 +8,10 @@
 #include "Game/Stage/StageManager.h"
 #include "Game/Stage/G5_StageAsibawatari_Normal.h"
 #include "Game/Stage/StageMoveFloor.h"
+#include "SceneLoading.h"
+#include "SceneManager.h"
+#include "G5_Asibawatari_GameOver.h"
+#include "G5_Asibawatari_Clear.h"
 
 // 初期化
 void G5_Asibawatari::Initialize()
@@ -55,8 +59,8 @@ void G5_Asibawatari::Initialize()
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
 	cameraController->SetTarget(DirectX::XMFLOAT3(0, 0.5f, 0.0f));
-	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(32), 0, 0));
-	cameraController->SetRange(38.0f);
+	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(47), 0, 0));
+	cameraController->SetRange(48.5f);
 
 	// 背景
 	backGround = std::make_unique<Sprite>();
@@ -106,6 +110,9 @@ void G5_Asibawatari::Update(float elapsedTime)
 
 	// エフェクト更新処理
 	EffectManager::Instance().Update(elapsedTime);
+
+	//! シーン切り替え処理
+	SceneChange();
 }
 
 // 描画処理
@@ -286,5 +293,30 @@ void G5_Asibawatari::UpdateMovie(float elapsedTime)
 		break;
 	default:
 		break;
+	}
+}
+
+// シーン切り替え処理
+void G5_Asibawatari::SceneChange()
+{
+	//! プレイヤーが落ちた、またはゲームをクリアしたなら
+	if(player->GetPosition().y < -10.0f || gameClear)
+	{
+		if (!setFade)
+		{
+			//! フェードを設定
+			fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+				0.0f, 1.0f,
+				1.0f, 0.5f);
+
+			setFade = true;
+		}
+		else if (setFade && !fade->GetFade())
+		{
+			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G5_Asibawatari_GameOver>());
+
+			// シーンマネージャーにローディングシーンへの切り替えを指示
+			SceneManager::Instance().ChangeScene(std::move(loadingScene));
+		}
 	}
 }

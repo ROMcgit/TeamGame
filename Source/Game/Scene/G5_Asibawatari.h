@@ -32,8 +32,13 @@ private:
 	// ムービー更新処理
 	void UpdateMovie(float elapsedTime);
 
+	// シーン切り替え処理
+	void SceneChange();
+
 private:
 	std::unique_ptr<Fade> fade;
+	bool setFade = false;
+	bool gameClear = false;
 
 	std::unique_ptr <Player5_AsibaWatari> player;
 	std::unique_ptr <CameraController> cameraController;

@@ -62,6 +62,9 @@ void G4_OssanTataki::Initialize()
 		1000.0f
 	);
 
+	//! ポストエフェクトの設定(一回だけ)フラグを初期化
+	camera.SetPostEffectStatusOnceUnlock();
+
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
 	cameraController->SetTarget(DirectX::XMFLOAT3(10, 56, -44.0f));

@@ -49,6 +49,9 @@ void G5_Asibawatari::Initialize()
 		1000.0f
 	);
 
+	//! ポストエフェクトの設定(一回だけ)フラグを初期化
+	camera.SetPostEffectStatusOnceUnlock();
+
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
 	cameraController->SetTarget(DirectX::XMFLOAT3(0, 0.5f, 0.0f));

@@ -9,8 +9,10 @@
 // 初期化
 void G1_DarumasangaKoronda_GameOver::Initialize()
 {
-	// スプライト初期化
-	sprite = std::make_unique<Sprite>("Data/Sprite/Title.png");
+	// 背景
+	backGround = std::make_unique<Sprite>();
+	// ゲームオーバー
+	gameOver = std::make_unique<Sprite>("Data/Sprite/0.Onigokko/GameOver.png");
 
 	fade = std::make_unique<Fade>();
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
@@ -69,10 +71,20 @@ void G1_DarumasangaKoronda_GameOver::Render()
 	{
 		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
 		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
-		float textureWidth = static_cast<float>(sprite->GetTextureWidth());
-		float textureHeight = static_cast<float>(sprite->GetTextureHeight());
-		// タイトルスプライト描画
-		sprite->Render(dc,
+		float textureWidth = static_cast<float>(backGround->GetTextureWidth());
+		float textureHeight = static_cast<float>(backGround->GetTextureHeight());
+		
+		// 背景
+		backGround->Render(dc,
+			0, 0, screenWidth, screenHeight,
+			0, 0, textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1);
+
+		textureWidth = static_cast<float>(gameOver->GetTextureWidth());
+		textureHeight = static_cast<float>(gameOver->GetTextureHeight());
+		// ゲームオーバーの文字
+		gameOver->Render(dc,
 			0, 0, screenWidth, screenHeight,
 			0, 0, textureWidth, textureHeight,
 			0,

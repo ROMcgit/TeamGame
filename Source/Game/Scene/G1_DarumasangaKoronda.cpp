@@ -71,6 +71,9 @@ void G1_DarumasangaKoronda::Initialize()
 		1000.0f
 	);
 
+	//! ポストエフェクトの設定(一回だけ)フラグを初期化
+	camera.SetPostEffectStatusOnceUnlock();
+
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
 	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(26.5f), 0, 0));
@@ -87,7 +90,7 @@ void G1_DarumasangaKoronda::Initialize()
 		1.0f, 0.5f);
 
 	//! タイマー
-	timer = std::make_unique<Timer>(true, 3, 0);
+	timer = std::make_unique<Timer>(true, 1, 0);
 }
 
 // 終了化

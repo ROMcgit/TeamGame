@@ -86,6 +86,9 @@ void G3_SoratobuHusenWari::Initialize()
 		1000.0f
 	);
 
+	//! ポストエフェクトの設定(一回だけ)フラグを初期化
+	camera.SetPostEffectStatusOnceUnlock();
+
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
 	cameraController->SetTarget(DirectX::XMFLOAT3(0, 21.0f, 4.8f));

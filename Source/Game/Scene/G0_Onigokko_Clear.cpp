@@ -9,8 +9,10 @@
 // 初期化
 void G0_Onigokko_Clear::Initialize()
 {
-	// スプライト初期化
-	sprite = std::make_unique<Sprite>("Data/Sprite/Title.png");
+	// 背景
+	backGround = std::make_unique<Sprite>();
+	// ゲームクリア
+	gameClear = std::make_unique<Sprite>("Data/Sprite/0.Onigokko/GameClear.png");
 
 	fade = std::make_unique<Fade>();
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
@@ -69,10 +71,20 @@ void G0_Onigokko_Clear::Render()
 	{
 		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
 		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
-		float textureWidth = static_cast<float>(sprite->GetTextureWidth());
-		float textureHeight = static_cast<float>(sprite->GetTextureHeight());
-		// タイトルスプライト描画
-		sprite->Render(dc,
+		float textureWidth = static_cast<float>(backGround->GetTextureWidth());
+		float textureHeight = static_cast<float>(backGround->GetTextureHeight());
+
+		// 背景
+		backGround->Render(dc,
+			0, 0, screenWidth, screenHeight,
+			0, 0, textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1);
+
+		textureWidth = static_cast<float>(gameClear->GetTextureWidth());
+		textureHeight = static_cast<float>(gameClear->GetTextureHeight());
+		// ゲームクリアの文字
+		gameClear->Render(dc,
 			0, 0, screenWidth, screenHeight,
 			0, 0, textureWidth, textureHeight,
 			0,

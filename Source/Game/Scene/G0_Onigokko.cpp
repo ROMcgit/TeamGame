@@ -58,6 +58,9 @@ void G0_Onigokko::Initialize()
 		1000.0f
 	);
 
+	//! ポストエフェクトの設定(一回だけ)フラグを初期化
+	camera.SetPostEffectStatusOnceUnlock();
+
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
 	cameraController->SetRange(14);

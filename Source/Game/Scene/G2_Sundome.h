@@ -34,7 +34,7 @@ private:
 
 public:
 	static bool movieScene; // ムービー中か
-	static float score[3];   // スコア
+	static int score[3];   // スコア
 
 private:
 	std::unique_ptr<Fade> fade; // フェード

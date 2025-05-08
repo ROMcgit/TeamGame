@@ -24,20 +24,19 @@ void G2_Sundome_Result::Initialize()
 		text[i] = std::make_unique<Text>();
 	}
 
-	float screeenWidth = Graphics::Instance().GetScreenWidth();
+	float screeenWidth = static_cast<float>(Graphics::Instance().GetScreenWidth());
 	for (int i = 0; i < 4; i++)
 	{
 		textPos[i].x = screeenWidth * 1.1f;
 	}
 
-	float screenHeight = Graphics::Instance().GetScreenHeight();
+	 startTextPosX = textPos[0].x;
+
+	float screenHeight = static_cast<float>(Graphics::Instance().GetScreenHeight());
 	textPos[0].y = screenHeight * 0.2f;
 	textPos[1].y = screenHeight * 0.4f;
 	textPos[2].y = screenHeight * 0.6f;
 	textPos[3].y = screenHeight * 0.8f;
-
-	for (int i = 0; i < 4; i++)
-		textPos[i].x = startTextPosX[i];
 }
 
 // 終了化
@@ -51,6 +50,18 @@ void G2_Sundome_Result::Update(float elapsedTime)
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
 	fade->Update(elapsedTime);
+
+	//! スコアを代入
+	int score[3];
+	for (int i = 0; i < 3; i++)
+		score[i] = G2_Sundome::score[i];
+
+	//! 合計スコアを計算
+	int totalScore = score[0] + score[1] + score[2];
+	this->totalScore = totalScore;
+
+	// スコア演出処理
+	DirectorScore(elapsedTime);
 
 	// なにかボタンを押したらローディングシーンを挟んでゲームシーンへ切り替え
 	const GamePadButton anyButton =
@@ -117,7 +128,7 @@ void G2_Sundome_Result::Render()
 			false, false, false,
 			textPos[3].x, textPos[3].y,
 			12.0f, 12.0f, 0,
-			30.0f);
+			40.0f);
 
 		fade->Render(dc, graphics);
 	}
@@ -127,12 +138,20 @@ void G2_Sundome_Result::Render()
 	{
 		if (ImGui::Begin("Debug"))
 		{
+			ImGui::InputInt("Step", &directorStep);
 			for(int i = 0; i < 4; i++)
 			{
 				std::string name = "TextPos" + std::to_string(i);
 				ImGui::DragFloat2(name.c_str(), &textPos[i].x, 0.5f);
 			}
+
+			for (int i = 0; i < 3; i++)
+			{
+				std::string name = "Score" + std::to_string(i);
+				ImGui::InputInt(name.c_str(), &G2_Sundome::score[i], 2);
+			}
 		}
+		ImGui::End();
 	}
 
 #endif // !_DEBUG
@@ -158,14 +177,16 @@ void G2_Sundome_Result::DirectorScore(float elapsedTime)
 		break;
 	//! textPos[textNum].xの変更
 	case 1:
-
+	{
 		float screeenWidth = Graphics::Instance().GetScreenWidth();
+
+		directorTime += elapsedTime;
 
 		float t = directorTime / 0.8f;
 
-		if(t < 1.0f)
+		if (t < 1.0f)
 		{
-			textPos[textNum].x = Easing::EaseOut(startTextPosX[0], screeenWidth * 0.7f, t);
+			textPos[textNum].x = Easing::EaseOut(startTextPosX, screeenWidth * 0.7f, t);
 		}
 		else
 		{
@@ -173,21 +194,26 @@ void G2_Sundome_Result::DirectorScore(float elapsedTime)
 			directorStep++;
 			textNum++;
 		}
+	}
 		break;
 	//! 待ち時間
 	case 2:
 
 		directorTime += elapsedTime;
 
-		if (directorTime > 0.3f)
+		if (textNum >= 5)
 		{
 			directorTime = 0.0f;
-			if (textNum >= 3)
+			directorStep++;
+		}
+		else
+		{
+			float waitTime = textNum == 3 ? 0.6f : 0.3f;
+			if (directorTime > waitTime)
 			{
-				directorStep++;
-			}
-			else
+				directorTime = 0.0f;
 				directorStep = 1;
+			}
 		}
 		break;
 	case 3:

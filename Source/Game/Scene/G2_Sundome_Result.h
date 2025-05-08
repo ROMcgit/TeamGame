@@ -36,7 +36,7 @@ private:
 
 	std::unique_ptr<Text> text[4];
 	DirectX::XMFLOAT2 textPos[4];
-	float startTextPosX[4];
+	float startTextPosX;
 	int textNum = 0;
 	float totalScore = 0;
 

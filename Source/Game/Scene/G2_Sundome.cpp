@@ -13,7 +13,7 @@
 bool G2_Sundome::movieScene = false;
 
 //! ƒXƒRƒA
-float G2_Sundome::score[3] = { 0, 0, 0 };
+int G2_Sundome::score[3] = { 0, 0, 0 };
 
 // ‰Šú‰»
 void G2_Sundome::Initialize()

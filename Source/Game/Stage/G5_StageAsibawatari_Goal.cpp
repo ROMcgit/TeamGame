@@ -1,21 +1,21 @@
-#include "Game/Stage/G5_StageAsibawatari_Normal_Vertical.h"
+#include "Game/Stage/G5_StageAsibawatari_Goal.h"
 #include <imgui.h>
 
 // コンストラクタ
-G5_StageAsibawatari_Normal_Vertical::G5_StageAsibawatari_Normal_Vertical()
+G5_StageAsibawatari_Goal::G5_StageAsibawatari_Goal()
 {
 	// ステージモデルを読み込み
-	model = std::make_unique <Model>("Data/Model/Stage/5.Asibawatari/0.Normal_Vertical/StageNormal_Vertical.mdl");
+	model = std::make_unique <Model>("Data/Model/Stage/5.Asibawatari/0.Normal/StageNormal.mdl");
 
 	scale.x = scale.y = scale.z = 0.1f;
 }
 
-G5_StageAsibawatari_Normal_Vertical::~G5_StageAsibawatari_Normal_Vertical()
+G5_StageAsibawatari_Goal::~G5_StageAsibawatari_Goal()
 {
 }
 
 // 更新処理
-void G5_StageAsibawatari_Normal_Vertical::Update(float elapsedTime)
+void G5_StageAsibawatari_Goal::Update(float elapsedTime)
 {
 	// ステージの状態更新処理
 	UpdateGameObjectBaseState(elapsedTime, Object::Stage);
@@ -29,7 +29,7 @@ void G5_StageAsibawatari_Normal_Vertical::Update(float elapsedTime)
 }
 
 // 描画処理
-void G5_StageAsibawatari_Normal_Vertical::Render(ID3D11DeviceContext* dc, Shader* shader)
+void G5_StageAsibawatari_Goal::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	// 表示用のためワールド行列を更新する
 	model->UpdateTransform(transform);
@@ -39,7 +39,7 @@ void G5_StageAsibawatari_Normal_Vertical::Render(ID3D11DeviceContext* dc, Shader
 }
 
 // レイキャスト
-bool G5_StageAsibawatari_Normal_Vertical::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit)
+bool G5_StageAsibawatari_Goal::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit)
 {
 	// 前回のワールド行列と逆行列を求める
 	DirectX::XMMATRIX oldWorld = DirectX::XMLoadFloat4x4(&oldTransform);
@@ -92,9 +92,9 @@ bool G5_StageAsibawatari_Normal_Vertical::RayCast(const DirectX::XMFLOAT3& start
 }
 
 // デバッグGUI
-void G5_StageAsibawatari_Normal_Vertical::DrawDebugGUI()
+void G5_StageAsibawatari_Goal::DrawDebugGUI()
 {
-	if (ImGui::TreeNode(u8"ステージ足場渡り_縦長"))
+	if (ImGui::TreeNode(u8"ステージ足場渡り"))
 	{
 		// 位置
 		ImGui::DragFloat3(u8"位置", &position.x);
@@ -116,8 +116,8 @@ void G5_StageAsibawatari_Normal_Vertical::DrawDebugGUI()
 	}
 }
 
-// 移動更新処理
-void G5_StageAsibawatari_Normal_Vertical::UpdateMove(float elapsedTime)
+// 移動処理
+void G5_StageAsibawatari_Goal::UpdateMove(float elapsedTime)
 {
 	position.x -= moveSpeed * elapsedTime;
 }

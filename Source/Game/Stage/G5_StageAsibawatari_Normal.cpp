@@ -119,5 +119,5 @@ void G5_StageAsibawatari_Normal::DrawDebugGUI()
 // ˆÚ“®ˆ—
 void G5_StageAsibawatari_Normal::UpdateMove(float elapsedTime)
 {
-
+	position.x -= moveSpeed * elapsedTime;
 }

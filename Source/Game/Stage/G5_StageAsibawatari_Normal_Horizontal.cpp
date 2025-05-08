@@ -5,7 +5,7 @@
 G5_StageAsibawatari_Normal_Horizontal::G5_StageAsibawatari_Normal_Horizontal()
 {
 	// ステージモデルを読み込み
-	model = std::make_unique <Model>("Data/Model/Stage/5.Asibawatari/0.Normal/StageNormal.mdl");
+	model = std::make_unique <Model>("Data/Model/Stage/5.Asibawatari/0.Normal_Horizontal/StageNormal_Horizontal.mdl");
 
 	scale.x = scale.y = scale.z = 0.1f;
 }
@@ -119,4 +119,5 @@ void G5_StageAsibawatari_Normal_Horizontal::DrawDebugGUI()
 // 移動更新処理
 void G5_StageAsibawatari_Normal_Horizontal::UpdateMove(float elapsedTime)
 {
+	position.x -= moveSpeed * elapsedTime;
 }

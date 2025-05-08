@@ -561,6 +561,12 @@
     <ClInclude Include="Source\Game\Stage\G5_StageAsibawatari_Normal_Vertical.h">
       <Filter>Source\Stage\StageGame\G5_足場渡り</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Stage\G5_StageAsibawatari_Trap.h">
+      <Filter>Source\Stage\StageGame\G5_足場渡り</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Stage\G5_StageAsibawatari_Goal.h">
+      <Filter>Source\Stage\StageGame\G5_足場渡り</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -906,6 +912,12 @@
       <Filter>Source\Stage\StageGame\G5_足場渡り</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Stage\G5_StageAsibawatari_Normal_Vertical.cpp">
+      <Filter>Source\Stage\StageGame\G5_足場渡り</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Stage\G5_StageAsibawatari_Trap.cpp">
+      <Filter>Source\Stage\StageGame\G5_足場渡り</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Stage\G5_StageAsibawatari_Goal.cpp">
       <Filter>Source\Stage\StageGame\G5_足場渡り</Filter>
     </ClCompile>
   </ItemGroup>

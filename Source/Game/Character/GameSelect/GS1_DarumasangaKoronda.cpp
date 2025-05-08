@@ -6,6 +6,7 @@
 #include "Other/Collision.h"
 #include "Game/Camera/CameraController.h"
 #include "Game/Scene/SceneGameSelect.h"
+#include "Input/Input.h"
 
 // コンストラクタ
 GS1_DarumasangaKoronda::GS1_DarumasangaKoronda()
@@ -175,6 +176,9 @@ void GS1_DarumasangaKoronda::CollisionVsPlayer()
 {
 	Player0_Onigokko& player = Player0_Onigokko::Instance();
 
+	GamePad& gamePad = Input::Instance().GetGamePad();
+	GamePadButton button = GamePad::BTN_A | GamePad::BTN_B;
+
 	DirectX::XMFLOAT3 outPosition;
 	if (Collision::IntersectBoxVsCylinder(
 		collisionPos,
@@ -184,7 +188,7 @@ void GS1_DarumasangaKoronda::CollisionVsPlayer()
 		player.GetPosition(),
 		player.GetRadius(),
 		player.GetHeight(),
-		outPosition))
+		outPosition) && (gamePad.GetButtonDown()& button))
 	{
 		//! シーンを切り替える
 		SceneGameSelect::gameSelect = SceneGameSelect::GameSelect::DarumasangaKoronda;

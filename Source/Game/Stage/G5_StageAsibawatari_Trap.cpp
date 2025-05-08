@@ -19,6 +19,8 @@ G5_StageAsibawatari_Trap::~G5_StageAsibawatari_Trap()
 // 更新処理
 void G5_StageAsibawatari_Trap::Update(float elapsedTime)
 {
+	noViewTime -= elapsedTime;
+
 	// ステージの状態更新処理
 	UpdateGameObjectBaseState(elapsedTime, Object::Stage);
 
@@ -37,7 +39,8 @@ void G5_StageAsibawatari_Trap::Render(ID3D11DeviceContext* dc, Shader* shader)
 	model->UpdateTransform(transform);
 
 	// シェーダーにモデルを描画してもらう
-	shader->Draw(dc, model.get(), materialColor, opacity);
+	if(noViewTime <= 0.0f)
+		shader->Draw(dc, model.get(), materialColor, opacity);
 }
 
 // レイキャスト
@@ -49,7 +52,7 @@ bool G5_StageAsibawatari_Trap::RayCast(const DirectX::XMFLOAT3& start, const Dir
 // デバッグGUI
 void G5_StageAsibawatari_Trap::DrawDebugGUI()
 {
-	if (ImGui::TreeNode(u8"ステージ足場渡り"))
+	if (ImGui::TreeNode(u8"ステージトラップ"))
 	{
 		// 位置
 		ImGui::DragFloat3(u8"位置", &position.x);

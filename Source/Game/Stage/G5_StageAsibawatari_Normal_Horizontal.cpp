@@ -1,5 +1,6 @@
 #include "Game/Stage/G5_StageAsibawatari_Normal_Horizontal.h"
 #include <imgui.h>
+#include "Game/Character/Player/Player5_AsibaWatari.h"
 
 // コンストラクタ
 G5_StageAsibawatari_Normal_Horizontal::G5_StageAsibawatari_Normal_Horizontal()
@@ -8,6 +9,10 @@ G5_StageAsibawatari_Normal_Horizontal::G5_StageAsibawatari_Normal_Horizontal()
 	model = std::make_unique <Model>("Data/Model/Stage/5.Asibawatari/0.Normal_Horizontal/StageNormal_Horizontal.mdl");
 
 	scale.x = scale.y = scale.z = 0.1f;
+
+	materialColor.x = materialColor.y = materialColor.z = 0.8f;
+
+	emissiveStrength = 0.5f;
 }
 
 G5_StageAsibawatari_Normal_Horizontal::~G5_StageAsibawatari_Normal_Horizontal()
@@ -17,6 +22,8 @@ G5_StageAsibawatari_Normal_Horizontal::~G5_StageAsibawatari_Normal_Horizontal()
 // 更新処理
 void G5_StageAsibawatari_Normal_Horizontal::Update(float elapsedTime)
 {
+	noViewTime -= elapsedTime;
+
 	// ステージの状態更新処理
 	UpdateGameObjectBaseState(elapsedTime, Object::Stage);
 
@@ -35,7 +42,8 @@ void G5_StageAsibawatari_Normal_Horizontal::Render(ID3D11DeviceContext* dc, Shad
 	model->UpdateTransform(transform);
 
 	// シェーダーにモデルを描画してもらう
-	shader->Draw(dc, model.get());
+	if (noViewTime <= 0.0f)
+	shader->Draw(dc, model.get(), materialColor, opacity, emissiveColor, emissiveStrength);
 }
 
 // レイキャスト
@@ -123,4 +131,21 @@ void G5_StageAsibawatari_Normal_Horizontal::UpdateMove(float elapsedTime)
 
 	if (position.x < -50.0f)
 		Destroy();
+
+	float numX = 100;
+	float numZ = 50;
+
+	float safeXR = position.x + (numX * scale.x);
+	float safeXL = position.x - (numX * scale.x);
+	float safeYOku = position.z + (numZ * scale.z);
+	float safeYTemae = position.z - (numZ * scale.z);
+
+	Player5_AsibaWatari& player = Player5_AsibaWatari::Instance();
+	if (player.GetPosition().x > safeXL && player.GetPosition().x < safeXR
+		&& player.GetPosition().z > safeYTemae && player.GetPosition().z < safeYOku)
+	{
+		emissiveColor = { 0,1,0 };
+	}
+	else
+		emissiveColor = { 1,0,0 };
 }

@@ -17,6 +17,9 @@ public:
 		return instance;
 	}
 
+	// ステージ数取得
+	int GetStageCount() const { return static_cast<int>(stages.size()); }
+
 	// ステージ取得
 	std::unique_ptr<Stage>& GetStage(int index) {
 		if (index < 0 || index >= static_cast<int>(stages.size()))
@@ -49,4 +52,5 @@ public:
 
 private:
 	std::vector<std::unique_ptr<Stage>> stages;
+	std::vector<Stage*> removes;
 };

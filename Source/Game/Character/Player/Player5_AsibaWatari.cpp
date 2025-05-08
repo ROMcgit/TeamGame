@@ -28,12 +28,12 @@ Player5_AsibaWatari::Player5_AsibaWatari()
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.03f;
 
-	debugPrimitiveColor = { 0, 0, 1 };
+	// 重力
+	gravity = 0.45f;
 
-	gravity = 0.4f;
-
-	radius = 0.6f;
-	height = 5.0f;
+	// 当たり判定
+	radius = 2.3f;
+	height = 15.6f;
 
 	// 待機ステートへ遷移
 	TransitionWaitState();
@@ -48,6 +48,8 @@ Player5_AsibaWatari::~Player5_AsibaWatari()
 void Player5_AsibaWatari::Update(float elapsedTime)
 {
 	if (CameraController::debugCamera) return;
+
+	GamePad& gamePad = Input::Instance().GetGamePad();
 
 	// ムービー中なら待機ステートへ遷移
 	if (movieScene)
@@ -85,6 +87,12 @@ void Player5_AsibaWatari::Update(float elapsedTime)
 		case State::Move:
 			UpdateMoveState(elapsedTime);
 			break;
+		case State::Dash:
+			UpdateDashState(elapsedTime);
+			break;
+		case State::Jump:
+			UpdateJumpState(elapsedTime);
+			break;
 		case State::Damage:
 			UpdateDamageState(elapsedTime);
 			break;
@@ -99,9 +107,6 @@ void Player5_AsibaWatari::Update(float elapsedTime)
 
 	// 弾丸更新処理
 	projectileManager.Update(elapsedTime);
-
-	// プレイヤーと敵との衝突処理
-	CollisionPlayer5_AsibaWatariVsEnemies();
 
 	// モデルアニメーション更新処理
 	model->UpdateAnimation(elapsedTime);
@@ -140,6 +145,25 @@ bool Player5_AsibaWatari::InputMove(float elapsedTime)
 	return !(moveVec.x == 0.0f && moveVec.z == 0.0f);
 }
 
+// ジャンプ入力処理
+bool Player5_AsibaWatari::InputJump()
+{
+	GamePad& gamePad = Input::Instance().GetGamePad();
+	{
+		if (gamePad.GetButtonHeld() & GamePad::BTN_A) //Zキー
+		{
+			// ジャンプ
+			Jump(jumpSpeed);
+			jumpCount++;
+
+			// ジャンプ入力した
+			return true;
+
+		}
+		return false;
+	}
+}
+
 // 待機ステートへ遷移
 void Player5_AsibaWatari::TransitionWaitState()
 {
@@ -168,6 +192,22 @@ void Player5_AsibaWatari::UpdateWaitState(float elapsedTime)
 		TransitionMoveState();
 	}
 
+	//! ジャンプ処理
+	if (gamePad.GetButtonDown() & GamePad::BTN_A)
+	{
+		InputJump();
+		TransitionJumpState();
+	}
+
+	GamePadButton button = GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
+
+	//! ダッシュ処理
+	if (gamePad.GetButtonDown() & button)
+	{
+		//! ダッシュステートへ遷移
+		TransitionDashState();
+	}
+
 	InputMove(elapsedTime);
 }
 
@@ -177,7 +217,8 @@ void Player5_AsibaWatari::TransitionMoveState()
 	state = State::Move;
 
 	// 走りアニメーション再生
-	model->PlayAnimation(Anim_Move, true);
+	if (model->GetAnimationNum() != Anim_Move)
+		model->PlayAnimation(Anim_Move, true);
 }
 
 // 移動ステート更新処理
@@ -194,11 +235,87 @@ void Player5_AsibaWatari::UpdateMoveState(float elapsedTime)
 
 	if (gamePad.GetAxisLX() == 0 && gamePad.GetAxisLY() == 0)
 	{
+		velocity.x = velocity.z = 0;
+
 		// 待機ステートへ遷移
 		TransitionWaitState();
 	}
 
+	//! ジャンプ処理
+	if (gamePad.GetButtonDown() & GamePad::BTN_A)
+	{
+		InputJump();
+		TransitionJumpState();
+	}
+
+	GamePadButton button = GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
+
+	//! ダッシュ処理
+	if (gamePad.GetButtonDown() & button)
+	{
+		//! ダッシュステートへ遷移
+		TransitionDashState();
+	}
+
 	InputMove(elapsedTime);
+}
+
+// ジャンプステートへ遷移
+void Player5_AsibaWatari::TransitionJumpState()
+{
+	state = State::Jump;
+
+	model->PlayAnimation(Anim_Jump, false);
+}
+
+// ジャンプステート更新処理
+void Player5_AsibaWatari::UpdateJumpState(float elapsedTime)
+{
+	if (isGround)
+		TransitionWaitState();
+
+	// 移動入力処理
+	InputMove(elapsedTime);
+}
+
+// ダッシュステートへ遷移
+void Player5_AsibaWatari::TransitionDashState()
+{
+	state = State::Dash;
+
+	stateChangeWaitTimer = 1.0f;
+
+	// 走りアニメーション再生
+	if (model->GetAnimationNum() != Anim_Move)
+		model->PlayAnimation(Anim_Move, true);
+}
+
+// ダッシュステート更新処理
+void Player5_AsibaWatari::UpdateDashState(float elapsedTime)
+{
+	// 前方向
+	DirectX::XMFLOAT3 dir;
+
+	dir.x = transform._31;
+	dir.y = transform._32;
+	dir.z = transform._33;
+
+	DirectX::XMVECTOR DIR;
+	DIR = DirectX::XMLoadFloat3(&dir);
+	DIR = DirectX::XMVector3Normalize(DIR);
+	DirectX::XMStoreFloat3(&dir, DIR);
+
+	// 移動する
+	Move3D(dir.x, dir.z, 30.0f);
+
+	stateChangeWaitTimer -= elapsedTime;
+
+	//! 待ち時間が0なら
+	if (stateChangeWaitTimer <= 0.0f)
+	{
+		//! 待機ステートへ遷移
+		TransitionWaitState();
+	}
 }
 
 // ダメージステートへ遷移
@@ -232,76 +349,6 @@ void Player5_AsibaWatari::TransitionDeathState()
 // 死亡ステート更新処理
 void Player5_AsibaWatari::UpdateDeathState(float elapsedTimae)
 {
-}
-
-// プレイヤーとエネミーとの衝突処理
-void Player5_AsibaWatari::CollisionPlayer5_AsibaWatariVsEnemies()
-{
-	EnemyManager& enemyManager = EnemyManager::Instance();
-
-	// 全ての敵と総当たりで衝突処理
-	int enemyCount = enemyManager.GetEnemyCount();
-	for (int i = 0; i < enemyCount; ++i)
-	{
-		std::unique_ptr<Enemy>& enemy = enemyManager.GetEnemy(i);
-
-		// 衝突処理
-		DirectX::XMFLOAT3 outPosition;
-		//if (Collision::IntersectSphereVsSphere(
-		//	Player5_AsibaWatari::GetPosition(),
-		//	Player5_AsibaWatari::GetRadius(),
-		//	enemy->GetPosition(),
-		//	enemy->GetRadius(),
-		//	outPosition
-		//))
-		//{
-		//	// 押し出しの後の位置設定
-		//	enemy->SetPosition(outPosition);
-		//}
-
-
-		if (Collision::IntersectCylinderVsCylinder(
-			position,
-			radius,
-			height,
-			enemy->GetPosition(),
-			enemy->GetRadius(),
-			enemy->GetHeight(),
-			outPosition
-		))
-		{
-			//// プレイヤーが敵の上にいるかを判定する
-			//float diff = Player5_AsibaWatari::GetPosition().y - ( enemy->GetPosition().y + enemy->GetHeight());
-			//if (diff < -0.2f)
-			//{
-			//	Player5_AsibaWatari::Jump(10);
-			//	// 小ジャンプさせるためにY方向の速度を設定する
-			//}
-
-			//// 押し出しの後の位置設定
-			//enemy->SetPosition(outPosition);
-
-			DirectX::XMVECTOR P = DirectX::XMLoadFloat3(&position);
-			DirectX::XMVECTOR E = DirectX::XMLoadFloat3(&enemy->GetPosition());
-			DirectX::XMVECTOR V = DirectX::XMVectorSubtract(P, E);
-			DirectX::XMVECTOR N = DirectX::XMVector3Normalize(V);
-			DirectX::XMFLOAT3 normal;
-			DirectX::XMStoreFloat3(&normal, N);
-			// 上から踏んづけた場合は小ジャンプする
-			if (normal.y > 0.8f)
-			{
-				// 小ジャンプする
-				Jump(jumpSpeed * 0.5f);
-			}
-			else
-			{
-				// 押し出し後の位置設定
-				enemy->SetPosition(outPosition);
-			}
-
-		}
-
-	}
 }
 
 //デバッグプリミティブ描画

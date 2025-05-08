@@ -26,4 +26,7 @@ public:
 
 	// ステージを削除
 	void Destroy();
+
+protected:
+	float noViewTime = 0.1f;
 };

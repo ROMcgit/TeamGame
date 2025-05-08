@@ -31,28 +31,6 @@ public:
 	// デバッグプリミティブ描画
 	void DrawDebugPrimitive();
 
-	/*! 加速度 */
-
-	// 加速度Xを設定
-	void SetVelocityX(float velocityX) { this->velocity.x = velocityX; }
-
-	// 加速度Yを設定
-	void SetVelocityY(float velocityY) { this->velocity.y = velocityY; }
-
-	// 加速度Zを設定
-	void SetVelocityZ(float velocityZ) { this->velocity.z = velocityZ; }
-
-	/*! 位置 */
-
-	// 位置Xを設定
-	void SetPositionX(float positionX) { this->position.x = positionX; }
-
-	// 位置Yを設定
-	void SetPositionY(float positionY) { this->position.y = positionY; }
-
-	// 位置Zを設定
-	void SetPositionZ(float positionZ) { this->position.z = positionZ; }
-
 protected:
 	// 着地した時に呼ばれる
 	void OnLanding() override;
@@ -68,16 +46,16 @@ private:
 	// 移動入力処理
 	bool InputMove(float elapsedTime);
 
+	// ジャンプ入力処理
+	bool InputJump();
+
 	/*! 当たり判定処理 */
 
-	// プレイヤーとエネミーとの衝突処理
-	void CollisionPlayer5_AsibaWatariVsEnemies();
+/******************************************************************************************/
 
-	/******************************************************************************************/
+	/*! 行動制御 */
 
-		/*! 行動制御 */
-
-		// 待機ステートへ遷移
+	// 待機ステートへ遷移
 	void TransitionWaitState();
 
 	// 待機ステート更新処理
@@ -85,11 +63,27 @@ private:
 
 	//-----------------------------------------------------------------//
 
-			// 移動ステートへ遷移
+		// 移動ステートへ遷移
 	void TransitionMoveState();
 
 	// 移動ステート更新処理
 	void UpdateMoveState(float elapsedTime);
+
+	//-----------------------------------------------------------------//
+
+		// ジャンプステートへ遷移
+	void TransitionJumpState();
+
+	// ジャンプステート更新処理
+	void UpdateJumpState(float elapsedTime);
+
+	//-----------------------------------------------------------------//
+
+		// ダッシュステートへ遷移
+	void TransitionDashState();
+
+	// ダッシュステート更新処理
+	void UpdateDashState(float elapsedTime);
 
 	//-----------------------------------------------------------------//
 
@@ -101,7 +95,7 @@ private:
 
 	//-----------------------------------------------------------------//
 
-			// 死亡ステートへ遷移
+		// 死亡ステートへ遷移
 	void TransitionDeathState();
 
 	// 死亡ステート更新処理
@@ -113,6 +107,8 @@ private:
 	{
 		Wait,
 		Move,
+		Jump,
+		Dash,
 		Damage,
 		Death,
 	};
@@ -132,7 +128,7 @@ private:
 
 	float turnSpeed = DirectX::XMConvertToRadians(720);
 
-	float jumpSpeed = 13.0f;
+	float jumpSpeed = 20.0f;
 
 	int jumpCount = 0;
 	bool jumpFlipAnimation = false;

@@ -17,6 +17,17 @@ void StageManager::Update(float elapsedTime)
 	{
 		stage->Update(elapsedTime);
 	}
+
+	for (Stage* stage : removes)
+	{
+		stages.erase(
+			std::remove_if(stages.begin(), stages.end(),
+				[stage](const std::unique_ptr<Stage>& ptr) { return ptr.get() == stage; }),
+			stages.end()
+		);
+	}
+
+	removes.clear();
 }
 
 // 描画処理
@@ -37,11 +48,8 @@ void StageManager::Register(std::unique_ptr<Stage> stage)
 // ステージを破棄
 void StageManager::Remove(Stage* stage)
 {
-	// std::remove_ifを使ってステージを削除
-	stages.erase(std::remove_if(stages.begin(), stages.end(),
-		[&stage](const std::unique_ptr<Stage>& s) {
-			return s.get() == stage;
-		}), stages.end());
+	// 破棄リストに追加
+	removes.push_back(stage);
 }
 
 // ステージを全削除

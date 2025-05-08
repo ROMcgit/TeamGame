@@ -9,6 +9,7 @@
 #include "Game/Stage/G5_StageAsibawatari_Normal.h"
 #include "Game/Stage/G5_StageAsibawatari_Normal_Horizontal.h"
 #include "Game/Stage/G5_StageAsibawatari_Normal_Vertical.h"
+#include "Game/Stage/G5_StageAsibawatari_Trap.h"
 #include "Game/Stage/StageMoveFloor.h"
 #include "SceneLoading.h"
 #include "SceneManager.h"
@@ -46,7 +47,7 @@ void G5_Asibawatari::Initialize()
 	player = std::make_unique<Player5_AsibaWatari>();
 	player->SetPosition(DirectX::XMFLOAT3(0, 5.0f, 0));
 	player->SetAngleY(DirectX::XMConvertToRadians(180));
-	//player->SetGravity(0.0f);
+	player->SetGravity(0.0f);
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
@@ -105,15 +106,15 @@ void G5_Asibawatari::Update(float elapsedTime)
 	//! ムービー更新処理
 	UpdateMovie(elapsedTime);
 
-	//! ステージ生成処理
-	NewStage(elapsedTime);
-
 	// カメラコントローラー更新処理
 	Camera::Instance().Update(elapsedTime);
 	cameraController->Update(elapsedTime);
 
 	// ステージ更新処理
 	StageManager::Instance().Update(elapsedTime);
+
+	//! ステージ生成処理
+	NewStage(elapsedTime);
 
 	// プレイヤー更新処理
 	player->Update(elapsedTime);
@@ -136,7 +137,7 @@ void G5_Asibawatari::Render()
 	lightPosition.z = CameraController::target.z - 25.0f;
 	lightRange = 20000.0f;
 
-	shadowMapEyeOffset = { 4.0f, 17.0f, 9.0f };
+	shadowMapEyeOffset = { 4.0f, 25.0f, 9.0f };
 
 	//! フォグ
 	fogStart = 2000.0f;
@@ -307,7 +308,7 @@ void G5_Asibawatari::UpdateMovie(float elapsedTime)
 		if (movieTime > 2.0f)
 		{
 			std::unique_ptr<Stage>& stage = StageManager::Instance().GetStage(0);
-			stage->SetMoveSpeed(1.0f);
+			stage->SetMoveSpeed(2.0f);
 
 			movieScene = false;
 		}
@@ -329,22 +330,25 @@ void G5_Asibawatari::NewStage(float elapsedTime)
 
 	gameTimer += elapsedTime;
 
-	//! 位置Xは40以上
+	float posX = 50.0f;
+
 	//! 位置Zは-18～18
 
 	switch (stageStep)
 	{
-	//! 通常
+		//! 通常
 	case 0:
 
-		if (gameTimer > 1.0f)
+		if (gameTimer > 2.0f)
 		{
 			//! 通常
 			std::unique_ptr<G5_StageAsibawatari_Normal> normal = std::make_unique<G5_StageAsibawatari_Normal>();
-			normal->SetPositionX(40);
+			normal->SetPositionX(posX);
 			normal->SetPositionZ(0);
 			normal->SetMoveSpeed(5.0f);
 			normal->SetScale(DirectX::XMFLOAT3(0.07f, 0.1f, 0.07f));
+
+			StageManager::Instance().Register(std::move(normal));
 
 			gameTimer = 0.0f;
 			stageStep++;
@@ -354,49 +358,188 @@ void G5_Asibawatari::NewStage(float elapsedTime)
 
 		if (gameTimer > 1.8f)
 		{
-			for(int i = 0; i < 2; i++)
+			for (int i = 0; i < 2; i++)
 			{
-				//! 横長
-				std::unique_ptr<G5_StageAsibawatari_Normal_Horizontal> horizontal = std::make_unique<G5_StageAsibawatari_Normal_Horizontal>();
-				horizontal->SetPositionX(40);
-				float posZ = i == 0 ? 14 : -14;
-				horizontal->SetPositionZ(posZ);
-				horizontal->SetMoveSpeed(5.0f);
+				for (int j = 0; j < 2; j++)
+					//! 横長
+				{
+					std::unique_ptr<G5_StageAsibawatari_Normal_Horizontal> horizontal = std::make_unique<G5_StageAsibawatari_Normal_Horizontal>();
+					horizontal->SetPositionX(posX + (25 * j));
+					float posZ = i == 0 ? 14 : -14;
+					horizontal->SetPositionZ(posZ);
+					horizontal->SetMoveSpeed(5.0f);
 
-				gameTimer = 0.0f;
-				stageStep++;
+					StageManager::Instance().Register(std::move(horizontal));
+				}
 			}
-		}
-		break;
-	case 2:
-
-		if (gameTimer > 1.8f)
-		{
-			//! 通常
-			std::unique_ptr<G5_StageAsibawatari_Normal> normal = std::make_unique<G5_StageAsibawatari_Normal>();
-			normal->SetPositionX(40);
-			normal->SetPositionZ(8);
-			normal->SetMoveSpeed(5.0f);
-			normal->SetScale(DirectX::XMFLOAT3(0.07f, 0.1f, 0.07f));
-
-			//! 縦長
-			std::unique_ptr<G5_StageAsibawatari_Normal_Vertical> vertical = std::make_unique<G5_StageAsibawatari_Normal_Vertical>();
-			vertical->SetPositionX(40);
-			vertical->SetPositionZ(0);
-			vertical->SetMoveSpeed(5.0f);
 
 			gameTimer = 0.0f;
 			stageStep++;
 		}
+		break;
+	case 2:
 
+		if (gameTimer > 10.0f)
+		{
+			//! 通常
+			std::unique_ptr<G5_StageAsibawatari_Normal> normal = std::make_unique<G5_StageAsibawatari_Normal>();
+			normal->SetPositionX(posX);
+			normal->SetPositionZ(0);
+			normal->SetMoveSpeed(5.0f);
+			//normal->SetScale(DirectX::XMFLOAT3(0.07f, 0.1f, 0.07f));
+
+			StageManager::Instance().Register(std::move(normal));
+
+			//! 縦長
+			std::unique_ptr<G5_StageAsibawatari_Normal_Vertical> vertical = std::make_unique<G5_StageAsibawatari_Normal_Vertical>();
+			vertical->SetPositionX(posX + 17);
+			vertical->SetPositionZ(0);
+			vertical->SetMoveSpeed(5.0f);
+
+			StageManager::Instance().Register(std::move(vertical));
+
+			gameTimer = 0.0f;
+			stageStep++;
+		}
 		break;
 	case 3:
+	{
+		if (gameTimer > 7.0f)
+		{
+			//! 通常
+			std::unique_ptr<G5_StageAsibawatari_Normal> normal = std::make_unique<G5_StageAsibawatari_Normal>();
+			normal->SetPositionX(posX);
+			normal->SetPositionZ(10);
+			normal->SetMoveSpeed(5.0f);
+			normal->SetScale(DirectX::XMFLOAT3(0.075f, 0.1f, 0.075f));
+
+			StageManager::Instance().Register(std::move(normal));
+
+			//! トラップ
+			std::unique_ptr<G5_StageAsibawatari_Trap> trap = std::make_unique<G5_StageAsibawatari_Trap>();
+			trap->SetPositionX(posX);
+			trap->SetPositionZ(-10);
+			trap->SetMoveSpeed(5.0f);
+			trap->SetScale(DirectX::XMFLOAT3(0.07f, 0.1f, 0.07f));
+
+			StageManager::Instance().Register(std::move(trap));
+
+			gameTimer = 0.0f;
+			stageStep++;
+		}
+	}
 		break;
+	case 4:
+	{
+		if (gameTimer > 4.0f)
+		{
+			for (int i = 0; i < 2; i++)
+			{
+				for (int j = 0; j < 2; j++)
+					//! 横長
+				{
+					std::unique_ptr<G5_StageAsibawatari_Normal_Horizontal> horizontal = std::make_unique<G5_StageAsibawatari_Normal_Horizontal>();
+					horizontal->SetPositionX(posX + (25 * j));
+					float num = j == 0 ? 12 : 6;
+					float posZ = i == 0 ? num : -num;
+					horizontal->SetPositionZ(posZ);
+					horizontal->SetMoveSpeed(5.0f);
+
+					StageManager::Instance().Register(std::move(horizontal));
+				}
+			}
+
+			gameTimer = 0.0f;
+			stageStep++;
+		}
+	}
+	break;
+	case 5:
+	{
+		if (gameTimer > 9.5f)
+		{
+			//! 通常
+			std::unique_ptr<G5_StageAsibawatari_Normal> normal = std::make_unique<G5_StageAsibawatari_Normal>();
+			normal->SetPositionX(posX);
+			normal->SetPositionZ(0);
+			normal->SetMoveSpeed(5.0f);
+			normal->SetScale(DirectX::XMFLOAT3(0.075f, 0.1f, 0.075f));
+
+			StageManager::Instance().Register(std::move(normal));
+
+			gameTimer = 0.0f;
+			stageStep++;
+		}
+	}
+	break;
+	case 6:
+	{
+		if (gameTimer > 4.0f)
+		{
+			for (int i = 0; i < 2; i++)
+			{
+				for (int j = 0; j < 2; j++)
+					//! 横長
+				{
+					std::unique_ptr<G5_StageAsibawatari_Normal_Horizontal> horizontal = std::make_unique<G5_StageAsibawatari_Normal_Horizontal>();
+					horizontal->SetPositionX(posX + (25 * j));
+					float num = j == 0 ? 6 : 12;
+					float posZ = i == 0 ? num : -num;
+					horizontal->SetPositionZ(posZ);
+					horizontal->SetMoveSpeed(5.0f);
+
+					StageManager::Instance().Register(std::move(horizontal));
+				}
+			}
+
+			gameTimer = 0.0f;
+			stageStep++;
+		}
+	}
+	break;
+	case 7:
+	{
+		if (gameTimer > 8.0f)
+		{
+			//! 通常
+			std::unique_ptr<G5_StageAsibawatari_Normal> normal = std::make_unique<G5_StageAsibawatari_Normal>();
+			normal->SetPositionX(posX + 17);
+			normal->SetPositionZ(0);
+			normal->SetMoveSpeed(5.0f);
+
+			StageManager::Instance().Register(std::move(normal));
+
+			//! 縦長
+			std::unique_ptr<G5_StageAsibawatari_Normal_Vertical> vertical = std::make_unique<G5_StageAsibawatari_Normal_Vertical>();
+			vertical->SetPositionX(posX);
+			vertical->SetPositionZ(0);
+			vertical->SetMoveSpeed(5.0f);
+
+			StageManager::Instance().Register(std::move(vertical));
+
+			gameTimer = 0.0f;
+			stageStep++;
+		}
+	}
+	break;
+	case 8:
+	{
+
+	}
+	break;
+	case 9:
+	{
+
+	}
+	break;
+	case 10:
+	{
+
+	}
+	break;
 	default:
 		break;
 	}
-
-	
 }
 
 // シーン切り替え処理

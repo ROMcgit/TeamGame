@@ -120,4 +120,7 @@ void G5_StageAsibawatari_Normal::DrawDebugGUI()
 void G5_StageAsibawatari_Normal::UpdateMove(float elapsedTime)
 {
 	position.x -= moveSpeed * elapsedTime;
+
+	if (position.x < -50.0f)
+		Destroy();
 }

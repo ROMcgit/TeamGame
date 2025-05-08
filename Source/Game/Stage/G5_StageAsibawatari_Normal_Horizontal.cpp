@@ -23,6 +23,9 @@ void G5_StageAsibawatari_Normal_Horizontal::Update(float elapsedTime)
 	//レイキャストようにモデル空間行列にするために単位行列を渡す
 	const DirectX::XMFLOAT4X4 transformIdentity = { 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 };
 	model->UpdateTransform(transformIdentity);
+
+	// 移動更新処理
+	UpdateMove(elapsedTime);
 }
 
 // 描画処理
@@ -111,4 +114,9 @@ void G5_StageAsibawatari_Normal_Horizontal::DrawDebugGUI()
 
 		ImGui::TreePop();
 	}
+}
+
+// 移動更新処理
+void G5_StageAsibawatari_Normal_Horizontal::UpdateMove(float elapsedTime)
+{
 }

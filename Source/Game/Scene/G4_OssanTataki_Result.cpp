@@ -53,7 +53,9 @@ void G4_OssanTataki_Result::Update(float elapsedTime)
 	// なにかボタンを押したらローディングシーンを挟んでゲームシーンへ切り替え
 	const GamePadButton anyButton =
 		GamePad::BTN_A |
-		GamePad::BTN_B;
+		GamePad::BTN_B |
+		GamePad::BTN_X |
+		GamePad::BTN_Y;
 	if ((gamePad.GetButtonDown() & anyButton && !setFade && !fade->GetFade()) && !scoreDirector)
 	{
 		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
@@ -124,6 +126,8 @@ void G4_OssanTataki_Result::Render()
 // スコア画像の更新処理
 void G4_OssanTataki_Result::UpdateScoreSprite(float elapsedTime)
 {
+	if (!scoreDirector) return;
+
 	switch (scoreStep)
 	{
 	case 0:

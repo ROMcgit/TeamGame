@@ -2,6 +2,7 @@
 
 #include "Graphics/Sprite.h"
 #include "Scene.h"
+#include "Graphics/Text.h"
 
 class Fade;
 
@@ -25,7 +26,21 @@ public:
 	void Render() override;
 
 private:
-	std::unique_ptr<Sprite> sprite;
+	// スコアの演出処理
+	void DirectorScore(float elapsedTime);
+
+private:
+	std::unique_ptr<Sprite> backGround;
 	std::unique_ptr<Fade> fade;
 	bool setFade = false; // フェードを設定したか
+
+	std::unique_ptr<Text> text[4];
+	DirectX::XMFLOAT2 textPos[4];
+	float startTextPosX[4];
+	int textNum = 0;
+	float totalScore = 0;
+
+	int   directorStep = 0;
+	float directorTime = 0.0f;
+	bool  directorFinish = false;
 };

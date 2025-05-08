@@ -59,7 +59,7 @@ void G2_Sundome::Initialize()
 
 	//カメラコントローラー初期化
 	cameraController = std::make_unique <CameraController>();
-	cameraController->SetTarget(DirectX::XMFLOAT3(-233.5, 61.5f, -2.8f));
+	cameraController->SetTarget(DirectX::XMFLOAT3(-176.5, 61.5f, -2.8f));
 	cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(45), 0, 0));
 	cameraController->SetRange(42.5f);
 

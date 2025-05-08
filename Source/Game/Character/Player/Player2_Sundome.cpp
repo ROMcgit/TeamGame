@@ -319,7 +319,7 @@ void Player2_Sundome::UpdateMoveState(float elapsedTime)
 		//! 死亡ステートへ遷移
 		TransitionDeathState();
 	}
-	else if (setVelocityX == 0)
+	else if (setVelocityX == 0 && isGround)
 	{
 		stateChangeWaitTimer -= elapsedTime;
 

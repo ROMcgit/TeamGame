@@ -6,6 +6,7 @@
 #include "Other/Collision.h"
 #include "Game/Camera/CameraController.h"
 #include "Game/Scene/SceneGameSelect.h"
+#include "Input/Input.h"
 
 // コンストラクタ
 GS0_OniGokko::GS0_OniGokko()
@@ -175,6 +176,9 @@ void GS0_OniGokko::CollisionVsPlayer()
 {
 	Player0_Onigokko& player = Player0_Onigokko::Instance();
 
+	GamePad& gamePad = Input::Instance().GetGamePad();
+	GamePadButton button = GamePad::BTN_A | GamePad::BTN_B;
+
 	DirectX::XMFLOAT3 outPosition;
 	if (Collision::IntersectBoxVsCylinder(
 			collisionPos,
@@ -186,9 +190,15 @@ void GS0_OniGokko::CollisionVsPlayer()
 			player.GetHeight(),
 			outPosition))
 	{
-		//! シーンを切り替える
-		SceneGameSelect::gameSelect = SceneGameSelect::GameSelect::Onigokko;
-		SceneGameSelect::sceneChange = true;
+		//! 位置を設定
 		player.SetPosition(outPosition);
+
+		if(gamePad.GetButtonDown() & button)
+		{
+			//! シーンを切り替える
+			SceneGameSelect::gameSelect = SceneGameSelect::GameSelect::Onigokko;
+			SceneGameSelect::sceneChange = true;
+			player.SetPosition(outPosition);
+		}
 	}
 }

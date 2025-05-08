@@ -188,11 +188,17 @@ void GS2_Sundome::CollisionVsPlayer()
 		player.GetPosition(),
 		player.GetRadius(),
 		player.GetHeight(),
-		outPosition) && (gamePad.GetButtonDown() & button))
+		outPosition))
 	{
-		//! シーンを切り替える
-		SceneGameSelect::gameSelect = SceneGameSelect::GameSelect::Sundome;
-		SceneGameSelect::sceneChange = true;
+		//! 位置を設定
 		player.SetPosition(outPosition);
+
+		if (gamePad.GetButtonDown() & button)
+		{
+			//! シーンを切り替える
+			SceneGameSelect::gameSelect = SceneGameSelect::GameSelect::Onigokko;
+			SceneGameSelect::sceneChange = true;
+			player.SetPosition(outPosition);
+		}
 	}
 }

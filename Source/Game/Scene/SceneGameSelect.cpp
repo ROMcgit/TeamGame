@@ -21,6 +21,11 @@
 
 #include "Game/Character/GameSelect/GameSelectManager.h"
 #include "Game/Character/GameSelect/GS0_Onigokko.h"
+#include "Game/Character/GameSelect/GS1_DarumasangaKoronda.h"
+#include "Game/Character/GameSelect/GS2_Sundome.h"
+#include "Game/Character/GameSelect/GS3_SoratobuHusenWari.h"
+#include "Game/Character/GameSelect/GS4_OssanTataki.h"
+#include "Game/Character/GameSelect/GS5_AsibaWatari.h"
 
 #include <algorithm>
 
@@ -49,7 +54,7 @@ void SceneGameSelect::Initialize()
 
 	// プレイヤー初期化
 	player = std::make_unique<Player0_Onigokko>();
-	player->SetPosition(DirectX::XMFLOAT3(0, -5.35f, 0));
+	player->SetPosition(DirectX::XMFLOAT3(0, -5.2f, 0));
 	player->SetScale(DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f));
 	player->SetMoveSpeed(20.0f);
 	player->SetRadius(1.9f);
@@ -88,9 +93,34 @@ void SceneGameSelect::Initialize()
 
 	sceneChange = false;
 
+	GameSelectManager& gameSelectManager = GameSelectManager::Instance();
+
+	float posX = 80.0f;
+
+	//! おにごっこ
 	std::unique_ptr<GS0_OniGokko> onigokko = std::make_unique<GS0_OniGokko>();
-	onigokko->SetPosition(DirectX::XMFLOAT3(0, 1, 80));
-	GameSelectManager::Instance().Register(std::move(onigokko));
+	onigokko->SetPosition(DirectX::XMFLOAT3(posX * -2, 1, 80));
+	gameSelectManager.Register(std::move(onigokko));
+
+	//! だるまさんが転んだ
+	std::unique_ptr<GS1_DarumasangaKoronda> darumasangaKoronda = std::make_unique<GS1_DarumasangaKoronda>();
+	darumasangaKoronda->SetPosition(DirectX::XMFLOAT3(posX * -1, 1, 80));
+	gameSelectManager.Register(std::move(darumasangaKoronda));
+
+	//! 寸止め
+	std::unique_ptr<GS2_Sundome> sundome = std::make_unique<GS2_Sundome>();
+	sundome->SetPosition(DirectX::XMFLOAT3(0, 1, 80));
+	gameSelectManager.Register(std::move(sundome));
+
+	//! 空飛ぶ風船割り
+	std::unique_ptr<GS3_SoratobuHusenWari> soratobuHusenWari = std::make_unique<GS3_SoratobuHusenWari>();
+	soratobuHusenWari->SetPosition(DirectX::XMFLOAT3(posX * 1, 1, 80));
+	gameSelectManager.Register(std::move(soratobuHusenWari));
+
+	//! おっさん叩き
+	std::unique_ptr<GS4_OssanTataki> ossanTataki = std::make_unique<GS4_OssanTataki>();
+	ossanTataki->SetPosition(DirectX::XMFLOAT3(posX * 2, 1, 80));
+	gameSelectManager.Register(std::move(ossanTataki));
 }
 
 // 終了化
@@ -112,6 +142,17 @@ void SceneGameSelect::Update(float elapsedTime)
 	// カメラコントローラー更新処理
 	DirectX::XMFLOAT3 target = player->GetPosition();
 	target.y = player->GetHeight() * 0.5f;
+
+	if (target.x < -126.0f || target.x > 126.0f)
+	{
+		target.x = std::clamp(target.x, -126.0f, 126.0f);
+	}
+
+	if (target.z < -35.0f || target.z > 35.0f)
+	{
+		target.z = std::clamp(target.z, -35.0f, 35.0f);
+	}
+
 	cameraController->SetTarget(target);
 	Camera::Instance().Update(elapsedTime);
 	cameraController->Update(elapsedTime);
@@ -189,7 +230,7 @@ void SceneGameSelect::Render()
 	lightPosition.z = CameraController::target.z - 25.0f;
 	lightRange = 20000.0f;
 
-	shadowMapEyeOffset = { 4.0f, 17.0f, 9.0f };
+	shadowMapEyeOffset = { 0.0f, 17.0f, 9.0f };
 
 	//! フォグ
 	fogStart = 2000.0f;
@@ -361,17 +402,19 @@ void SceneGameSelect::Render()
 // プレイヤーの位置制限
 void SceneGameSelect::PlayerPositionControll()
 {
-	if (player->GetPosition().x < -300.0f || player->GetPosition().x > 300.0f)
+	float posX = 176.0f;
+
+	if (player->GetPosition().x < -posX || player->GetPosition().x > posX)
 	{
 		player->SetVelocityX(0);
-		float positoinX = std::clamp(player->GetPosition().x, -300.0f, 300.0f);
+		float positoinX = std::clamp(player->GetPosition().x, -posX, posX);
 		player->SetPositionX(positoinX);
 	}
 
-	if (player->GetPosition().z < -300.0f || player->GetPosition().z > 300.0f)
+	if (player->GetPosition().z < -61.2 || player->GetPosition().z > 130.0f)
 	{
 		player->SetVelocityZ(0);
-		float positoinZ = std::clamp(player->GetPosition().z, -300.0f, 300.0f);
+		float positoinZ = std::clamp(player->GetPosition().z, -61.2f, 130.0f);
 		player->SetPositionZ(positoinZ);
 	}
 }

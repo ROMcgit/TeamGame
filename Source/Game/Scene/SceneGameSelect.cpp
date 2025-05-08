@@ -95,32 +95,36 @@ void SceneGameSelect::Initialize()
 
 	GameSelectManager& gameSelectManager = GameSelectManager::Instance();
 
-	float posX = 80.0f;
+	float posX = 65.0f;
 
 	//! おにごっこ
 	std::unique_ptr<GS0_OniGokko> onigokko = std::make_unique<GS0_OniGokko>();
-	onigokko->SetPosition(DirectX::XMFLOAT3(posX * -2, 1, 80));
+	onigokko->SetPosition(DirectX::XMFLOAT3(posX * -2.5f, 1, 80));
 	gameSelectManager.Register(std::move(onigokko));
 
 	//! だるまさんが転んだ
 	std::unique_ptr<GS1_DarumasangaKoronda> darumasangaKoronda = std::make_unique<GS1_DarumasangaKoronda>();
-	darumasangaKoronda->SetPosition(DirectX::XMFLOAT3(posX * -1, 1, 80));
+	darumasangaKoronda->SetPosition(DirectX::XMFLOAT3(posX * -1.5f, 1, 80));
 	gameSelectManager.Register(std::move(darumasangaKoronda));
 
 	//! 寸止め
 	std::unique_ptr<GS2_Sundome> sundome = std::make_unique<GS2_Sundome>();
-	sundome->SetPosition(DirectX::XMFLOAT3(0, 1, 80));
+	sundome->SetPosition(DirectX::XMFLOAT3(posX * -0.5f, 1, 80));
 	gameSelectManager.Register(std::move(sundome));
 
 	//! 空飛ぶ風船割り
 	std::unique_ptr<GS3_SoratobuHusenWari> soratobuHusenWari = std::make_unique<GS3_SoratobuHusenWari>();
-	soratobuHusenWari->SetPosition(DirectX::XMFLOAT3(posX * 1, 1, 80));
+	soratobuHusenWari->SetPosition(DirectX::XMFLOAT3(posX * 0.5f, 1, 80));
 	gameSelectManager.Register(std::move(soratobuHusenWari));
 
 	//! おっさん叩き
 	std::unique_ptr<GS4_OssanTataki> ossanTataki = std::make_unique<GS4_OssanTataki>();
-	ossanTataki->SetPosition(DirectX::XMFLOAT3(posX * 2, 1, 80));
+	ossanTataki->SetPosition(DirectX::XMFLOAT3(posX * 1.5f, 1, 80));
 	gameSelectManager.Register(std::move(ossanTataki));
+
+	//! 足場渡り
+	std::unique_ptr<GS5_AsibaWatari> asibaWatari = std::make_unique<GS5_AsibaWatari>();
+	asibaWatari->SetPosition(DirectX::XMFLOAT3(posX * 2.5f, 1, 80));
 }
 
 // 終了化
@@ -230,11 +234,11 @@ void SceneGameSelect::Render()
 	lightPosition.z = CameraController::target.z - 25.0f;
 	lightRange = 20000.0f;
 
-	shadowMapEyeOffset = { 0.0f, 17.0f, 9.0f };
+	shadowMapEyeOffset = { 3.0f, 22.0f, 9.0f };
 
 	//! フォグ
-	fogStart = 2000.0f;
-	fogEnd = 2100.0f;
+	fogStart = 100.0f;
+	fogEnd   = 150.0f;
 
 	Graphics& graphics = Graphics::Instance();
 	
@@ -402,7 +406,7 @@ void SceneGameSelect::Render()
 // プレイヤーの位置制限
 void SceneGameSelect::PlayerPositionControll()
 {
-	float posX = 176.0f;
+	float posX = 185.0f;
 
 	if (player->GetPosition().x < -posX || player->GetPosition().x > posX)
 	{

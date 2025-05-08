@@ -196,7 +196,7 @@ void GS5_AsibaWatari::CollisionVsPlayer()
 		if (gamePad.GetButtonDown() & button)
 		{
 			//! ÉVÅ[ÉìÇêÿÇËë÷Ç¶ÇÈ
-			SceneGameSelect::gameSelect = SceneGameSelect::GameSelect::Onigokko;
+			SceneGameSelect::gameSelect = SceneGameSelect::GameSelect::Asibawatari;
 			SceneGameSelect::sceneChange = true;
 			player.SetPosition(outPosition);
 		}

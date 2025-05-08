@@ -196,7 +196,7 @@ void GS1_DarumasangaKoronda::CollisionVsPlayer()
 		if (gamePad.GetButtonDown() & button)
 		{
 			//! ÉVÅ[ÉìÇêÿÇËë÷Ç¶ÇÈ
-			SceneGameSelect::gameSelect = SceneGameSelect::GameSelect::Onigokko;
+			SceneGameSelect::gameSelect = SceneGameSelect::GameSelect::DarumasangaKoronda;
 			SceneGameSelect::sceneChange = true;
 			player.SetPosition(outPosition);
 		}

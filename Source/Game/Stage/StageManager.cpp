@@ -35,7 +35,7 @@ void StageManager::Register(std::unique_ptr<Stage> stage)
 }
 
 // ステージを破棄
-void StageManager::Unregister(Stage* stage)
+void StageManager::Remove(Stage* stage)
 {
 	// std::remove_ifを使ってステージを削除
 	stages.erase(std::remove_if(stages.begin(), stages.end(),

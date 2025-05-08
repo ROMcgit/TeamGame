@@ -358,6 +358,9 @@ public:
 	//! å¸Ç´ÇÃê›íË
 	void SetDirection(const DirectX::XMFLOAT3& direction);
 
+	//! à⁄ìÆë¨ìxê›íË
+	void SetMoveSpeed(float moveSpeed) { this->moveSpeed = moveSpeed; }
+
 	/*! à íu */
 #if 1
 	// à íuê›íË

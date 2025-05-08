@@ -7,6 +7,8 @@
 #include "Input/Input.h"
 #include "Game/Stage/StageManager.h"
 #include "Game/Stage/G5_StageAsibawatari_Normal.h"
+#include "Game/Stage/G5_StageAsibawatari_Normal_Horizontal.h"
+#include "Game/Stage/G5_StageAsibawatari_Normal_Vertical.h"
 #include "Game/Stage/StageMoveFloor.h"
 #include "SceneLoading.h"
 #include "SceneManager.h"
@@ -19,6 +21,8 @@ bool G5_Asibawatari::gameClear = false;
 void G5_Asibawatari::Initialize()
 {
 	gameClear = false;
+
+	movieScene = true;
 
 	ID3D11Device* device = Graphics::Instance().GetDevice();
 	float screenWidth = Graphics::Instance().GetScreenWidth();
@@ -35,12 +39,14 @@ void G5_Asibawatari::Initialize()
 		// ステージ初期化
 	StageManager& stageManager = StageManager::Instance();
 	std::unique_ptr<G5_StageAsibawatari_Normal> stageMain = std::make_unique<G5_StageAsibawatari_Normal>();
+	stageMain->SetMoveSpeed(0.0f);
 	stageManager.Register(std::move(stageMain));
 
 	// プレイヤー初期化
 	player = std::make_unique<Player5_AsibaWatari>();
 	player->SetPosition(DirectX::XMFLOAT3(0, 5.0f, 0));
 	player->SetAngleY(DirectX::XMConvertToRadians(180));
+	//player->SetGravity(0.0f);
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
@@ -98,6 +104,9 @@ void G5_Asibawatari::Update(float elapsedTime)
 
 	//! ムービー更新処理
 	UpdateMovie(elapsedTime);
+
+	//! ステージ生成処理
+	NewStage(elapsedTime);
 
 	// カメラコントローラー更新処理
 	Camera::Instance().Update(elapsedTime);
@@ -287,9 +296,22 @@ void G5_Asibawatari::UpdateMovie(float elapsedTime)
 {
 	if (!movieScene) return;
 
+	player->SetMovieTime(0.1f);
+
 	switch (movieStep)
 	{
 	case 0:
+
+		movieTime += elapsedTime;
+
+		if (movieTime > 2.0f)
+		{
+			std::unique_ptr<Stage>& stage = StageManager::Instance().GetStage(0);
+			stage->SetMoveSpeed(1.0f);
+
+			movieScene = false;
+		}
+
 		break;
 	case 1:
 		break;
@@ -298,6 +320,83 @@ void G5_Asibawatari::UpdateMovie(float elapsedTime)
 	default:
 		break;
 	}
+}
+
+// ステージ生成処理
+void G5_Asibawatari::NewStage(float elapsedTime)
+{
+	if (movieScene) return;
+
+	gameTimer += elapsedTime;
+
+	//! 位置Xは40以上
+	//! 位置Zは-18～18
+
+	switch (stageStep)
+	{
+	//! 通常
+	case 0:
+
+		if (gameTimer > 1.0f)
+		{
+			//! 通常
+			std::unique_ptr<G5_StageAsibawatari_Normal> normal = std::make_unique<G5_StageAsibawatari_Normal>();
+			normal->SetPositionX(40);
+			normal->SetPositionZ(0);
+			normal->SetMoveSpeed(5.0f);
+			normal->SetScale(DirectX::XMFLOAT3(0.07f, 0.1f, 0.07f));
+
+			gameTimer = 0.0f;
+			stageStep++;
+		}
+		break;
+	case 1:
+
+		if (gameTimer > 1.8f)
+		{
+			for(int i = 0; i < 2; i++)
+			{
+				//! 横長
+				std::unique_ptr<G5_StageAsibawatari_Normal_Horizontal> horizontal = std::make_unique<G5_StageAsibawatari_Normal_Horizontal>();
+				horizontal->SetPositionX(40);
+				float posZ = i == 0 ? 14 : -14;
+				horizontal->SetPositionZ(posZ);
+				horizontal->SetMoveSpeed(5.0f);
+
+				gameTimer = 0.0f;
+				stageStep++;
+			}
+		}
+		break;
+	case 2:
+
+		if (gameTimer > 1.8f)
+		{
+			//! 通常
+			std::unique_ptr<G5_StageAsibawatari_Normal> normal = std::make_unique<G5_StageAsibawatari_Normal>();
+			normal->SetPositionX(40);
+			normal->SetPositionZ(8);
+			normal->SetMoveSpeed(5.0f);
+			normal->SetScale(DirectX::XMFLOAT3(0.07f, 0.1f, 0.07f));
+
+			//! 縦長
+			std::unique_ptr<G5_StageAsibawatari_Normal_Vertical> vertical = std::make_unique<G5_StageAsibawatari_Normal_Vertical>();
+			vertical->SetPositionX(40);
+			vertical->SetPositionZ(0);
+			vertical->SetMoveSpeed(5.0f);
+
+			gameTimer = 0.0f;
+			stageStep++;
+		}
+
+		break;
+	case 3:
+		break;
+	default:
+		break;
+	}
+
+	
 }
 
 // シーン切り替え処理

@@ -32,6 +32,9 @@ private:
 	// ムービー更新処理
 	void UpdateMovie(float elapsedTime);
 
+	// ステージ生成処理
+	void NewStage(float elapsedTime);
+
 	// シーン切り替え処理
 	void SceneChange();
 
@@ -52,4 +55,8 @@ private:
 	bool movieScene = false; // ムービー中か
 	float movieTime = 0.0f;  // ムービー時間
 	int   movieStep = 0;     // ムービーステップ
+
+	float gameTimer = 0.0f;
+
+	int stageStep = 0;
 };

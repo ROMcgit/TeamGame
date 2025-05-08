@@ -17,6 +17,15 @@ public:
 		return instance;
 	}
 
+	// ステージ取得
+	std::unique_ptr<Stage>& GetStage(int index) {
+		if (index < 0 || index >= static_cast<int>(stages.size()))
+		{
+			throw std::out_of_range("Stage index is out of range");
+		}
+		return stages[index];
+	}
+
 	// 更新処理
 	void Update(float elapsedTime);
 
@@ -27,7 +36,7 @@ public:
 	void Register(std::unique_ptr<Stage> stage);
 
 	// ステージを破棄
-	void Unregister(Stage* stage);
+	void Remove(Stage* stage);
 
 	// ステージを全削除
 	void Clear();

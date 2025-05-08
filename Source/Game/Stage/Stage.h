@@ -23,4 +23,7 @@ public:
 
 	// デバッグ用GUI描画
 	virtual void DrawDebugGUI() {};
+
+	// ステージを削除
+	void Destroy();
 };

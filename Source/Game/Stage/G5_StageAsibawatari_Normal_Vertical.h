@@ -3,7 +3,7 @@
 #include "Graphics/Model.h"
 #include "Stage.h"
 
-// ステージ
+// ステージ_縦長
 class G5_StageAsibawatari_Normal_Vertical : public Stage
 {
 public:

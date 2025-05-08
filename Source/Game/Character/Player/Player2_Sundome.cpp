@@ -360,8 +360,31 @@ void Player2_Sundome::UpdateReturnState(float elapsedTime)
 				1.0f, 0.0f,
 				1.0f, 0.6f);
 
+			int score = 0;
+
+			if (position.x > 60.0f)
+			{
+				score = 10;
+			}
+			else if (position.x < 60.0f && position.x > -87.9f)
+			{
+				score = 30;
+			}
+			else if (position.x <= -87.9f && position.x > -171.35f)
+			{
+				score = 50;
+			}
+			else if (position.x <= -171.35f)
+			{
+				score = 100;
+			}
+
+			G2_Sundome::score[round - 1] = score;
+
 			if (round < 3)
+			{
 				round++;
+			}
 			else
 			{
 				std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G2_Sundome_Result>());

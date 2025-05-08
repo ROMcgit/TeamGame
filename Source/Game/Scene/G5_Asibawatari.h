@@ -35,10 +35,12 @@ private:
 	// ƒV[ƒ“Ø‚è‘Ö‚¦ˆ—
 	void SceneChange();
 
+public:
+	static bool gameClear;
+
 private:
 	std::unique_ptr<Fade> fade;
 	bool setFade = false;
-	bool gameClear = false;
 
 	std::unique_ptr <Player5_AsibaWatari> player;
 	std::unique_ptr <CameraController> cameraController;

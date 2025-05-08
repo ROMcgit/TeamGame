@@ -1,4 +1,5 @@
 #include "Game/Stage/G5_StageAsibawatari_Goal.h"
+#include "Game/Scene/G5_Asibawatari.h"
 #include <imgui.h>
 
 // コンストラクタ
@@ -85,6 +86,8 @@ bool G5_StageAsibawatari_Goal::RayCast(const DirectX::XMFLOAT3& start, const Dir
 		hit.rotation.x = angle.x;
 		hit.rotation.y = angle.y;
 		hit.rotation.z = angle.z;
+
+		G5_Asibawatari::gameClear = true;
 
 		return true;
 	}

@@ -13,9 +13,13 @@
 #include "G5_Asibawatari_GameOver.h"
 #include "G5_Asibawatari_Clear.h"
 
+bool G5_Asibawatari::gameClear = false;
+
 // èâä˙âª
 void G5_Asibawatari::Initialize()
 {
+	gameClear = false;
+
 	ID3D11Device* device = Graphics::Instance().GetDevice();
 	float screenWidth = Graphics::Instance().GetScreenWidth();
 	float screenHeight = Graphics::Instance().GetScreenHeight();

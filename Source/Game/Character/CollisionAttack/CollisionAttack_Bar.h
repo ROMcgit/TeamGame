@@ -21,5 +21,9 @@ public:
 	void DrawDebugGUI() override;
 
 private:
+	// ˆÊ’uXVˆ—
+	void UpdatePos();
+
+private:
 	std::unique_ptr<Model>  model;
 };

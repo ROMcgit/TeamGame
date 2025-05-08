@@ -8,6 +8,7 @@
 #include "Game/Character/Projectile/ProjectileStraight.h"
 #include "Game/Character/Projectile/ProjectileHoming.h"
 #include "Game/Camera/CameraController.h"
+#include "Game/Character/CollisionAttack/CollisionAttack_Bar.h"
 
 static Player5_AsibaWatari* instance = nullptr;
 
@@ -30,6 +31,10 @@ Player5_AsibaWatari::Player5_AsibaWatari()
 
 	// 重力
 	gravity = 0.45f;
+
+	// バーを生成
+	std::unique_ptr<CollisionAttack_Bar> bar = std::make_unique<CollisionAttack_Bar>(&collisionAttackManager);
+	collisionAttackManager.Register(std::move(bar));
 
 	// 当たり判定
 	radius = 2.3f;
@@ -108,6 +113,9 @@ void Player5_AsibaWatari::Update(float elapsedTime)
 	// 弾丸更新処理
 	projectileManager.Update(elapsedTime);
 
+	// 衝突攻撃の更新処理
+	collisionAttackManager.Update(elapsedTime);
+
 	// モデルアニメーション更新処理
 	model->UpdateAnimation(elapsedTime);
 
@@ -122,6 +130,8 @@ void Player5_AsibaWatari::Render(ID3D11DeviceContext* dc, Shader* shader)
 
 	// 弾丸描画処理
 	projectileManager.Render(dc, shader);
+
+	collisionAttackManager.Render(dc, shader);
 }
 
 // HPなどのUI描画

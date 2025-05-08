@@ -4,6 +4,7 @@
 #include "Graphics/Model.h"
 #include "Game/Character/Character.h"
 #include "Game/Character/Projectile/ProjectileManager.h"
+#include "Game/Character/CollisionAttack/CollisionAttackManager.h"
 #include "Game/Effect/Effect.h"
 
 // ÉvÉåÉCÉÑÅ[
@@ -135,6 +136,7 @@ private:
 	int jumpLimit = 2;
 
 	ProjectileManager projectileManager;
+	CollisionAttackManager collisionAttackManager;
 
 	std::unique_ptr<Effect> hitEffect;
 

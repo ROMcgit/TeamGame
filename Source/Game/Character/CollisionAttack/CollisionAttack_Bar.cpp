@@ -1,7 +1,7 @@
 #include "CollisionAttack_Bar.h"
 #include "Audio/SoundManager.h"
 #include "Game/Effect/EffectManager.h"
-#include "Game/Character/Player/Player3_SoratobuHusenWari.h"
+#include "Game/Character/Player/Player5_AsibaWatari.h"
 
 #include <imgui.h>
 
@@ -9,19 +9,25 @@
 CollisionAttack_Bar::CollisionAttack_Bar(CollisionAttackManager* manager)
 	: CollisionAttack(manager)
 {
-	model = std::make_unique<Model>("Data/Model/4.OssanTataki/Bar/Bar.mdl");
+	model = std::make_unique<Model>("Data/Model/5.Asibawatari/Bar.mdl");
 
 	// 角度
 	angle.x = DirectX::XMConvertToRadians(180);
 
 	// 大きさ
-	scale.x = scale.y = scale.z = 0.03f;
+	scale.x = scale.z = 0.01f;
+	scale.y = 0.04f;
 
 	// 当たり判定
 	radius = 0.0f;
 
 	// 当たり判定の調整
 	collisionOffset = { 0.0f, 0.0f, 0.0f };
+
+
+	materialColor = { 1,0,0 };
+
+	opacity = 0.5f;
 }
 
 // デストラクタ
@@ -37,12 +43,16 @@ void CollisionAttack_Bar::Update(float elapsedTime)
 
 	// モデル行列更新
 	model->UpdateTransform(transform);
+
+	// 位置更新処理
+	UpdatePos();
 }
 
 // 描画処理
 void CollisionAttack_Bar::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	shader->Draw(dc, model.get(), materialColor, opacity);
+	if(!Player5_AsibaWatari::Instance().IsGround())
+		shader->Draw(dc, model.get(), materialColor, opacity);
 }
 
 // デバッグGUI描画
@@ -134,4 +144,13 @@ void CollisionAttack_Bar::DrawDebugGUI()
 
 		ImGui::TreePop();
 	}
+}
+
+// 位置更新処理
+void CollisionAttack_Bar::UpdatePos()
+{
+	Player5_AsibaWatari& player = Player5_AsibaWatari::Instance();
+	position.x = player.GetPosition().x;
+	position.y = player.GetPosition().y - 4.0f;
+	position.z = player.GetPosition().z;
 }

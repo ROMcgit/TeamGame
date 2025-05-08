@@ -209,6 +209,8 @@
     <ClInclude Include="Source\Game\Stage\G3_StageSoratobuHusenWari.h" />
     <ClInclude Include="Source\Game\Stage\G4_StageOssanTataki.h" />
     <ClInclude Include="Source\Game\Stage\G5_StageAsibawatari_Normal.h" />
+    <ClInclude Include="Source\Game\Stage\G5_StageAsibawatari_Normal_Horizontal.h" />
+    <ClInclude Include="Source\Game\Stage\G5_StageAsibawatari_Normal_Vertical.h" />
     <ClInclude Include="Source\Game\Stage\StageGameSelect.h" />
     <ClInclude Include="Source\Graphics\HDRTexture.h" />
     <ClInclude Include="Source\Graphics\RenderTarget.h" />
@@ -328,6 +330,8 @@
     <ClCompile Include="Source\Game\Stage\G3_StageSoratobuHusenWari.cpp" />
     <ClCompile Include="Source\Game\Stage\G4_StageOssanTataki.cpp" />
     <ClCompile Include="Source\Game\Stage\G5_StageAsibawatari_Normal.cpp" />
+    <ClCompile Include="Source\Game\Stage\G5_StageAsibawatari_Normal_Horizontal.cpp" />
+    <ClCompile Include="Source\Game\Stage\G5_StageAsibawatari_Normal_Vertical.cpp" />
     <ClCompile Include="Source\Game\Stage\Stage.cpp" />
     <ClCompile Include="Source\Game\Stage\StageGameSelect.cpp" />
     <ClCompile Include="Source\Graphics\HDRTexture.cpp" />

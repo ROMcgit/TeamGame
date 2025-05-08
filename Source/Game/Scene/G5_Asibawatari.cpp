@@ -47,7 +47,7 @@ void G5_Asibawatari::Initialize()
 	player = std::make_unique<Player5_AsibaWatari>();
 	player->SetPosition(DirectX::XMFLOAT3(0, 5.0f, 0));
 	player->SetAngleY(DirectX::XMConvertToRadians(180));
-	player->SetGravity(0.0f);
+	//player->SetGravity(0.0f);
 
 	// ÉJÉÅÉâèâä˙ê›íË
 	Graphics& graphics = Graphics::Instance();
@@ -404,7 +404,7 @@ void G5_Asibawatari::NewStage(float elapsedTime)
 		break;
 	case 3:
 	{
-		if (gameTimer > 7.0f)
+		if (gameTimer > 6.3f)
 		{
 			//! í èÌ
 			std::unique_ptr<G5_StageAsibawatari_Normal> normal = std::make_unique<G5_StageAsibawatari_Normal>();

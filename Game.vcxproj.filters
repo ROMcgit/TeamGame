@@ -567,6 +567,9 @@
     <ClInclude Include="Source\Game\Stage\G5_StageAsibawatari_Goal.h">
       <Filter>Source\Stage\StageGame\G5_足場渡り</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Character\CollisionAttack\CollisionAttack_Bar.h">
+      <Filter>Source\Character\Player\5_足場渡り</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -919,6 +922,9 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Stage\G5_StageAsibawatari_Goal.cpp">
       <Filter>Source\Stage\StageGame\G5_足場渡り</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Character\CollisionAttack\CollisionAttack_Bar.cpp">
+      <Filter>Source\Character\Player\5_足場渡り</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

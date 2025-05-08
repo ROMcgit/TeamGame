@@ -27,7 +27,7 @@ CollisionAttack_Bar::CollisionAttack_Bar(CollisionAttackManager* manager)
 
 	materialColor = { 1,0,0 };
 
-	opacity = 0.5f;
+	opacity = 0.0f;
 }
 
 // デストラクタ
@@ -44,6 +44,11 @@ void CollisionAttack_Bar::Update(float elapsedTime)
 	// モデル行列更新
 	model->UpdateTransform(transform);
 
+	if (Player5_AsibaWatari::Instance().IsGround())
+		SetOpacityChange(0.0f, 0.2f);
+	else
+		SetOpacityChange(0.5f, 0.2f);
+
 	// 位置更新処理
 	UpdatePos();
 }
@@ -51,7 +56,7 @@ void CollisionAttack_Bar::Update(float elapsedTime)
 // 描画処理
 void CollisionAttack_Bar::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	if(!Player5_AsibaWatari::Instance().IsGround())
+	if(opacity > 0.0f)
 		shader->Draw(dc, model.get(), materialColor, opacity);
 }
 

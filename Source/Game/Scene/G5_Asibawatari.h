@@ -59,4 +59,6 @@ private:
 	float gameTimer = 0.0f;
 
 	int stageStep = 0;
+
+	bool newStageFinish = false;
 };

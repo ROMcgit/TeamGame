@@ -8,7 +8,7 @@ void GameSelect::DrawDebugPrimitive()
 	DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
 
 	// 衝突判定用のデバッグ球を描画
-	debugRenderer->DrawCylinder(collisionPos, radius, height, DirectX::XMFLOAT4(1, 0, 0, 1));
+	debugRenderer->DrawBox(collisionPos, width, height, depth, DirectX::XMFLOAT4(1, 0, 0, 1));
 }
 
 void GameSelect::Destroy()

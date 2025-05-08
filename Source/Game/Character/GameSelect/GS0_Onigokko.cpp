@@ -17,11 +17,13 @@ GS0_OniGokko::GS0_OniGokko()
 
 	angle.y = DirectX::XMConvertToRadians(180);
 
+	collisionType = CollisionType::Box;
 	// 幅、高さ設定
-	radius = 11.5f;
-	height = 5.0f;
+	width = 22.55f;
+	height = 7.0f;
+	depth = 2.5f;
 
-	collisionOffset.y = -1.85f;
+	collisionOffset.y = 0.0f;
 
 	gravity = 0.0f;
 }
@@ -67,8 +69,6 @@ void GS0_OniGokko::SpriteRender(ID3D11DeviceContext* dc, Graphics& graphics)
 {
 }
 
-
-
 // デバッグプリミティブ描画
 void GS0_OniGokko::DrawDebugPrimitive()
 {
@@ -105,8 +105,9 @@ void GS0_OniGokko::DrawDebugGUI()
 
 		if (ImGui::CollapsingHeader("Collision", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			ImGui::DragFloat("Radius", &radius, 0.01f);
+			ImGui::DragFloat("Width", &width, 0.01f);
 			ImGui::DragFloat("Height", &height, 0.01f);
+			ImGui::DragFloat("Depth", &depth, 0.01f);
 			ImGui::DragFloat3("CollisionOffset", &collisionOffset.x, 0.01f);
 		}
 
@@ -175,10 +176,11 @@ void GS0_OniGokko::CollisionVsPlayer()
 	Player0_Onigokko& player = Player0_Onigokko::Instance();
 
 	DirectX::XMFLOAT3 outPosition;
-	if (Collision::IntersectCylinderVsCylinder(
+	if (Collision::IntersectBoxVsCylinder(
 			collisionPos,
-			radius,
+			width,
 			height,
+			depth,
 			player.GetPosition(),
 			player.GetRadius(),
 			player.GetHeight(),

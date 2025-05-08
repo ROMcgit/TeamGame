@@ -21,7 +21,7 @@ public:
 	void Update(float elapsedTime);
 
 	// 描画処理
-	void Render(ID3D11DeviceContext* dc, Shader* shader);
+	void Render(ID3D11DeviceContext* dc, Shader* shader, bool shadowMap = false);
 
 	// HPなどのUI描画
 	void SpriteRender(ID3D11DeviceContext* dc);
@@ -80,14 +80,6 @@ private:
 
 	//-----------------------------------------------------------------//
 
-		// ダッシュステートへ遷移
-	void TransitionDashState();
-
-	// ダッシュステート更新処理
-	void UpdateDashState(float elapsedTime);
-
-	//-----------------------------------------------------------------//
-
 		// ダメージステートへ遷移
 	void TransitionDamageState();
 
@@ -109,7 +101,6 @@ private:
 		Wait,
 		Move,
 		Jump,
-		Dash,
 		Damage,
 		Death,
 	};

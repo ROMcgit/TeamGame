@@ -10,6 +10,7 @@
 #include "Game/Stage/G5_StageAsibawatari_Normal_Horizontal.h"
 #include "Game/Stage/G5_StageAsibawatari_Normal_Vertical.h"
 #include "Game/Stage/G5_StageAsibawatari_Trap.h"
+#include "Game/Stage/G5_StageAsibawatari_Goal.h"
 #include "Game/Stage/StageMoveFloor.h"
 #include "SceneLoading.h"
 #include "SceneManager.h"
@@ -111,12 +112,14 @@ void G5_Asibawatari::Update(float elapsedTime)
 	cameraController->Update(elapsedTime);
 
 	// ステージ更新処理
-	StageManager::Instance().Update(elapsedTime);
+	if(!gameClear)
+		StageManager::Instance().Update(elapsedTime);
 
 	//! ステージ生成処理
 	NewStage(elapsedTime);
 
 	// プレイヤー更新処理
+	if (!gameClear)
 	player->Update(elapsedTime);
 
 	// エネミー更新処理
@@ -161,7 +164,7 @@ void G5_Asibawatari::Render()
 				//エネミー描画
 				EnemyManager::Instance().Render(dc, shadowMapShader);
 				// プレイヤー描画
-				player->Render(dc, shadowMapShader);
+				player->Render(dc, shadowMapShader, true);
 
 				shadowMapShader->End(dc);
 			}
@@ -326,7 +329,7 @@ void G5_Asibawatari::UpdateMovie(float elapsedTime)
 // ステージ生成処理
 void G5_Asibawatari::NewStage(float elapsedTime)
 {
-	if (movieScene) return;
+	if (movieScene || newStageFinish) return;
 
 	gameTimer += elapsedTime;
 
@@ -524,17 +527,81 @@ void G5_Asibawatari::NewStage(float elapsedTime)
 	break;
 	case 8:
 	{
+		if (gameTimer > 8.0f)
+		{
+			//! 通常
+			std::unique_ptr<G5_StageAsibawatari_Normal> normal = std::make_unique<G5_StageAsibawatari_Normal>();
+			normal->SetPositionX(posX);
+			normal->SetPositionZ(-10);
+			normal->SetMoveSpeed(5.0f);
+			normal->SetScale(DirectX::XMFLOAT3(0.075f, 0.1f, 0.075f));
 
+			StageManager::Instance().Register(std::move(normal));
+
+			//! トラップ
+			std::unique_ptr<G5_StageAsibawatari_Trap> trap = std::make_unique<G5_StageAsibawatari_Trap>();
+			trap->SetPositionX(posX);
+			trap->SetPositionZ(10);
+			trap->SetMoveSpeed(5.0f);
+			trap->SetScale(DirectX::XMFLOAT3(0.07f, 0.1f, 0.07f));
+
+			StageManager::Instance().Register(std::move(trap));
+
+			gameTimer = 0.0f;
+			stageStep++;
+		}
 	}
 	break;
 	case 9:
 	{
+		if (gameTimer > 4.0f)
+		{
+			for (int i = 0; i < 2; i++)
+			{
+				for (int j = 0; j < 5; j++)
+					//! 横長
+				{
+					std::unique_ptr<G5_StageAsibawatari_Normal_Horizontal> horizontal = std::make_unique<G5_StageAsibawatari_Normal_Horizontal>();
+					horizontal->SetPositionX(posX + (25 * j));
+					float num = 0;
+					switch (j)
+					{
+					case 0: num = 12; break;
+					case 1: num = 6; break;
+					case 2: num = 10; break;
+					case 3: num = 6; break;
+					case 4: num = 12; break;
+					default:
+						break;
+					}
 
+					float posZ = i == 0 ? num : -num;
+					horizontal->SetPositionZ(posZ);
+					horizontal->SetMoveSpeed(5.0f);
+
+					StageManager::Instance().Register(std::move(horizontal));
+				}
+			}
+
+			gameTimer = 0.0f;
+			stageStep++;
+		}
 	}
 	break;
 	case 10:
 	{
+		if (gameTimer > 25.0f)
+		{
+			//! ゴール
+			std::unique_ptr<G5_StageAsibawatari_Goal> goal = std::make_unique<G5_StageAsibawatari_Goal>();
+			goal->SetPositionX(posX);
+			goal->SetPositionZ(0);
+			goal->SetMoveSpeed(5.0f);
 
+			StageManager::Instance().Register(std::move(goal));
+
+			newStageFinish = true;
+		}
 	}
 	break;
 	default:
@@ -559,7 +626,11 @@ void G5_Asibawatari::SceneChange()
 		}
 		else if (setFade && !fade->GetFade())
 		{
-			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G5_Asibawatari_GameOver>());
+			std::unique_ptr<SceneLoading> loadingScene;
+			if(player->GetPosition().y < -10.0f)
+				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G5_Asibawatari_GameOver>());
+			else
+				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G5_Asibawatari_Clear>());
 
 			// シーンマネージャーにローディングシーンへの切り替えを指示
 			SceneManager::Instance().ChangeScene(std::move(loadingScene));

@@ -6,7 +6,7 @@
 G5_StageAsibawatari_Goal::G5_StageAsibawatari_Goal()
 {
 	// ステージモデルを読み込み
-	model = std::make_unique <Model>("Data/Model/Stage/5.Asibawatari/0.Normal/StageNormal.mdl");
+	model = std::make_unique <Model>("Data/Model/Stage/5.Asibawatari/2.Goal/StageGoal.mdl");
 
 	scale.x = scale.y = scale.z = 0.1f;
 }
@@ -18,6 +18,8 @@ G5_StageAsibawatari_Goal::~G5_StageAsibawatari_Goal()
 // 更新処理
 void G5_StageAsibawatari_Goal::Update(float elapsedTime)
 {
+	noViewTime -= elapsedTime;
+
 	// ステージの状態更新処理
 	UpdateGameObjectBaseState(elapsedTime, Object::Stage);
 
@@ -36,7 +38,8 @@ void G5_StageAsibawatari_Goal::Render(ID3D11DeviceContext* dc, Shader* shader)
 	model->UpdateTransform(transform);
 
 	// シェーダーにモデルを描画してもらう
-	shader->Draw(dc, model.get());
+	if(noViewTime <= 0.0f)
+		shader->Draw(dc, model.get());
 }
 
 // レイキャスト

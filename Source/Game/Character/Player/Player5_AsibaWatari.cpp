@@ -92,9 +92,6 @@ void Player5_AsibaWatari::Update(float elapsedTime)
 		case State::Move:
 			UpdateMoveState(elapsedTime);
 			break;
-		case State::Dash:
-			UpdateDashState(elapsedTime);
-			break;
 		case State::Jump:
 			UpdateJumpState(elapsedTime);
 			break;
@@ -124,14 +121,15 @@ void Player5_AsibaWatari::Update(float elapsedTime)
 }
 
 // 描画処理
-void Player5_AsibaWatari::Render(ID3D11DeviceContext* dc, Shader* shader)
+void Player5_AsibaWatari::Render(ID3D11DeviceContext* dc, Shader* shader, bool shadowMap)
 {
 	shader->Draw(dc, model.get());
 
 	// 弾丸描画処理
 	projectileManager.Render(dc, shader);
 
-	collisionAttackManager.Render(dc, shader);
+	if(!shadowMap)
+		collisionAttackManager.Render(dc, shader);
 }
 
 // HPなどのUI描画
@@ -203,19 +201,12 @@ void Player5_AsibaWatari::UpdateWaitState(float elapsedTime)
 	}
 
 	//! ジャンプ処理
-	if (gamePad.GetButtonDown() & GamePad::BTN_A)
+	GamePadButton button = GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
+	//! ジャンプ処理
+	if (gamePad.GetButtonDown() & button)
 	{
 		InputJump();
 		TransitionJumpState();
-	}
-
-	GamePadButton button = GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
-
-	//! ダッシュ処理
-	if (gamePad.GetButtonDown() & button)
-	{
-		//! ダッシュステートへ遷移
-		TransitionDashState();
 	}
 
 	InputMove(elapsedTime);
@@ -251,21 +242,15 @@ void Player5_AsibaWatari::UpdateMoveState(float elapsedTime)
 		TransitionWaitState();
 	}
 
+	GamePadButton button = GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
 	//! ジャンプ処理
-	if (gamePad.GetButtonDown() & GamePad::BTN_A)
+	if (gamePad.GetButtonDown() & button)
 	{
 		InputJump();
 		TransitionJumpState();
 	}
 
-	GamePadButton button = GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
-
-	//! ダッシュ処理
-	if (gamePad.GetButtonDown() & button)
-	{
-		//! ダッシュステートへ遷移
-		TransitionDashState();
-	}
+	
 
 	InputMove(elapsedTime);
 }
@@ -286,46 +271,6 @@ void Player5_AsibaWatari::UpdateJumpState(float elapsedTime)
 
 	// 移動入力処理
 	InputMove(elapsedTime);
-}
-
-// ダッシュステートへ遷移
-void Player5_AsibaWatari::TransitionDashState()
-{
-	state = State::Dash;
-
-	stateChangeWaitTimer = 1.0f;
-
-	// 走りアニメーション再生
-	if (model->GetAnimationNum() != Anim_Move)
-		model->PlayAnimation(Anim_Move, true);
-}
-
-// ダッシュステート更新処理
-void Player5_AsibaWatari::UpdateDashState(float elapsedTime)
-{
-	// 前方向
-	DirectX::XMFLOAT3 dir;
-
-	dir.x = transform._31;
-	dir.y = transform._32;
-	dir.z = transform._33;
-
-	DirectX::XMVECTOR DIR;
-	DIR = DirectX::XMLoadFloat3(&dir);
-	DIR = DirectX::XMVector3Normalize(DIR);
-	DirectX::XMStoreFloat3(&dir, DIR);
-
-	// 移動する
-	Move3D(dir.x, dir.z, 30.0f);
-
-	stateChangeWaitTimer -= elapsedTime;
-
-	//! 待ち時間が0なら
-	if (stateChangeWaitTimer <= 0.0f)
-	{
-		//! 待機ステートへ遷移
-		TransitionWaitState();
-	}
 }
 
 // ダメージステートへ遷移

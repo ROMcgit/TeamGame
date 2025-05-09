@@ -242,11 +242,8 @@ void EnemyDarumasangaKoronda::TransitionLookState()
 	//! 角度Yを変更する
 	SetAngleYChange(DirectX::XMConvertToRadians(180), 0.3f);
 
-	//! コントラスト
-	SetContrast(Camera::postEffect.contrast + 0.05f);
 
-	//! 色収差
-	SetChromaticAberration(Camera::postEffect.chromaticAberration + 0.05f);
+	SetVignetteIntensityChange(0.5f, 0.03f);
 
 	stateChangeWaitTimer = 1.8f;
 }
@@ -265,11 +262,8 @@ void EnemyDarumasangaKoronda::UpdateLookState(float elapsedTime)
 		//! カラーフィルターを戻す
 		SetColorFilterResetChange(0.3f);
 
-		//! コントラストを戻す
-		SetContrastResetChange(0.3f);
-
-		//! 色収差を戻す
-		SetChromaticAberrationResetChange(0.3f);
+		//! ビネットを戻す
+		SetVignetteIntensityChange(0.0f, 0.7f);
 
 		//! 待機ステートへ遷移
 		TransitionWaitState();
@@ -289,18 +283,6 @@ void EnemyDarumasangaKoronda::TransitionAttackState()
 	pos.z += 0.8f;
 	position = pos;
 
-	//! コントラスト
-	SetContrastChange(1.5f, 0.5f);
-
-	//! サチュレーション
-	SetSaturationChange(1.0f, 0.5f);
-
-	//! カラーフィルター
-	SetColorFilterChange(DirectX::XMFLOAT3(3.0f, 1.3f, 1.35f), 0.5f);
-
-	//! クロマティックアベレーション
-	SetChromaticAberrationChange(0.03f, 1.5f);
-
 	stateChangeWaitTimer = 2.2f;
 
 	// 攻撃アニメーション再生
@@ -319,11 +301,8 @@ void EnemyDarumasangaKoronda::UpdateAttackState(float elapsedTime)
 		//! カラーフィルターを戻す
 		SetColorFilterResetChange(0.3f);
 
-		//! コントラストを戻す
-		SetContrastResetChange(0.3f);
-
-		//! 色収差を戻す
-		SetChromaticAberrationResetChange(0.3f);
+		//! ビネットを戻す
+		SetVignetteIntensityChange(0.0f, 1.0f);
 
 		//! 待機ステートへ遷移
 		TransitionWaitState();

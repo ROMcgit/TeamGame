@@ -145,6 +145,8 @@ public:
 	// カメラシェイク更新処理
 	bool UpdateCameraShakeShader(float elapsedTime);
 
+	bool UpdateVignetteIntensityChange(float elapsedTime);
+
 private:
 	DirectX::XMFLOAT4X4 view;       // ビュー行列
 	DirectX::XMFLOAT4X4 projection; // プロジェクション行列
@@ -208,4 +210,13 @@ public:
 
 	static bool  cameraShakeShader;     // カメラシェイク(シェーダー)
 	static float cameraShakeShaderTime; // カメラシェイク(シェーダー)する時間
+
+	static bool vignetteIntensityChange;
+	static float startVignetteIntensityChange;
+	static float endVignetteIntensityChange;
+	static float vignetteIntensityChangeTime;
+	static float vignetteIntensityChangeElapsedTime;
+
+	//static bool vignetteOpacityChange;
+
 };

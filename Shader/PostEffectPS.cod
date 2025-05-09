@@ -138,15 +138,13 @@ lt r0.w, l(0.000000), cb5[2].x
 add r2.xy, v1.xyxx, l(-0.500000, -0.500000, 0.000000, 0.000000)
 dp2 r1.w, r2.xyxx, r2.xyxx
 sqrt r1.w, r1.w
-add r2.x, -cb5[2].x, l(0.500000)
-add r2.y, -r2.x, l(0.500000)
-add r1.w, r1.w, -r2.x
-div r2.x, l(1.000000, 1.000000, 1.000000, 1.000000), r2.y
-mul_sat r1.w, r1.w, r2.x
+add r1.w, r1.w, l(-0.300000)
+mul_sat r1.w, r1.w, l(5.000000)
 mad r2.x, r1.w, l(-2.000000), l(3.000000)
 mul r1.w, r1.w, r1.w
 mul r1.w, r1.w, r2.x
-mad r1.w, cb5[2].y, -r1.w, l(1.000000)
+mul r2.x, cb5[2].y, cb5[2].x
+mad r1.w, r2.x, -r1.w, l(1.000000)
 mul r2.xyz, r0.xyzx, r1.wwww
 movc r0.xyz, r0.wwww, r2.xyzx, r0.xyzx
 dp3 r0.w, r1.xyzx, l(0.212600, 0.715200, 0.072200, 0.000000)
@@ -170,4 +168,4 @@ endif
 add o0.xyz, r0.xyzx, r1.xyzx
 mov o0.w, l(1.000000)
 ret 
-// Approximately 103 instruction slots used
+// Approximately 101 instruction slots used

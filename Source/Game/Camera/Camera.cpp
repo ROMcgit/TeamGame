@@ -108,6 +108,14 @@ bool Camera::cameraShakeShader = false;
 //! カメラシェイク(シェーダー)をする時間
 float Camera::cameraShakeShaderTime = 0.0f;
 
+//----------------------------------------------------------//
+
+bool Camera::vignetteIntensityChange = false;
+float Camera::startVignetteIntensityChange = 0.0f;
+float Camera::endVignetteIntensityChange = 0.0f;
+float Camera::vignetteIntensityChangeTime = 0.0f;
+float Camera::vignetteIntensityChangeElapsedTime = 0.0f;
+
 // ポストエフェクトを生成
 void Camera::CreatePostEffect()
 {
@@ -131,6 +139,7 @@ void Camera::SetPostEffectStatusOnce()
 		colorFilterChange = false; // カラーフィルターの変更
 		chromaticAberrationChange = false; // クロマティックアベレーションの変更
 		blurStrengthChange = false; // ブラーの強度の変更
+		vignetteIntensityChange = false;
 
 		//! ポストエフェクト
 		postEffect.contrast            = contrastReset            = Scene::contrastStatic;            // コントラスト
@@ -314,6 +323,8 @@ void Camera::UpdatePostEffectStatusChange(float elapsedTime)
 
 	//! カメラシェイク(シェーダー)更新処理
 	UpdateCameraShakeShader(elapsedTime);
+
+	UpdateVignetteIntensityChange(elapsedTime);
 }
 
 //! コントラスト変更更新処理
@@ -474,6 +485,26 @@ bool Camera::UpdateCameraShakeShader(float elapsedTime)
 		postEffect.shakeTime = 0.0f;  // カメラシェイクの計測時間を0にする
 		postEffect.shakeStrength = 0.0f;  // カメラシェイクの強さを0にする
 		cameraShakeShader = false; // カメラシェイクを解除
+	}
+
+	return true;
+}
+
+bool Camera::UpdateVignetteIntensityChange(float elapsedTime)
+{
+	if(!vignetteIntensityChange)
+		return false;
+
+	vignetteIntensityChangeElapsedTime += elapsedTime;
+
+	float t = vignetteIntensityChangeElapsedTime / vignetteIntensityChangeTime;
+
+	postEffect.vignetteIntensity = Easing::Linear(startVignetteIntensityChange, endVignetteIntensityChange, t);
+
+	if (t >= 1.0f)
+	{
+		postEffect.vignetteIntensity = endVignetteIntensityChange;
+		vignetteIntensityChange = false;
 	}
 
 	return true;

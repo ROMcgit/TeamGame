@@ -122,12 +122,14 @@ float3 Vignette(float3 color, float2 uv)
     {
         float2 center = float2(0.5, 0.5);
         float dist = length(uv - center);
-        float vignette = 1.0 - smoothstep(0.5 - _vignetteIntensity, 0.5, dist);
         
-        // _vignetteOpacity でビネットの暗さを調整（1.0 なら完全に黒くなる）
-        vignette = lerp(1.0, vignette, _vignetteOpacity);
+        // 固定範囲でスムーズにフェード
+        float vignette = 1.0 - smoothstep(0.3, 0.5, dist);
         
-        color *= vignette;
+        // 不透明度と強度で暗さを制御
+        float blend = _vignetteIntensity * _vignetteOpacity;
+
+        color *= lerp(1.0, vignette, blend);
     }
     return color;
 }

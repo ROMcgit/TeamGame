@@ -1186,6 +1186,8 @@ public:
 
 #endif
 
+	void SetVignetteIntensityChange(float end, float time);
+
 	// カメラシェイク(シェーダー)の設定
 	void SetCameraShakeShader(float cameraShakeTime = 1.0f, float cameraShakeStrength = 0.2f, DirectX::XMFLOAT2 cameraShakeOffset = { 0, -0.05f }, float cameraShakeSpeed = 50.0f);
 

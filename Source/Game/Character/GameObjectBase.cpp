@@ -813,6 +813,18 @@ void GameObjectBase::SetBlurStrengthResetChange(float blurStrengthChangeTime)
 
 #endif
 
+void GameObjectBase::SetVignetteIntensityChange(float end, float time)
+{
+	if (!Camera::vignetteIntensityChange)
+	{
+		Camera::vignetteIntensityChange = true;
+		Camera::startVignetteIntensityChange = Camera::postEffect.vignetteIntensity;
+		Camera::endVignetteIntensityChange = end;
+		Camera::vignetteIntensityChangeTime = time;
+		Camera::vignetteIntensityChangeElapsedTime = 0.0f;
+	}
+}
+
 // カメラシェイク(シェーダー)の設定
 void GameObjectBase::SetCameraShakeShader(float cameraShakeTime, float cameraShakeStrength, DirectX::XMFLOAT2 cameraShakeOffset, float cameraShakeSpeed)
 {

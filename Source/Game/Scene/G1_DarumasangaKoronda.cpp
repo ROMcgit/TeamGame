@@ -174,6 +174,8 @@ void G1_DarumasangaKoronda::Render()
 
 	shadowMapEyeOffset = { 4.0f, 17.0f, 9.0f };
 
+	vignetteOpacity = 0.5f;
+
 	//! ÉtÉHÉO
 	fogStart = 50.0f;
 	fogEnd   = 100.0f;

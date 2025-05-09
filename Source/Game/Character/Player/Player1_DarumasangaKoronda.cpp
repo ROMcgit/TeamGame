@@ -347,7 +347,7 @@ void Player1_DarumasangaKoronda::TransitionDamageState()
 {
 	isDamage = false;
 
-	stateChangeWaitTimer = 1.0f;
+	stateChangeWaitTimer = 2.0f;
 
 	state = State::Damage;
 
@@ -361,10 +361,18 @@ void Player1_DarumasangaKoronda::UpdateDamageState(float elapsedTime)
 	stateChangeWaitTimer -= elapsedTime;
 
 	// ダメージアニメーションが終わったら待機ステートへ遷移
-	if (stateChangeWaitTimer <= 0.0f)
+	if (stateChangeWaitTimer <= 1.0f)
 	{
-		velocity.y = 20.0f;
-		velocity.z = -30.0f;
+		if(!setVelocityY)
+		{
+			setVelocityY = true;
+			velocity.y = 20.0f;
+		}
+		velocity.z = -10.0f;
+	}
+	else if(stateChangeWaitTimer <= 0.0f)
+	{
+		
 		TransitionWaitState();
 	}
 }

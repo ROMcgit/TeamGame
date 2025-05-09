@@ -131,6 +131,8 @@ private:
 
 	float turnSpeed = DirectX::XMConvertToRadians(720);
 
+	bool setVelocityY = false;
+
 	float jumpSpeed = 13.0f;
 
 	int jumpCount = 0;

@@ -62,7 +62,9 @@ void GS4_OssanTataki::Update(float elapsedTime)
 // •`‰æˆ—
 void GS4_OssanTataki::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	shader->Draw(dc, model.get(), materialColor, opacity, emissiveColor, emissiveStrength);
+	float dist = abs(position.x - CameraController::target.x);
+	if (dist < 110)
+		shader->Draw(dc, model.get(), materialColor, opacity, emissiveColor, emissiveStrength);
 }
 
 // HP‚È‚Ç‚Ì•`‰æ

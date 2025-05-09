@@ -9,6 +9,8 @@
 #include "Game/Character/Projectile/ProjectileHoming.h"
 #include "Game/Camera/CameraController.h"
 
+bool Player1_DarumasangaKoronda::isDamage = false;
+
 static Player1_DarumasangaKoronda* instance = nullptr;
 
 // インスタンス取得
@@ -19,6 +21,8 @@ Player1_DarumasangaKoronda& Player1_DarumasangaKoronda::Instance()
 
 Player1_DarumasangaKoronda::Player1_DarumasangaKoronda()
 {
+	isDamage = false;
+
 	// インスタンスポインタ設定
 	instance = this;
 
@@ -209,6 +213,11 @@ void Player1_DarumasangaKoronda::UpdateWaitState(float elapsedTime)
 	}
 
 	InputMove(elapsedTime);
+
+	if (isDamage)
+	{
+		TransitionDamageState();
+	}
 }
 
 // 移動ステートへ遷移
@@ -258,6 +267,11 @@ void Player1_DarumasangaKoronda::UpdateMoveState(float elapsedTime)
 	}
 
 	InputMove(elapsedTime);
+
+	if (isDamage)
+	{
+		TransitionDamageState();
+	}
 }
 
 // ジャンプステートへ遷移
@@ -276,6 +290,11 @@ void Player1_DarumasangaKoronda::UpdateJumpState(float elapsedTime)
 
 	// 移動入力処理
 	InputMove(elapsedTime);
+
+	if (isDamage)
+	{
+		TransitionDamageState();
+	}
 }
 
 // ダッシュステートへ遷移
@@ -316,11 +335,20 @@ void Player1_DarumasangaKoronda::UpdateDashState(float elapsedTime)
 		//! 待機ステートへ遷移
 		TransitionWaitState();
 	}
+
+	if (isDamage)
+	{
+		TransitionDamageState();
+	}
 }
 
 // ダメージステートへ遷移
 void Player1_DarumasangaKoronda::TransitionDamageState()
 {
+	isDamage = false;
+
+	stateChangeWaitTimer = 1.0f;
+
 	state = State::Damage;
 
 	// ダメージアニメーション再生
@@ -330,9 +358,13 @@ void Player1_DarumasangaKoronda::TransitionDamageState()
 // ダメージステート更新処理
 void Player1_DarumasangaKoronda::UpdateDamageState(float elapsedTime)
 {
+	stateChangeWaitTimer -= elapsedTime;
+
 	// ダメージアニメーションが終わったら待機ステートへ遷移
-	if (!model->IsPlayAnimation())
+	if (stateChangeWaitTimer <= 0.0f)
 	{
+		velocity.y = 20.0f;
+		velocity.z = -30.0f;
 		TransitionWaitState();
 	}
 }

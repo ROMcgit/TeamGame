@@ -102,6 +102,8 @@ private:
 private:
 	std::unique_ptr<Model> model;
 
+	DirectX::XMFLOAT3 posReset = { 0.0f, 113.227f, 538.45f };
+	
 	bool deathState = false;
 
 	bool setMoveTarget = false;

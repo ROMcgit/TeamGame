@@ -90,7 +90,7 @@ void G1_DarumasangaKoronda::Initialize()
 		1.0f, 0.5f);
 
 	//! タイマー
-	timer = std::make_unique<Timer>(true, 1, 0);
+	timer = std::make_unique<Timer>(true, 3, 0);
 }
 
 // 終了化
@@ -126,6 +126,10 @@ void G1_DarumasangaKoronda::Update(float elapsedTime)
 		target.x = 0;
 		target.y += player->GetHeight() * 0.5f;
 		target.z -= 2.0f;
+		if (target.z < 0.8f || target.z > 540.0f)
+		{
+			target.z = std::clamp(target.z, 0.8f, 540.0f);
+		}
 		cameraController->SetTarget(target);
 		cameraController->SetRange(20.0f);
 	}
@@ -146,6 +150,7 @@ void G1_DarumasangaKoronda::Update(float elapsedTime)
 	// ステージ更新処理
 	StageManager::Instance().Update(elapsedTime);
 
+	PlayerPositionControll();
 	// プレイヤー更新処理
 	player->Update(elapsedTime);
 
@@ -426,5 +431,25 @@ void G1_DarumasangaKoronda::SceneChange()
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示
 		SceneManager::Instance().ChangeScene(std::move(loadingScene));
+	}
+}
+
+// プレイヤーの位置制限
+void G1_DarumasangaKoronda::PlayerPositionControll()
+{
+	float setPosX = 16.3f;
+	if (player->GetPosition().x < -setPosX || player->GetPosition().x > setPosX)
+	{
+		player->SetVelocityX(0);
+		float positoinX = std::clamp(player->GetPosition().x, -setPosX, setPosX);
+		player->SetPositionX(positoinX);
+	}
+
+	float setPosZ = 287.0f;
+	if (player->GetPosition().z < -2.0f || player->GetPosition().z > 545.0f)
+	{
+		player->SetVelocityZ(0);
+		float positoinZ = std::clamp(player->GetPosition().z, -2.0f, 545.0f);
+		player->SetPositionZ(positoinZ);
 	}
 }

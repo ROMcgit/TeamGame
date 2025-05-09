@@ -36,6 +36,9 @@ private:
 	// シーン切り替え処理
 	void SceneChange();
 
+	// プレイヤーの位置制限
+	void PlayerPositionControll();
+
 public:
 	static bool movieScene; // ムービー中か
 

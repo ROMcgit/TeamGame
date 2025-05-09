@@ -49,17 +49,6 @@ void EnemyDarumasangaKoronda::Update(float elapsedTime)
 		deathState = true;
 	}
 
-	if (CollisionVsPlayer() && !deathState)
-	{
-		//! ムービーにする
-		G1_DarumasangaKoronda::movieScene = true;
-
-		deathState = true;
-
-		//! 死亡ステートへ遷移
-		TransitionDeathState();
-	}
-
 	// ステート毎の更新処理
 	switch (state)
 	{
@@ -232,6 +221,17 @@ void EnemyDarumasangaKoronda::UpdateWaitState(float elapsedTime)
 		color.x += 1.5f;
 		SetColorFilterChange(color, 1.3f);
 	}
+
+	if (CollisionVsPlayer() && !deathState)
+	{
+		//! ムービーにする
+		G1_DarumasangaKoronda::movieScene = true;
+
+		deathState = true;
+
+		//! 死亡ステートへ遷移
+		TransitionDeathState();
+	}
 }
 
 // 見るステート
@@ -254,6 +254,10 @@ void EnemyDarumasangaKoronda::TransitionLookState()
 // 見るステート更新処理
 void EnemyDarumasangaKoronda::UpdateLookState(float elapsedTime)
 {
+	Player1_DarumasangaKoronda& player = Player1_DarumasangaKoronda::Instance();
+	if (player.GetVelocity().x != 0 || player.GetVelocity().y != 0 || player.GetVelocity().z != 0)
+		TransitionAttackState();
+
 	stateChangeWaitTimer -= elapsedTime;
 
 	if (stateChangeWaitTimer <= 0.0f)
@@ -277,6 +281,14 @@ void EnemyDarumasangaKoronda::TransitionAttackState()
 {
 	state = State::Attack;
 	
+	Player1_DarumasangaKoronda& player = Player1_DarumasangaKoronda::Instance();
+	player.isDamage = true;
+
+	DirectX::XMFLOAT3 pos = player.GetPosition();
+	pos.y = position.y;
+	pos.z += 0.8f;
+	position = pos;
+
 	//! コントラスト
 	SetContrastChange(1.5f, 0.5f);
 
@@ -302,9 +314,18 @@ void EnemyDarumasangaKoronda::UpdateAttackState(float elapsedTime)
 
 	if (stateChangeWaitTimer <= 0.0f)
 	{
-		//! ポストエフェクトを元に戻す
-		SetPostEffectStatusResetChange();
+		position = posReset;
 
+		//! カラーフィルターを戻す
+		SetColorFilterResetChange(0.3f);
+
+		//! コントラストを戻す
+		SetContrastResetChange(0.3f);
+
+		//! 色収差を戻す
+		SetChromaticAberrationResetChange(0.3f);
+
+		//! 待機ステートへ遷移
 		TransitionWaitState();
 	}
 }

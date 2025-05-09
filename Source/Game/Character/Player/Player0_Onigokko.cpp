@@ -28,7 +28,7 @@ Player0_Onigokko::Player0_Onigokko()
 	damage = false;
 
 	//! ‘Ì—Í
-	hp = 2;
+	hp = 3;
 
 	// ƒ‚ƒfƒ‹“Ç‚İ‚İ
 	model = std::make_unique <Model>("Data/Model/Ai/Ai.mdl");

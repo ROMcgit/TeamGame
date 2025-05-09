@@ -82,7 +82,7 @@ void GS3_SoratobuHusenWari::DrawDebugPrimitive()
 // デバッグGUI
 void GS3_SoratobuHusenWari::DrawDebugGUI()
 {
-	if (ImGui::TreeNode("GS0_Onigokko"))
+	if (ImGui::TreeNode("GS3_SoratobuHusenWari"))
 	{
 		ImGui::InputFloat3("Velocity", &velocity.x);
 

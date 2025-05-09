@@ -82,7 +82,7 @@ void GS4_OssanTataki::DrawDebugPrimitive()
 // デバッグGUI
 void GS4_OssanTataki::DrawDebugGUI()
 {
-	if (ImGui::TreeNode("GS0_Onigokko"))
+	if (ImGui::TreeNode("GS4_OssanTataki"))
 	{
 		ImGui::InputFloat3("Velocity", &velocity.x);
 

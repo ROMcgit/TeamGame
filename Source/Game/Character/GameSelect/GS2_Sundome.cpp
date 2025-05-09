@@ -82,7 +82,7 @@ void GS2_Sundome::DrawDebugPrimitive()
 // デバッグGUI
 void GS2_Sundome::DrawDebugGUI()
 {
-	if (ImGui::TreeNode("GS0_Onigokko"))
+	if (ImGui::TreeNode("GS2_Sundome"))
 	{
 		ImGui::InputFloat3("Velocity", &velocity.x);
 

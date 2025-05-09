@@ -125,6 +125,7 @@ void SceneGameSelect::Initialize()
 	//! ‘«ê“n‚è
 	std::unique_ptr<GS5_AsibaWatari> asibaWatari = std::make_unique<GS5_AsibaWatari>();
 	asibaWatari->SetPosition(DirectX::XMFLOAT3(posX * 2.5f, 1, 80));
+	gameSelectManager.Register(std::move(asibaWatari));
 }
 
 // I—¹‰»

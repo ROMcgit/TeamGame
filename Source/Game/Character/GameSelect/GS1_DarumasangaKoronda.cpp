@@ -82,7 +82,7 @@ void GS1_DarumasangaKoronda::DrawDebugPrimitive()
 // デバッグGUI
 void GS1_DarumasangaKoronda::DrawDebugGUI()
 {
-	if (ImGui::TreeNode("GS0_Onigokko"))
+	if (ImGui::TreeNode("GS1_DarumasangaKoronda"))
 	{
 		ImGui::InputFloat3("Velocity", &velocity.x);
 

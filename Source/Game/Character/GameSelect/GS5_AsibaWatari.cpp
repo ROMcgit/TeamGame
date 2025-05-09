@@ -82,7 +82,7 @@ void GS5_AsibaWatari::DrawDebugPrimitive()
 // デバッグGUI
 void GS5_AsibaWatari::DrawDebugGUI()
 {
-	if (ImGui::TreeNode("GS0_Onigokko"))
+	if (ImGui::TreeNode("GS5_AsibaWatari"))
 	{
 		ImGui::InputFloat3("Velocity", &velocity.x);
 

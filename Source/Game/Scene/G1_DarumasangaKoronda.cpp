@@ -152,7 +152,8 @@ void G1_DarumasangaKoronda::Update(float elapsedTime)
 
 	PlayerPositionControll();
 	// プレイヤー更新処理
-	player->Update(elapsedTime);
+	if (timer->GetTimeM_Int() > 0 || (timer->GetTimeM_Int() == 0 && timer->GetTimeS_Int() > 0))
+		player->Update(elapsedTime);
 
 	// エネミー更新処理
 	EnemyManager::Instance().Update(elapsedTime);

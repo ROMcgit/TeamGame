@@ -14,7 +14,7 @@
 // コンストラクタ
 EnemyEye::EnemyEye()
 {
-	model = std::make_unique<Model>("Data/Model/0.Eyegokko/Eye/Eye.mdl");
+	model = std::make_unique<Model>("Data/Model/0.Onigokko/Eye/Eye.mdl");
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.03f;
@@ -77,7 +77,7 @@ void EnemyEye::Render(ID3D11DeviceContext* dc, Shader* shader)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < 7000 || !G0_Onigokko::movieScene)
+	if (dist < 7000 && !G0_Onigokko::movieScene && !EnemyOni::tracking)
 		shader->Draw(dc, model.get(), materialColor, opacity);
 }
 
@@ -165,7 +165,7 @@ void EnemyEye::UpdateWaitState(float elapsedTime)
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
 
-	angle.y += DirectX::XMConvertToRadians(500) * (rotationR ? 1 : -1) * elapsedTime;
+	angle.y += DirectX::XMConvertToRadians(100) * (rotationR ? 1 : -1) * elapsedTime;
 
 	if (SearchPlayer() && player.GetInvincibleTimer() <= 0)
 		EnemyOni::tracking = true;

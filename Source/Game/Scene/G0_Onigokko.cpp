@@ -3,6 +3,7 @@
 #include "Game/Camera/Camera.h"
 #include "Game/Character/Enemy/EnemyManager.h"
 #include "Game/Character/Enemy/EnemyOni.h"
+#include "Game/Character/Enemy/EnemyEye.h"
 #include "Game/Effect/EffectManager.h"
 #include "Input/Input.h"
 #include "Game/Stage/StageManager.h"
@@ -86,6 +87,138 @@ void G0_Onigokko::Initialize()
 		EnemyManager::Instance().Register(std::move(oni));
 	}
 
+	float posZ = 20;
+	float posX = 20;
+	for (int i = 0; i < 18; i++)
+	{
+		switch (i + 1)
+		{
+		case 1:
+		case 2:
+		{
+			posZ = 30 * (i + 1 == 2 ? 1 : -1);
+		}
+		break;
+		case 3:
+		case 4:
+		{
+			posZ = 60 * (i + 1 == 4 ? 1 : -1);
+		}
+		break;
+		case 5:
+		case 6: 
+		{
+			posZ = 90 * (i + 1 == 6 ? 1 : -1);
+		}
+			break;
+		case 7:
+		case 8:
+		{
+			posZ = 120 * (i + 1 == 8 ? 1 : -1);
+		}
+		break;
+		case 9:
+		case 10:
+		{
+			posZ = 150 * (i + 1 == 10 ? 1 : -1);
+		}
+		break;
+		case 11:
+		case 12: 
+		{
+			posZ = 180 * (i + 1 == 12 ? 1 : -1);
+		}
+		break;
+		case 13:
+		case 14:
+		{
+			posZ = 210 * (i + 1 == 14 ? 1 : -1);
+		}
+		break;
+		case 15:
+		case 16:
+		{
+			posZ = 240 * (i + 1 == 16 ? 1 : -1);
+		}
+		break;
+		case 17:
+		case 18:
+		{
+			posZ = 270 * (i + 1 == 18 ? 1 : -1);
+		}
+		break;
+		default:
+			break;
+		}
+
+
+		for (int j = 0; j < 6; j++)
+		{
+			switch (j + 1)
+			{
+			case 1:
+			case 2:
+			{
+				posX = 30 * (i + 1 == 2 ? 1 : -1);
+			}
+			break;
+			case 3:
+			case 4:
+			{
+				posX = 60 * (i + 1 == 4 ? 1 : -1);
+			}
+			break;
+			case 5:
+			case 6:
+			{
+				posX = 90 * (i + 1 == 6 ? 1 : -1);
+			}
+			break;
+			case 7:
+			case 8:
+			{
+				posX = 120 * (i + 1 == 8 ? 1 : -1);
+			}
+			break;
+			case 9:
+			case 10:
+			{
+				posX = 150 * (i + 1 == 10 ? 1 : -1);
+			}
+			break;
+			case 11:
+			case 12:
+			{
+				posX = 180 * (i + 1 == 12 ? 1 : -1);
+			}
+			break;
+			case 13:
+			case 14:
+			{
+				posX = 210 * (i + 1 == 14 ? 1 : -1);
+			}
+			break;
+			case 15:
+			case 16:
+			{
+				posX = 240 * (i + 1 == 16 ? 1 : -1);
+			}
+			break;
+			case 17:
+			case 18:
+			{
+				posX = 270 * (i + 1 == 18 ? 1 : -1);
+			}
+			break;
+			default:
+				break;
+			}
+
+			std::unique_ptr<EnemyEye> eye = std::make_unique<EnemyEye>();
+			eye->SetPosition(DirectX::XMFLOAT3(posX, 10, posZ));
+			EnemyManager::Instance().Register(std::move(eye));
+		}
+	}
 
 	//! フェード
 	fade = std::make_unique<Fade>();

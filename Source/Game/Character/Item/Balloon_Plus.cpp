@@ -145,11 +145,11 @@ void Balloon_Plus::UpdateMoveState(float elapsedTime)
 	if (G3_SoratobuHusenWari::gameTimer < 30.0f)
 		velocity.z = -8.0f;
 	else if (G3_SoratobuHusenWari::gameTimer < 100.0f)
-		velocity.z = -10.0f;
+		velocity.z = -13.0f;
 	else if (G3_SoratobuHusenWari::gameTimer < 150.0f)
-		velocity.z = -12.0f;
+		velocity.z = -18.0f;
 	else
-		velocity.z = -15.0f;
+		velocity.z = -23.0f;
 
 	float posY = position.y == positionResetY ? positionResetY + 0.1f : positionResetY;
 	SetPositionYChange(posY, 0.5f);

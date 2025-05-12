@@ -1,5 +1,6 @@
 #include "Game/Stage/G3_StageSoratobuHusenWari.h"
 #include <imgui.h>
+#include "Game/Scene/G3_SoratobuHusenWari.h"
 
 // コンストラクタ
 G3_StageSoratobuHusenWari::G3_StageSoratobuHusenWari()
@@ -122,7 +123,17 @@ void G3_StageSoratobuHusenWari::DrawDebugGUI()
 // 位置更新処理
 void G3_StageSoratobuHusenWari::UpdatePosition(float elapsedTime)
 {
-	position.z -= 5 * elapsedTime;
+	float speed = 0;
+	if (G3_SoratobuHusenWari::gameTimer < 30.0f)
+		speed = -5.0f;
+	else if (G3_SoratobuHusenWari::gameTimer < 100.0f)
+		speed = -10.0f;
+	else if (G3_SoratobuHusenWari::gameTimer < 150.0f)
+		speed = -15.0f;
+	else
+		speed = -20.0f;
+
+	position.z += speed * elapsedTime;
 
 	if (position.z < -80.0f)
 		position.z = 200.0f;

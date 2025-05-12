@@ -21,6 +21,8 @@ bool G3_SoratobuHusenWari::movieScene = false;
 //! ÉXÉRÉA
 int G3_SoratobuHusenWari::score = 0;
 
+float G3_SoratobuHusenWari::gameTimer = 0.0f;
+
 // èâä˙âª
 void G3_SoratobuHusenWari::Initialize()
 {
@@ -403,6 +405,15 @@ void G3_SoratobuHusenWari::NewBalloon(float elapsedTime)
 			break;
 		}
 		newBalloonWaitTime = 1.3f;
+
+		if (G3_SoratobuHusenWari::gameTimer < 30.0f)
+			newBalloonWaitTime = 1.3f;
+		else if (G3_SoratobuHusenWari::gameTimer < 100.0f)
+			newBalloonWaitTime = 1.2f;
+		else if (G3_SoratobuHusenWari::gameTimer < 150.0f)
+			newBalloonWaitTime = 1.0f;
+		else
+			newBalloonWaitTime = 0.7f;
 	}
 }
 
@@ -442,7 +453,14 @@ void G3_SoratobuHusenWari::NewCloud(float elapsedTime)
 
 		collisionAttackManager.Register(std::move(cloud));
 
-		newCloudWaitTime = 5.0f;
+		if (G3_SoratobuHusenWari::gameTimer < 30.0f)
+			newCloudWaitTime = 5.0f;
+		else if (G3_SoratobuHusenWari::gameTimer < 100.0f)
+			newCloudWaitTime = 4.0f;
+		else if (G3_SoratobuHusenWari::gameTimer < 150.0f)
+			newCloudWaitTime = 2.0f;
+		else
+			newCloudWaitTime = 0.5f;
 	}
 }
 

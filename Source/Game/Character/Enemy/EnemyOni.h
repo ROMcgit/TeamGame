@@ -120,6 +120,9 @@ private:
 		Anim_Death
 	};
 
+public:
+	static bool tracking;
+
 private:
 	std::unique_ptr<Model> model;
 

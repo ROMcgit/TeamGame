@@ -11,6 +11,8 @@
 #include <algorithm>
 #include "EnemyDarumasangaKoronda.h"
 
+bool EnemyOni::tracking = false;
+
 // コンストラクタ
 EnemyOni::EnemyOni()
 {
@@ -219,7 +221,7 @@ void EnemyOni::UpdateWaitState(float elapsedTime)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < 2000 && player.GetInvincibleTimer() <= 0)
+	if (dist < 2000 && player.GetInvincibleTimer() <= 0 || tracking)
 		//! 威嚇ステートへ遷移
 		TransitionLaughState();
 	else if (stateChangeWaitTimer <= 0.0f)
@@ -271,7 +273,7 @@ void EnemyOni::UpdateMoveState(float elapsedTime)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < 2000 && player.GetInvincibleTimer() <= 0)
+	if (dist < 2000 && player.GetInvincibleTimer() <= 0 || tracking)
 		//! 威嚇ステートへ遷移
 		TransitionLaughState();
 	else if (stateChangeWaitTimer <= 0.0f)
@@ -333,7 +335,7 @@ void EnemyOni::UpdateTrackingState(float elapsedTime)
 	dist = vx * vx + vz * vz;
 	if (dist < 1500)
 		//! プレイヤーに向かって移動する
-		MoveToTarget(elapsedTime, 5);
+		MoveToTarget(elapsedTime, 6);
 	else
 		//! プレイヤーの位置制に向かって移動する
 		//! プレイヤーに向かって移動する
@@ -350,6 +352,8 @@ void EnemyOni::UpdateTrackingState(float elapsedTime)
 void EnemyOni::TransitionTiredState()
 {
 	state = State::Tired;
+
+	tracking = false;
 
 	//! ポストエフェクトを元に戻す
 	SetPostEffectStatusResetChange();

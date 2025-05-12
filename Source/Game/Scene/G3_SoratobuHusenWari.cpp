@@ -431,14 +431,14 @@ void G3_SoratobuHusenWari::NewCloud(float elapsedTime)
 	int collisionAttackCount = collisionAttackManager.GetCollisionAttackCount();
 	int maxCollisionAttackCount = 5;
 
-	if (gameTimer > 10.0f)
-		maxCollisionAttackCount = 6;
-	else if(gameTimer > 60.0f)
-		maxCollisionAttackCount = 7;
-	else if(gameTimer > 120.0f)
-		maxCollisionAttackCount = 8;
-	else if (gameTimer > 240.0f)
-		maxCollisionAttackCount = 9;
+	if (G3_SoratobuHusenWari::gameTimer < 30.0f)
+		maxCollisionAttackCount = 10;
+	else if (G3_SoratobuHusenWari::gameTimer < 100.0f)
+		maxCollisionAttackCount = 3.0f;
+	else if (G3_SoratobuHusenWari::gameTimer < 150.0f)
+		maxCollisionAttackCount = 1.5f;
+	else
+		maxCollisionAttackCount = 0.5f;
 
 	if (collisionAttackCount < maxCollisionAttackCount)
 	{
@@ -456,9 +456,9 @@ void G3_SoratobuHusenWari::NewCloud(float elapsedTime)
 		if (G3_SoratobuHusenWari::gameTimer < 30.0f)
 			newCloudWaitTime = 5.0f;
 		else if (G3_SoratobuHusenWari::gameTimer < 100.0f)
-			newCloudWaitTime = 4.0f;
+			newCloudWaitTime = 3.0f;
 		else if (G3_SoratobuHusenWari::gameTimer < 150.0f)
-			newCloudWaitTime = 2.0f;
+			newCloudWaitTime = 1.5f;
 		else
 			newCloudWaitTime = 0.5f;
 	}

@@ -45,7 +45,7 @@ private:
 		const DirectX::XMFLOAT4X4& projection);
 
 public:
-	enum class GameSelect
+	enum class GameSelectA
 	{
 		Onigokko,           // おにごっこ
 		DarumasangaKoronda, // だるまさんが転んだ
@@ -55,7 +55,7 @@ public:
 		Asibawatari,        // 足場渡り
 	};
 
-	static GameSelect gameSelect; // ゲーム選択
+	static GameSelectA gameSelect; // ゲーム選択
 
 	static bool sceneChange; // シーン切り替え
 
@@ -67,7 +67,8 @@ private:
 	ShadowMap                      shadowMap;    // シャドウマップの実体
 
 	std::unique_ptr<Sprite> backGround;
-
+	std::unique_ptr<Sprite> gameSelectSprite[6];
+	DirectX::XMFLOAT2 gameSelectSpritePos;
 
 	std::unique_ptr<Fade> fade;
 	bool setFade = false;

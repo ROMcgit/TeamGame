@@ -196,7 +196,7 @@ void GS2_Sundome::CollisionVsPlayer()
 		if (gamePad.GetButtonDown() & button)
 		{
 			//! ƒV[ƒ“‚ğØ‚è‘Ö‚¦‚é
-			SceneGameSelect::gameSelect = SceneGameSelect::GameSelect::Sundome;
+			SceneGameSelect::gameSelect = SceneGameSelect::GameSelectA::Sundome;
 			SceneGameSelect::sceneChange = true;
 			player.SetPosition(outPosition);
 		}

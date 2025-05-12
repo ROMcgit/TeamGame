@@ -198,7 +198,7 @@ void GS4_OssanTataki::CollisionVsPlayer()
 		if (gamePad.GetButtonDown() & button)
 		{
 			//! ƒV[ƒ“‚ğØ‚è‘Ö‚¦‚é
-			SceneGameSelect::gameSelect = SceneGameSelect::GameSelect::OssanTataki;
+			SceneGameSelect::gameSelect = SceneGameSelect::GameSelectA::OssanTataki;
 			SceneGameSelect::sceneChange = true;
 			player.SetPosition(outPosition);
 		}

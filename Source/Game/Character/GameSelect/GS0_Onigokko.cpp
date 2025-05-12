@@ -198,7 +198,7 @@ void GS0_OniGokko::CollisionVsPlayer()
 		if(gamePad.GetButtonDown() & button)
 		{
 			//! ÉVÅ[ÉìÇêÿÇËë÷Ç¶ÇÈ
-			SceneGameSelect::gameSelect = SceneGameSelect::GameSelect::Onigokko;
+			SceneGameSelect::gameSelect = SceneGameSelect::GameSelectA::Onigokko;
 			SceneGameSelect::sceneChange = true;
 			player.SetPosition(outPosition);
 		}

@@ -29,7 +29,7 @@
 
 #include <algorithm>
 
-SceneGameSelect::GameSelect SceneGameSelect::gameSelect = SceneGameSelect::GameSelect::Onigokko;
+SceneGameSelect::GameSelectA SceneGameSelect::gameSelect = SceneGameSelect::GameSelectA::Onigokko;
 bool SceneGameSelect::sceneChange = false;
 
 // 初期化
@@ -92,6 +92,12 @@ void SceneGameSelect::Initialize()
 		0.5f, 0.2f);
 
 	sceneChange = false;
+
+	//! ゲームの選択画面
+	for(int i = 0; i < 6; i++)
+	{
+		gameSelectSprite[i] = std::make_unique<Sprite>();
+	}
 
 	GameSelectManager& gameSelectManager = GameSelectManager::Instance();
 
@@ -199,22 +205,22 @@ void SceneGameSelect::Update(float elapsedTime)
 
 			switch (gameSelect)
 			{
-			case GameSelect::Onigokko:
+			case GameSelectA::Onigokko:
 				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G0_Onigokko>());
 				break;
-			case GameSelect::DarumasangaKoronda:
+			case GameSelectA::DarumasangaKoronda:
 				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G1_DarumasangaKoronda>());
 				break;
-			case GameSelect::Sundome:
+			case GameSelectA::Sundome:
 				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G2_Sundome>());
 				break;
-			case GameSelect::SoratobuHusenWari:
+			case GameSelectA::SoratobuHusenWari:
 				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G3_SoratobuHusenWari>());
 				break;
-			case GameSelect::OssanTataki:
+			case GameSelectA::OssanTataki:
 				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G4_OssanTataki>());
 				break;
-			case GameSelect::Asibawatari:
+			case GameSelectA::Asibawatari:
 				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G5_Asibawatari>());
 				break;
 			default:
@@ -354,6 +360,8 @@ void SceneGameSelect::Render()
 	}
 
 	{
+		RenderGameSprite(dc, rc.view, rc.projection);
+
 		fade->Render(dc, graphics);
 	}
 	
@@ -363,6 +371,11 @@ void SceneGameSelect::Render()
 	{
 		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
 		{
+			for(int i = 0; i < 6; i++)
+			{
+				std::string name = "GameSelectSpritePos" + std::to_string(i + 1);
+				ImGui::DragFloat2(name.c_str(), &gameSelectSpritePos.x);
+			}
 			ImGui::Image(shadowMap.GetSRV(), ImVec2(300, 200));
 			StageManager::Instance().DrawDebugGUI();
 
@@ -478,5 +491,24 @@ void SceneGameSelect::RenderGameSprite(ID3D11DeviceContext* dc, const DirectX::X
 
 		DirectX::XMFLOAT3 worldPos;
 		DirectX::XMStoreFloat3(&worldPos, WorldPosition);
+
+		Graphics& graphics = Graphics::Instance();
+
+		float screenWidth  = static_cast<float>(graphics.GetScreenWidth());
+		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
+		float textureWidth = static_cast<float>(gameSelectSprite[i]->GetTextureWidth());
+		float textureHeight = static_cast<float>(gameSelectSprite[i]->GetTextureHeight());
+
+		gameSelectSpritePos.x = screenPos.x - (gameSelect->GetWidth() * 6.0f);
+		gameSelectSpritePos.y = screenPos.y - (gameSelect->GetHeight() * 6.0f);
+
+		//! ゲーム選択画面
+		gameSelectSprite[i]->Render(dc,
+			gameSelectSpritePos.x, gameSelectSpritePos.y,
+			screenHeight * 0.4f, screenHeight * 0.4f,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 1, 1, 0.5f);
 	}
 }

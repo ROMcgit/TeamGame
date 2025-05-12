@@ -21,10 +21,10 @@ public:
 		return instance;
 	}
 
-	// エネミー数取得
+	// ゲームセレクト数取得
 	int GetGameSelectCount() const { return static_cast<int>(gameSelects.size()); }
 
-	// エネミー取得
+	// ゲームセレクト取得
 	std::unique_ptr<GameSelect>& GetGameSelect(int index) {
 		if (index < 0 || index >= static_cast<int>(gameSelects.size()))
 		{

@@ -305,7 +305,7 @@ void Player3_SoratobuHusenWari::UpdateMoveState(float elapsedTime)
 	if (isDamage || isGround)
 	{
 		//! ƒ_ƒ[ƒW‚ğ—^‚¦‚é
-		ApplyDamage(10, 0.1f);
+		ApplyDamage(20, 0.1f);
 
 		TransitionDamageState();
 	}

@@ -46,6 +46,7 @@ private:
 public:
 	static bool movieScene;
 	static int score;
+	static float gameTimer;
 
 private:
 	CollisionAttackManager collisionAttackManager;
@@ -65,5 +66,4 @@ private:
 
 	float newBalloonWaitTime = 0.0f;
 	float newCloudWaitTime = 0.0f;
-	float gameTimer = 0.0f;
 };

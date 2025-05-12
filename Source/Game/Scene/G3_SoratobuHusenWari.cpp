@@ -24,6 +24,8 @@ int G3_SoratobuHusenWari::score = 0;
 // ‰Šú‰»
 void G3_SoratobuHusenWari::Initialize()
 {
+	gameTimer = 0.0f;
+
 	//! ƒXƒRƒA
 	score = 0;
 
@@ -416,21 +418,21 @@ void G3_SoratobuHusenWari::NewCloud(float elapsedTime)
 	}
 
 	int collisionAttackCount = collisionAttackManager.GetCollisionAttackCount();
-	int maxCollisionAttackCount = 0;
+	int maxCollisionAttackCount = 5;
 
-	if (gameTimer > 60.0f)
-		maxCollisionAttackCount = 1;
+	if (gameTimer > 10.0f)
+		maxCollisionAttackCount = 6;
+	else if(gameTimer > 60.0f)
+		maxCollisionAttackCount = 7;
 	else if(gameTimer > 120.0f)
-		maxCollisionAttackCount = 2;
-	else if(gameTimer > 240.0f)
-		maxCollisionAttackCount = 3;
-	else if (gameTimer > 360.0f)
-		maxCollisionAttackCount = 4;
+		maxCollisionAttackCount = 8;
+	else if (gameTimer > 240.0f)
+		maxCollisionAttackCount = 9;
 
 	if (collisionAttackCount < maxCollisionAttackCount)
 	{
 		DirectX::XMFLOAT3 pos;
-		pos.x = rand() % 13 * (rand() % 2 == 1 ? -1 : 1);
+		pos.x = rand() % 11 * (rand() % 2 == 1 ? -1 : 1);
 		pos.y = rand() % 8 + 18.5f;
 		pos.z = 100.0f;
 

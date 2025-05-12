@@ -2,6 +2,7 @@
 #include "Audio/SoundManager.h"
 #include "Game/Effect/EffectManager.h"
 #include "Game/Character/Player/Player3_SoratobuHusenWari.h"
+#include "Game/Scene/G3_SoratobuHusenWari.h"
 
 #include <imgui.h>
 
@@ -39,7 +40,15 @@ CollisionAttack_Cloud::~CollisionAttack_Cloud()
 // çXêVèàóù
 void CollisionAttack_Cloud::Update(float elapsedTime)
 {
-	velocity.z = -8.0f;
+	if (G3_SoratobuHusenWari::gameTimer < 30.0f)
+		velocity.z = -8.0f;
+	else if (G3_SoratobuHusenWari::gameTimer < 100.0f)
+		velocity.z = -12.0f;
+	else if (G3_SoratobuHusenWari::gameTimer < 150.0f)
+		velocity.z = -16.0f;
+	else
+		velocity.z = -20.0f;
+
 	//position.z = Player3_SoratobuHusenWari::Instance().GetPosition().z + 3;
 	if (Player3_SoratobuHusenWari::Instance().GetPosition().z - 0.5f > position.z)
 		SetOpacityChange(0.5f, 0.3f);

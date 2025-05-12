@@ -375,7 +375,7 @@ void Framework::SceneSelectGUI()
 
 		if (ImGui::TreeNodeEx(u8"ゲームシーン", ImGuiTreeNodeFlags_DefaultOpen))
 		{
-			if(ImGui::TreeNode(u8"00.おにごっこ"))
+			if(ImGui::TreeNode(u8"おにごっこ"))
 			{
 				ChangeSceneButtonGUI<G0_Onigokko_Tutorial>(u8"00.チュートリアル");
 				ChangeSceneButtonGUI<G0_Onigokko>         (u8"01.ゲーム");

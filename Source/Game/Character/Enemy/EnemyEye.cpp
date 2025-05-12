@@ -17,7 +17,7 @@ EnemyEye::EnemyEye()
 	model = std::make_unique<Model>("Data/Model/0.Onigokko/Eye/Eye.mdl");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.03f;
+	scale.x = scale.y = scale.z = 0.02f;
 
 	gravity = 0;
 
@@ -93,6 +93,8 @@ void EnemyEye::DrawDebugPrimitive()
 	Enemy::DrawDebugPrimitive();
 
 	DebugRenderer* debugRender = Graphics::Instance().GetDebugRenderer();
+
+	debugRender->DrawCylinder(position, searchRange, 2.0f, { 1,1,1,1 });
 
 	// 縄張り範囲をデバッグ円柱描画
 	//debugRender->DrawCylinder(territoryOrigin, territoryRange, 1.0f,
@@ -227,7 +229,8 @@ bool EnemyEye::SearchPlayer()
 		float frontZ = cosf(angle.y);
 		// 2つのベクトルの内積値で前後判定
 		float dot = (frontX * vx) + (frontZ * vz);
-		if (dot > 0.0f)
+		float threshold = cosf(DirectX::XMConvertToRadians(30.0f)); // 30度をラジアンに変換
+		if (dot > threshold)
 		{
 			return true;
 		}

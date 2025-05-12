@@ -284,6 +284,8 @@ void EnemyOni::UpdateMoveState(float elapsedTime)
 // 威嚇ステートへ遷移
 void EnemyOni::TransitionLaughState()
 {
+	if (!tracking) tracking = true;
+
 	state = State::Laugh;
 
 	stateChangeWaitTimer = 0.5f;

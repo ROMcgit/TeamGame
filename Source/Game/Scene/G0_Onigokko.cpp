@@ -146,7 +146,7 @@ void G0_Onigokko::Initialize()
 		}
 
 
-		for (int j = 0; j < 6; j++)
+		for (int j = 0; j < 18; j++)
 		{
 			switch (j + 1)
 			{

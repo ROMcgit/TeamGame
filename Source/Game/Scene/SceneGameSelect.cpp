@@ -423,3 +423,60 @@ void SceneGameSelect::PlayerPositionControll()
 		player->SetPositionZ(positoinZ);
 	}
 }
+
+// ゲーム画面描画
+void SceneGameSelect::RenderGameSprite(ID3D11DeviceContext* dc, const DirectX::XMFLOAT4X4& view, const DirectX::XMFLOAT4X4& projection)
+{
+	// ビューポート
+	D3D11_VIEWPORT viewport;
+	UINT numViewports = 1;
+	dc->RSGetViewports(&numViewports, &viewport);
+
+	// 変換行列
+	DirectX::XMMATRIX View = DirectX::XMLoadFloat4x4(&view);
+	DirectX::XMMATRIX Projection = DirectX::XMLoadFloat4x4(&projection);
+	DirectX::XMMATRIX World = DirectX::XMMatrixIdentity();
+
+	GameSelectManager& gameSelectManager = GameSelectManager::Instance();
+	int gameSelectCount = gameSelectManager.GetGameSelectCount();
+
+	for (int i = 0; i < gameSelectCount; i++)
+	{
+		std::unique_ptr<GameSelect>& gameSelect = gameSelectManager.GetGameSelect(i);
+
+		DirectX::XMFLOAT3 gameSelectPos = gameSelect->GetPosition();
+
+		DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&gameSelectPos);
+		DirectX::XMVECTOR ScreenPos = DirectX::XMVector3Project(
+			Pos,
+			viewport.TopLeftX,
+			viewport.TopLeftY,
+			viewport.Width,
+			viewport.Height,
+			viewport.MinDepth,
+			viewport.MaxDepth,
+			Projection,
+			View,
+			World);
+
+		// スクリーン座標を取得
+		DirectX::XMFLOAT3 screenPos;
+		DirectX::XMStoreFloat3(&screenPos, ScreenPos);
+
+		DirectX::XMVECTOR WorldPosition = DirectX::XMVector3Unproject(
+			ScreenPos,
+			viewport.TopLeftX,
+			viewport.TopLeftY,
+			viewport.Width,
+			viewport.Height,
+			viewport.MinDepth,
+			viewport.MaxDepth,
+			Projection,
+			View,
+			World
+		);
+
+		DirectX::XMFLOAT3 worldPos;
+		DirectX::XMStoreFloat3(&worldPos, WorldPosition);
+	}
+}

@@ -22,15 +22,15 @@ public:
 	}
 
 	// エネミー数取得
-	int GetGameSelectCount() const { return static_cast<int>(enemies.size()); }
+	int GetGameSelectCount() const { return static_cast<int>(gameSelects.size()); }
 
 	// エネミー取得
 	std::unique_ptr<GameSelect>& GetGameSelect(int index) {
-		if (index < 0 || index >= static_cast<int>(enemies.size()))
+		if (index < 0 || index >= static_cast<int>(gameSelects.size()))
 		{
 			throw std::out_of_range("GameSelect index is out of range");
 		}
-		return enemies[index];
+		return gameSelects[index];
 	}
 
 	// 更新処理
@@ -59,6 +59,6 @@ public:
 
 private:
 
-	std::vector<std::unique_ptr<GameSelect>> enemies;
+	std::vector<std::unique_ptr<GameSelect>> gameSelects;
 	std::vector<GameSelect*> removes;
 };

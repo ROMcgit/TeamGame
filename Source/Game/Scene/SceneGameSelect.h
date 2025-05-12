@@ -39,6 +39,11 @@ private:
 	//! プレイヤーの位置制限
 	void PlayerPositionControll();
 
+	// ゲーム画面描画
+	void RenderGameSprite(ID3D11DeviceContext* dc,
+		const DirectX::XMFLOAT4X4& view,
+		const DirectX::XMFLOAT4X4& projection);
+
 public:
 	enum class GameSelect
 	{

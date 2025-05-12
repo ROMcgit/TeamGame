@@ -13,9 +13,9 @@ GameSelectManager::~GameSelectManager()
 // 更新処理
 void GameSelectManager::Update(float elapsedTime)
 {
-	for (auto& enemy : enemies)
+	for (auto& gameSelect : gameSelects)
 	{
-		enemy->Update(elapsedTime);
+		gameSelect->Update(elapsedTime);
 	}
 
 	//for (GameSelect* enemy : removes)
@@ -34,12 +34,12 @@ void GameSelectManager::Update(float elapsedTime)
 
 	for (GameSelect* enemy : removes)
 	{
-		auto it = std::remove_if(enemies.begin(), enemies.end(),
+		auto it = std::remove_if(gameSelects.begin(), gameSelects.end(),
 			[enemy](const std::unique_ptr<GameSelect>& ptr) { return ptr.get() == enemy; });
 
-		if (it != enemies.end())
+		if (it != gameSelects.end())
 		{
-			enemies.erase(it, enemies.end());
+			gameSelects.erase(it, gameSelects.end());
 		}
 	}
 
@@ -49,40 +49,40 @@ void GameSelectManager::Update(float elapsedTime)
 // 描画処理
 void GameSelectManager::Render(ID3D11DeviceContext* context, Shader* shader)
 {
-	for (auto& enemy : enemies)
+	for (auto& gameSelect : gameSelects)
 	{
-		enemy->Render(context, shader);
+		gameSelect->Render(context, shader);
 	}
 }
 
 // 2Dスプライトの描画処理
 void GameSelectManager::SpriteRender(ID3D11DeviceContext* dc, Graphics& graphics)
 {
-	for (auto& enemy : enemies)
+	for (auto& gameSelect : gameSelects)
 	{
-		enemy->SpriteRender(dc, graphics);
+		gameSelect->SpriteRender(dc, graphics);
 	}
 }
 
 // デバッグプリミティブ描画
 void GameSelectManager::DrawDebugPrimitive()
 {
-	for (auto& enemy : enemies)
+	for (auto& gameSelect : gameSelects)
 	{
-		enemy->DrawDebugPrimitive();
+		gameSelect->DrawDebugPrimitive();
 	}
 }
 
 // エネミー登録
 void GameSelectManager::Register(std::unique_ptr<GameSelect> enemy)
 {
-	enemies.emplace_back(std::move(enemy));
+	gameSelects.emplace_back(std::move(enemy));
 }
 
 // エネミー全削除
 void GameSelectManager::Clear()
 {
-	enemies.clear();
+	gameSelects.clear();
 }
 
 void GameSelectManager::Remove(GameSelect* enemy)
@@ -94,8 +94,8 @@ void GameSelectManager::Remove(GameSelect* enemy)
 // デバッグ用GUI描画
 void GameSelectManager::DrawDebugGUI()
 {
-	for (auto& enemy : enemies)
+	for (auto& gameSelect : gameSelects)
 	{
-		enemy->DrawDebugGUI();
+		gameSelect->DrawDebugGUI();
 	}
 }

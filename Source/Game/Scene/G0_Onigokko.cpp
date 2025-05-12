@@ -96,7 +96,7 @@ void G0_Onigokko::Initialize()
 		case 1:
 		case 2:
 		{
-			posZ = 20 * (i + 1 == 2 ? 1 : -1);
+			posZ = 0 * (i + 1 == 2 ? 1 : -1);
 		}
 		break;
 		case 3:

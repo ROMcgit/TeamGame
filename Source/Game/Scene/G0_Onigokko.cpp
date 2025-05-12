@@ -85,9 +85,6 @@ void G0_Onigokko::Initialize()
 	// タイマー
 	timer = std::make_unique<Timer>(true, 2);
 
-	// 背景
-	backGround = std::make_unique<Sprite>();
-
 	// ムービーシーンにする
 	movieScene = true;
 }

@@ -50,6 +50,7 @@ Player2_Sundome::Player2_Sundome()
 
 	// 加速度の画像
 	velocitySprite = std::make_unique<Sprite>();
+	velocitySpriteLimit = std::make_unique<Sprite>();
 
 	// 待機ステートへ遷移
 	TransitionMovieWaitState();
@@ -126,6 +127,14 @@ void Player2_Sundome::SpriteRender(ID3D11DeviceContext* dc, Graphics& graphics)
 		//! 加速度の描画
 		if(state == State::Wait)
 		{
+			velocitySpriteLimit->Render(dc,
+				spritePos.x, spritePos.y,
+				spriteScale.x, spriteScale.y,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				0, 0, 0, 1);
+
 			velocitySprite->Render(dc,
 				spritePos.x, spritePos.y,
 				spriteScale.x, velocityHeight,
@@ -217,7 +226,7 @@ void Player2_Sundome::TransitionWaitState()
 // 待機ステート更新処理
 void Player2_Sundome::UpdateWaitState(float elapsedTime)
 {
-	setVelocityX += (30 * elapsedTime) * (velocityDown ? -1 : 1);
+	setVelocityX += (40 * elapsedTime) * (velocityDown ? -1 : 1);
 
 	if (setVelocityX < velocityLimit.min || setVelocityX > velocityLimit.max)
 	{

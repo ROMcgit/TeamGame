@@ -85,6 +85,9 @@ void G0_Onigokko::Initialize()
 	// É^ÉCÉ}Å[
 	timer = std::make_unique<Timer>(true, 2);
 
+	// îwåi
+	backGround = std::make_unique<Sprite>();
+
 	// ÉÄÅ[ÉrÅ[ÉVÅ[ÉìÇ…Ç∑ÇÈ
 	movieScene = true;
 }
@@ -225,7 +228,7 @@ void G0_Onigokko::Render()
 
 		//! îwåiï`âÊ
 		backGround->Render(dc,
-			0, 0, screenWidth, screenHeight * 0.8f,
+			0, 0, screenWidth, screenHeight,
 			0, 0, textureWidth, textureHeight,
 			0,
 			1, 1, 1, 1);

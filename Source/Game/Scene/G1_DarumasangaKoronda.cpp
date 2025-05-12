@@ -231,7 +231,7 @@ void G1_DarumasangaKoronda::Render()
 
 		//! ”wŒi•`‰æ
 		backGround->Render(dc,
-			0, 0, screenWidth, screenHeight * 0.8f,
+			0, 0, screenWidth, screenHeight,
 			0, 0, textureWidth, textureHeight,
 			0,
 			1, 1, 1, 1);

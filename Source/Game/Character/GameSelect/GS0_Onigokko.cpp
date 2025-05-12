@@ -11,7 +11,7 @@
 // コンストラクタ
 GS0_OniGokko::GS0_OniGokko()
 {
-	model = std::make_unique<Model>("Data/Model/GameSelect/Onigokko.mdl");
+	model = std::make_unique<Model>("Data/Model/GameSelect/GSGameSelect.mdl");
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.05f;

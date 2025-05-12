@@ -7,6 +7,7 @@
 #include "Game/Scene/G0_Onigokko.h"
 #include "Game/Camera/Camera.h"
 #include "Graphics/Timer.h"
+#include "EnemyOni.h"
 
 #include <algorithm>
 
@@ -27,10 +28,9 @@ EnemyEye::EnemyEye()
 	radius = 0.6f;
 	height = 5.0f;
 
-	opacity = 0;
-	SetOpacityChange(1.0f, 0.8f);
+	rotationR = rand() % 2 == 1 ? true : false;
 
-	TransitionEntryState();
+	TransitionWaitState();
 }
 
 // デストラクタ
@@ -51,25 +51,9 @@ void EnemyEye::Update(float elapsedTime)
 	// ステート毎の更新処理
 	switch (state)
 	{
-		// 登場
-	case State::Entry:
-		UpdateEntryState(elapsedTime);
-		break;
 		// 待機
 	case State::Wait:
 		UpdateWaitState(elapsedTime);
-		break;
-		// 移動
-	case State::Move:
-		UpdateMoveState(elapsedTime);
-		break;
-		// 笑う
-	case State::Laugh:
-		UpdateLaughState(elapsedTime);
-		break;
-		// 死亡
-	case State::Death:
-		UpdateDeathState(elapsedTime);
 		break;
 	}
 
@@ -93,7 +77,7 @@ void EnemyEye::Render(ID3D11DeviceContext* dc, Shader* shader)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if ((dist < 7000 || G0_Onigokko::movieScene) && opacity > 0)
+	if (dist < 7000 || !G0_Onigokko::movieScene)
 		shader->Draw(dc, model.get(), materialColor, opacity);
 }
 
@@ -158,24 +142,6 @@ void EnemyEye::DrawDebugGUI()
 	}
 }
 
-// 登場ステートへ遷移
-void EnemyEye::TransitionEntryState()
-{
-	state = State::Entry;
-
-	stateChangeWaitTimer = 1.0f;
-}
-
-// 登場ステート更新処理
-void EnemyEye::UpdateEntryState(float elapsedTime)
-{
-	if (!model->IsPlayAnimation())
-		stateChangeWaitTimer -= elapsedTime;
-
-	if (stateChangeWaitTimer <= 0.0f)
-		TransitionWaitState();
-}
-
 // 待機ステートへ遷移
 void EnemyEye::TransitionWaitState()
 {
@@ -198,98 +164,15 @@ void EnemyEye::UpdateWaitState(float elapsedTime)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (SearchPlayer() && player.GetInvincibleTimer() <= 0)
-		//! 威嚇ステートへ遷移
-		TransitionLaughState();
-	else if (stateChangeWaitTimer <= 0.0f)
-		TransitionMoveState();
-}
 
-// 移動ステートへ遷移
-void EnemyEye::TransitionMoveState()
-{
-	state = State::Move;
-
-	stateChangeWaitTimer = 10.0f;
-
-	setMoveTarget = false;
-}
-
-// 移動ステート更新処理
-void EnemyEye::UpdateMoveState(float elapsedTime)
-{
-	if (!setMoveTarget)
-	{
-		moveTarget.x = position.x + (rand() % 50 * (rand() % 2 == 1 ? -1 : 1));
-		moveTarget.z = position.z + (rand() % 50 * (rand() % 2 == 1 ? -1 : 1));
-
-		moveTarget.x = std::clamp(moveTarget.x, -445.0f, 445.0f);
-		moveTarget.z = std::clamp(moveTarget.z, -445.0f, 445.0f);
-
-		setMoveTarget = true;
-	}
-
-	// 移動位置に移動
-	MoveTarget(elapsedTime, 10);
-
-	float vx = moveTarget.x - position.x;
-	float vz = moveTarget.z - position.z;
-	float d = vx * vx + vz * vz;
-	if (d < (radius * radius))
-	{
-		MoveTarget(elapsedTime, 0);
-		// 待機ステートへ遷移
-		TransitionWaitState();
-	}
-
-	Player0_Onigokko& player = Player0_Onigokko::Instance();
-	targetPosition = player.GetPosition();
+	angle.y += DirectX::XMConvertToRadians(500) * (rotationR ? 1 : -1) * elapsedTime;
 
 	if (SearchPlayer() && player.GetInvincibleTimer() <= 0)
-		//! 威嚇ステートへ遷移
-		TransitionLaughState();
-	else if (stateChangeWaitTimer <= 0.0f)
-		//! 待機ステートへ遷移
-		TransitionWaitState();
+		EnemyOni::tracking = true;
 }
-
-// 威嚇ステートへ遷移
-void EnemyEye::TransitionLaughState()
-{
-	state = State::Laugh;
-
-	stateChangeWaitTimer = 0.5f;
-
-	velocity.x = velocity.z = 0;
-
-	//! コントラスト
-	SetContrastChange(1.5f, 0.5f);
-
-	//! サチュレーション
-	SetSaturationChange(1.0f, 0.5f);
-
-	//! カラーフィルター
-	SetColorFilterChange(DirectX::XMFLOAT3(3.0f, 1.3f, 1.35f), 0.5f);
-
-	//! クロマティックアベレーション
-	SetChromaticAberrationChange(0.03f, 1.5f);
-}
-
-// 威嚇ステート更新処理
-void EnemyEye::UpdateLaughState(float elapsedTime)
-{
-	if (!model->IsPlayAnimation())
-		stateChangeWaitTimer -= elapsedTime;
-
-	if (stateChangeWaitTimer <= 0.0f)
-		TransitionWaitState();
-}
-
 // 死亡ステートへ遷移
 void EnemyEye::TransitionDeathState()
 {
-	state = State::Death;
-
 	angle.y = DirectX::XMConvertToRadians(180);
 
 	stateChangeWaitTimer = 2.0f;

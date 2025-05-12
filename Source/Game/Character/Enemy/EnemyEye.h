@@ -42,29 +42,11 @@ private:
 	// 移動位置に移動
 	void MoveTarget(float elapsedTime, float speedRate);
 
-	// 登場ステートへ遷移
-	void TransitionEntryState();
-
-	// 登場ステート更新処理
-	void UpdateEntryState(float elapsedTime);
-
 	// 待機ステートへ遷移
 	void TransitionWaitState();
 
 	// 待機ステート更新処理
 	void UpdateWaitState(float elapsedTime);
-
-	// 移動ステートへ遷移
-	void TransitionMoveState();
-
-	// 移動ステート更新処理
-	void UpdateMoveState(float elapsedTime);
-
-	// 威嚇ステートへ遷移
-	void TransitionLaughState();
-
-	// 威嚇ステート更新処理
-	void UpdateLaughState(float elapsedTime);
 
 	// 死亡ステートへ遷移
 	void TransitionDeathState();
@@ -76,14 +58,7 @@ private:
 	// ステート
 	enum class State
 	{
-		Entry,
 		Wait,
-		Move,
-		Laugh,
-		Tracking,
-		Tired,
-		Attack,
-		Death
 	};
 
 private:
@@ -103,4 +78,6 @@ private:
 	float stateTimer = 0.0f;
 	float searchRange = 5.0f;
 	float attackRange = 1.5f;
+
+	bool rotationR = false;
 };

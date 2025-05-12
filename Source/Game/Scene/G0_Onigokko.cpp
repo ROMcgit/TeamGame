@@ -69,10 +69,22 @@ void G0_Onigokko::Initialize()
 	// 背景
 	backGround = std::make_unique<Sprite>();
 
-	// 鬼
-	std::unique_ptr<EnemyOni> oni = std::make_unique<EnemyOni>();
-	oni->SetPosition(DirectX::XMFLOAT3(0, 5, 250));
-	EnemyManager::Instance().Register(std::move(oni));
+	for(int i = 0; i < 3; i++)
+	{
+		float posX = 0;
+		switch (i + 1)
+		{
+		case 1: posX = 0; break;
+		case 2: posX = -5;  break;
+		case 3: posX = 5;  break;
+		default:
+			break;
+		}
+		// 鬼
+		std::unique_ptr<EnemyOni> oni = std::make_unique<EnemyOni>();
+		oni->SetPosition(DirectX::XMFLOAT3(posX, 5, 250));
+		EnemyManager::Instance().Register(std::move(oni));
+	}
 
 
 	//! フェード
@@ -302,6 +314,9 @@ void G0_Onigokko::Render()
 	{
 		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
 		{
+			int enemyCount = EnemyManager::Instance().GetEnemyCount();
+			ImGui::InputInt("EnemyCount", &enemyCount);
+
 			// プレイヤーデバッグ描画
 			player->DrawDebugGUI();
 			//-----------------------------------------------------------------------------------------------------//

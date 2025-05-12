@@ -165,8 +165,8 @@ void EnemyEye::TransitionWaitState()
 void EnemyEye::UpdateWaitState(float elapsedTime)
 {
 	//! ‰¡ˆÚ“®
-	if (!verticalMove) velocity.x = 3 * moveMinus ? -1 : 1;
-	else velocity.z = 3 * moveMinus ? -1 : 1;
+	if (!verticalMove) velocity.x += moveMinus ? -1 : 1;
+	else velocity.z += moveMinus ? -1 : 1;
 
 	actionTimer += elapsedTime;
 	if (actionTimer > 5.0f)

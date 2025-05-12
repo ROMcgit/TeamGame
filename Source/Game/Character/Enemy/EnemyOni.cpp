@@ -128,6 +128,8 @@ void EnemyOni::DrawDebugPrimitive()
 
 	DebugRenderer* debugRender = Graphics::Instance().GetDebugRenderer();
 
+	debugRender->DrawCylinder(position, searchRange, 2.0f, { 1,1,1,1 });
+
 	// “ê’£‚è”ÍˆÍ‚ðƒfƒoƒbƒO‰~’Œ•`‰æ
 	//debugRender->DrawCylinder(territoryOrigin, territoryRange, 1.0f,
 	//	DirectX::XMFLOAT4(0, 1, 0, 1));
@@ -221,7 +223,7 @@ void EnemyOni::UpdateWaitState(float elapsedTime)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < 2000 && player.GetInvincibleTimer() <= 0 || tracking)
+	if (dist < searchRange && player.GetInvincibleTimer() <= 0 || tracking)
 		//! ˆÐŠdƒXƒe[ƒg‚Ö‘JˆÚ
 		TransitionLaughState();
 	else if (stateChangeWaitTimer <= 0.0f)
@@ -275,7 +277,7 @@ void EnemyOni::UpdateMoveState(float elapsedTime)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < 2000 && player.GetInvincibleTimer() <= 0 || tracking)
+	if (dist < searchRange && player.GetInvincibleTimer() <= 0 || tracking)
 		//! ˆÐŠdƒXƒe[ƒg‚Ö‘JˆÚ
 		TransitionLaughState();
 	else if (stateChangeWaitTimer <= 0.0f)

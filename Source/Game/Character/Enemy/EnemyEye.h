@@ -36,11 +36,20 @@ protected:
 
 private:
 
+	// プレイヤーとの衝突処理
+	void CollisionVsPlayer();
+
 	// プレイヤーを探す
 	bool SearchPlayer();
 
 	// 移動位置に移動
 	void MoveTarget(float elapsedTime, float speedRate);
+
+	// 登場ステートへ遷移
+	void TransitionEntryState();
+
+	// 登場ステート更新処理
+	void UpdateEntryState(float elapsedTime);
 
 	// 待機ステートへ遷移
 	void TransitionWaitState();
@@ -58,6 +67,7 @@ private:
 	// ステート
 	enum class State
 	{
+		Entry,
 		Wait,
 	};
 
@@ -80,4 +90,7 @@ private:
 	float attackRange = 1.5f;
 
 	bool rotationR = false;
+
+	bool verticalMove = false;
+	bool moveMinus = false;
 };

@@ -102,43 +102,43 @@ void G0_Onigokko::Initialize()
 		case 3:
 		case 4:
 		{
-			posZ = rand() % 10 + 50 * (i + 1 == 4 ? 1 : -1);
+			posZ = rand() % 15 + 50 * (i + 1 == 4 ? 1 : -1);
 		}
 		break;
 		case 5:
 		case 6: 
 		{
-			posZ = rand() % 10 + 90 * (i + 1 == 6 ? 1 : -1);
+			posZ = rand() % 15 + 90 * (i + 1 == 6 ? 1 : -1);
 		}
 			break;
 		case 7:
 		case 8:
 		{
-			posZ = rand() % 10 + 130 * (i + 1 == 8 ? 1 : -1);
+			posZ = rand() % 15 + 130 * (i + 1 == 8 ? 1 : -1);
 		}
 		break;
 		case 9:
 		case 10:
 		{
-			posZ = rand() % 10 + 170 * (i + 1 == 10 ? 1 : -1);
+			posZ = rand() % 15 + 170 * (i + 1 == 10 ? 1 : -1);
 		}
 		break;
 		case 11:
 		case 12: 
 		{
-			posZ = rand() % 10 + 210 * (i + 1 == 12 ? 1 : -1);
+			posZ = rand() % 15 + 210 * (i + 1 == 12 ? 1 : -1);
 		}
 		break;
 		case 13:
 		case 14:
 		{
-			posZ = rand() % 10 + 250 * (i + 1 == 14 ? 1 : -1);
+			posZ = rand() % 15 + 250 * (i + 1 == 14 ? 1 : -1);
 		}
 		break;
 		case 15:
 		case 16:
 		{
-			posZ = rand() % 10 + 290 * (i + 1 == 16 ? 1 : -1);
+			posZ = rand() % 15 + 290 * (i + 1 == 16 ? 1 : -1);
 		}
 		break;
 		default:
@@ -153,55 +153,55 @@ void G0_Onigokko::Initialize()
 			case 1:
 			case 2:
 			{
-				posX = 10 * (j + 1 == 2 ? 1 : -1);
+				posX = 15 * (j + 1 == 2 ? 1 : -1);
 			}
 			break;
 			case 3:
 			case 4:
 			{
-				posX = rand() % 10 + 50 * (j + 1 == 4 ? 1 : -1);
+				posX = rand() % 15 + 50 * (j + 1 == 4 ? 1 : -1);
 			}
 			break;
 			case 5:
 			case 6:
 			{
-				posX = rand() % 10 + 80 * (j + 1 == 6 ? 1 : -1);
+				posX = rand() % 15 + 80 * (j + 1 == 6 ? 1 : -1);
 			}
 			break;
 			case 7:
 			case 8:
 			{
-				posX = rand() % 10 + 110 * (j + 1 == 8 ? 1 : -1);
+				posX = rand() % 15 + 110 * (j + 1 == 8 ? 1 : -1);
 			}
 			break;
 			case 9:
 			case 10:
 			{
-				posX = rand() % 10 + 140 * (j + 1 == 10 ? 1 : -1);
+				posX = rand() % 15 + 140 * (j + 1 == 10 ? 1 : -1);
 			}
 			break;
 			case 11:
 			case 12:
 			{
-				posX = rand() % 10 + 170 * (j + 1 == 12 ? 1 : -1);
+				posX = rand() % 15 + 170 * (j + 1 == 12 ? 1 : -1);
 			}
 			break;
 			case 13:
 			case 14:
 			{
-				posX = rand() % 10 + 200 * (j + 1 == 14 ? 1 : -1);
+				posX = rand() % 15 + 200 * (j + 1 == 14 ? 1 : -1);
 			}
 			break;
 			case 15:
 			case 16:
 			{
-				posX = rand() % 10 + 230 * (j + 1 == 16 ? 1 : -1);
+				posX = rand() % 15 + 230 * (j + 1 == 16 ? 1 : -1);
 			}
 			break;
 			case 17:
 			case 18:
 			{
-				posX = rand() % 10 + 260 * (j + 1 == 18 ? 1 : -1);
+				posX = rand() % 15 + 260 * (j + 1 == 18 ? 1 : -1);
 			}
 			break;
 			default:

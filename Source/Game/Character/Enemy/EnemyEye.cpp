@@ -25,12 +25,14 @@ EnemyEye::EnemyEye()
 
 	debugPrimitiveColor = { 0, 0, 1 };
 
-	radius = 0.6f;
-	height = 5.0f;
+	radius = 2.11f;
+	height = 1.95f;
 
 	rotationR = rand() % 2 == 1 ? true : false;
 
-	TransitionWaitState();
+	TransitionEntryState();
+
+	verticalMove = rand() % 2 == 1 ? true : false;
 }
 
 // デストラクタ
@@ -51,7 +53,11 @@ void EnemyEye::Update(float elapsedTime)
 	// ステート毎の更新処理
 	switch (state)
 	{
-		// 待機
+	// 登場
+	case State::Entry:
+		UpdateEntryState(elapsedTime);
+		break;
+	// 待機
 	case State::Wait:
 		UpdateWaitState(elapsedTime);
 		break;
@@ -62,6 +68,9 @@ void EnemyEye::Update(float elapsedTime)
 
 	// キャラクターの状態更新処理
 	UpdateGameObjectBaseState(elapsedTime);
+
+	// プレイヤーとの衝突処理
+	CollisionVsPlayer();
 
 	// モデルアニメーション更新
 	model->UpdateAnimation(elapsedTime);
@@ -77,7 +86,7 @@ void EnemyEye::Render(ID3D11DeviceContext* dc, Shader* shader)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < 7000 && !G0_Onigokko::movieScene && !EnemyOni::tracking)
+	if (dist < 2000 && !G0_Onigokko::movieScene && !EnemyOni::tracking)
 		shader->Draw(dc, model.get(), materialColor, opacity);
 }
 
@@ -155,6 +164,18 @@ void EnemyEye::TransitionWaitState()
 // 待機ステート更新処理
 void EnemyEye::UpdateWaitState(float elapsedTime)
 {
+	//! 横移動
+	if (!verticalMove) velocity.x = 3 * moveMinus ? -1 : 1;
+	else velocity.z = 3 * moveMinus ? -1 : 1;
+
+	actionTimer += elapsedTime;
+	if (actionTimer > 5.0f)
+	{
+		moveMinus = !moveMinus;
+		actionTimer = 0.0f;
+	}
+
+
 	//! ムービーシーンでないなら、待ち時間を減らす
 	if (!G0_Onigokko::movieScene)
 		stateChangeWaitTimer -= elapsedTime;
@@ -207,6 +228,25 @@ void EnemyEye::OnDead()
 	TransitionDeathState();
 }
 
+// プレイヤーとの衝突処理
+void EnemyEye::CollisionVsPlayer()
+{
+	Player0_Onigokko& player = Player0_Onigokko::Instance();
+
+	DirectX::XMFLOAT3 outPosition;
+	if (Collision::IntersectCylinderVsCylinder(
+		position,
+		radius,
+		height,
+		player.GetPosition(),
+		player.GetRadius(),
+		player.GetHeight(),
+		outPosition))
+	{
+		player.SetPosition(outPosition);
+	}
+}
+
 // プレイヤーを探す
 bool EnemyEye::SearchPlayer()
 {
@@ -251,4 +291,17 @@ void EnemyEye::MoveTarget(float elapsedTime, float speedRate)
 	// 移動処理
 	Move3D(vx, vz, moveSpeed * speedRate);
 	Turn3DNotCancel(elapsedTime, vx, vz, turnSpeed * speedRate);
+}
+
+// 登場ステートへ遷移
+void EnemyEye::TransitionEntryState()
+{
+	state = State::Entry;
+}
+
+// 登場ステート更新処理
+void EnemyEye::UpdateEntryState(float elapsedTime)
+{
+	if (Player0_Onigokko::Instance().GetMovieTime() <= 0.0f)
+		TransitionWaitState();
 }

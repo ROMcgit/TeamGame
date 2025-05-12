@@ -138,6 +138,6 @@ private:
 	float territoryRange = 10.0f;
 	float turnSpeed = DirectX::XMConvertToRadians(360);
 	float stateTimer = 0.0f;
-	float searchRange = 5.0f;
+	float searchRange = 15.0f;
 	float attackRange = 1.5f;
 };

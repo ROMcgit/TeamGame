@@ -126,7 +126,7 @@ void Player0_Onigokko::Update(float elapsedTime)
 	projectileManager.Update(elapsedTime);
 
 	// プレイヤーと敵との衝突処理
-	CollisionPlayer0_OnigokkoVsEnemies();
+	//CollisionPlayer0_OnigokkoVsEnemies();
 
 	// モデルアニメーション更新処理
 	model->UpdateAnimation(elapsedTime);

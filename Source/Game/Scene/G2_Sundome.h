@@ -45,7 +45,7 @@ private:
 	std::unique_ptr<RenderTarget>  renderTarget; //! レンダーターゲット
 	ShadowMap                      shadowMap;    // シャドウマップの実体
 	std::unique_ptr<Sprite> backGround;
-	DirectX::XMFLOAT3 backGroundColor = { 1, 1, 1 };
+	DirectX::XMFLOAT3 backGroundColor = { 0.46f, 1, 0.8f };
 
 	int movieStep   = 0;
 	float movieTime = 0.0f;

@@ -63,7 +63,7 @@ private:
 	std::unique_ptr<RenderTarget>  renderTarget; //! レンダーターゲット
 	ShadowMap                      shadowMap;    // シャドウマップの実体
 	std::unique_ptr<Sprite> backGround;
-	DirectX::XMFLOAT3 backGroundColor = { 1, 1, 1 };
+	DirectX::XMFLOAT3 backGroundColor = { 0, 0, 0 };
 
 	float newBalloonWaitTime = 0.0f;
 	float newCloudWaitTime = 0.0f;

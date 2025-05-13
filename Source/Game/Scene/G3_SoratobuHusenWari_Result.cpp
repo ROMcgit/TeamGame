@@ -30,6 +30,9 @@ void G3_SoratobuHusenWari_Result::Initialize()
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 		1.0f, 0.0f,
 		0.5f, 0.2f);
+
+	if (G3_SoratobuHusenWari::score >= 100)
+		SceneGameSelect::clear.soratobuHusenWari = true;
 }
 
 // èIóπâª

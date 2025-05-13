@@ -59,6 +59,19 @@ public:
 
 	static bool sceneChange; // ƒV[ƒ“Ø‚è‘Ö‚¦
 
+	//! ƒNƒŠƒA
+	struct Clear
+	{
+		bool onigokko           = false; // ‚¨‚É‚²‚Á‚±
+		bool darumasangaKoronda = false; // ‚¾‚é‚Ü‚³‚ñ‚ª“]‚ñ‚¾
+		bool sundome            = false; // ¡~‚ß
+		bool soratobuHusenWari  = false; // ‹ó”ò‚Ô•—‘DŠ„‚è
+		bool ossanTataki        = false; // ‚¨‚Á‚³‚ñ’@‚«
+		bool asibawatari        = false; // ‘«ê“n‚è
+	};
+
+	static Clear clear;
+
 private:
 	std::unique_ptr <Player0_Onigokko> player;
 	std::unique_ptr <CameraController> cameraController;

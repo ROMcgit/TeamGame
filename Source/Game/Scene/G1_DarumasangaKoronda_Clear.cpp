@@ -14,6 +14,8 @@ void G1_DarumasangaKoronda_Clear::Initialize()
 	// ƒQ[ƒ€ƒNƒŠƒA
 	gameClear = std::make_unique<Sprite>("Data/Sprite/1.DarumasangaKoronda/GameClear.png");
 
+	SceneGameSelect::clear.darumasangaKoronda = true;
+
 	fade = std::make_unique<Fade>();
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 		1.0f, 0.0f,

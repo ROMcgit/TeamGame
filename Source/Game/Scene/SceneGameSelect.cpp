@@ -3,12 +3,12 @@
 #include "Game/Scene/SceneLoading.h"
 #include "Game/Scene/SceneManager.h"
 
-#include "Game/Scene/G0_Onigokko.h"
-#include "Game/Scene/G1_DarumasangaKoronda.h"
-#include "Game/Scene/G2_Sundome.h"
-#include "Game/Scene/G3_SoratobuHusenWari.h"
-#include "Game/Scene/G4_OssanTataki.h"
-#include "Game/Scene/G5_Asibawatari.h"
+#include "Game/Scene/G0_Onigokko_Tutorial.h"
+#include "Game/Scene/G1_DarumasangaKoronda_Tutorial.h"
+#include "Game/Scene/G2_Sundome_Tutorial.h"
+#include "Game/Scene/G3_SoratobuHusenWari_Tutorial.h"
+#include "Game/Scene/G4_OssanTataki_Tutorial.h"
+#include "Game/Scene/G5_Asibawatari_Tutorial.h"
 
 #include "Game/Camera/Camera.h"
 #include "Game/Character/Enemy/EnemyManager.h"
@@ -31,6 +31,9 @@
 
 SceneGameSelect::GameSelectA SceneGameSelect::gameSelect = SceneGameSelect::GameSelectA::Onigokko;
 bool SceneGameSelect::sceneChange = false;
+
+// ÉNÉäÉA
+SceneGameSelect::Clear SceneGameSelect::clear;
 
 // èâä˙âª
 void SceneGameSelect::Initialize()
@@ -206,22 +209,22 @@ void SceneGameSelect::Update(float elapsedTime)
 			switch (gameSelect)
 			{
 			case GameSelectA::Onigokko:
-				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G0_Onigokko>());
+				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G0_Onigokko_Tutorial>());
 				break;
 			case GameSelectA::DarumasangaKoronda:
-				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G1_DarumasangaKoronda>());
+				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G1_DarumasangaKoronda_Tutorial>());
 				break;
 			case GameSelectA::Sundome:
-				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G2_Sundome>());
+				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G2_Sundome_Tutorial>());
 				break;
 			case GameSelectA::SoratobuHusenWari:
-				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G3_SoratobuHusenWari>());
+				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G3_SoratobuHusenWari_Tutorial>());
 				break;
 			case GameSelectA::OssanTataki:
-				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G4_OssanTataki>());
+				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G4_OssanTataki_Tutorial>());
 				break;
 			case GameSelectA::Asibawatari:
-				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G5_Asibawatari>());
+				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G5_Asibawatari_Tutorial>());
 				break;
 			default:
 				break;

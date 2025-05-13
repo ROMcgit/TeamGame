@@ -18,6 +18,8 @@ void G5_Asibawatari_Clear::Initialize()
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 		1.0f, 0.0f,
 		0.5f, 0.2f);
+
+	SceneGameSelect::clear.asibawatari = true;
 }
 
 // èIóπâª

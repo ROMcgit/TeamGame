@@ -14,6 +14,8 @@ void G0_Onigokko_Clear::Initialize()
 	// ÉQÅ[ÉÄÉNÉäÉA
 	gameClear = std::make_unique<Sprite>("Data/Sprite/0.Onigokko/GameClear.png");
 
+	SceneGameSelect::clear.onigokko = true;
+
 	fade = std::make_unique<Fade>();
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 		1.0f, 0.0f,

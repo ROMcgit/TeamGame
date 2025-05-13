@@ -30,6 +30,9 @@ void G4_OssanTataki_Result::Initialize()
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 		1.0f, 0.0f,
 		0.5f, 0.2f);
+
+	if(G4_OssanTataki::score >= 110)
+		SceneGameSelect::clear.ossanTataki = true;
 }
 
 // I—¹‰»

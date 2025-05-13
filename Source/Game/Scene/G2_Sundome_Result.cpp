@@ -60,6 +60,9 @@ void G2_Sundome_Result::Update(float elapsedTime)
 	int totalScore = score[0] + score[1] + score[2];
 	this->totalScore = totalScore;
 
+	if (this->totalScore >= 80)
+		SceneGameSelect::clear.sundome = true;
+
 	// スコア演出処理
 	DirectorScore(elapsedTime);
 

@@ -265,7 +265,7 @@ void G3_SoratobuHusenWari::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -312,7 +312,7 @@ void G3_SoratobuHusenWari::Render()
 		fade->Render(dc, graphics);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

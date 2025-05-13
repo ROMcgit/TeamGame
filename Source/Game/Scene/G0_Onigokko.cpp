@@ -397,7 +397,7 @@ void G0_Onigokko::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -435,7 +435,7 @@ void G0_Onigokko::Render()
 		fade->Render(dc, graphics);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

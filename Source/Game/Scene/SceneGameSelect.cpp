@@ -99,7 +99,8 @@ void SceneGameSelect::Initialize()
 	//! ゲームの選択画面
 	for(int i = 0; i < 6; i++)
 	{
-		gameSelectSprite[i] = std::make_unique<Sprite>();
+		std::string filePath = "Data/Sprite/GameSelect/" + std::to_string(i);
+		gameSelectSprite[i] = std::make_unique<Sprite>(filePath.c_str());
 	}
 
 	GameSelectManager& gameSelectManager = GameSelectManager::Instance();
@@ -331,7 +332,7 @@ void SceneGameSelect::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -368,7 +369,7 @@ void SceneGameSelect::Render()
 		fade->Render(dc, graphics);
 	}
 	
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

@@ -192,15 +192,9 @@ void GS4_OssanTataki::CollisionVsPlayer()
 		player.GetHeight(),
 		outPosition))
 	{
-		//! 位置を設定
+		//! シーンを切り替える
+		SceneGameSelect::gameSelect = SceneGameSelect::GameSelectA::OssanTataki;
+		SceneGameSelect::sceneChange = true;
 		player.SetPosition(outPosition);
-
-		if (gamePad.GetButtonDown() & button)
-		{
-			//! シーンを切り替える
-			SceneGameSelect::gameSelect = SceneGameSelect::GameSelectA::OssanTataki;
-			SceneGameSelect::sceneChange = true;
-			player.SetPosition(outPosition);
-		}
 	}
 }

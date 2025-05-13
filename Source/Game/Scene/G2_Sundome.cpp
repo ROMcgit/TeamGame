@@ -216,6 +216,8 @@ void G2_Sundome::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
+#ifndef _DEBUG
+
 	// 3Dデバッグ描画
 	{
 		// プレイヤーデバッグプリミティブ描画
@@ -230,6 +232,8 @@ void G2_Sundome::Render()
 		// デバッグレンダラ描画実行
 		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 	}
+
+#endif // !_DEBUG
 
 	//! シェーダーを出す
 	{
@@ -248,6 +252,8 @@ void G2_Sundome::Render()
 		//! フェードの描画処理
 		fade->Render(dc, graphics);
 	}
+
+#ifndef _DEBUG
 
 	// 2DデバッグGUI描画
 	{
@@ -286,6 +292,8 @@ void G2_Sundome::Render()
 		}
 		ImGui::End();
 	}
+
+#endif // !_DEBUG
 }
 
 // ムービー更新処理

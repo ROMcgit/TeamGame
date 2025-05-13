@@ -274,6 +274,8 @@ void G4_OssanTataki::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
+#ifndef _DEBUG
+
 	// 3Dデバッグ描画
 	{
 		// プレイヤーデバッグプリミティブ描画
@@ -288,6 +290,8 @@ void G4_OssanTataki::Render()
 		// デバッグレンダラ描画実行
 		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 	}
+
+#endif // !_DEBUG
 
 	//! シェーダーを出す
 	{
@@ -317,6 +321,8 @@ void G4_OssanTataki::Render()
 		//! フェードの描画処理
 		fade->Render(dc, graphics);
 	}
+
+#ifndef _DEBUG
 
 	// 2DデバッグGUI描画
 	{
@@ -358,6 +364,7 @@ void G4_OssanTataki::Render()
 		}
 		ImGui::End();
 	}
+#endif // !_DEBUG
 }
 
 // ムービー更新処理

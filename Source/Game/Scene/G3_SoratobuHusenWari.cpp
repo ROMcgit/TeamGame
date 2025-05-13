@@ -311,6 +311,8 @@ void G3_SoratobuHusenWari::Render()
 		fade->Render(dc, graphics);
 	}
 
+#ifndef _DEBUG
+
 	// 2DデバッグGUI描画
 	{
 		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
@@ -356,6 +358,8 @@ void G3_SoratobuHusenWari::Render()
 		}
 		ImGui::End();
 	}
+
+#endif // !_DEBUG
 }
 
 // 風船生成処理

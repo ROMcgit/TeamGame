@@ -367,7 +367,7 @@ void G0_Onigokko::Render()
 			0, 0, screenWidth, screenHeight,
 			0, 0, textureWidth, textureHeight,
 			0,
-			1, 1, 1, 1);
+			0.8f, 0, 0, 1);
 
 		ID3D11DepthStencilState* depthEnabledState = graphics.GetDepthEnabledState();
 		dc->OMSetDepthStencilState(depthEnabledState, 0);

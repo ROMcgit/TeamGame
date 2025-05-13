@@ -234,7 +234,7 @@ void G1_DarumasangaKoronda::Render()
 			0, 0, screenWidth, screenHeight,
 			0, 0, textureWidth, textureHeight,
 			0,
-			1, 1, 1, 1);
+			backGroundColor.x, backGroundColor.y, backGroundColor.z, 1);
 
 		ID3D11DepthStencilState* depthEnabledState = graphics.GetDepthEnabledState();
 		dc->OMSetDepthStencilState(depthEnabledState, 0);
@@ -305,10 +305,15 @@ void G1_DarumasangaKoronda::Render()
 		fade->Render(dc, graphics);
 	}
 
+#ifndef _DEBUG
+
 	// 2DデバッグGUI描画
 	{
 		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
 		{
+			ImGui::ColorEdit3("BGColor", &backGroundColor.x);
+			ImGui::InputFloat3("BGColorNum", &backGroundColor.x);
+
 			// プレイヤーデバッグ描画
 			player->DrawDebugGUI();
 			//-----------------------------------------------------------------------------------------------------//
@@ -342,6 +347,8 @@ void G1_DarumasangaKoronda::Render()
 		}
 		ImGui::End();
 	}
+
+#endif // !_DEBUG
 }
 
 // ムービー更新処理

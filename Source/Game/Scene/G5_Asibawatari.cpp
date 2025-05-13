@@ -236,6 +236,8 @@ void G5_Asibawatari::Render()
 		renderTarget->Render();
 	}
 
+#ifndef _DEBUG
+
 	// 3Dデバッグ描画
 	{
 		// プレイヤーデバッグプリミティブ描画
@@ -251,10 +253,14 @@ void G5_Asibawatari::Render()
 		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 	}
 
+#endif // !_DEBUG
+
 	{
 		//! フェードの描画処理
 		fade->Render(dc, graphics);
 	}
+
+#ifndef _DEBUG
 
 	// 2DデバッグGUI描画
 	{
@@ -293,6 +299,8 @@ void G5_Asibawatari::Render()
 		}
 		ImGui::End();
 	}
+
+#endif // !_DEBUG
 }
 
 // ムービー更新処理

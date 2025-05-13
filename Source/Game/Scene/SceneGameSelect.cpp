@@ -99,7 +99,7 @@ void SceneGameSelect::Initialize()
 	//! ゲームの選択画面
 	for(int i = 0; i < 6; i++)
 	{
-		std::string filePath = "Data/Sprite/GameSelect/" + std::to_string(i);
+		std::string filePath = "Data/Sprite/GameSelect/" + std::to_string(i) + ".png";
 		gameSelectSprite[i] = std::make_unique<Sprite>(filePath.c_str());
 	}
 
@@ -332,7 +332,7 @@ void SceneGameSelect::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -369,7 +369,7 @@ void SceneGameSelect::Render()
 		fade->Render(dc, graphics);
 	}
 	
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 2DデバッグGUI描画
 	{
@@ -503,13 +503,13 @@ void SceneGameSelect::RenderGameSprite(ID3D11DeviceContext* dc, const DirectX::X
 		float textureWidth = static_cast<float>(gameSelectSprite[i]->GetTextureWidth());
 		float textureHeight = static_cast<float>(gameSelectSprite[i]->GetTextureHeight());
 
-		gameSelectSpritePos.x = screenPos.x - (gameSelect->GetWidth() * 6.0f);
+		gameSelectSpritePos.x = screenPos.x - (gameSelect->GetWidth() * 8.0f);
 		gameSelectSpritePos.y = screenPos.y - (gameSelect->GetHeight() * 6.0f);
 
 		//! ゲーム選択画面
 		gameSelectSprite[i]->Render(dc,
 			gameSelectSpritePos.x, gameSelectSpritePos.y,
-			screenHeight * 0.4f, screenHeight * 0.4f,
+			screenWidth * 0.27f, screenHeight * 0.27f,
 			0, 0,
 			textureWidth, textureHeight,
 			0,

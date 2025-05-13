@@ -57,16 +57,9 @@ Graphics::Graphics(HWND hWnd)
 			swapchainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
 			// TODO:ウインドウモードか、フルスクリーンにするか
-
-#ifndef _DEBUG
 			// ウインドウモード
 			swapchainDesc.Windowed = TRUE;
 			swapchainDesc.Flags = 0;
-#else
-			// フルスクリーン
-			swapchainDesc.Windowed = FALSE;
-			swapchainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-#endif // DEBUG
 		}
 
 		D3D_FEATURE_LEVEL featureLevel;

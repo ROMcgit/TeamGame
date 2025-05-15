@@ -347,7 +347,7 @@ void G2_Sundome::UpdateMovie(float elapsedTime)
 				cameraController->SetTargetChange(pos, 2.0f);
 
 				//! カメラの範囲を変更する
-				cameraController->SetRangeChange(18.0f, 2.0f);
+				cameraController->SetRangeChange(29.0f, 2.0f);
 
 				//! ムービー時間を0にする
 				movieTime = 0.0f;

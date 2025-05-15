@@ -134,8 +134,8 @@ void G2_Sundome::Render()
 	shadowMapEyeOffset = { -18.0f, 53.0f, 9.0f };
 
 	//! ÉtÉHÉO
-	fogStart = 80.0f;
-	fogEnd   = 130.0f;
+	fogStart = 45.0f;
+	fogEnd   = 100.0f;
 
 	Graphics& graphics = Graphics::Instance();
 

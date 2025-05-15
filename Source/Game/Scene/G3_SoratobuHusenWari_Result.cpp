@@ -12,7 +12,7 @@
 void G3_SoratobuHusenWari_Result::Initialize()
 {
 	// スプライト初期化
-	backGround = std::make_unique<Sprite>("Data/Sprite/Title.png");
+	backGround = std::make_unique<Sprite>("Data/Sprite/GameSelect/3.png");
 
 	// スコア
 	score = std::make_unique<Text>();
@@ -101,7 +101,7 @@ void G3_SoratobuHusenWari_Result::Render()
 			0, 0, screenWidth, screenHeight,
 			0, 0, textureWidth, textureHeight,
 			0,
-			1, 1, 1, 1);
+			0.5f, 0.5f, 0.5f, 1);
 
 		// スコア
 		score->RenderOku(dc, left, G3_SoratobuHusenWari::score, false,

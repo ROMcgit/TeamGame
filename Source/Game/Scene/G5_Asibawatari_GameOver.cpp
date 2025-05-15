@@ -10,7 +10,7 @@
 void G5_Asibawatari_GameOver::Initialize()
 {
 	// îwåi
-	backGround = std::make_unique<Sprite>();
+	backGround = std::make_unique<Sprite>("Data/Sprite/5.Asibawatari/Game.png");
 	// ÉQÅ[ÉÄÉIÅ[ÉoÅ[
 	gameOver = std::make_unique<Sprite>("Data/Sprite/5.Asibawatari/GameOver.png");
 
@@ -79,7 +79,7 @@ void G5_Asibawatari_GameOver::Render()
 			0, 0, screenWidth, screenHeight,
 			0, 0, textureWidth, textureHeight,
 			0,
-			1, 1, 1, 1);
+			0.5f, 0.5f, 0.5f, 1);
 
 		textureWidth = static_cast<float>(gameOver->GetTextureWidth());
 		textureHeight = static_cast<float>(gameOver->GetTextureHeight());

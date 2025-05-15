@@ -12,7 +12,7 @@
 void G2_Sundome_Result::Initialize()
 {
 	// スプライト初期化
-	backGround = std::make_unique<Sprite>("Data/Sprite/Title.png");
+	backGround = std::make_unique<Sprite>("Data/Sprite/GameSelect/2.png");
 
 	fade = std::make_unique<Fade>();
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
@@ -114,7 +114,7 @@ void G2_Sundome_Result::Render()
 			0, 0, screenWidth, screenHeight,
 			0, 0, textureWidth, textureHeight,
 			0,
-			1, 1, 1, 1);
+			0.5f, 0.5f, 0.5f, 1);
 
 		// スコア
 		for (int i = 0; i < 3; i++)

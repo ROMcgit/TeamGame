@@ -266,6 +266,9 @@ void G0_Onigokko::Update(float elapsedTime)
 
 	// カメラのムービー更新処理
 	UpdateCameraMovie(elapsedTime);
+
+	//! 敵を生成
+	NewEnemy();
 }
 
 // 描画処理
@@ -367,13 +370,7 @@ void G0_Onigokko::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifndef _DEBUG
-
-	// 3Dデバッグ描画
 	{
-		// プレイヤーデバッグプリミティブ描画
-		player->DrawDebugPrimitive();
-
 		// エネミーデバッグプリミティブ描画
 		EnemyManager::Instance().DrawDebugPrimitive();
 
@@ -382,6 +379,14 @@ void G0_Onigokko::Render()
 
 		// デバッグレンダラ描画実行
 		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
+	}
+
+#ifndef _DEBUG
+
+	// 3Dデバッグ描画
+	{
+		// プレイヤーデバッグプリミティブ描画
+		player->DrawDebugPrimitive();
 	}
 #endif // _DEBUG
 
@@ -594,5 +599,20 @@ void G0_Onigokko::UpdateCameraMovie(float elapsedTime)
 	break;
 	default:
 		break;
+	}
+}
+
+// 敵生成処理
+void G0_Onigokko::NewEnemy()
+{
+	EnemyManager& enemyManager = EnemyManager::Instance();
+	int enemyCount = enemyManager.GetEnemyCount();
+
+	if (timer->GetTimeM_Int() < 1 && enemyCount < 5 && !EnemyOni::tracking)
+	{
+		// 鬼
+		std::unique_ptr<EnemyOni> oni = std::make_unique<EnemyOni>();
+		oni->SetPosition(DirectX::XMFLOAT3(0, 0, 250));
+		EnemyManager::Instance().Register(std::move(oni));
 	}
 }

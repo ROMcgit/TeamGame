@@ -42,6 +42,9 @@ private:
 	// カメラのムービー更新処理
 	void UpdateCameraMovie(float elapsedTime);
 
+	// 敵生成処理
+	void NewEnemy();
+
 public:
 	static bool  movieScene; // ムービーシーンか
 private:

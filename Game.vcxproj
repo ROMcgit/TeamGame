@@ -210,8 +210,10 @@
     <ClInclude Include="Source\Game\Scene\G5_Asibawatari_Clear.h" />
     <ClInclude Include="Source\Game\Scene\G5_Asibawatari_GameOver.h" />
     <ClInclude Include="Source\Game\Scene\G5_Asibawatari_Tutorial.h" />
+    <ClInclude Include="Source\Game\Stage\G1_StageBumpiness.h" />
     <ClInclude Include="Source\Game\Stage\G1_StageDarumasangaKoronda.h" />
     <ClInclude Include="Source\Game\Stage\G2_StageSundome.h" />
+    <ClInclude Include="Source\Game\Stage\G1_StageEndHole.h" />
     <ClInclude Include="Source\Game\Stage\G3_StageSoratobuHusenWari.h" />
     <ClInclude Include="Source\Game\Stage\G4_StageOssanTataki.h" />
     <ClInclude Include="Source\Game\Stage\G5_StageAsibawatari_Goal.h" />
@@ -340,7 +342,9 @@
     <ClCompile Include="Source\Game\Scene\G5_Asibawatari_Tutorial.cpp" />
     <ClCompile Include="Source\Game\Scene\Scene.cpp" />
     <ClCompile Include="Source\Game\Stage\G1_StageDarumasangaKoronda.cpp" />
+    <ClCompile Include="Source\Game\Stage\G1_StageBumpiness.cpp" />
     <ClCompile Include="Source\Game\Stage\G2_StageSundome.cpp" />
+    <ClCompile Include="Source\Game\Stage\G1_StageEndHole.cpp" />
     <ClCompile Include="Source\Game\Stage\G3_StageSoratobuHusenWari.cpp" />
     <ClCompile Include="Source\Game\Stage\G4_StageOssanTataki.cpp" />
     <ClCompile Include="Source\Game\Stage\G5_StageAsibawatari_Goal.cpp" />

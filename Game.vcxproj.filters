@@ -600,6 +600,12 @@
     <ClInclude Include="Source\Game\Character\GameSelect\GS5_AsibaWatari.h">
       <Filter>Source\Character\GameSelect\5_足場渡り</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Stage\G1_StageBumpiness.h">
+      <Filter>Source\Stage\StageGame\G1_だるまさんが転んだ</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Stage\G1_StageEndHole.h">
+      <Filter>Source\Stage\StageGame\G1_だるまさんが転んだ</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -970,6 +976,12 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Character\GameSelect\GS5_AsibaWatari.cpp">
       <Filter>Source\Character\GameSelect\5_足場渡り</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Stage\G1_StageBumpiness.cpp">
+      <Filter>Source\Stage\StageGame\G1_だるまさんが転んだ</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Stage\G1_StageEndHole.cpp">
+      <Filter>Source\Stage\StageGame\G1_だるまさんが転んだ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

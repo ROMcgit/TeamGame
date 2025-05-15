@@ -10,7 +10,7 @@
 void G0_Onigokko_Clear::Initialize()
 {
 	// îwåi
-	backGround = std::make_unique<Sprite>();
+	backGround = std::make_unique<Sprite>("Data/Sprite/0.Onigokko/Bonus.png");
 	// ÉQÅ[ÉÄÉNÉäÉA
 	gameClear = std::make_unique<Sprite>("Data/Sprite/0.Onigokko/GameClear.png");
 

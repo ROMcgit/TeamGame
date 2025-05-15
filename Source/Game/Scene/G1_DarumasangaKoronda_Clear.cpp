@@ -10,7 +10,7 @@
 void G1_DarumasangaKoronda_Clear::Initialize()
 {
 	// îwåi
-	backGround = std::make_unique<Sprite>();
+	backGround = std::make_unique<Sprite>("Data/Sprite/1.DarumasangaKoronda/Bonus.png");
 	// ÉQÅ[ÉÄÉNÉäÉA
 	gameClear = std::make_unique<Sprite>("Data/Sprite/1.DarumasangaKoronda/GameClear.png");
 
@@ -81,7 +81,7 @@ void G1_DarumasangaKoronda_Clear::Render()
 			0, 0, screenWidth, screenHeight,
 			0, 0, textureWidth, textureHeight,
 			0,
-			1, 1, 1, 1);
+			0.5f, 0.5f, 0.5f, 1);
 
 		textureWidth = static_cast<float>(gameClear->GetTextureWidth());
 		textureHeight = static_cast<float>(gameClear->GetTextureHeight());

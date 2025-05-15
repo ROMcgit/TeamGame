@@ -11,11 +11,11 @@
 // 初期化
 void G4_OssanTataki_Result::Initialize()
 {
-	// 背景
-	backGround = std::make_unique<Sprite>("Data/Sprite/GameSelect/4.png");
-
 	// リザルト
 	result = std::make_unique<Sprite>("Data/Sprite/Result.png");
+
+	// ヒント
+	hint = std::make_unique<Sprite>("Data/Sprite/4.OssanTataki/Hint.png");
 
 	// スコア
 	score = std::make_unique<Text>();
@@ -36,6 +36,15 @@ void G4_OssanTataki_Result::Initialize()
 
 	if(G4_OssanTataki::score >= 110)
 		SceneGameSelect::clear.ossanTataki = true;
+
+	std::string filePath = "";
+	if (SceneGameSelect::clear.ossanTataki)
+		filePath = "Data/Sprite/4.OssanTataki/Bonus.png";
+	else
+		filePath = "Data/Sprite/GameSelect/4.png";
+
+	// 背景
+	backGround = std::make_unique<Sprite>(filePath.c_str());
 }
 
 // 終了化
@@ -105,6 +114,9 @@ void G4_OssanTataki_Result::Render()
 			0, 0, textureWidth, textureHeight,
 			0,
 			0.5f, 0.5f, 0.5f, 1);
+
+		textureWidth = static_cast<float>(result->GetTextureWidth());
+		textureHeight = static_cast<float>(result->GetTextureHeight());
 
 		// リザルト
 		result->Render(dc,

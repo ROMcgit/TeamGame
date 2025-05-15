@@ -11,11 +11,11 @@
 // 初期化
 void G2_Sundome_Result::Initialize()
 {
-	// 背景
-	backGround = std::make_unique<Sprite>("Data/Sprite/GameSelect/2.png");
-
 	// リザルト
 	result = std::make_unique<Sprite>("Data/Sprite/Result.png");
+
+	// ヒント
+	hint = std::make_unique<Sprite>("Data/Sprite/2.Sundome/Hint.png");
 
 	fade = std::make_unique<Fade>();
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
@@ -40,6 +40,27 @@ void G2_Sundome_Result::Initialize()
 	textPos[1].y = screenHeight * 0.45f;
 	textPos[2].y = screenHeight * 0.65f;
 	textPos[3].y = screenHeight * 0.85f;
+
+	//! スコアを代入
+	int score[3];
+	for (int i = 0; i < 3; i++)
+		score[i] = G2_Sundome::score[i];
+
+	//! 合計スコアを計算
+	int totalScore = score[0] + score[1] + score[2];
+	this->totalScore = totalScore;
+
+	if (this->totalScore >= 80)
+		SceneGameSelect::clear.sundome = true;
+
+	std::string filePath = "";
+	if (SceneGameSelect::clear.sundome)
+		filePath = "Data/Sprite/2.Sundome/Bonus.png";
+	else
+		filePath = "Data/Sprite/GameSelect/2.png";
+
+	// 背景
+	backGround = std::make_unique<Sprite>(filePath.c_str());
 }
 
 // 終了化
@@ -53,18 +74,6 @@ void G2_Sundome_Result::Update(float elapsedTime)
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
 	fade->Update(elapsedTime);
-
-	//! スコアを代入
-	int score[3];
-	for (int i = 0; i < 3; i++)
-		score[i] = G2_Sundome::score[i];
-
-	//! 合計スコアを計算
-	int totalScore = score[0] + score[1] + score[2];
-	this->totalScore = totalScore;
-
-	if (this->totalScore >= 80)
-		SceneGameSelect::clear.sundome = true;
 
 	// スコア演出処理
 	DirectorScore(elapsedTime);
@@ -118,6 +127,18 @@ void G2_Sundome_Result::Render()
 			0, 0, textureWidth, textureHeight,
 			0,
 			0.5f, 0.5f, 0.5f, 1);
+
+		if (!SceneGameSelect::clear.sundome)
+		{
+			hint->Render(dc,
+				0, 0, screenWidth, screenHeight,
+				0, 0, textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+		}
+
+		textureWidth = static_cast<float>(result->GetTextureWidth());
+		textureHeight = static_cast<float>(result->GetTextureHeight());
 
 		// リザルト文字
 		result->Render(dc,

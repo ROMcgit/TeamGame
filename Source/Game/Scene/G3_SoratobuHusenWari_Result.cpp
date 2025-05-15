@@ -11,11 +11,11 @@
 // 初期化
 void G3_SoratobuHusenWari_Result::Initialize()
 {
-	// 背景
-	backGround = std::make_unique<Sprite>("Data/Sprite/GameSelect/3.png");
-
 	// リザルト
 	result = std::make_unique<Sprite>("Data/Sprite/Result.png");
+
+	// ヒント
+	hint = std::make_unique<Sprite>("Data/Sprite/3.SoratobuHusenWari/Hint.png");
 
 	// スコア
 	score = std::make_unique<Text>();
@@ -36,6 +36,15 @@ void G3_SoratobuHusenWari_Result::Initialize()
 
 	if (G3_SoratobuHusenWari::score >= 100)
 		SceneGameSelect::clear.soratobuHusenWari = true;
+
+	std::string filePath = "";
+	if (SceneGameSelect::clear.soratobuHusenWari)
+		filePath = "Data/Sprite/3.SoratobuHusenWari/Bonus.png";
+	else
+		filePath = "Data/Sprite/GameSelect/3.png";
+
+	// 背景
+	backGround = std::make_unique<Sprite>(filePath.c_str());
 }
 
 // 終了化
@@ -99,12 +108,28 @@ void G3_SoratobuHusenWari_Result::Render()
 		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
 		float textureWidth = static_cast<float>(backGround->GetTextureWidth());
 		float textureHeight = static_cast<float>(backGround->GetTextureHeight());
+		
+		float color = SceneGameSelect::clear.soratobuHusenWari ? 0.5f : 1.0f;
+		
+		
 		// タイトルスプライト描画
 		backGround->Render(dc,
 			0, 0, screenWidth, screenHeight,
 			0, 0, textureWidth, textureHeight,
 			0,
-			0.5f, 0.5f, 0.5f, 1);
+			color, color, color, 1);
+
+		if (!SceneGameSelect::clear.soratobuHusenWari)
+		{
+			hint->Render(dc,
+				0, 0, screenWidth, screenHeight,
+				0, 0, textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+		}
+
+		textureWidth = static_cast<float>(result->GetTextureWidth());
+		textureHeight = static_cast<float>(result->GetTextureHeight());
 
 		// リザルト
 		result->Render(dc,

@@ -99,7 +99,7 @@ void EnemyEye::SpriteRender(ID3D11DeviceContext* dc, Graphics& graphics)
 void EnemyEye::DrawDebugPrimitive()
 {
 	// 基底クラスのデバッグプリミティブ描画
-	Enemy::DrawDebugPrimitive();
+	//Enemy::DrawDebugPrimitive();
 
 	DebugRenderer* debugRender = Graphics::Instance().GetDebugRenderer();
 

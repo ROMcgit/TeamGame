@@ -215,7 +215,7 @@ void G0_Onigokko::Finalize()
 void G0_Onigokko::Update(float elapsedTime)
 {
 	// カメラコントローラー更新処理
-	if (!movieScene)
+	if (!movieScene || cameraMovieScene == CameraMovieScene::OniMove)
 	{
 		DirectX::XMFLOAT3 cameraTarget = player->GetPosition();
 		cameraTarget.y += player->GetHeight() * 0.6f;

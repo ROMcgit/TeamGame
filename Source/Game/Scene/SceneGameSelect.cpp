@@ -106,7 +106,7 @@ void SceneGameSelect::Initialize()
 
 	float setPosX = screenWidth * 0.5f;
 	//! ボーナス画像
-	for(int i = 0; i < 6; i++)
+	for(int i = 0; i < 7; i++)
 	{
 		std::string filePath = "";
 
@@ -118,6 +118,7 @@ void SceneGameSelect::Initialize()
 		case 4: filePath = "Data/Sprite/3.SoratobuHusenWari/Bonus.png";  break;
 		case 5: filePath = "Data/Sprite/4.OssanTataki/Bonus.png";        break;
 		case 6: filePath = "Data/Sprite/5.Asibawatari/Bonus.png";        break;
+		case 7: filePath = "Data/Sprite/GameComplete.png";               break;
 		default:
 			break;
 		}
@@ -180,6 +181,8 @@ void SceneGameSelect::Finalize()
 
 	//! エフェクトを全て破棄する
 	EffectManager::Instance().Cleanup();
+
+	GameSelectManager::Instance().Clear();
 }
 
 // 更新処理
@@ -293,7 +296,7 @@ void SceneGameSelect::Render()
 	//! シャドウマップ
 	{
 		// ボーナス画像を表示しないなら
-		if ((!viewBonusImage || viewBonusImage) && fade->GetFadeOpacity() < 1.0f)
+		if ((!viewBonusImage) || (viewBonusImage && fade->GetFadeOpacity() < 1.0f))
 		{
 			//! シャドウマップ開始
 			shadowMap.Begin(rc);
@@ -315,6 +318,7 @@ void SceneGameSelect::Render()
 
 	//! レンダーターゲット
 	{
+		if ((!viewBonusImage) || (viewBonusImage && fade->GetFadeOpacity() < 1.0f))
 		//! レンダーターゲットに描画開始
 		renderTarget->Begin();
 	}
@@ -344,7 +348,7 @@ void SceneGameSelect::Render()
 	// 3Dモデル描画
 	{
 		// ボーナス画像を表示しないなら
-		if ((!viewBonusImage || viewBonusImage) && fade->GetFadeOpacity() < 1.0f)
+		if ((!viewBonusImage) || (viewBonusImage && fade->GetFadeOpacity() < 1.0f))
 		{
 			Shader* shader = graphics.GetDefaultLitShader();
 			shader->Begin(dc, rc);
@@ -370,7 +374,7 @@ void SceneGameSelect::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -381,24 +385,27 @@ void SceneGameSelect::Render()
 		EnemyManager::Instance().DrawDebugPrimitive();
 
 		GameSelectManager::Instance().DrawDebugPrimitive();
-
-		// ラインレンダラ描画実行
-		graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
-
-		// デバッグレンダラ描画実行
-		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 	}
 #endif // DEBUG
 
+	// ラインレンダラ描画実行
+	graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
+
+	// デバッグレンダラ描画実行
+	graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
+
 	//! シェーダーを出す
 	{
-		//! レンダーターゲットへ描画終了
-		renderTarget->End();
-		//! スクリーンをポストエフェクトシェーダーで描画
-		Camera::Instance().CreatePostEffect();
-		Camera::Instance().SetPostEffectStatusOnce();
-		//! スクリーンをポストエフェクトシェーダーで描画
-		renderTarget->Render();
+		if ((!viewBonusImage) || (viewBonusImage && fade->GetFadeOpacity() < 1.0f))
+		{
+			//! レンダーターゲットへ描画終了
+			renderTarget->End();
+			//! スクリーンをポストエフェクトシェーダーで描画
+			Camera::Instance().CreatePostEffect();
+			Camera::Instance().SetPostEffectStatusOnce();
+			//! スクリーンをポストエフェクトシェーダーで描画
+			renderTarget->Render();
+		}
 	}
 
 	{
@@ -409,7 +416,7 @@ void SceneGameSelect::Render()
 		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
 		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
 		
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < 7; i++)
 		{
 			float textureWidth = static_cast<float>(bonusImage[i]->GetTextureWidth());
 			float textureHeight = static_cast<float>(bonusImage[i]->GetTextureHeight());
@@ -511,6 +518,25 @@ void SceneGameSelect::Render()
 				0,
 				1, 1, 1, bonusImageOpacity);
 #endif
+		}
+
+		if (clear.onigokko
+		 && clear.darumasangaKoronda
+		 && clear.sundome
+		 && clear.soratobuHusenWari
+		 && clear.ossanTataki
+		 && clear.asibawatari)
+			gameComplete = true;
+
+		if (!gameComplete)
+		{
+			hint[6]->RenderCenter(dc,
+				bonusImagePosX[6], screenHeight * 0.5f,
+				screenWidth * 0.75f, screenHeight * 0.75f,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, bonusImageOpacity);
 		}
 	}
 	
@@ -680,6 +706,7 @@ void SceneGameSelect::UpdateBonusImage(float elapsedTime)
 	if (clear.soratobuHusenWari)  bonusImageColor[3] = 1;
 	if (clear.ossanTataki)        bonusImageColor[4] = 1;
 	if (clear.asibawatari)        bonusImageColor[5] = 1;
+	if (gameComplete)             bonusImageColor[6] = 1;
 
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
@@ -725,7 +752,7 @@ void SceneGameSelect::UpdateBonusImage(float elapsedTime)
 		{
 			if (bonusImageNum <= 1) return;
 
-			for (int i = 0; i < 6; i++)
+			for (int i = 0; i < 7; i++)
 			{
 				startBonusImagePosX[i] = bonusImagePosX[i];
 				endBonusImagePosX[i] = bonusImagePosX[i] + screenWidth;
@@ -737,9 +764,9 @@ void SceneGameSelect::UpdateBonusImage(float elapsedTime)
 		break;
 		case GamePad::BTN_RIGHT:
 		{
-			if (bonusImageNum >= 6) return;
+			if (bonusImageNum >= 7) return;
 
-			for (int i = 0; i < 6; i++)
+			for (int i = 0; i < 7; i++)
 			{
 				startBonusImagePosX[i] = bonusImagePosX[i];
 				endBonusImagePosX[i] = bonusImagePosX[i] - screenWidth;
@@ -753,7 +780,7 @@ void SceneGameSelect::UpdateBonusImage(float elapsedTime)
 		{
 			if (button != GamePad::BTN_RIGHT && button != GamePad::BTN_LEFT) return;
 
-			for (int i = 0; i < 6; i++)
+			for (int i = 0; i < 7; i++)
 			{
 				bonusImagePosX[i] = endBonusImagePosX[i];
 			}
@@ -769,7 +796,7 @@ void SceneGameSelect::UpdateBonusImage(float elapsedTime)
 
 		if (t < 1.0f)
 		{
-			for (int i = 0; i < 6; i++)
+			for (int i = 0; i < 7; i++)
 			{
 				bonusImagePosX[i] = Easing::EaseOut(startBonusImagePosX[i], endBonusImagePosX[i], t);
 			}

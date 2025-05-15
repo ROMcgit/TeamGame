@@ -91,17 +91,18 @@ private:
 	DirectX::XMFLOAT2 gameSelectSpritePos;
 
 	bool viewBonusImage = false;
-	std::unique_ptr<Sprite> hint[6];
-	std::unique_ptr<Sprite> bonusImage[6];
-	std::unique_ptr<Sprite> bonusImageFrame[6];
+	std::unique_ptr<Sprite> hint[7];
+	std::unique_ptr<Sprite> bonusImage[7];
+	std::unique_ptr<Sprite> bonusImageFrame[7];
 	DirectX::XMFLOAT3 bonusImageFrameColor = { 0, 0.69f, 1.0f };
+	bool gameComplete = false;
 
 	int   bonusImageNum = 1;
 	float bonusImageOpacity = 0.0f;
-	float bonusImagePosX[6];
-	float startBonusImagePosX[6];
-	float endBonusImagePosX[6];
-	float bonusImageColor[6];
+	float bonusImagePosX[7];
+	float startBonusImagePosX[7];
+	float endBonusImagePosX[7];
+	float bonusImageColor[7];
 	bool bonusImageMove = false;
 	float bonusImageElapsedTime = 0.0f;
 	float inputWaitTime = 0.0f;

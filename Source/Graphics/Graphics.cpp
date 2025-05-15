@@ -171,7 +171,7 @@ Graphics::Graphics(HWND hWnd)
 
 		environmentMap = std::make_unique<HDRTexture>();
 		environmentMap->Load(
-			"Data/Environment/rogland_clear_night_4k.hdr"
+			"Data/Environment/Barrier_Demons.hdr"
 		);
 		// シェーダーのテクスチャSlot15にセット
 		environmentMap->Set(15);

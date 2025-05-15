@@ -7,8 +7,8 @@
 #include "Input/Input.h"
 #include "Game/Stage/StageManager.h"
 #include "Game/Stage/G1_StageDarumasangaKoronda.h"
-#include "Game/Stage/G2_StageBumpiness.h"
-#include "Game/Stage/G1_StageDarumasangaKoronda.h"
+#include "Game/Stage/G1_StageBumpiness.h"
+#include "Game/Stage/G1_StageEndHole.h"
 #include "Game/Stage/StageMoveFloor.h"
 #include "SceneManager.h"
 #include "SceneLoading.h"
@@ -41,25 +41,42 @@ void G1_DarumasangaKoronda::Initialize()
 	{
 		float posZ = 54.0f + (i * 110.0f);
 
+		StageManager& stageManager = StageManager::Instance();
+
 		switch (i + 1)
 		{
 		case 1:
+		case 2:
 		{
-			StageManager& stageManager = StageManager::Instance();
+			
 			std::unique_ptr<G1_StageDarumasangaKoronda> stageMain = std::make_unique<G1_StageDarumasangaKoronda>();
 
 			stageMain->SetPosition(DirectX::XMFLOAT3(0, 110.0f, posZ));
 			stageManager.Register(std::move(stageMain));
 		}
 		break;
-		case 2:
-		{
-
-		}
-		break;
 		case 3:
 		{
+			std::unique_ptr<G1_StageBumpiness> stageMain = std::make_unique<G1_StageBumpiness>();
 
+			stageMain->SetPosition(DirectX::XMFLOAT3(0, 110.0f, posZ));
+			stageManager.Register(std::move(stageMain));
+		}
+		break;
+		case 4:
+		{
+			std::unique_ptr<G1_StageEndHole> stageMain = std::make_unique<G1_StageEndHole>();
+
+			stageMain->SetPosition(DirectX::XMFLOAT3(0, 110.0f, posZ));
+			stageManager.Register(std::move(stageMain));
+		}
+		break;
+		case 5:
+		{
+			std::unique_ptr<G1_StageBumpiness> stageMain = std::make_unique<G1_StageBumpiness>();
+
+			stageMain->SetPosition(DirectX::XMFLOAT3(0, 110.0f, posZ));
+			stageManager.Register(std::move(stageMain));
 		}
 		break;
 		default:
@@ -112,7 +129,7 @@ void G1_DarumasangaKoronda::Initialize()
 		1.0f, 0.5f);
 
 	//! タイマー
-	timer = std::make_unique<Timer>(true, 3, 0);
+	timer = std::make_unique<Timer>(true, 2, 30);
 }
 
 // 終了化

@@ -168,6 +168,9 @@ void EnemyEye::UpdateWaitState(float elapsedTime)
 	if (!verticalMove) velocity.x += moveMinus ? -1 : 1;
 	else velocity.z += moveMinus ? -1 : 1;
 
+	velocity.x = std::clamp(velocity.x, -8.0f, 8.0f);
+	velocity.z = std::clamp(velocity.z, -8.0f, 8.0f);
+
 	actionTimer += elapsedTime;
 	if (actionTimer > 5.0f)
 	{

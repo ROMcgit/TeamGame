@@ -53,6 +53,13 @@ void Player1_DarumasangaKoronda::Update(float elapsedTime)
 {
 	if (CameraController::debugCamera) return;
 
+	//! 落ちたら戻す
+	if (position.y < 105.0f)
+	{
+		position.y = 118.0f;
+		position.z = position.z - 20.0f;
+	}
+
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
 	// ムービー中なら待機ステートへ遷移

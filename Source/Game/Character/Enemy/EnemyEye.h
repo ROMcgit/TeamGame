@@ -93,4 +93,7 @@ private:
 
 	bool verticalMove = false;
 	bool moveMinus = false;
+
+	float velocityXMax = 0.0f;
+	float velocityZMax = 0.0f;
 };

@@ -126,9 +126,11 @@ void SceneGameSelect::Initialize()
 
 		bonusImagePosX[i] = setPosX;
 		setPosX += screenWidth;
-		bonusImageColor[i] = 1.0f;
 
 		bonusImageFrame[i] = std::make_unique<Sprite>();
+
+		filePath = "Data/Sprite/Bonus/Hint" + std::to_string(i) + ".png";
+		hint[i] = std::make_unique<Sprite>(filePath.c_str());
 	}
 	
 
@@ -428,6 +430,88 @@ void SceneGameSelect::Render()
 				0,
 				bonusImageColor[i], bonusImageColor[i], bonusImageColor[i], bonusImageOpacity);
 		}
+
+		float textureWidth = static_cast<float>(hint[0]->GetTextureWidth());
+		float textureHeight = static_cast<float>(hint[0]->GetTextureHeight());
+
+		//! ‚¨‚É‚²‚Á‚±
+		if (!clear.onigokko)
+		{
+#if 1
+			hint[0]->RenderCenter(dc,
+				bonusImagePosX[0], screenHeight * 0.5f,
+				screenWidth * 0.75f, screenHeight * 0.75f,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, bonusImageOpacity);
+#endif
+		}
+		//! ‚¾‚é‚Ü‚³‚ñ‚ª“]‚ñ‚¾
+		if (!clear.darumasangaKoronda)
+		{
+#if 1
+			hint[1]->RenderCenter(dc,
+				bonusImagePosX[1], screenHeight * 0.5f,
+				screenWidth * 0.75f, screenHeight * 0.75f,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, bonusImageOpacity);
+#endif
+		}
+		//! ¡Ž~‚ß
+		if (!clear.sundome)
+		{
+#if 1
+			hint[2]->RenderCenter(dc,
+				bonusImagePosX[2], screenHeight * 0.5f,
+				screenWidth * 0.75f, screenHeight * 0.75f,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, bonusImageOpacity);
+#endif
+		}
+		//! ‹ó”ò‚Ô•—‘DŠ„‚è
+		if (!clear.soratobuHusenWari)
+		{
+#if 1
+			hint[3]->RenderCenter(dc,
+				bonusImagePosX[3], screenHeight * 0.5f,
+				screenWidth * 0.75f, screenHeight * 0.75f,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, bonusImageOpacity);
+#endif
+		}
+		//! ‚¨‚Á‚³‚ñ’@‚«
+		if (!clear.ossanTataki)
+		{
+#if 1
+			hint[4]->RenderCenter(dc,
+				bonusImagePosX[4], screenHeight * 0.5f,
+				screenWidth * 0.75f, screenHeight * 0.75f,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, bonusImageOpacity);
+#endif
+		}
+		//! ‘«ê“n‚è
+		if (!clear.asibawatari)
+		{
+#if 1
+			hint[5]->RenderCenter(dc,
+				bonusImagePosX[5], screenHeight * 0.5f,
+				screenWidth * 0.75f, screenHeight * 0.75f,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, bonusImageOpacity);
+#endif
+		}
 	}
 	
 #ifndef _DEBUG
@@ -681,7 +765,7 @@ void SceneGameSelect::UpdateBonusImage(float elapsedTime)
 	if (bonusImageMove)
 	{
 		bonusImageElapsedTime += elapsedTime;
-		float t = bonusImageElapsedTime / 1.0f;
+		float t = bonusImageElapsedTime / 0.8f;
 
 		if (t < 1.0f)
 		{

@@ -61,9 +61,6 @@
     <Filter Include="Source\Scene\GameScene\1.だるまさんが転んだ">
       <UniqueIdentifier>{84f86738-c6c4-4ced-a8ea-4aab95ac6ad4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Scene\GameScene\2.寸止め">
-      <UniqueIdentifier>{733b4247-8dbd-4ea2-9101-6a52852e777a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Scene\GameScene\4.おっさん叩き">
       <UniqueIdentifier>{c26c3a82-0ab9-40da-ac3b-1a2bb627a17a}</UniqueIdentifier>
     </Filter>
@@ -216,6 +213,9 @@
     </Filter>
     <Filter Include="Source\Character\GameSelect\5_足場渡り">
       <UniqueIdentifier>{51b0879d-b333-4dae-9eba-2fac18f817b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\GameScene\2.寸止め">
+      <UniqueIdentifier>{733b4247-8dbd-4ea2-9101-6a52852e777a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

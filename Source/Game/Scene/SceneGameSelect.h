@@ -91,6 +91,7 @@ private:
 	DirectX::XMFLOAT2 gameSelectSpritePos;
 
 	bool viewBonusImage = false;
+	std::unique_ptr<Sprite> hint[6];
 	std::unique_ptr<Sprite> bonusImage[6];
 	std::unique_ptr<Sprite> bonusImageFrame[6];
 	DirectX::XMFLOAT3 bonusImageFrameColor = { 0, 0.69f, 1.0f };

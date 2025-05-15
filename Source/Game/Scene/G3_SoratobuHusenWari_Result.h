@@ -38,6 +38,7 @@ private:
 
 private:
 	std::unique_ptr<Sprite> backGround;
+	std::unique_ptr<Sprite> result;
 	std::unique_ptr<Fade> fade;
 	bool setFade = false; // フェードを設定したか
 

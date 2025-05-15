@@ -11,8 +11,11 @@
 // 初期化
 void G2_Sundome_Result::Initialize()
 {
-	// スプライト初期化
+	// 背景
 	backGround = std::make_unique<Sprite>("Data/Sprite/GameSelect/2.png");
+
+	// リザルト
+	result = std::make_unique<Sprite>("Data/Sprite/Result.png");
 
 	fade = std::make_unique<Fade>();
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
@@ -33,10 +36,10 @@ void G2_Sundome_Result::Initialize()
 	 startTextPosX = textPos[0].x;
 
 	float screenHeight = static_cast<float>(Graphics::Instance().GetScreenHeight());
-	textPos[0].y = screenHeight * 0.2f;
-	textPos[1].y = screenHeight * 0.4f;
-	textPos[2].y = screenHeight * 0.6f;
-	textPos[3].y = screenHeight * 0.8f;
+	textPos[0].y = screenHeight * 0.25f;
+	textPos[1].y = screenHeight * 0.45f;
+	textPos[2].y = screenHeight * 0.65f;
+	textPos[3].y = screenHeight * 0.85f;
 }
 
 // 終了化
@@ -116,6 +119,13 @@ void G2_Sundome_Result::Render()
 			0,
 			0.5f, 0.5f, 0.5f, 1);
 
+		// リザルト文字
+		result->Render(dc,
+			0, 0, screenWidth, screenHeight,
+			0, 0, textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1);
+
 		// スコア
 		for (int i = 0; i < 3; i++)
 		{
@@ -165,6 +175,9 @@ void G2_Sundome_Result::DirectorScore(float elapsedTime)
 {
 	if (directorFinish) return;
 
+	float screeenWidth = Graphics::Instance().GetScreenWidth();
+	float end = screeenWidth * 0.8f;
+
 	switch (directorStep)
 	{
 	case 0:
@@ -181,7 +194,7 @@ void G2_Sundome_Result::DirectorScore(float elapsedTime)
 	//! textPos[textNum].xの変更
 	case 1:
 	{
-		float screeenWidth = Graphics::Instance().GetScreenWidth();
+		
 
 		directorTime += elapsedTime;
 
@@ -189,7 +202,7 @@ void G2_Sundome_Result::DirectorScore(float elapsedTime)
 
 		if (t < 1.0f)
 		{
-			textPos[textNum].x = Easing::EaseOut(startTextPosX, screeenWidth * 0.7f, t);
+			textPos[textNum].x = Easing::EaseOut(startTextPosX, end, t);
 		}
 		else
 		{

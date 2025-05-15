@@ -11,8 +11,11 @@
 // 初期化
 void G4_OssanTataki_Result::Initialize()
 {
-	// スプライト初期化
+	// 背景
 	backGround = std::make_unique<Sprite>("Data/Sprite/GameSelect/4.png");
+
+	// リザルト
+	result = std::make_unique<Sprite>("Data/Sprite/Result.png");
 
 	// スコア
 	score = std::make_unique<Text>();
@@ -102,6 +105,13 @@ void G4_OssanTataki_Result::Render()
 			0, 0, textureWidth, textureHeight,
 			0,
 			0.5f, 0.5f, 0.5f, 1);
+
+		// リザルト
+		result->Render(dc,
+			0, 0, screenWidth, screenHeight,
+			0, 0, textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1);
 
 		// スコア
 		score->RenderOku(dc, left, G4_OssanTataki::score, false,

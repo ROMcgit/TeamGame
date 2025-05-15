@@ -44,7 +44,12 @@ private:
 		const DirectX::XMFLOAT4X4& view,
 		const DirectX::XMFLOAT4X4& projection);
 
+	// ボーナス画像の表示処理
+	void UpdateBonusImage(float elapsedTime);
+
+
 public:
+#if 1
 	enum class GameSelectA
 	{
 		Onigokko,           // おにごっこ
@@ -72,6 +77,8 @@ public:
 
 	static Clear clear;
 
+#endif
+
 private:
 	std::unique_ptr <Player0_Onigokko> player;
 	std::unique_ptr <CameraController> cameraController;
@@ -82,6 +89,21 @@ private:
 	std::unique_ptr<Sprite> backGround;
 	std::unique_ptr<Sprite> gameSelectSprite[6];
 	DirectX::XMFLOAT2 gameSelectSpritePos;
+
+	bool viewBonusImage = false;
+	std::unique_ptr<Sprite> bonusImage[6];
+	std::unique_ptr<Sprite> bonusImageFrame[6];
+	DirectX::XMFLOAT3 bonusImageFrameColor = { 0, 0.69f, 1.0f };
+
+	int   bonusImageNum = 1;
+	float bonusImageOpacity = 0.0f;
+	float bonusImagePosX[6];
+	float startBonusImagePosX[6];
+	float endBonusImagePosX[6];
+	float bonusImageColor[6];
+	bool bonusImageMove = false;
+	float bonusImageElapsedTime = 0.0f;
+	float inputWaitTime = 0.0f;
 
 	std::unique_ptr<Fade> fade;
 	bool setFade = false;

@@ -2,6 +2,7 @@
 #include "SceneGameSelect.h"
 #include "Game/Scene/SceneLoading.h"
 #include "Game/Scene/SceneManager.h"
+#include "Other/Easing.h"
 
 #include "Game/Scene/G0_Onigokko_Tutorial.h"
 #include "Game/Scene/G1_DarumasangaKoronda_Tutorial.h"
@@ -103,6 +104,34 @@ void SceneGameSelect::Initialize()
 		gameSelectSprite[i] = std::make_unique<Sprite>(filePath.c_str());
 	}
 
+	float setPosX = screenWidth * 0.5f;
+	//! ボーナス画像
+	for(int i = 0; i < 6; i++)
+	{
+		std::string filePath = "";
+
+		switch (i + 1)
+		{
+		case 1: filePath = "Data/Sprite/0.Onigokko/Bonus.png";           break;
+		case 2: filePath = "Data/Sprite/1.DarumasangaKoronda/Bonus.png"; break;
+		case 3: filePath = "Data/Sprite/2.Sundome/Bonus.png";            break;
+		case 4: filePath = "Data/Sprite/3.SoratobuHusenWari/Bonus.png";  break;
+		case 5: filePath = "Data/Sprite/4.OssanTataki/Bonus.png";        break;
+		case 6: filePath = "Data/Sprite/5.Asibawatari/Bonus.png";        break;
+		default:
+			break;
+		}
+
+		bonusImage[i] = std::make_unique<Sprite>(filePath.c_str());
+
+		bonusImagePosX[i] = setPosX;
+		setPosX += screenWidth;
+		bonusImageColor[i] = 1.0f;
+
+		bonusImageFrame[i] = std::make_unique<Sprite>();
+	}
+	
+
 	GameSelectManager& gameSelectManager = GameSelectManager::Instance();
 
 	float posX = 65.0f;
@@ -178,7 +207,8 @@ void SceneGameSelect::Update(float elapsedTime)
 	// プレイヤーの位置制限
 	PlayerPositionControll();
 	// プレイヤー更新処理
-	player->Update(elapsedTime);
+	if(!viewBonusImage)
+		player->Update(elapsedTime);
 
 	fade->Update(elapsedTime);
 
@@ -189,6 +219,9 @@ void SceneGameSelect::Update(float elapsedTime)
 	EffectManager::Instance().Update(elapsedTime);
 
 	GameSelectManager::Instance().Update(elapsedTime);
+
+	// ボーナス画像の更新処理
+	UpdateBonusImage(elapsedTime);
 
 	if (sceneChange)
 	{
@@ -257,8 +290,8 @@ void SceneGameSelect::Render()
 
 	//! シャドウマップ
 	{
-		// ポーズ画面じゃないなら
-		//if (pause->GetPause_BurioHuntersOpacity() < 1.0f)
+		// ボーナス画像を表示しないなら
+		if ((!viewBonusImage || viewBonusImage) && fade->GetFadeOpacity() < 1.0f)
 		{
 			//! シャドウマップ開始
 			shadowMap.Begin(rc);
@@ -308,23 +341,26 @@ void SceneGameSelect::Render()
 
 	// 3Dモデル描画
 	{
-		Shader* shader = graphics.GetDefaultLitShader();
-		shader->Begin(dc, rc);
-		// ステージ描画
-		StageManager::Instance().Render(dc, shader);
+		// ボーナス画像を表示しないなら
+		if ((!viewBonusImage || viewBonusImage) && fade->GetFadeOpacity() < 1.0f)
+		{
+			Shader* shader = graphics.GetDefaultLitShader();
+			shader->Begin(dc, rc);
+			// ステージ描画
+			StageManager::Instance().Render(dc, shader);
 
-		// カメラの位置を描画
-		CameraController::Instance().RenderCameraTarget(dc, shader);
+			// カメラの位置を描画
+			CameraController::Instance().RenderCameraTarget(dc, shader);
 
-		GameSelectManager::Instance().Render(dc, shader);
+			GameSelectManager::Instance().Render(dc, shader);
 
-		// プレイヤー描画
-		player->Render(dc, shader);
+			// プレイヤー描画
+			player->Render(dc, shader);
 
-		//エネミー描画
-		EnemyManager::Instance().Render(dc,shader);
-		shader->End(dc);
-
+			//エネミー描画
+			EnemyManager::Instance().Render(dc, shader);
+			shader->End(dc);
+		}
 	}
 
 	// 3Dエフェクト描画
@@ -367,6 +403,31 @@ void SceneGameSelect::Render()
 		RenderGameSprite(dc, rc.view, rc.projection);
 
 		fade->Render(dc, graphics);
+
+		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
+		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
+		
+		for (int i = 0; i < 6; i++)
+		{
+			float textureWidth = static_cast<float>(bonusImage[i]->GetTextureWidth());
+			float textureHeight = static_cast<float>(bonusImage[i]->GetTextureHeight());
+
+			bonusImageFrame[i]->RenderCenter(dc,
+				bonusImagePosX[i], screenHeight * 0.5,
+				screenWidth * 0.77f, screenHeight * 0.78f,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				bonusImageFrameColor.x, bonusImageFrameColor.y, bonusImageFrameColor.z, bonusImageOpacity);
+
+			bonusImage[i]->RenderCenter(dc,
+				bonusImagePosX[i], screenHeight * 0.5f,
+				screenWidth * 0.75f, screenHeight * 0.75f,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				bonusImageColor[i], bonusImageColor[i], bonusImageColor[i], bonusImageOpacity);
+		}
 	}
 	
 #ifndef _DEBUG
@@ -375,6 +436,15 @@ void SceneGameSelect::Render()
 	{
 		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
 		{
+			ImGui::ColorEdit3("BonusImageFrameColor", &bonusImageFrameColor.x);
+			ImGui::InputFloat3("BonusImageFrameColorNum", &bonusImageFrameColor.x);
+
+			for (int i = 0; i < 6; i++)
+			{
+				std::string name = "BonusImagePosX" + std::to_string(i + 1);
+				ImGui::DragFloat(name.c_str(), &bonusImagePosX[i]);
+			}
+
 			for(int i = 0; i < 6; i++)
 			{
 				std::string name = "GameSelectSpritePos" + std::to_string(i + 1);
@@ -515,4 +585,117 @@ void SceneGameSelect::RenderGameSprite(ID3D11DeviceContext* dc, const DirectX::X
 			0,
 			1, 1, 1, 0.5f);
 	}
+}
+
+// ボーナス画像の表示処理
+void SceneGameSelect::UpdateBonusImage(float elapsedTime)
+{
+	if (clear.onigokko)           bonusImageColor[0] = 1;
+	if (clear.darumasangaKoronda) bonusImageColor[1] = 1;
+	if (clear.sundome)            bonusImageColor[2] = 1;
+	if (clear.soratobuHusenWari)  bonusImageColor[3] = 1;
+	if (clear.ossanTataki)        bonusImageColor[4] = 1;
+	if (clear.asibawatari)        bonusImageColor[5] = 1;
+
+	GamePad& gamePad = Input::Instance().GetGamePad();
+
+	if (gamePad.GetButtonDown() & GamePad::BTN_START && !fade->GetFade())
+	{
+		viewBonusImage = !viewBonusImage;
+
+		float startFade = viewBonusImage ? 0.0f : 1.0f;
+		float endFade = viewBonusImage   ? 1.0f : 0.0f;
+
+		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+			startFade, endFade,
+			0.5f);
+	}
+
+	//! 表示しないなら
+	if (!viewBonusImage) 
+	{
+		if (bonusImageOpacity > 0.0f)
+			bonusImageOpacity -= 3 * elapsedTime;
+		else
+			bonusImageOpacity = 0.0f;
+
+		return;
+	}
+
+	if (bonusImageOpacity < 1.0f)
+		bonusImageOpacity += 3 * elapsedTime;
+	else
+		bonusImageOpacity = 1.0f;
+
+	if (inputWaitTime > 0.0f) inputWaitTime -= elapsedTime;
+
+	if ((gamePad.GetButtonDown() || gamePad.GetButtonHeld()) && !bonusImageMove && inputWaitTime <= 0.0f && !fade->GetFade())
+	{
+		int button = gamePad.GetButtonDown() | gamePad.GetButtonHeld();
+
+		float screenWidth = static_cast<float>(Graphics::Instance().GetScreenWidth());
+
+		switch (button)
+		{
+		case GamePad::BTN_LEFT:
+		{
+			if (bonusImageNum <= 1) return;
+
+			for (int i = 0; i < 6; i++)
+			{
+				startBonusImagePosX[i] = bonusImagePosX[i];
+				endBonusImagePosX[i] = bonusImagePosX[i] + screenWidth;
+			}
+
+			bonusImageNum--;
+			bonusImageMove = true;
+		}
+		break;
+		case GamePad::BTN_RIGHT:
+		{
+			if (bonusImageNum >= 6) return;
+
+			for (int i = 0; i < 6; i++)
+			{
+				startBonusImagePosX[i] = bonusImagePosX[i];
+				endBonusImagePosX[i] = bonusImagePosX[i] - screenWidth;
+			}
+
+			bonusImageNum++;
+			bonusImageMove = true;
+		}
+		break;
+		default:
+		{
+			if (button != GamePad::BTN_RIGHT && button != GamePad::BTN_LEFT) return;
+
+			for (int i = 0; i < 6; i++)
+			{
+				bonusImagePosX[i] = endBonusImagePosX[i];
+			}
+		}
+			break;
+		}
+	}
+
+	if (bonusImageMove)
+	{
+		bonusImageElapsedTime += elapsedTime;
+		float t = bonusImageElapsedTime / 1.0f;
+
+		if (t < 1.0f)
+		{
+			for (int i = 0; i < 6; i++)
+			{
+				bonusImagePosX[i] = Easing::EaseOut(startBonusImagePosX[i], endBonusImagePosX[i], t);
+			}
+		}
+		else
+		{
+			bonusImageElapsedTime = 0.0f;
+			inputWaitTime = 0.1f;
+			bonusImageMove = false;
+		}
+	}
+	else return;
 }

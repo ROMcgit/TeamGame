@@ -73,7 +73,7 @@ void G3_SoratobuHusenWari::Initialize()
 
 	// プレイヤー初期化
 	player = std::make_unique<Player3_SoratobuHusenWari>();
-	player->SetPosition(DirectX::XMFLOAT3(0, 20, 0));
+	player->SetPosition(DirectX::XMFLOAT3(0, 22, 0));
 
 	// カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
@@ -437,16 +437,7 @@ void G3_SoratobuHusenWari::NewCloud(float elapsedTime)
 	}
 
 	int collisionAttackCount = collisionAttackManager.GetCollisionAttackCount();
-	int maxCollisionAttackCount = 5;
-
-	if (G3_SoratobuHusenWari::gameTimer < 30.0f)
-		maxCollisionAttackCount = 10;
-	else if (G3_SoratobuHusenWari::gameTimer < 100.0f)
-		maxCollisionAttackCount = 3.0f;
-	else if (G3_SoratobuHusenWari::gameTimer < 150.0f)
-		maxCollisionAttackCount = 1.5f;
-	else
-		maxCollisionAttackCount = 0.5f;
+	int maxCollisionAttackCount = 20;
 
 	if (collisionAttackCount < maxCollisionAttackCount)
 	{

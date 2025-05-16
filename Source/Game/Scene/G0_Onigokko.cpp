@@ -526,7 +526,7 @@ void G0_Onigokko::UpdateCameraMovie(float elapsedTime)
 			{
 				if (player->GetHp() <= 0)
 				{
-					std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneTitle>());
+					std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G0_Onigokko_GameOver>());
 					// シーンマネージャーにローディングシーンへの切り替えを指示
 					SceneManager::Instance().ChangeScene(std::move(loadingScene));
 				}
@@ -590,7 +590,7 @@ void G0_Onigokko::UpdateCameraMovie(float elapsedTime)
 			}
 			else if (!fade->GetFade())
 			{
-				std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneTitle>());
+				std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G0_Onigokko_Clear>());
 				// シーンマネージャーにローディングシーンへの切り替えを指示
 				SceneManager::Instance().ChangeScene(std::move(loadingScene));
 			}

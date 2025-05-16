@@ -96,7 +96,7 @@ void G3_SoratobuHusenWari_Tutorial::Render()
 			0, 0,
 			textureWidth, textureHeight,
 			0,
-			0.5f, 0.5f, 0.5f, 1.0f);
+			1.0f, 1.0f, 1.0f, 1.0f);
 
 		for (int i = 0; i < 3; i++)
 		{

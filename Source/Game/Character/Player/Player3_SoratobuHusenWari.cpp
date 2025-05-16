@@ -8,6 +8,7 @@
 #include "Game/Character/Projectile/ProjectileStraight.h"
 #include "Game/Character/Projectile/ProjectileHoming.h"
 #include "Game/Camera/CameraController.h"
+#include "Game/Scene/G3_SoratobuHusenWari.h"
 
 static Player3_SoratobuHusenWari* instance = nullptr;
 
@@ -36,7 +37,7 @@ Player3_SoratobuHusenWari::Player3_SoratobuHusenWari()
 	opacity = 0.8f;
 
 	// 重力
-	gravity = gravityReset = 0.3f;
+	gravity = gravityReset = 0.25f;
 
 	//! プレイヤーUI
 	//uiSprite[0] = std::make_unique <Sprite>("Data/Sprite/5.UI/CuppyUI.png");
@@ -99,6 +100,28 @@ void Player3_SoratobuHusenWari::Update(float elapsedTime)
 	else
 		movieAnimation = false; // ムービー中に待機ステートかどうか
 
+	// キャラクター状態更新処理
+	UpdateGameObjectBaseState(elapsedTime);
+
+	// モデルアニメーション更新処理
+	model->UpdateAnimation(elapsedTime);
+
+	// モデル更新処理
+	model->UpdateTransform(transform);
+
+	if (G3_SoratobuHusenWari::gameTimer < 2.0f)
+	{
+		gravity = 0.0f;
+
+		return;
+	}
+	else if(!gameStart)
+	{
+		gravity = gravityReset;
+
+		gameStart = true;
+	}
+
 	if (!movieScene)
 	{
 		// ステート毎の処理
@@ -116,9 +139,6 @@ void Player3_SoratobuHusenWari::Update(float elapsedTime)
 		}
 	}
 
-	// キャラクター状態更新処理
-	UpdateGameObjectBaseState(elapsedTime);
-
 	// 弾丸更新処理
 	projectileManager.Update(elapsedTime);
 
@@ -130,12 +150,6 @@ void Player3_SoratobuHusenWari::Update(float elapsedTime)
 
 	// 位置制限
 	PositionControll(elapsedTime);
-
-	// モデルアニメーション更新処理
-	model->UpdateAnimation(elapsedTime);
-
-	// モデル更新処理
-	model->UpdateTransform(transform);
 }
 
 // 描画処理
@@ -252,7 +266,18 @@ void Player3_SoratobuHusenWari::UpdateMoveState(float elapsedTime)
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
-	float move             = 5;
+	float move = 0;
+
+	if (G3_SoratobuHusenWari::gameTimer < 30.0f)
+		move = 5.0f;
+	else if (G3_SoratobuHusenWari::gameTimer < 100.0f)
+		move = 8.0f;
+	else if (G3_SoratobuHusenWari::gameTimer < 150.0f)
+		move = 12.0f;
+	else
+		move = 17.0f;
+
+
 	float angleZ           = 10;
 	float angleZChangeTime = 0.2f;
 	if ((gamePad.GetButtonHeld() & GamePad::BTN_LEFT) && !(gamePad.GetButtonHeld() & GamePad::BTN_RIGHT))

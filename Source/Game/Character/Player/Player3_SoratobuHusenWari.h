@@ -125,4 +125,6 @@ private:
 	float leftHandRadius = 0.4f;
 
 	bool attackCollisionFlag = false;
+
+	bool gameStart = false;
 };

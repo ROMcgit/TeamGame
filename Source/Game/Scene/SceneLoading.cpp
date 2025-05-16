@@ -6,32 +6,29 @@
 // 初期化
 void SceneLoading::Initialize()
 {
-	// スプライト初期化
-	sprite = std::make_unique<Sprite>("Data/Sprite/LoadingIcon.png");
+	int imageNum = rand() % 4;
+	std::string backPath = "Data/Sprite/Loading/BackGround" + std::to_string(imageNum) + ".png";
+	backGround = std::make_unique<Sprite>(backPath.c_str());
+
+	// ローディング
+	for(int i = 0; i < 4; i++)
+	{
+		std::string filePath = "Data/Sprite/Loading/Loading" + std::to_string(i) + ".png";
+		loading[i] = std::make_unique<Sprite>(filePath.c_str());
+	}
 
 	// スレッド開始
 	thread = std::make_unique <std::thread>(LoadingThread, this);
+
+	fade = std::make_unique<Fade>();
+	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+		1.0f, 0.0f,
+		0.5f);
 }
 
 // 終了化
 void SceneLoading::Finalize()
 {
-	//if (sprite != nullptr)
-	//{
-	//	delete sprite;
-	//	sprite = nullptr;
-	//}
-
-	//// スレッド終了化
-	//if (thread != nullptr)
-	//{
-	//	if (thread->joinable())
-	//	{
-	//		thread->join(); // スレッドの終了を待つ
-	//	}
-	//	delete thread;
-	//	thread = nullptr;
-	//}
 	if (thread->joinable())
 	{
 		thread->join(); // スレッドの終了を待つ
@@ -41,18 +38,33 @@ void SceneLoading::Finalize()
 // 更新処理
 void SceneLoading::Update(float elapsedTime)
 {
-	constexpr float speed = 180;
-	angle += speed * elapsedTime;
+	fade->Update(elapsedTime);
 
-	//if (thread->joinable())
-	//{
-	//	thread->join(); // スレッドの終了を待つ
-	//}
+	loadingTime += elapsedTime;
+
+	if (loadingTime > 0.3f)
+	{
+		loadingTime = 0.0f;
+		loadingNum++;
+	}
+	if (loadingNum > 3)
+		loadingNum = 0;
+
 
 	// 次のシーンの準備が完了したらシーンを切り替える
 	if (nextScene->IsReady())
 	{
-		SceneManager::Instance().ChangeScene(std::move(nextScene));
+		if (!setFade)
+		{
+			fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
+				0.0f, 1.0f,
+				0.5f);
+
+			setFade = true;
+		}
+
+		if(!fade->GetFade() && setFade)
+			SceneManager::Instance().ChangeScene(std::move(nextScene));
 	}
 }
 
@@ -65,7 +77,7 @@ void SceneLoading::Render()
 	ID3D11DepthStencilView* dsv = graphics.GetDepthStencilView();
 
 	// 画面クリア&レンダーターゲット設定
-	FLOAT color[] = { 0.0f, 0.0f, 0.5f, 1.0f }; //RGBA(0.0～1.0)
+	FLOAT color[] = { 0.0f, 0.0f, 0.0f, 1.0f }; //RGBA(0.0～1.0)
 	dc->ClearRenderTargetView(rtv, color);
 	dc->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	dc->OMSetRenderTargets(1, &rtv, dsv);
@@ -74,16 +86,29 @@ void SceneLoading::Render()
 	{
 		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
 		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
-		float textureWidth = static_cast<float>(sprite->GetTextureWidth());
-		float textureHeight = static_cast<float>(sprite->GetTextureHeight());
-		float positionX = screenWidth - textureWidth;
-		float positionY = screenHeight - textureHeight;
-		// タイトルスプライト描画
-		sprite->Render(dc,
-			positionX, positionY, textureWidth, textureHeight,
+		
+		float textureWidth = static_cast<float>(backGround->GetTextureWidth());
+		float textureHeight = static_cast<float>(backGround->GetTextureHeight());
+
+		//! 背景
+		backGround->Render(dc,
+			0, 0,
+			screenWidth, screenHeight,
 			0, 0, textureWidth, textureHeight,
-			angle,
+			0,
+			0.5f, 0.5f, 0.5f, 1);
+		
+		textureWidth = static_cast<float>(loading[loadingNum]->GetTextureWidth());
+		textureHeight = static_cast<float>(loading[loadingNum]->GetTextureHeight());
+		// ローディング
+		loading[loadingNum]->Render(dc,
+			0, 0,
+			screenWidth, screenHeight,
+			0, 0, textureWidth, textureHeight,
+			0,
 			1, 1, 1, 1);
+
+		fade->Render(dc, graphics);
 	}
 }
 

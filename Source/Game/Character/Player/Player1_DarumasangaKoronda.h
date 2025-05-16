@@ -133,7 +133,7 @@ private:
 
 	bool setVelocityY = false;
 
-	float jumpSpeed = 13.0f;
+	float jumpSpeed = 20.0f;
 
 	int jumpCount = 0;
 	bool jumpFlipAnimation = false;

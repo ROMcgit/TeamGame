@@ -334,6 +334,15 @@ void Player1_DarumasangaKoronda::UpdateDashState(float elapsedTime)
 	// ˆÚ“®‚·‚é
 	Move3D(dir.x, dir.z, 30.0f);
 
+	GamePad& gamePad = Input::Instance().GetGamePad();
+
+	//! ƒWƒƒƒ“ƒvˆ—
+	if (gamePad.GetButtonDown() & GamePad::BTN_A)
+	{
+		InputJump();
+		TransitionJumpState();
+	}
+
 	stateChangeWaitTimer -= elapsedTime;
 
 	//! ‘Ò‚¿ŠÔ‚ª0‚È‚ç

@@ -11,6 +11,8 @@
 // 初期化
 void G4_OssanTataki_Tutorial::Initialize()
 {
+	backGround = std::make_unique<Sprite>("Data/Sprite/GameSelect/4.png");
+
 	float screenWidth = Graphics::Instance().GetScreenWidth();
 	float screenHeight = Graphics::Instance().GetScreenHeight();
 
@@ -78,10 +80,22 @@ void G4_OssanTataki_Tutorial::Render()
 		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
 		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
 
+		float textureWidth = static_cast<float>(backGround->GetTextureWidth());
+		float textureHeight = static_cast<float>(backGround->GetTextureHeight());
+
+		// 背景
+		backGround->Render(dc,
+			0, 0,
+			screenWidth, screenHeight,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			0.5f, 0.5f, 0.5f, 1.0f);
+
 		for (int i = 0; i < 3; i++)
 		{
-			float textureWidth = static_cast<float>(tutorialSprite[i]->GetTextureWidth());
-			float textureHeight = static_cast<float>(tutorialSprite[i]->GetTextureHeight());
+			textureWidth = static_cast<float>(tutorialSprite[i]->GetTextureWidth());
+			textureHeight = static_cast<float>(tutorialSprite[i]->GetTextureHeight());
 			// チュートリアル画像
 			tutorialSprite[i]->RenderCenter(dc,
 				tutorialSpritePos[i].x, tutorialSpritePos[i].y,

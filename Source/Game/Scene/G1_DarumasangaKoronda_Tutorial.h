@@ -29,6 +29,7 @@ private:
 	void SpriteDirector(float elapsedTime);
 
 private:
+	std::unique_ptr<Sprite> backGround;
 	std::unique_ptr<Sprite> tutorialSprite[3];
 	DirectX::XMFLOAT2       tutorialSpritePos[3];
 

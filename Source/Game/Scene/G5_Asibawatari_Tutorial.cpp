@@ -18,7 +18,9 @@ void G5_Asibawatari_Tutorial::Initialize()
 	float posX = screenWidth * 1.3f;
 	for (int i = 0; i < 3; i++)
 	{
-		tutorialSprite[i] = std::make_unique<Sprite>();
+		std::string filePath = "Data/Sprite/5.Asibawatari/Tutorial" + std::to_string(i) + ".png";
+
+		tutorialSprite[i] = std::make_unique<Sprite>(filePath.c_str());
 		tutorialSpritePos[i].x = posX;
 		posX += screenWidth;
 

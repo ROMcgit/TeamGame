@@ -30,8 +30,12 @@ private:
 
 private:
 	std::unique_ptr<Sprite> backGround;
+	std::unique_ptr<Sprite> tutorialSpriteFrame;
 	std::unique_ptr<Sprite> tutorialSprite[3];
 	DirectX::XMFLOAT2       tutorialSpritePos[3];
+	DirectX::XMFLOAT2       startPos[3];
+	DirectX::XMFLOAT2       endPos[3];
+	int tutorialNum = 0;
 
 	int   directorStep = 0;    // 演出のステップ
 	float directorTime = 0.0f; // 演出の時間

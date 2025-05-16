@@ -17,7 +17,7 @@ void G3_SoratobuHusenWari_Tutorial::Initialize()
 	float screenHeight = Graphics::Instance().GetScreenHeight();
 
 	// チュートリアル画像
-	float posX = screenWidth * 1.3f;
+	float posX = screenWidth * 1.7f;
 	for (int i = 0; i < 3; i++)
 	{
 		std::string filePath = "Data/Sprite/3.SoratobuHusenWari/Tutorial" + std::to_string(i) + ".png";
@@ -26,8 +26,14 @@ void G3_SoratobuHusenWari_Tutorial::Initialize()
 		tutorialSpritePos[i].x = posX;
 		posX += screenWidth;
 
+		//! 開始の位置
+		startPos[i].x = tutorialSpritePos[i].x;
+		endPos[i].x = (screenWidth * 0.5f) + (i * screenWidth * 1.7f);
+
 		tutorialSpritePos[i].y = screenHeight * 0.5f;
 	}
+
+	tutorialSpriteFrame = std::make_unique<Sprite>();
 
 	fade = std::make_unique<Fade>();
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
@@ -96,10 +102,19 @@ void G3_SoratobuHusenWari_Tutorial::Render()
 		{
 			textureWidth = static_cast<float>(tutorialSprite[i]->GetTextureWidth());
 			textureHeight = static_cast<float>(tutorialSprite[i]->GetTextureHeight());
+			
+			// チュートリアルの画像の枠
+			tutorialSpriteFrame->RenderCenter(dc,
+				tutorialSpritePos[i].x, tutorialSpritePos[i].y,
+				screenWidth * 0.67f, screenHeight * 0.68f,
+				0, 0, textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+			
 			// チュートリアル画像
 			tutorialSprite[i]->RenderCenter(dc,
 				tutorialSpritePos[i].x, tutorialSpritePos[i].y,
-				screenWidth * 0.5f, screenHeight * 0.5f,
+				screenWidth * 0.65f, screenHeight * 0.65f,
 				0, 0, textureWidth, textureHeight,
 				0,
 				1, 1, 1, 1);
@@ -152,97 +167,34 @@ void G3_SoratobuHusenWari_Tutorial::SpriteDirector(float elapsedTime)
 
 		if (t < 1.0f)
 		{
-			tutorialSpritePos[0].x = Easing::EaseOut(screenWidth * 1.3f, (screenWidth * 0.5f), t);
-			tutorialSpritePos[1].x = Easing::EaseOut(screenWidth * 1.3f + screenWidth, screenWidth * 1.3f, t);
-			tutorialSpritePos[2].x = Easing::EaseOut((screenWidth * 1.3f) + (screenWidth * 2), screenWidth * 1.3f + screenWidth, t);
+			for (int i = 0; i < 3; i++)
+				tutorialSpritePos[i].x = Easing::EaseOut(startPos[i].x, endPos[i].x, t);
 		}
 		else
 		{
 			if (gamePad.GetButtonDown() & button)
 			{
+				if (tutorialNum >= 2)
+				{
+					directorStep++;
+				}
+				else
+				{
+					for (int i = 0; i < 3; i++)
+					{
+						startPos[i].x = tutorialSpritePos[i].x;
+						endPos[i].x -= screenWidth * 1.7f;
+					}
+
+					tutorialNum++;
+				}
+
 				directorTime = 0.0f;
-				directorStep++;
 			}
 		}
 	}
 	break;
 	case 2:
-	{
-
-		directorTime += elapsedTime;
-
-		float t = directorTime / 1.0f;
-
-		float screenWidth = Graphics::Instance().GetScreenWidth();
-		float screenHeight = Graphics::Instance().GetScreenHeight();
-
-		if (t < 1.0f)
-		{
-			tutorialSpritePos[0].x = Easing::EaseOut(screenWidth * 0.5f, screenWidth * -0.3f, t);
-			tutorialSpritePos[1].x = Easing::EaseOut(screenWidth * 1.3f, screenWidth * 0.5f, t);
-			tutorialSpritePos[2].x = Easing::EaseOut(screenWidth * 1.3f + screenWidth, screenWidth * 1.3f, t);
-		}
-		else
-		{
-			if (gamePad.GetButtonDown() & button)
-			{
-				directorTime = 0.0f;
-				directorStep++;
-			}
-		}
-	}
-	break;
-	case 3:
-	{
-
-		directorTime += elapsedTime;
-
-		float t = directorTime / 1.0f;
-
-		float screenWidth = Graphics::Instance().GetScreenWidth();
-		float screenHeight = Graphics::Instance().GetScreenHeight();
-
-		if (t < 1.0f)
-		{
-			tutorialSpritePos[1].x = Easing::EaseOut(screenWidth * 0.5f, screenWidth * -0.3f, t);
-			tutorialSpritePos[2].x = Easing::EaseOut(screenWidth * 1.3f, screenWidth * 0.5f, t);
-		}
-		else
-		{
-			if (gamePad.GetButtonDown() & button)
-			{
-				directorTime = 0.0f;
-				directorStep++;
-			}
-		}
-	}
-	break;
-	case 4:
-	{
-
-		directorTime += elapsedTime;
-
-		float t = directorTime / 1.0f;
-
-		float screenWidth = Graphics::Instance().GetScreenWidth();
-		float screenHeight = Graphics::Instance().GetScreenHeight();
-
-		// チュートリアル画像
-		float posX = screenWidth * 1.3f;
-
-		if (t < 1.0f)
-		{
-			tutorialSpritePos[2].x = Easing::EaseOut(screenWidth * 0.5f, screenWidth * -0.3f, t);
-		}
-		else
-		{
-			directorTime = 0.0f;
-			directorStep++;
-
-		}
-	}
-	break;
-	case 5:
 
 		directorTime += elapsedTime;
 

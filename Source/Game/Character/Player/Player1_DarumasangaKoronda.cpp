@@ -46,6 +46,7 @@ Player1_DarumasangaKoronda::Player1_DarumasangaKoronda()
 	SoundManager& sound = SoundManager::Instance();
 	sound.LoadSound("ジャンプ", "Data/Audio/Sound/Jump.wav");
 	sound.LoadSound("ダッシュ", "Data/Audio/Sound/Dash.wav");
+	sound.LoadSound("攻撃", "Data/Audio/Sound/Attack.wav");
 }
 
 // デストラクタ
@@ -394,6 +395,8 @@ void Player1_DarumasangaKoronda::UpdateDamageState(float elapsedTime)
 	{
 		if(!setVelocityY)
 		{
+			SoundManager::Instance().PlaySound("攻撃");
+
 			setVelocityY = true;
 			velocity.y = 20.0f;
 		}

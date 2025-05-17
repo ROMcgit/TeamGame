@@ -26,7 +26,9 @@ EnemyOni::EnemyOni(bool perception)
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.03f;
 
-	SoundManager::Instance().LoadSound("笑い声", "Data/Audio/Sound/Laughter.wav");
+	SoundManager& sound = SoundManager::Instance();
+	sound.LoadSound("笑い声", "Data/Audio/Sound/Laughter.wav");
+	sound.PlaySound("笑い声", 3.0f);
 
 	gravity = 0;
 
@@ -309,6 +311,7 @@ void EnemyOni::TransitionLaughState()
 	if (!tracking) tracking = true;
 
 	BgmManager::Instance().ChangeBgmStatus("おにごっこ", 1.0f, 3.0f);
+	SoundManager::Instance().PlaySound("笑い声", 3.0f);
 
 	state = State::Laugh;
 

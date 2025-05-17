@@ -3,6 +3,7 @@
 #include "Game/Effect/EffectManager.h"
 #include "Game/Character/Player/Player3_SoratobuHusenWari.h"
 #include "Game/Scene/G3_SoratobuHusenWari.h"
+#include "Audio/SoundManager.h"
 
 #include <imgui.h>
 

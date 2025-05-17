@@ -184,7 +184,6 @@
     <ClInclude Include="Source\Game\Character\Obstacle\Obstacle.h" />
     <ClInclude Include="Source\Game\Character\Obstacle\ObstacleManager.h" />
     <ClInclude Include="Source\Game\Character\Obstacle\Togemaru.h" />
-    <ClInclude Include="Source\Game\Character\Player\CollisionAttack_Propeller.h" />
     <ClInclude Include="Source\Game\Character\Player\Player0_Onigokko.h" />
     <ClInclude Include="Source\Game\Character\Player\Player2_Sundome.h" />
     <ClInclude Include="Source\Game\Character\Player\Player3_SoratobuHusenWari.h" />
@@ -313,7 +312,6 @@
     <ClCompile Include="Source\Game\Character\Obstacle\Obstacle.cpp" />
     <ClCompile Include="Source\Game\Character\Obstacle\ObstacleManager.cpp" />
     <ClCompile Include="Source\Game\Character\Obstacle\Togemaru.cpp" />
-    <ClCompile Include="Source\Game\Character\Player\CollisionAttack_Propeller.cpp" />
     <ClCompile Include="Source\Game\Character\Player\Player0_Onigokko.cpp" />
     <ClCompile Include="Source\Game\Character\Player\Player2_Sundome.cpp" />
     <ClCompile Include="Source\Game\Character\Player\Player3_SoratobuHusenWari.cpp" />

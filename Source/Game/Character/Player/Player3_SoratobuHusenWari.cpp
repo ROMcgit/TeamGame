@@ -9,6 +9,7 @@
 #include "Game/Character/Projectile/ProjectileHoming.h"
 #include "Game/Camera/CameraController.h"
 #include "Game/Scene/G3_SoratobuHusenWari.h"
+#include "Audio/SoundManager.h"
 
 static Player3_SoratobuHusenWari* instance = nullptr;
 
@@ -58,6 +59,10 @@ Player3_SoratobuHusenWari::Player3_SoratobuHusenWari()
 	hpSpriteShakePosY = hpSpritePos.y;
 
 	playerHpSpriteWidth = 200;
+
+	SoundManager& sound = SoundManager::Instance();
+	sound.LoadSound("着地", "Data/Audio/Sound/Attack.wav");
+	sound.LoadSound("雷", "Data/Audio/Sound/Thunder.wav");
 
 	// 移動ステートへ遷移
 	TransitionMoveState();
@@ -332,6 +337,10 @@ void Player3_SoratobuHusenWari::UpdateMoveState(float elapsedTime)
 		int damage = isDamage ? 40 : 20;
 		//! ダメージを与える
 		ApplyDamage(damage, 0.1f);
+
+		std::string soundPath = isDamage ? "雷" : "着地";
+		float volume = isDamage ? 1.5f : 1.0f;
+		SoundManager::Instance().PlaySound(soundPath.c_str(), volume);
 
 		TransitionDamageState();
 	}

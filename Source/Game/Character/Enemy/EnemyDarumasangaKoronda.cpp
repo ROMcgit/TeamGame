@@ -34,7 +34,9 @@ EnemyDarumasangaKoronda::EnemyDarumasangaKoronda()
 
 	TransitionEntryState();
 
-	SoundManager::Instance().LoadSound("笑い声", "Data/Audio/Sound/Laughter.wav");
+	SoundManager& sound = SoundManager::Instance();
+	sound.LoadSound("笑い声", "Data/Audio/Sound/Laughter.wav");
+	sound.PlaySound("笑い声", 3.0f);
 }
 
 // デストラクタ
@@ -282,7 +284,7 @@ void EnemyDarumasangaKoronda::TransitionAttackState()
 
 	stateChangeWaitTimer = 2.2f;
 
-	SoundManager::Instance().PlaySound("笑い声");
+	SoundManager::Instance().PlaySound("笑い声", 3.0f);
 
 	// 攻撃アニメーション再生
 	model->PlayAnimation(Anim_Attack, false);

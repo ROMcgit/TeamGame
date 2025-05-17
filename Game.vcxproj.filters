@@ -519,9 +519,6 @@
     <ClInclude Include="Source\Game\Character\CollisionAttack\CollisionAttackManager.h">
       <Filter>Source\Character\CollisionAttack</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Character\Player\CollisionAttack_Propeller.h">
-      <Filter>Source\Character\Player\3_空飛ぶ風船割り</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Game\Character\CollisionAttack\CollisionAttack_Hole.h">
       <Filter>Source\Scene\GameScene\4.おっさん叩き</Filter>
     </ClInclude>
@@ -895,9 +892,6 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Character\CollisionAttack\CollisionAttackManager.cpp">
       <Filter>Source\Character\CollisionAttack</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Character\Player\CollisionAttack_Propeller.cpp">
-      <Filter>Source\Character\Player\3_空飛ぶ風船割り</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Character\CollisionAttack\CollisionAttack_Hole.cpp">
       <Filter>Source\Scene\GameScene\4.おっさん叩き</Filter>

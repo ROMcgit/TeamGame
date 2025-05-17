@@ -83,7 +83,8 @@ void G0_Onigokko::Initialize()
 			break;
 		}
 		// ‹S
-		std::unique_ptr<EnemyOni> oni = std::make_unique<EnemyOni>();
+		bool s = i == 0 ? true : false;
+		std::unique_ptr<EnemyOni> oni = std::make_unique<EnemyOni>(s);
 		oni->SetPosition(DirectX::XMFLOAT3(posX, 5, 250));
 		EnemyManager::Instance().Register(std::move(oni));
 	}

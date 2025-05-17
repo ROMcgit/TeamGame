@@ -10,6 +10,10 @@
 // 初期化
 void SceneTitle::Initialize()
 {
+	BgmManager& bgm = BgmManager::Instance();
+	bgm.LoadBgm("タイトル", "Data/Audio/Bgm/0.Title.wav");
+	bgm.PlayBgm("タイトル", 0.7f);
+
 	// スプライト初期化
 	sprite = std::make_unique<Sprite>("Data/Sprite/Title.png");
 
@@ -48,6 +52,8 @@ void SceneTitle::Update(float elapsedTime)
 	}
 	else if (setFade && !fade->GetFade())
 	{
+		BgmManager::Instance().UnloadBgm("タイトル");
+
 		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGameSelect>());
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示

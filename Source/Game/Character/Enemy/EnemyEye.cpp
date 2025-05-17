@@ -247,7 +247,7 @@ void EnemyEye::CollisionVsPlayer()
 		player.GetPosition(),
 		player.GetRadius(),
 		player.GetHeight(),
-		outPosition))
+		outPosition) && !EnemyOni::tracking)
 	{
 		player.SetPosition(outPosition);
 	}

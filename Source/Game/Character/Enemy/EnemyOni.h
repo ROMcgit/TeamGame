@@ -9,7 +9,7 @@
 class EnemyOni : public Enemy
 {
 public:
-	EnemyOni();
+	EnemyOni(bool perception = false);
 	~EnemyOni() override;
 
 	// XVˆ—
@@ -126,6 +126,8 @@ public:
 private:
 	std::unique_ptr<Model> model;
 
+	float perception = false;
+
 	bool deathState = false;
 
 	bool setMoveTarget = false;
@@ -138,6 +140,6 @@ private:
 	float territoryRange = 10.0f;
 	float turnSpeed = DirectX::XMConvertToRadians(360);
 	float stateTimer = 0.0f;
-	float searchRange = 15.0f;
+	float searchRange = 13.0f;
 	float attackRange = 1.5f;
 };

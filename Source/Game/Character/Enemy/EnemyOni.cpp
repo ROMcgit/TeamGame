@@ -7,6 +7,7 @@
 #include "Game/Scene/G0_Onigokko.h"
 #include "Game/Camera/Camera.h"
 #include "Graphics/Timer.h"
+#include "Audio/BgmManager.h"
 
 #include <algorithm>
 #include "EnemyDarumasangaKoronda.h"
@@ -14,8 +15,11 @@
 bool EnemyOni::tracking = false;
 
 // コンストラクタ
-EnemyOni::EnemyOni()
+EnemyOni::EnemyOni(bool perception)
 {
+	//! 察知しているか
+	this->perception = perception;
+
 	model = std::make_unique<Model>("Data/Model/0.Onigokko/Oni/Oni.mdl");
 
 	// モデルが大きいのでスケーリング
@@ -126,9 +130,9 @@ void EnemyOni::DrawDebugPrimitive()
 	// 基底クラスのデバッグプリミティブ描画
 	//Enemy::DrawDebugPrimitive();
 
-	//DebugRenderer* debugRender = Graphics::Instance().GetDebugRenderer();
+	DebugRenderer* debugRender = Graphics::Instance().GetDebugRenderer();
 
-	//debugRender->DrawCylinder(position, searchRange, 2.0f, { 1,1,1,1 });
+	debugRender->DrawCylinder(position, searchRange, 2.0f, { 1,1,1,1 });
 
 	// 縄張り範囲をデバッグ円柱描画
 	//debugRender->DrawCylinder(territoryOrigin, territoryRange, 1.0f,
@@ -223,7 +227,7 @@ void EnemyOni::UpdateWaitState(float elapsedTime)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < searchRange && player.GetInvincibleTimer() <= 0 || tracking)
+	if ((dist < searchRange * searchRange && player.GetInvincibleTimer() <= 0) || tracking)
 		//! 威嚇ステートへ遷移
 		TransitionLaughState();
 	else if (stateChangeWaitTimer <= 0.0f)
@@ -247,19 +251,30 @@ void EnemyOni::UpdateMoveState(float elapsedTime)
 {
 	if(!setMoveTarget)
 	{
-		moveTarget.x = position.x + (rand() % 200 + 200 * (rand() % 2 == 1 ? -1 : 1));
-		moveTarget.z = position.z + (rand() % 200 + 200 * (rand() % 2 == 1 ? -1 : 1));
+		if (!perception)
+		{
+			moveTarget.x = position.x + (rand() % 200 + 200 * (rand() % 2 == 1 ? -1 : 1));
+			moveTarget.z = position.z + (rand() % 200 + 200 * (rand() % 2 == 1 ? -1 : 1));
 
-		float setPosX = 295.0f;
-		moveTarget.x = std::clamp(moveTarget.x, -setPosX, setPosX);
-		float setPosZ = 287.0f;
-		moveTarget.z = std::clamp(moveTarget.z, -setPosZ, setPosZ);
+			float setPosX = 295.0f;
+			moveTarget.x = std::clamp(moveTarget.x, -setPosX, setPosX);
+			float setPosZ = 287.0f;
+			moveTarget.z = std::clamp(moveTarget.z, -setPosZ, setPosZ);
+		}
+		else
+		{
+			Player0_Onigokko& player = Player0_Onigokko::Instance();
+			moveTarget.x = player.GetPosition().x + (3 * (rand() % 2 == 1 ? -1 : 1));
+			moveTarget.z = player.GetPosition().z + (3 * (rand() % 2 == 1 ? -1 : 1));
+		}
 
 		setMoveTarget = true;
 	}
 
 	// 移動位置に移動
-	MoveTarget(elapsedTime, 60);
+	float moveSpeed = perception ? 10 : 60;
+
+	MoveTarget(elapsedTime, moveSpeed);
 
 	float vxm = moveTarget.x - position.x;
 	float vzm = moveTarget.z - position.z;
@@ -277,7 +292,7 @@ void EnemyOni::UpdateMoveState(float elapsedTime)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < searchRange && player.GetInvincibleTimer() <= 0 || tracking)
+	if ((dist < searchRange * searchRange && player.GetInvincibleTimer() <= 0) || tracking)
 		//! 威嚇ステートへ遷移
 		TransitionLaughState();
 	else if (stateChangeWaitTimer <= 0.0f)
@@ -289,6 +304,8 @@ void EnemyOni::UpdateMoveState(float elapsedTime)
 void EnemyOni::TransitionLaughState()
 {
 	if (!tracking) tracking = true;
+
+	BgmManager::Instance().ChangeBgmStatus("おにごっこ", 1.0f, 3.0f);
 
 	state = State::Laugh;
 
@@ -341,7 +358,7 @@ void EnemyOni::UpdateTrackingState(float elapsedTime)
 	dist = vx * vx + vz * vz;
 	if (dist < 1500)
 		//! プレイヤーに向かって移動する
-		MoveToTarget(elapsedTime, 6);
+		MoveToTarget(elapsedTime, 5);
 	else
 		//! プレイヤーの位置制に向かって移動する
 		//! プレイヤーに向かって移動する
@@ -358,6 +375,8 @@ void EnemyOni::UpdateTrackingState(float elapsedTime)
 void EnemyOni::TransitionTiredState()
 {
 	state = State::Tired;
+
+	BgmManager::Instance().ChangeBgmStatus("おにごっこ", 1.0f, 1.0f);
 
 	tracking = false;
 

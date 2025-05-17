@@ -169,6 +169,12 @@ void SceneGameSelect::Initialize()
 	std::unique_ptr<GS5_AsibaWatari> asibaWatari = std::make_unique<GS5_AsibaWatari>();
 	asibaWatari->SetPosition(DirectX::XMFLOAT3(posX * 2.5f, 1, 80));
 	gameSelectManager.Register(std::move(asibaWatari));
+
+	BgmManager& bgm = BgmManager::Instance();
+	bgm.LoadBgm("ゲーム選択", "Data/Audio/Bgm/1.GameSelect.wav");
+	bgm.PlayBgm("ゲーム選択", 0.8f);
+
+	bgm.LoadBgm("ボーナス", "Data/Audio/Bgm/2.Bonus.wav");
 }
 
 // 終了化
@@ -244,6 +250,10 @@ void SceneGameSelect::Update(float elapsedTime)
 
 		if (setFade && !fade->GetFade())
 		{
+			BgmManager& bgm = BgmManager::Instance();
+			bgm.UnloadBgm("ゲーム選択");
+			bgm.UnloadBgm("ボーナス");
+
 			std::unique_ptr<SceneLoading> loadingScene;
 
 			switch (gameSelect)
@@ -714,6 +724,13 @@ void SceneGameSelect::UpdateBonusImage(float elapsedTime)
 	if (gamePad.GetButtonDown() & GamePad::BTN_START && !fade->GetFade())
 	{
 		viewBonusImage = !viewBonusImage;
+
+		BgmManager& bgm = BgmManager::Instance();
+		bgm.StopBgm();
+		std::string bgmPath = viewBonusImage ? "ボーナス" : "ゲーム選択";
+		float volume = viewBonusImage ? 0.5f : 0.8f;
+		bgm.PlayBgm(bgmPath.c_str(), volume);
+
 
 		float startFade = viewBonusImage ? 0.0f : 1.0f;
 		float endFade = viewBonusImage   ? 1.0f : 0.0f;

@@ -108,6 +108,10 @@ void G3_SoratobuHusenWari::Initialize()
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 		1.0f, 0.0f,
 		1.0f, 0.5f);
+
+	BgmManager& bgm = BgmManager::Instance();
+	bgm.LoadBgm("空飛ぶ風船割り", "Data/Audio/Bgm/10.Soratobu.wav");
+	bgm.PlayBgm("空飛ぶ風船割り", 1.0f);
 }
 
 // 終了化
@@ -494,6 +498,8 @@ void G3_SoratobuHusenWari::SceneChange()
 		}
 		else if(setFade && !fade->GetFade())
 		{
+			BgmManager::Instance().UnloadBgm("空飛ぶ風船割り");
+
 			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G3_SoratobuHusenWari_Result>());
 
 			// シーンマネージャーにローディングシーンへの切り替えを指示

@@ -84,6 +84,10 @@ void G5_Asibawatari::Initialize()
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 		1.0f, 0.0f,
 		1.0f, 0.5f);
+
+	BgmManager& bgm = BgmManager::Instance();
+	bgm.LoadBgm("‘«ê“n‚è", "Data/Audio/Bgm/11.Ossantataki.wav");
+	bgm.PlayBgm("‘«ê“n‚è", 1.0f);
 }
 
 // I—¹‰»
@@ -638,6 +642,8 @@ void G5_Asibawatari::SceneChange()
 		}
 		else if (setFade && !fade->GetFade())
 		{
+			BgmManager::Instance().UnloadBgm("‘«ê“n‚è");
+
 			std::unique_ptr<SceneLoading> loadingScene;
 			if(player->GetPosition().y < -10.0f)
 				loadingScene = std::make_unique<SceneLoading>(std::make_unique<G5_Asibawatari_GameOver>());

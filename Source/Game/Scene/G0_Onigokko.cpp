@@ -197,6 +197,10 @@ void G0_Onigokko::Initialize()
 
 	// ムービーシーンにする
 	movieScene = true;
+
+	BgmManager& bgm = BgmManager::Instance();
+	bgm.LoadBgm("おにごっこ", "Data/Audio/Bgm/7.Onigokko.wav");
+	bgm.PlayBgm("おにごっこ", 1.0f);
 }
 
 // 終了化
@@ -527,6 +531,8 @@ void G0_Onigokko::UpdateCameraMovie(float elapsedTime)
 			{
 				if (player->GetHp() <= 0)
 				{
+					BgmManager::Instance().UnloadBgm("おにごっこ");
+
 					std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G0_Onigokko_GameOver>());
 					// シーンマネージャーにローディングシーンへの切り替えを指示
 					SceneManager::Instance().ChangeScene(std::move(loadingScene));
@@ -591,6 +597,8 @@ void G0_Onigokko::UpdateCameraMovie(float elapsedTime)
 			}
 			else if (!fade->GetFade())
 			{
+				BgmManager::Instance().UnloadBgm("おにごっこ");
+
 				std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G0_Onigokko_Clear>());
 				// シーンマネージャーにローディングシーンへの切り替えを指示
 				SceneManager::Instance().ChangeScene(std::move(loadingScene));

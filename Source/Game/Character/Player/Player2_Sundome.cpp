@@ -10,6 +10,7 @@
 #include "Game/Scene/SceneManager.h"
 #include "Game/Scene/SceneLoading.h"
 #include "Game/Scene/G2_Sundome_Result.h"
+#include "Audio/BgmManager.h"
 
 static Player2_Sundome* instance = nullptr;
 
@@ -396,6 +397,8 @@ void Player2_Sundome::UpdateReturnState(float elapsedTime)
 			}
 			else
 			{
+				BgmManager::Instance().UnloadBgm("寸止め");
+
 				std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G2_Sundome_Result>());
 
 				// シーンマネージャーにローディングシーンへの切り替えを指示

@@ -75,6 +75,10 @@ void G2_Sundome::Initialize()
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 		1.0f, 0.0f,
 		0.5f, 0.2f);
+
+	BgmManager& bgm = BgmManager::Instance();
+	bgm.LoadBgm("ê°é~Çﬂ", "Data/Audio/Bgm/9.Sundome.wav");
+	bgm.PlayBgm("ê°é~Çﬂ", 1.0f);
 }
 
 // èIóπâª

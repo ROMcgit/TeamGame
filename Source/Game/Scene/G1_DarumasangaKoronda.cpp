@@ -131,6 +131,10 @@ void G1_DarumasangaKoronda::Initialize()
 
 	//! タイマー
 	timer = std::make_unique<Timer>(true, 2, 30);
+
+	BgmManager& bgm = BgmManager::Instance();
+	bgm.LoadBgm("だるまさんが転んだ", "Data/Audio/Bgm/8.Daruma.wav");
+	bgm.PlayBgm("だるまさんが転んだ", 1.0f);
 }
 
 // 終了化
@@ -473,6 +477,8 @@ void G1_DarumasangaKoronda::SceneChange()
 	}
 	else if (!fade->GetFade())
 	{
+		BgmManager::Instance().UnloadBgm("だるまさんが転んだ");
+
 		std::unique_ptr<SceneLoading> loadingScene;
 		if((timer->GetTimeM_Int() > 0 || (timer->GetTimeM_Int() == 0 && timer->GetTimeS_Int() > 0)))
 			loadingScene = std::make_unique<SceneLoading>(std::make_unique<G1_DarumasangaKoronda_Clear>());

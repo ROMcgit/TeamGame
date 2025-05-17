@@ -117,6 +117,10 @@ void G4_OssanTataki::Initialize()
 
 	//! タイマー
 	timer = std::make_unique<Timer>(true, 1, 30);
+
+	BgmManager& bgm = BgmManager::Instance();
+	bgm.LoadBgm("おっさん叩き", "Data/Audio/Bgm/11.Ossantataki.wav");
+	bgm.PlayBgm("おっさん叩き", 1.0f);
 }
 
 // 終了化
@@ -451,6 +455,8 @@ void G4_OssanTataki::SceneChange()
 		}
 		else if (setFade && !fade->GetFade())
 		{
+			BgmManager::Instance().UnloadBgm("おっさん叩き");
+
 			std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G4_OssanTataki_Result>());
 
 			// シーンマネージャーにローディングシーンへの切り替えを指示

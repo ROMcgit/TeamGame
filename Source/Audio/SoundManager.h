@@ -32,6 +32,9 @@ public:
     // 効果音が再生中か
     bool IsPlayingSound(const std::string& name) const;
 
+    // 効果音の音量やスピードを変える
+    void ChangeSoundStatus(const std::string& name, float volume = 1.0f, float speed = 1.0f);
+
 private:
     // LRUキャッシュを管理
     void ManageCacheSize();

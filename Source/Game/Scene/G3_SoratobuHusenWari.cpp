@@ -111,7 +111,7 @@ void G3_SoratobuHusenWari::Initialize()
 
 	BgmManager& bgm = BgmManager::Instance();
 	bgm.LoadBgm("空飛ぶ風船割り", "Data/Audio/Bgm/10.Soratobu.wav");
-	bgm.PlayBgm("空飛ぶ風船割り", 1.0f);
+	bgm.PlayBgm("空飛ぶ風船割り", 0.5f);
 }
 
 // 終了化

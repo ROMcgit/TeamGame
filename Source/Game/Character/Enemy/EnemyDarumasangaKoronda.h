@@ -106,6 +106,8 @@ private:
 	
 	bool deathState = false;
 
+	bool noiseSoundPlay = false;
+
 	bool setMoveTarget = false;
 
 	bool playAnimation = false;

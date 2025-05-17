@@ -120,7 +120,7 @@ void G4_OssanTataki::Initialize()
 
 	BgmManager& bgm = BgmManager::Instance();
 	bgm.LoadBgm("‚¨‚Á‚³‚ñ’@‚«", "Data/Audio/Bgm/11.Ossantataki.wav");
-	bgm.PlayBgm("‚¨‚Á‚³‚ñ’@‚«", 1.0f);
+	bgm.PlayBgm("‚¨‚Á‚³‚ñ’@‚«", 0.3f);
 }
 
 // I—¹‰»

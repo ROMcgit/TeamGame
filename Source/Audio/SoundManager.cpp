@@ -87,6 +87,19 @@ bool SoundManager::IsPlayingSound(const std::string& name) const
     return currentSound != nullptr && currentSound->IsPlaying();
 }
 
+// 効果音の音量やスピードを変える
+void SoundManager::ChangeSoundStatus(const std::string& name, float volume, float speed)
+{
+    auto it = soundEffects.find(name);
+    if (it != soundEffects.end())
+    {
+        currentSound = it->second.get();
+        currentSound->ChangeBgmStatus(volume, speed);
+    }
+    else
+        throw std::runtime_error("");
+}
+
 // LRUキャッシュを管理
 void SoundManager::ManageCacheSize()
 {

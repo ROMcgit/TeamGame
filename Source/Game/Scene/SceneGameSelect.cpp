@@ -31,6 +31,8 @@
 
 #include <algorithm>
 
+#include "Audio/SoundManager.h"
+
 SceneGameSelect::GameSelectA SceneGameSelect::gameSelect = SceneGameSelect::GameSelectA::Onigokko;
 bool SceneGameSelect::sceneChange = false;
 
@@ -175,6 +177,9 @@ void SceneGameSelect::Initialize()
 	bgm.PlayBgm("ゲーム選択", 0.8f);
 
 	bgm.LoadBgm("ボーナス", "Data/Audio/Bgm/2.Bonus.wav");
+
+	SoundManager& sound = SoundManager::Instance();
+	sound.LoadSound("決定", "Data/Audio/Sound/Decision.wav");
 }
 
 // 終了化
@@ -730,6 +735,8 @@ void SceneGameSelect::UpdateBonusImage(float elapsedTime)
 		std::string bgmPath = viewBonusImage ? "ボーナス" : "ゲーム選択";
 		float volume = viewBonusImage ? 0.5f : 0.8f;
 		bgm.PlayBgm(bgmPath.c_str(), volume);
+
+		SoundManager::Instance().PlaySound("決定");
 
 
 		float startFade = viewBonusImage ? 0.0f : 1.0f;

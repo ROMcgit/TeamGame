@@ -86,8 +86,8 @@ void G5_Asibawatari::Initialize()
 		1.0f, 0.5f);
 
 	BgmManager& bgm = BgmManager::Instance();
-	bgm.LoadBgm("‘«ê“n‚è", "Data/Audio/Bgm/11.Ossantataki.wav");
-	bgm.PlayBgm("‘«ê“n‚è", 1.0f);
+	bgm.LoadBgm("‘«ê“n‚è", "Data/Audio/Bgm/12.Asibawatari.wav");
+	bgm.PlayBgm("‘«ê“n‚è", 0.5f);
 }
 
 // I—¹‰»

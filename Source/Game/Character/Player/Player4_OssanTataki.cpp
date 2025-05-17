@@ -151,7 +151,9 @@ void Player4_OssanTataki::TransitionAttackState()
 {
 	state = State::Attack;
 
-	SoundManager::Instance().PlaySound("UŒ‚");
+	SoundManager& sound = SoundManager::Instance();
+	sound.StopSound("UŒ‚");
+	sound.PlaySound("UŒ‚");
 
 	stateChangeWaitTimer = 0.5f;
 }

@@ -319,6 +319,7 @@ void Player1_DarumasangaKoronda::TransitionDashState()
 
 	stateChangeWaitTimer = 1.0f;
 
+	SoundManager::Instance().StopSound("ダッシュ");
 	SoundManager::Instance().PlaySound("ダッシュ");
 
 	// 走りアニメーション再生

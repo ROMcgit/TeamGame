@@ -8,6 +8,7 @@
 #include "Game/Camera/Camera.h"
 #include "Graphics/Timer.h"
 #include "Audio/SoundManager.h"
+#include "Audio/BgmManager.h"
 
 #include <random>
 #include <algorithm>
@@ -37,6 +38,8 @@ EnemyDarumasangaKoronda::EnemyDarumasangaKoronda()
 	SoundManager& sound = SoundManager::Instance();
 	sound.LoadSound("笑い声", "Data/Audio/Sound/Laughter.wav");
 	sound.PlaySound("笑い声", 3.0f);
+
+	sound.LoadSound("ノイズ", "Data/Audio/Sound/Noise.wav");
 }
 
 // デストラクタ
@@ -201,6 +204,8 @@ void EnemyDarumasangaKoronda::TransitionWaitState()
 	std::uniform_real_distribution<> dist(5.0f, 8.0f);
 	float time = dist(gen);
 	
+	noiseSoundPlay = false;
+
 	//! ステート切り替えまでの待ち時間
 	stateChangeWaitTimer = time;
 
@@ -221,6 +226,13 @@ void EnemyDarumasangaKoronda::UpdateWaitState(float elapsedTime)
 	}
 	else if (stateChangeWaitTimer < 1.7f)
 	{
+		if (!noiseSoundPlay)
+		{
+			SoundManager::Instance().PlaySound("ノイズ", 0.4f);
+
+			noiseSoundPlay = true;
+		}
+
 		SetVignetteIntensityChange(1.0f, 0.5f);
 	}
 
@@ -240,6 +252,8 @@ void EnemyDarumasangaKoronda::UpdateWaitState(float elapsedTime)
 void EnemyDarumasangaKoronda::TransitionLookState()
 {
 	state = State::Look;
+
+	SoundManager::Instance().ChangeSoundStatus("ノイズ", 2.0f);
 
 	//! 角度Yを変更する
 	SetAngleYChange(DirectX::XMConvertToRadians(180), 0.3f);
@@ -263,6 +277,8 @@ void EnemyDarumasangaKoronda::UpdateLookState(float elapsedTime)
 
 	if (stateChangeWaitTimer <= 0.0f)
 	{
+		SoundManager::Instance().StopSound("ノイズ");
+
 		//! カラーフィルターを戻す
 		SetColorFilterResetChange(0.3f);
 

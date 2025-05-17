@@ -11,6 +11,7 @@
 #include "Game/Scene/SceneLoading.h"
 #include "Game/Scene/G2_Sundome_Result.h"
 #include "Audio/BgmManager.h"
+#include "Audio/SoundManager.h"
 
 static Player2_Sundome* instance = nullptr;
 
@@ -52,6 +53,10 @@ Player2_Sundome::Player2_Sundome()
 	// 加速度の画像
 	velocitySprite = std::make_unique<Sprite>();
 	velocitySpriteLimit = std::make_unique<Sprite>();
+
+	SoundManager& sound = SoundManager::Instance();
+	sound.LoadSound("発射", "Data/Audio/Sound/Laughter.wav");
+	sound.LoadSound("ブレーキ", "Data/Audio/Sound/Brake.wav");
 
 	// 待機ステートへ遷移
 	TransitionMovieWaitState();
@@ -258,11 +263,13 @@ void Player2_Sundome::TransitionMoveState()
 	switch (round)
 	{
 	case 1: brake = 8.0f; break;
-	case 2: brake = 25.0f; break;
-	case 3: brake = 30.0f; break;
+	case 2: brake = 15.0f; break;
+	case 3: brake = 5.0f; break;
 	default:
 		break;
 	}
+
+	SoundManager::Instance().PlaySound("発射");
 
 	stateChangeWaitTimer = 1.0f;
 }
@@ -271,7 +278,7 @@ void Player2_Sundome::TransitionMoveState()
 void Player2_Sundome::UpdateMoveState(float elapsedTime)
 {
 	if (round == 3)
-		brake = rand() % 30 + 13.0f;
+		brake = rand() % 5 + 13;
 
 	velocity.x = setVelocityX * -1;
 
@@ -310,9 +317,15 @@ void Player2_Sundome::UpdateMoveState(float elapsedTime)
 	if ((gamePad.GetButtonHeld() & button && position.x < 205.0f))
 		isBrake = true;
 
+	if (isBrake && !breakeSound)
+	{
+		SoundManager::Instance().PlaySound("ブレーキ");
+		breakeSound = true;
+	}
+
 	//! ブレーキする
 	if (isBrake && isGround && setVelocityX > 0.0f)
-		setVelocityX -= 10 * elapsedTime;
+		setVelocityX -= brake * elapsedTime;
 	else if (setVelocityX < 0.0f)
 		setVelocityX = 0.0f;
 
@@ -397,6 +410,7 @@ void Player2_Sundome::UpdateReturnState(float elapsedTime)
 			if (round < 3)
 			{
 				isBrake = false;
+				breakeSound = false;
 
 				round++;
 			}

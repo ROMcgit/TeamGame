@@ -7,6 +7,7 @@
 #include "Game/Scene/G1_DarumasangaKoronda.h"
 #include "Game/Camera/Camera.h"
 #include "Graphics/Timer.h"
+#include "Audio/SoundManager.h"
 
 #include <random>
 #include <algorithm>
@@ -32,6 +33,8 @@ EnemyDarumasangaKoronda::EnemyDarumasangaKoronda()
 	SetOpacityChange(1.0f, 0.8f);
 
 	TransitionEntryState();
+
+	SoundManager::Instance().LoadSound("笑い声", "Data/Audio/Sound/Laughter.wav");
 }
 
 // デストラクタ
@@ -278,6 +281,8 @@ void EnemyDarumasangaKoronda::TransitionAttackState()
 	player.isDamage = true;
 
 	stateChangeWaitTimer = 2.2f;
+
+	SoundManager::Instance().PlaySound("笑い声");
 
 	// 攻撃アニメーション再生
 	model->PlayAnimation(Anim_Attack, false);

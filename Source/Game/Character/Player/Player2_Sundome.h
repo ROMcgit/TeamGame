@@ -120,6 +120,7 @@ private:
 	std::unique_ptr<Fade> fade;
 
 	bool isBrake = false;
+	bool breakeSound = false;
 
 	float turnSpeed = DirectX::XMConvertToRadians(720);
 

@@ -8,6 +8,7 @@
 #include "Game/Camera/Camera.h"
 #include "Graphics/Timer.h"
 #include "Audio/BgmManager.h"
+#include "Audio/SoundManager.h"
 
 #include <algorithm>
 #include "EnemyDarumasangaKoronda.h"
@@ -24,6 +25,8 @@ EnemyOni::EnemyOni(bool perception)
 
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.03f;
+
+	SoundManager::Instance().LoadSound("笑い声", "Data/Audio/Sound/Laughter.wav");
 
 	gravity = 0;
 
@@ -326,6 +329,8 @@ void EnemyOni::TransitionLaughState()
 	SetChromaticAberrationChange(0.03f, 1.5f);
 
 	model->PlayAnimation(Anim_Laugh, false);
+
+	SoundManager::Instance().PlaySound("笑い声");
 }
 
 // 威嚇ステート更新処理

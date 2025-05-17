@@ -8,6 +8,7 @@
 #include "Game/Character/Projectile/ProjectileStraight.h"
 #include "Game/Character/Projectile/ProjectileHoming.h"
 #include "Game/Camera/CameraController.h"
+#include "Audio/SoundManager.h"
 
 bool Player1_DarumasangaKoronda::isDamage = false;
 
@@ -41,6 +42,10 @@ Player1_DarumasangaKoronda::Player1_DarumasangaKoronda()
 
 	// 待機ステートへ遷移
 	TransitionWaitState();
+
+	SoundManager& sound = SoundManager::Instance();
+	sound.LoadSound("ジャンプ", "Data/Audio/Sound/Jump.wav");
+	sound.LoadSound("ダッシュ", "Data/Audio/Sound/Dash.wav");
 }
 
 // デストラクタ
@@ -286,6 +291,8 @@ void Player1_DarumasangaKoronda::TransitionJumpState()
 {
 	state = State::Jump;
 
+	SoundManager::Instance().PlaySound("ジャンプ");
+
 	model->PlayAnimation(Anim_Jump, false);
 }
 
@@ -310,6 +317,8 @@ void Player1_DarumasangaKoronda::TransitionDashState()
 	state = State::Dash;
 
 	stateChangeWaitTimer = 1.0f;
+
+	SoundManager::Instance().PlaySound("ダッシュ");
 
 	// 走りアニメーション再生
 	if(model->GetAnimationNum() != Anim_Move)

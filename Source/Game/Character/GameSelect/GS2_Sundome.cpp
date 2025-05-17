@@ -63,7 +63,9 @@ void GS2_Sundome::Update(float elapsedTime)
 // •`‰æˆ—
 void GS2_Sundome::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
-	shader->Draw(dc, model.get(), materialColor, opacity, emissiveColor, emissiveStrength);
+	float dist = abs(CameraController::target.x - position.x);
+	if (dist < 130)
+		shader->Draw(dc, model.get(), materialColor, opacity, emissiveColor, emissiveStrength);
 }
 
 // HP‚È‚Ç‚Ì•`‰æ

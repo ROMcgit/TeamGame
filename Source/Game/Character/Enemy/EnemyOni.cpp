@@ -310,7 +310,7 @@ void EnemyOni::TransitionLaughState()
 {
 	if (!tracking) tracking = true;
 
-	BgmManager::Instance().ChangeBgmStatus("おにごっこ", 1.0f, 3.0f);
+	BgmManager::Instance().ChangeBgmStatus("おにごっこ", 1.2f, 3.0f);
 	SoundManager::Instance().PlaySound("笑い声", 3.0f);
 
 	state = State::Laugh;
@@ -364,9 +364,9 @@ void EnemyOni::UpdateTrackingState(float elapsedTime)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if (dist < 1500)
+	if (dist < 1400)
 		//! プレイヤーに向かって移動する
-		MoveToTarget(elapsedTime, 5);
+		MoveToTarget(elapsedTime, 5.5f);
 	else
 		//! プレイヤーの位置制に向かって移動する
 		//! プレイヤーに向かって移動する
@@ -375,7 +375,7 @@ void EnemyOni::UpdateTrackingState(float elapsedTime)
 	stateChangeWaitTimer -= elapsedTime;
 
 	// 一定時間で疲れる
-	if (stateChangeWaitTimer <= 0.0f)
+	if (stateChangeWaitTimer <= 0.0f || !tracking)
 		TransitionTiredState();
 }
 
@@ -384,7 +384,7 @@ void EnemyOni::TransitionTiredState()
 {
 	state = State::Tired;
 
-	BgmManager::Instance().ChangeBgmStatus("おにごっこ", 1.0f, 1.0f);
+	BgmManager::Instance().ChangeBgmStatus("おにごっこ", 0.7f, 1.0f);
 
 	tracking = false;
 

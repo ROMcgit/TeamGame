@@ -42,7 +42,7 @@ void G0_Onigokko::Initialize()
 	// プレイヤー初期化
 	player = std::make_unique<Player0_Onigokko>();
 	player->SetPosition(DirectX::XMFLOAT3(0, 5.0f, 0));
-	player->SetMovieTime(10.0f);
+	player->SetMovieTime(6.3f);
 	player->SetMovieAnimation(0, true);
 
 	// カメラ初期設定
@@ -177,7 +177,7 @@ void G0_Onigokko::Initialize()
 
 	BgmManager& bgm = BgmManager::Instance();
 	bgm.LoadBgm("おにごっこ", "Data/Audio/Bgm/7.Onigokko.wav");
-	bgm.PlayBgm("おにごっこ", 1.0f);
+	bgm.PlayBgm("おにごっこ", 0.7f);
 }
 
 // 終了化
@@ -196,6 +196,9 @@ void G0_Onigokko::Finalize()
 // 更新処理
 void G0_Onigokko::Update(float elapsedTime)
 {
+	if (player->GetInvincibleTimer() > 0.0f)
+		EnemyOni::tracking = false;
+
 	// カメラコントローラー更新処理
 	if (!movieScene || cameraMovieScene == CameraMovieScene::OniMove)
 	{
@@ -475,7 +478,7 @@ void G0_Onigokko::UpdateCameraMovie(float elapsedTime)
 		target    = oni->GetPosition();
 		target.y += oni->GetHeight() * 0.6f;
 
-		if (cameraMovieTime > 8.0f)
+		if (cameraMovieTime > 5.0f)
 		{
 			cameraMovieTime = 0;
 			movieScene = false;

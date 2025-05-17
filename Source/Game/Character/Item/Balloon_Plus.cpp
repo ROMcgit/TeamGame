@@ -7,6 +7,7 @@
 #include "Game/Scene/G3_SoratobuHusenWari.h"
 #include "Game/Camera/Camera.h"
 #include "Graphics/Timer.h"
+#include "Audio/SoundManager.h"
 
 #include <algorithm>
 
@@ -33,6 +34,8 @@ Balloon_Plus::Balloon_Plus()
 	collisionOffset.y = -0.95f;
 
 	TransitionMoveState();
+
+	SoundManager::Instance().LoadSound("破裂", "Data/Audio/Sound/Burst.wav");
 }
 
 // デストラクタ
@@ -166,6 +169,8 @@ void Balloon_Plus::UpdateMoveState(float elapsedTime)
 void Balloon_Plus::TransitionBreakState()
 {
 	state = State::Break;
+
+	SoundManager::Instance().PlaySound("破裂");
 
 	G3_SoratobuHusenWari::score += 5;
 }

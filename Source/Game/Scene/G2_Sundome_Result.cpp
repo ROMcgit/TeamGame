@@ -89,7 +89,7 @@ void G2_Sundome_Result::Update(float elapsedTime)
 		GamePad::BTN_B |
 		GamePad::BTN_X |
 		GamePad::BTN_Y;
-	if ((gamePad.GetButtonDown() & anyButton && !setFade && !fade->GetFade()) && directorFinish)
+	if (directorFinish && !setFade)
 	{
 		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 			0.0f, 1.0f,

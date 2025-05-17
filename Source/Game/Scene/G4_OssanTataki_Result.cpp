@@ -76,7 +76,7 @@ void G4_OssanTataki_Result::Update(float elapsedTime)
 		GamePad::BTN_B |
 		GamePad::BTN_X |
 		GamePad::BTN_Y;
-	if ((gamePad.GetButtonDown() & anyButton && !setFade && !fade->GetFade()) && !scoreDirector)
+	if (!scoreDirector && !setFade)
 	{
 		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 			0.0f, 1.0f,
@@ -176,7 +176,7 @@ void G4_OssanTataki_Result::UpdateScoreSprite(float elapsedTime)
 
 		scoreTimer += elapsedTime;
 
-		if (scoreTimer > 4.0f)
+		if (scoreTimer > 2.0f)
 		{
 			scoreTimer = 0.0f;
 			scoreStep++;

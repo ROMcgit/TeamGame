@@ -70,12 +70,7 @@ void G3_SoratobuHusenWari_Result::Update(float elapsedTime)
 	if (G3_SoratobuHusenWari::score > score->GetMaxOku())
 		G3_SoratobuHusenWari::score = score->GetMaxOku();
 
-	// なにかボタンを押したらローディングシーンを挟んでゲームシーンへ切り替え
-	const GamePadButton anyButton =
-		GamePad::BTN_A |
-		GamePad::BTN_B |
-		GamePad::BTN_X |
-		GamePad::BTN_Y;
+
 	if (!scoreDirector && !setFade)
 	{
 		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),

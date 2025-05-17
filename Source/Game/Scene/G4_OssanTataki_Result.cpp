@@ -70,12 +70,7 @@ void G4_OssanTataki_Result::Update(float elapsedTime)
 	if (G4_OssanTataki::score > score->GetMaxOku())
 		G4_OssanTataki::score = score->GetMaxOku();
 
-	// なにかボタンを押したらローディングシーンを挟んでゲームシーンへ切り替え
-	const GamePadButton anyButton =
-		GamePad::BTN_A |
-		GamePad::BTN_B |
-		GamePad::BTN_X |
-		GamePad::BTN_Y;
+
 	if (!scoreDirector && !setFade)
 	{
 		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),

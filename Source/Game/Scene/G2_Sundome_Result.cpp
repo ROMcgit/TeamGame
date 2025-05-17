@@ -83,12 +83,6 @@ void G2_Sundome_Result::Update(float elapsedTime)
 	// スコア演出処理
 	DirectorScore(elapsedTime);
 
-	// なにかボタンを押したらローディングシーンを挟んでゲームシーンへ切り替え
-	const GamePadButton anyButton =
-		GamePad::BTN_A |
-		GamePad::BTN_B |
-		GamePad::BTN_X |
-		GamePad::BTN_Y;
 	if (directorFinish && !setFade)
 	{
 		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),

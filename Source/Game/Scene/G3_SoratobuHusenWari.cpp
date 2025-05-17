@@ -14,6 +14,7 @@
 #include "SceneManager.h"
 #include "SceneLoading.h"
 #include "G3_SoratobuHusenWari_Result.h"
+#include "Audio/BgmManager.h"
 
 //! ƒ€[ƒr[’†‚©
 bool G3_SoratobuHusenWari::movieScene = false;

@@ -8,6 +8,7 @@
 #include "Game/Stage/StageManager.h"
 #include "Game/Stage/G2_StageSundome.h"
 #include "Game/Stage/StageMoveFloor.h"
+#include "Audio/BgmManager.h"
 
 //! ƒ€[ƒr[’†‚©
 bool G2_Sundome::movieScene = false;

@@ -13,6 +13,7 @@
 #include "SceneManager.h"
 #include "SceneLoading.h"
 #include "G4_OssanTataki_Result.h"
+#include "Audio/BgmManager.h"
 
 //! ÉXÉRÉA
 int G4_OssanTataki::score = 0;

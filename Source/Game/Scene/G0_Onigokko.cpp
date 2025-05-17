@@ -15,6 +15,7 @@
 #include "Game/Scene/SceneLoading.h"
 #include "Game/Scene/SceneManager.h"
 #include <algorithm>
+#include "Audio/BgmManager.h"
 
 bool G0_Onigokko::movieScene = false;
 

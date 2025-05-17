@@ -14,6 +14,7 @@
 #include "SceneLoading.h"
 #include "G1_DarumasangaKoronda_Clear.h"
 #include "G1_DarumasangaKoronda_GameOver.h"
+#include "Audio/BgmManager.h"
 
 //! ƒ€[ƒr[’†‚©
 bool G1_DarumasangaKoronda::movieScene = false;

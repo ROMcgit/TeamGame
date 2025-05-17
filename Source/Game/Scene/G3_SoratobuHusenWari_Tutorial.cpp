@@ -7,6 +7,7 @@
 #include "SceneLoading.h"
 #include "Graphics/Fade.h"
 #include "Other/Easing.h"
+#include "Audio/BgmManager.h"
 
 // ‰Šú‰»
 void G3_SoratobuHusenWari_Tutorial::Initialize()

@@ -5,6 +5,7 @@
 #include "Input/Input.h"
 #include "SceneLoading.h"
 #include "Graphics/Fade.h"
+#include "Audio/BgmManager.h"
 
 // ‰Šú‰»
 void G0_Onigokko_Clear::Initialize()

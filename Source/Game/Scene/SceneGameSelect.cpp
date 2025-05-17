@@ -3,6 +3,7 @@
 #include "Game/Scene/SceneLoading.h"
 #include "Game/Scene/SceneManager.h"
 #include "Other/Easing.h"
+#include "Audio/BgmManager.h"
 
 #include "Game/Scene/G0_Onigokko_Tutorial.h"
 #include "Game/Scene/G1_DarumasangaKoronda_Tutorial.h"

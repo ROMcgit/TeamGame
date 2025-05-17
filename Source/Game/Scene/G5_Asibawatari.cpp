@@ -16,6 +16,7 @@
 #include "SceneManager.h"
 #include "G5_Asibawatari_GameOver.h"
 #include "G5_Asibawatari_Clear.h"
+#include "Audio/BgmManager.h"
 
 bool G5_Asibawatari::gameClear = false;
 

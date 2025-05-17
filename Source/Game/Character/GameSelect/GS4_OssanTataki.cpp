@@ -14,15 +14,16 @@ GS4_OssanTataki::GS4_OssanTataki()
 	model = std::make_unique<Model>("Data/Model/GameSelect/GSGameSelect.mdl");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.05f;
+	scale.x = scale.y = 0.08f;
+	scale.z = 0.13f;
 
 	angle.y = DirectX::XMConvertToRadians(180);
 
 	collisionType = CollisionType::Box;
 	// 幅、高さ設定
-	width = 22.55f;
-	height = 7.0f;
-	depth = 2.5f;
+	width = 35.85f;
+	height = 11.0f;
+	depth = 13.0f;
 
 	collisionOffset.y = 0.0f;
 
@@ -63,7 +64,7 @@ void GS4_OssanTataki::Update(float elapsedTime)
 void GS4_OssanTataki::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	float dist = abs(position.x - CameraController::target.x);
-	if (dist < 110)
+	if (dist < 130)
 		shader->Draw(dc, model.get(), materialColor, opacity, emissiveColor, emissiveStrength);
 }
 

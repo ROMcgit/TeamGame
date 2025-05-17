@@ -385,7 +385,7 @@ void SceneGameSelect::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -694,13 +694,13 @@ void SceneGameSelect::RenderGameSprite(ID3D11DeviceContext* dc, const DirectX::X
 		float textureWidth = static_cast<float>(gameSelectSprite[i]->GetTextureWidth());
 		float textureHeight = static_cast<float>(gameSelectSprite[i]->GetTextureHeight());
 
-		gameSelectSpritePos.x = screenPos.x - (gameSelect->GetWidth() * 8.0f);
-		gameSelectSpritePos.y = screenPos.y - (gameSelect->GetHeight() * 6.0f);
+		gameSelectSpritePos.x = screenPos.x - (gameSelect->GetWidth() * 5.0f);
+		gameSelectSpritePos.y = screenPos.y - (gameSelect->GetHeight() * 8.0f);
 
 		//! ゲーム選択画面
 		gameSelectSprite[i]->Render(dc,
 			gameSelectSpritePos.x, gameSelectSpritePos.y,
-			screenWidth * 0.27f, screenHeight * 0.27f,
+			screenWidth * 0.28f, screenHeight * 0.28f,
 			0, 0,
 			textureWidth, textureHeight,
 			0,

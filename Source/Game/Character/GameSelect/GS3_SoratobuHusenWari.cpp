@@ -14,15 +14,16 @@ GS3_SoratobuHusenWari::GS3_SoratobuHusenWari()
 	model = std::make_unique<Model>("Data/Model/GameSelect/GSGameSelect.mdl");
 
 	// モデルが大きいのでスケーリング
-	scale.x = scale.y = scale.z = 0.05f;
+	scale.x = scale.y = 0.08f;
+	scale.z = 0.13f;
 
 	angle.y = DirectX::XMConvertToRadians(180);
 
 	collisionType = CollisionType::Box;
 	// 幅、高さ設定
-	width = 22.55f;
-	height = 7.0f;
-	depth = 2.5f;
+	width = 35.85f;
+	height = 11.0f;
+	depth = 13.0f;
 
 	collisionOffset.y = 0.0f;
 

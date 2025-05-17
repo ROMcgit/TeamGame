@@ -118,9 +118,6 @@
     <Filter Include="Source\Character\Director\Setting">
       <UniqueIdentifier>{99ff7498-53d1-41de-a0a7-c6ce8d36a71f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Character\GameSelect\0_おにごっこ">
-      <UniqueIdentifier>{26868fa7-b542-4f08-9f1c-a159a0e5c442}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Stage\StageGame\G0_おにごっこ">
       <UniqueIdentifier>{4943b1b1-a9b5-43dc-848e-9602a1429587}</UniqueIdentifier>
     </Filter>
@@ -216,6 +213,9 @@
     </Filter>
     <Filter Include="Source\Scene\GameScene\2.寸止め">
       <UniqueIdentifier>{733b4247-8dbd-4ea2-9101-6a52852e777a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Character\GameSelect\0_おにごっこ">
+      <UniqueIdentifier>{26868fa7-b542-4f08-9f1c-a159a0e5c442}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

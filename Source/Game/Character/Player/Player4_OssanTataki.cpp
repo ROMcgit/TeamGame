@@ -7,6 +7,7 @@
 #include "Other/Collision.h"
 #include "Game/Character/CollisionAttack/CollisionAttack_Tataki.h"
 #include "Game/Camera/CameraController.h"
+#include "Audio/SoundManager.h"
 
 static Player4_OssanTataki* instance = nullptr;
 
@@ -32,6 +33,8 @@ Player4_OssanTataki::Player4_OssanTataki()
 	//! Õ“ËUŒ‚‚ğ¶¬
 	std::unique_ptr<CollisionAttack_Tataki> tataki = std::make_unique<CollisionAttack_Tataki>(&collisionAttackManager);
 	collisionAttackManager.Register(std::move(tataki));
+
+	SoundManager::Instance().LoadSound("UŒ‚", "Data/Audio/Sound/Attack.wav");
 
 	// ‘Ò‹@ƒXƒe[ƒg‚Ö‘JˆÚ
 	TransitionWaitState();
@@ -147,6 +150,8 @@ void Player4_OssanTataki::UpdateWaitState(float elapsedTime)
 void Player4_OssanTataki::TransitionAttackState()
 {
 	state = State::Attack;
+
+	SoundManager::Instance().PlaySound("UŒ‚");
 
 	stateChangeWaitTimer = 0.5f;
 }

@@ -9,6 +9,7 @@
 #include "Game/Character/Projectile/ProjectileHoming.h"
 #include "Game/Camera/CameraController.h"
 #include "Game/Character/CollisionAttack/CollisionAttack_Bar.h"
+#include "Audio/SoundManager.h"
 
 static Player5_AsibaWatari* instance = nullptr;
 
@@ -39,6 +40,9 @@ Player5_AsibaWatari::Player5_AsibaWatari()
 	// 当たり判定
 	radius = 2.3f;
 	height = 15.6f;
+
+	SoundManager& sound = SoundManager::Instance();
+	sound.LoadSound("ジャンプ", "Data/Audio/Sound/Jump.wav");
 
 	// 待機ステートへ遷移
 	TransitionWaitState();
@@ -259,6 +263,8 @@ void Player5_AsibaWatari::UpdateMoveState(float elapsedTime)
 void Player5_AsibaWatari::TransitionJumpState()
 {
 	state = State::Jump;
+
+	SoundManager::Instance().PlaySound("ジャンプ");
 
 	model->PlayAnimation(Anim_Jump, false);
 }

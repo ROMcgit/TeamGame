@@ -307,12 +307,15 @@ void Player2_Sundome::UpdateMoveState(float elapsedTime)
 	GamePadButton button =
 		GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
 
-	if ((gamePad.GetButtonHeld() & button && position.x < 205.0f
-		&& ((setVelocityX > 0.0f && velocityXSyosuten >= 0.0f) || (setVelocityX <= 0.0f && velocityXSyosuten > 0.0f)) && isGround)
-		|| setVelocityX <= 13.0f && ((setVelocityX > 0.0f && velocityXSyosuten >= 0.0f) || (setVelocityX <= 0.0f && velocityXSyosuten > 0.0f)))
-		setVelocityX -= brake * elapsedTime;
-	else if ((int)setVelocityX <= 0.0f && velocityXSyosuten <= 0.0f)
+	if ((gamePad.GetButtonHeld() & button && position.x < 205.0f))
+		isBrake = true;
+
+	//! ブレーキする
+	if (isBrake && isGround && setVelocityX > 0.0f)
+		setVelocityX -= 10 * elapsedTime;
+	else if (setVelocityX < 0.0f)
 		setVelocityX = 0.0f;
+
 
 	//! ラウンドが2で着地しているなら
 	if (round == 2 && isGround && boundTimer > 0.7f && setVelocityX > 0.0f)
@@ -393,6 +396,8 @@ void Player2_Sundome::UpdateReturnState(float elapsedTime)
 
 			if (round < 3)
 			{
+				isBrake = false;
+
 				round++;
 			}
 			else

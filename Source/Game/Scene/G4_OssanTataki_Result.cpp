@@ -46,6 +46,10 @@ void G4_OssanTataki_Result::Initialize()
 
 	// 背景
 	backGround = std::make_unique<Sprite>(filePath.c_str());
+
+	BgmManager& bgm = BgmManager::Instance();
+	bgm.LoadBgm("リザルト", "Data/Audio/Bgm/6.Result.wav");
+	bgm.PlayBgm("リザルト", 0.8f);
 }
 
 // 終了化
@@ -82,6 +86,8 @@ void G4_OssanTataki_Result::Update(float elapsedTime)
 	}
 	else if (setFade && !fade->GetFade())
 	{
+		BgmManager::Instance().UnloadBgm("リザルト");
+
 		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGameSelect>());
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示

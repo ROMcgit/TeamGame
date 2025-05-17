@@ -119,6 +119,8 @@ private:
 	std::unique_ptr<Model> models[3];
 	std::unique_ptr<Fade> fade;
 
+	bool isBrake = false;
+
 	float turnSpeed = DirectX::XMConvertToRadians(720);
 
 	float jumpSpeed = 13.0f;

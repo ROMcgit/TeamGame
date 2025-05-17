@@ -158,7 +158,7 @@ bool Player5_AsibaWatari::InputJump()
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
 	{
-		if (gamePad.GetButtonHeld() & GamePad::BTN_A) //Zキー
+		if ((gamePad.GetButtonHeld() & GamePad::BTN_A) || (gamePad.GetButtonHeld() & GamePad::BTN_LEFT_TRIGGER)) //Zキー
 		{
 			// ジャンプ
 			Jump(jumpSpeed);
@@ -201,7 +201,7 @@ void Player5_AsibaWatari::UpdateWaitState(float elapsedTime)
 	}
 
 	//! ジャンプ処理
-	GamePadButton button = GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
+	GamePadButton button = GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y | GamePad::BTN_LEFT_TRIGGER;
 	//! ジャンプ処理
 	if (gamePad.GetButtonDown() & button)
 	{
@@ -242,7 +242,7 @@ void Player5_AsibaWatari::UpdateMoveState(float elapsedTime)
 		TransitionWaitState();
 	}
 
-	GamePadButton button = GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
+	GamePadButton button = GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y | GamePad::BTN_LEFT_TRIGGER;
 	//! ジャンプ処理
 	if (gamePad.GetButtonDown() & button)
 	{

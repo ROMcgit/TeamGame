@@ -91,7 +91,7 @@ void G0_Onigokko::Initialize()
 
 	float posZ = 0;
 	float posX = 0;
-	for (int i = 0; i < 12; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		switch (i + 1)
 		{
@@ -104,31 +104,19 @@ void G0_Onigokko::Initialize()
 		case 3:
 		case 4:
 		{
-			posZ = rand() % 15 + 50 * (i + 1 == 4 ? 1 : -1);
+			posZ = rand() % 5 + 80 * (i + 1 == 4 ? 1 : -1);
 		}
 		break;
 		case 5:
 		case 6: 
 		{
-			posZ = rand() % 15 + 110 * (i + 1 == 6 ? 1 : -1);
+			posZ = rand() % 5 + 160 * (i + 1 == 6 ? 1 : -1);
 		}
 			break;
 		case 7:
 		case 8:
 		{
-			posZ = rand() % 15 + 170 * (i + 1 == 8 ? 1 : -1);
-		}
-		break;
-		case 9:
-		case 10:
-		{
-			posZ = rand() % 15 + 230 * (i + 1 == 10 ? 1 : -1);
-		}
-		break;
-		case 11:
-		case 12: 
-		{
-			posZ = rand() % 15 + 290 * (i + 1 == 12 ? 1 : -1);
+			posZ = rand() % 5 + 240 * (i + 1 == 8 ? 1 : -1);
 		}
 		break;
 		default:
@@ -136,44 +124,32 @@ void G0_Onigokko::Initialize()
 		}
 
 
-		for (int j = 0; j < 12; j++)
+		for (int j = 0; j < 8; j++)
 		{
 			switch (j + 1)
 			{
 			case 1:
 			case 2:
 			{
-				posX = 15 * (j + 1 == 2 ? 1 : -1);
+				posX = 30 * (j + 1 == 2 ? 1 : -1);
 			}
 			break;
 			case 3:
 			case 4:
 			{
-				posX = rand() % 15 + 50 * (j + 1 == 4 ? 1 : -1);
+				posX = rand() % 5 + 80 * (j + 1 == 4 ? 1 : -1);
 			}
 			break;
 			case 5:
 			case 6:
 			{
-				posX = rand() % 15 + 110 * (j + 1 == 6 ? 1 : -1);
+				posX = rand() % 5 + 160 * (j + 1 == 6 ? 1 : -1);
 			}
 			break;
 			case 7:
 			case 8:
 			{
-				posX = rand() % 15 + 170 * (j + 1 == 8 ? 1 : -1);
-			}
-			break;
-			case 9:
-			case 10:
-			{
-				posX = rand() % 15 + 230 * (j + 1 == 10 ? 1 : -1);
-			}
-			break;
-			case 11:
-			case 12:
-			{
-				posX = rand() % 15 + 290 * (j + 1 == 12 ? 1 : -1);
+				posX = rand() % 5 + 240 * (j + 1 == 8 ? 1 : -1);
 			}
 			break;
 			default:

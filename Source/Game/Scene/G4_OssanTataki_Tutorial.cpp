@@ -12,6 +12,10 @@
 // 初期化
 void G4_OssanTataki_Tutorial::Initialize()
 {
+	BgmManager& bgm = BgmManager::Instance();
+	bgm.LoadBgm("チュートリアル", "Data/Audio/Bgm/3.Tutorial.wav");
+	bgm.PlayBgm("チュートリアル", 1.0f);
+
 	backGround = std::make_unique<Sprite>("Data/Sprite/GameSelect/4.png");
 
 	float screenWidth = Graphics::Instance().GetScreenWidth();
@@ -61,6 +65,8 @@ void G4_OssanTataki_Tutorial::Update(float elapsedTime)
 	//! チュートリアルを終わるなら
 	if (tutorialFinish && !fade->GetFade())
 	{
+		BgmManager::Instance().UnloadBgm("チュートリアル");
+
 		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G4_OssanTataki>());
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示

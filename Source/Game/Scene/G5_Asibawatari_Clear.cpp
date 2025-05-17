@@ -10,6 +10,10 @@
 // 初期化
 void G5_Asibawatari_Clear::Initialize()
 {
+	BgmManager& bgm = BgmManager::Instance();
+	bgm.LoadBgm("クリア", "Data/Audio/Bgm/4.Clear.wav");
+	bgm.PlayBgm("クリア", 1.0f);
+
 	// 背景
 	backGround = std::make_unique<Sprite>("Data/Sprite/5.Asibawatari/Bonus.png");
 	// ゲームクリア
@@ -49,6 +53,8 @@ void G5_Asibawatari_Clear::Update(float elapsedTime)
 	}
 	else if (setFade && !fade->GetFade())
 	{
+		BgmManager::Instance().UnloadBgm("クリア");
+
 		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGameSelect>());
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示

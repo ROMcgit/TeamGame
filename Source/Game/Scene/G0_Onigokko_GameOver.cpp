@@ -10,6 +10,10 @@
 // 初期化
 void G0_Onigokko_GameOver::Initialize()
 {
+	BgmManager& bgm = BgmManager::Instance();
+	bgm.LoadBgm("ゲームオーバー", "Data/Audio/Bgm/5.GameOver.wav");
+	bgm.PlayBgm("ゲームオーバー", 0.6f);
+
 	// 背景
 	backGround = std::make_unique<Sprite>("Data/Sprite/0.Onigokko/Game.png");
 	// ゲームオーバー
@@ -47,6 +51,8 @@ void G0_Onigokko_GameOver::Update(float elapsedTime)
 	}
 	else if (setFade && !fade->GetFade())
 	{
+		BgmManager::Instance().UnloadBgm("ゲームオーバー");
+
 		std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<SceneGameSelect>());
 
 		// シーンマネージャーにローディングシーンへの切り替えを指示

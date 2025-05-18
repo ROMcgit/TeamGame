@@ -8,6 +8,7 @@
 #include "Graphics/RenderTarget.h"
 #include "Graphics/ShadowMap.h"
 #include "Graphics/Fade.h"
+#include "Graphics/Pause.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 class G5_Asibawatari : public Scene
@@ -44,6 +45,8 @@ public:
 private:
 	std::unique_ptr<Fade> fade;
 	bool setFade = false;
+
+	std::unique_ptr<Pause> pause;
 
 	std::unique_ptr <Player5_AsibaWatari> player;
 	std::unique_ptr <CameraController> cameraController;

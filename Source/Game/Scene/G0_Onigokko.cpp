@@ -175,6 +175,9 @@ void G0_Onigokko::Initialize()
 	// ムービーシーンにする
 	movieScene = true;
 
+	//! ポーズ
+	pause = std::make_unique<Pause>();
+
 	BgmManager& bgm = BgmManager::Instance();
 	bgm.LoadBgm("おにごっこ", "Data/Audio/Bgm/7.Onigokko.wav");
 	bgm.PlayBgm("おにごっこ", 0.7f);
@@ -199,61 +202,71 @@ void G0_Onigokko::Update(float elapsedTime)
 	if (player->GetInvincibleTimer() > 0.0f)
 		EnemyOni::tracking = false;
 
-	// カメラコントローラー更新処理
-	if (!movieScene || cameraMovieScene == CameraMovieScene::OniMove)
-	{
-		DirectX::XMFLOAT3 cameraTarget = player->GetPosition();
-		cameraTarget.y += player->GetHeight() * 0.6f;
-
-		if (cameraTarget.x < -280 || cameraTarget.x > 280)
-		{
-			cameraTarget.x = std::clamp(cameraTarget.x, -280.0f, 280.0f);
-		}
-
-		if (cameraTarget.z < -280 || cameraTarget.z > 280)
-		{
-			cameraTarget.z = std::clamp(cameraTarget.z, -280.0f, 280.0f);
-		}
-
-		// ターゲットを設定
-		cameraController->SetTarget(cameraTarget);
-		// カメラの範囲
-		cameraController->SetRange(25.0f);
-		// カメラの角度
-		cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(40), 0, 0));
-	}
-	else
-		cameraController->SetTarget(target);
-	Camera::Instance().Update(elapsedTime);
-	cameraController->Update(elapsedTime);
-
-	fade->Update(elapsedTime);
-
 	if(!movieScene)
 	{
-		// タイマーの更新処理
-		timer->Update(elapsedTime);
+		if (pause->GetPauseOpacity() <= 0.0f)
+			// タイマーの更新処理
+			timer->Update(elapsedTime);
+
+		// ポーズ画面
+		pause->Update(elapsedTime);
 	}
 
 	// ステージ更新処理
 	StageManager::Instance().Update(elapsedTime);
 
-	//! プレイヤーの位置制限
-	PlayerPositionControll();
-	// プレイヤー更新処理
-	player->Update(elapsedTime);
+	if(pause->GetPauseOpacity() <= 0.0f)
+	{
 
-	// エネミー更新処理
-	EnemyManager::Instance().Update(elapsedTime);
+		fade->Update(elapsedTime);
 
-	// エフェクト更新処理
-	EffectManager::Instance().Update(elapsedTime);
+		// カメラコントローラー更新処理
+		if (!movieScene || cameraMovieScene == CameraMovieScene::OniMove)
+		{
+			DirectX::XMFLOAT3 cameraTarget = player->GetPosition();
+			cameraTarget.y += player->GetHeight() * 0.6f;
 
-	// カメラのムービー更新処理
-	UpdateCameraMovie(elapsedTime);
+			if (cameraTarget.x < -280 || cameraTarget.x > 280)
+			{
+				cameraTarget.x = std::clamp(cameraTarget.x, -280.0f, 280.0f);
+			}
 
-	//! 敵を生成
-	NewEnemy();
+			if (cameraTarget.z < -280 || cameraTarget.z > 280)
+			{
+				cameraTarget.z = std::clamp(cameraTarget.z, -280.0f, 280.0f);
+			}
+
+			// ターゲットを設定
+			cameraController->SetTarget(cameraTarget);
+			// カメラの範囲
+			cameraController->SetRange(25.0f);
+			// カメラの角度
+			cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(40), 0, 0));
+		}
+		else
+			cameraController->SetTarget(target);
+
+
+		Camera::Instance().Update(elapsedTime);
+		cameraController->Update(elapsedTime);
+
+		//! プレイヤーの位置制限
+		PlayerPositionControll();
+		// プレイヤー更新処理
+		player->Update(elapsedTime);
+
+		// エネミー更新処理
+		EnemyManager::Instance().Update(elapsedTime);
+
+		// エフェクト更新処理
+		EffectManager::Instance().Update(elapsedTime);
+
+		// カメラのムービー更新処理
+		UpdateCameraMovie(elapsedTime);
+
+		//! 敵を生成
+		NewEnemy();
+	}
 }
 
 // 描画処理
@@ -393,6 +406,8 @@ void G0_Onigokko::Render()
 			timer->Render(dc, graphics, DirectX::XMFLOAT2(30, 0));
 	
 		fade->Render(dc, graphics);
+
+		pause->Render(dc, graphics);
 	}
 
 #ifndef _DEBUG

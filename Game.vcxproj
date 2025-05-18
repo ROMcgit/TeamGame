@@ -222,6 +222,7 @@
     <ClInclude Include="Source\Game\Stage\G5_StageAsibawatari_Trap.h" />
     <ClInclude Include="Source\Game\Stage\StageGameSelect.h" />
     <ClInclude Include="Source\Graphics\HDRTexture.h" />
+    <ClInclude Include="Source\Graphics\Pause.h" />
     <ClInclude Include="Source\Graphics\RenderTarget.h" />
     <ClInclude Include="Source\Graphics\ShaderSetting.h" />
     <ClInclude Include="Source\Graphics\ShadowMap.h" />
@@ -353,6 +354,7 @@
     <ClCompile Include="Source\Game\Stage\Stage.cpp" />
     <ClCompile Include="Source\Game\Stage\StageGameSelect.cpp" />
     <ClCompile Include="Source\Graphics\HDRTexture.cpp" />
+    <ClCompile Include="Source\Graphics\Pause.cpp" />
     <ClCompile Include="Source\Graphics\RenderTarget.cpp" />
     <ClCompile Include="Source\Graphics\ShaderSetting.cpp" />
     <ClCompile Include="Source\Graphics\ShadowMap.cpp" />

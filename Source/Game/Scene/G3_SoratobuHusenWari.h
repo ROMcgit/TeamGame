@@ -10,6 +10,7 @@
 #include "Graphics/Fade.h"
 #include "Game/Character/CollisionAttack/CollisionAttackManager.h"
 #include "Graphics/Text.h"
+#include "Graphics/Pause.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 class G3_SoratobuHusenWari : public Scene
@@ -50,6 +51,8 @@ public:
 
 private:
 	CollisionAttackManager collisionAttackManager;
+
+	std::unique_ptr<Pause> pause;
 
 	std::unique_ptr<Text> scoreText;
 	DirectX::XMFLOAT2 scoreTextPos = { 1240.0f, 0.0f };

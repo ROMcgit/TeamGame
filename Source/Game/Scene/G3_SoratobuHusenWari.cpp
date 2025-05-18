@@ -109,6 +109,9 @@ void G3_SoratobuHusenWari::Initialize()
 		1.0f, 0.0f,
 		1.0f, 0.5f);
 
+	//! ポーズ画面
+	pause = std::make_unique<Pause>();
+
 	BgmManager& bgm = BgmManager::Instance();
 	bgm.LoadBgm("空飛ぶ風船割り", "Data/Audio/Bgm/10.Soratobu.wav");
 	bgm.PlayBgm("空飛ぶ風船割り", 0.5f);
@@ -130,43 +133,49 @@ void G3_SoratobuHusenWari::Finalize()
 // 更新処理
 void G3_SoratobuHusenWari::Update(float elapsedTime)
 {
-	//! フェードの更新処理
-	fade->Update(elapsedTime);
+	//! ポーズ画面の更新処理
+	pause->Update(elapsedTime);
 
-	//! ターゲットを設定
-	cameraController->SetTarget(DirectX::XMFLOAT3(0, 21.0f, 4.8f));
-	Camera::Instance().Update(elapsedTime);
-	cameraController->Update(elapsedTime);
+	if (pause->GetPauseOpacity() <= 0.0f)
+	{
+		//! フェードの更新処理
+		fade->Update(elapsedTime);
 
-	// ステージ更新処理
-	StageManager::Instance().Update(elapsedTime);
+		//! ターゲットを設定
+		cameraController->SetTarget(DirectX::XMFLOAT3(0, 21.0f, 4.8f));
+		Camera::Instance().Update(elapsedTime);
+		cameraController->Update(elapsedTime);
 
-	// プレイヤー更新処理
-	player->Update(elapsedTime);
+		// ステージ更新処理
+		StageManager::Instance().Update(elapsedTime);
 
-	// エネミー更新処理
-	EnemyManager::Instance().Update(elapsedTime);
+		// プレイヤー更新処理
+		player->Update(elapsedTime);
 
-	// アイテムの更新処理
-	ItemManager::Instance().Update(elapsedTime);
+		// エネミー更新処理
+		EnemyManager::Instance().Update(elapsedTime);
 
-	// エフェクト更新処理
-	EffectManager::Instance().Update(elapsedTime);
+		// アイテムの更新処理
+		ItemManager::Instance().Update(elapsedTime);
 
-	// 衝突攻撃の更新処理
-	collisionAttackManager.Update(elapsedTime);
+		// エフェクト更新処理
+		EffectManager::Instance().Update(elapsedTime);
 
-	//! バルーン生成処理
-	NewBalloon(elapsedTime);
+		// 衝突攻撃の更新処理
+		collisionAttackManager.Update(elapsedTime);
 
-	//! 雲生成処理
-	NewCloud(elapsedTime);
+		//! バルーン生成処理
+		NewBalloon(elapsedTime);
 
-	//! スコア更新処理
-	UpdateScore();
+		//! 雲生成処理
+		NewCloud(elapsedTime);
 
-	//! シーン切り替え
-	SceneChange();
+		//! スコア更新処理
+		UpdateScore();
+
+		//! シーン切り替え
+		SceneChange();
+	}
 }
 
 // 描画処理

@@ -132,6 +132,9 @@ void G1_DarumasangaKoronda::Initialize()
 	//! タイマー
 	timer = std::make_unique<Timer>(true, 2, 30);
 
+	//! ポーズ
+	pause = std::make_unique<Pause>();
+
 	BgmManager& bgm = BgmManager::Instance();
 	bgm.LoadBgm("だるまさんが転んだ", "Data/Audio/Bgm/8.Daruma.wav");
 	bgm.PlayBgm("だるまさんが転んだ", 1.0f);
@@ -153,60 +156,68 @@ void G1_DarumasangaKoronda::Finalize()
 // 更新処理
 void G1_DarumasangaKoronda::Update(float elapsedTime)
 {
-	//! フェードを更新処理
-	fade->Update(elapsedTime);
-
 	//! タイマーの更新処理
 	if (!movieScene)
-		timer->Update(elapsedTime);
-
-	//! ムービー更新処理
-	UpdateMovie(elapsedTime);
-
-	// カメラコントローラー更新処理
-	if (!movieScene || (movieStep == 1 || movieStep == 2))
 	{
-		DirectX::XMFLOAT3 target = player->GetPosition();
-		target.x = 0;
-		target.y += player->GetHeight() * 0.5f;
-		target.z -= 2.0f;
-		if (target.z < 0.8f || target.z > 540.0f)
+		if(pause->GetPauseOpacity() <= 0.0f)
+			timer->Update(elapsedTime);
+
+		pause->Update(elapsedTime);
+	}
+
+	if (pause->GetPauseOpacity() <= 0.0f)
+	{
+		//! フェードを更新処理
+		fade->Update(elapsedTime);
+
+		//! ムービー更新処理
+		UpdateMovie(elapsedTime);
+
+		// カメラコントローラー更新処理
+		if (!movieScene || (movieStep == 1 || movieStep == 2))
 		{
-			target.z = std::clamp(target.z, 0.8f, 540.0f);
+			DirectX::XMFLOAT3 target = player->GetPosition();
+			target.x = 0;
+			target.y += player->GetHeight() * 0.5f;
+			target.z -= 2.0f;
+			if (target.z < 0.8f || target.z > 540.0f)
+			{
+				target.z = std::clamp(target.z, 0.8f, 540.0f);
+			}
+			cameraController->SetTarget(target);
+			cameraController->SetRange(20.0f);
 		}
-		cameraController->SetTarget(target);
-		cameraController->SetRange(20.0f);
+		else
+		{
+			std::unique_ptr<Enemy>& oni = EnemyManager::Instance().GetEnemy(0);
+
+			DirectX::XMFLOAT3 target = oni->GetPosition();
+			target.x = 0;
+			target.y += oni->GetHeight() * 0.5f;
+			target.z -= 2.0f;
+			cameraController->SetTarget(target);
+			cameraController->SetRange(15.0f);
+		}
+		Camera::Instance().Update(elapsedTime);
+		cameraController->Update(elapsedTime);
+
+		// ステージ更新処理
+		StageManager::Instance().Update(elapsedTime);
+
+		PlayerPositionControll();
+		// プレイヤー更新処理
+		if (timer->GetTimeM_Int() > 0 || (timer->GetTimeM_Int() == 0 && timer->GetTimeS_Int() > 0))
+			player->Update(elapsedTime);
+
+		// エネミー更新処理
+		EnemyManager::Instance().Update(elapsedTime);
+
+		// エフェクト更新処理
+		EffectManager::Instance().Update(elapsedTime);
+
+		// シーン切り替え処理
+		SceneChange();
 	}
-	else
-	{
-		std::unique_ptr<Enemy>& oni = EnemyManager::Instance().GetEnemy(0);
-
-		DirectX::XMFLOAT3 target = oni->GetPosition();
-		target.x = 0;
-		target.y += oni->GetHeight() * 0.5f;
-		target.z -= 2.0f;
-		cameraController->SetTarget(target);
-		cameraController->SetRange(15.0f);
-	}
-	Camera::Instance().Update(elapsedTime);
-	cameraController->Update(elapsedTime);
-
-	// ステージ更新処理
-	StageManager::Instance().Update(elapsedTime);
-
-	PlayerPositionControll();
-	// プレイヤー更新処理
-	if (timer->GetTimeM_Int() > 0 || (timer->GetTimeM_Int() == 0 && timer->GetTimeS_Int() > 0))
-		player->Update(elapsedTime);
-
-	// エネミー更新処理
-	EnemyManager::Instance().Update(elapsedTime);
-
-	// エフェクト更新処理
-	EffectManager::Instance().Update(elapsedTime);
-
-	// シーン切り替え処理
-	SceneChange();
 }
 
 // 描画処理

@@ -9,6 +9,7 @@
 #include "Graphics/ShadowMap.h"
 #include "Graphics/Fade.h"
 #include "Graphics/Timer.h"
+#include "Graphics/Pause.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 class G1_DarumasangaKoronda : public Scene
@@ -46,6 +47,8 @@ private:
 	std::unique_ptr<Fade> fade;
 	bool setFade = false;
 	bool sceneChange = false;
+
+	std::unique_ptr<Pause> pause;
 
 	std::unique_ptr <Player1_DarumasangaKoronda> player;
 	std::unique_ptr <CameraController> cameraController;

@@ -9,6 +9,7 @@
 #include "Graphics/ShadowMap.h"
 #include "Graphics/Timer.h"
 #include "Graphics/Fade.h"
+#include "Graphics/Pause.h"
 
 // ゲームシーン
 class G0_Onigokko : public Scene
@@ -49,6 +50,8 @@ public:
 	static bool  movieScene; // ムービーシーンか
 private:
 	DirectX::XMFLOAT3 target = { 0, 0, 0 };
+
+	std::unique_ptr<Pause> pause;
 
 	std::unique_ptr <Player0_Onigokko> player;
 	std::unique_ptr <CameraController> cameraController;

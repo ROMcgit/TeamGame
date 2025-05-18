@@ -11,6 +11,7 @@
 #include "Graphics/Fade.h"
 #include "Graphics/Text.h"
 #include "Graphics/Timer.h"
+#include "Graphics/Pause.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 class G4_OssanTataki : public Scene
@@ -50,6 +51,8 @@ public:
 private:
 	std::unique_ptr<Text> scoreText;
 	DirectX::XMFLOAT2 scoreTextPos = { 1240.0f, 0.0f };
+
+	std::unique_ptr<Pause> pause;
 
 	CollisionAttackManager collisionAttackManager;
 

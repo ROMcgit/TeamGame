@@ -76,6 +76,9 @@ void G2_Sundome::Initialize()
 		1.0f, 0.0f,
 		0.5f, 0.2f);
 
+	//! ポーズ画面
+	pause = std::make_unique<Pause>();
+
 	BgmManager& bgm = BgmManager::Instance();
 	bgm.LoadBgm("寸止め", "Data/Audio/Bgm/9.Sundome.wav");
 	bgm.PlayBgm("寸止め", 1.0f);
@@ -97,34 +100,40 @@ void G2_Sundome::Finalize()
 // 更新処理
 void G2_Sundome::Update(float elapsedTime)
 {
-	//! フェードの更新処理
-	fade->Update(elapsedTime);
+	//! ポーズ画面の更新処理
+	pause->Update(elapsedTime);
 
-	//! ムービー更新処理
-	UpdateMovie(elapsedTime);
-
-	if(!movieScene || (movieScene && player->GetRound() >= 2))
+	if(pause->GetPauseOpacity() <= 0.0f)
 	{
-		// カメラコントローラー更新処理
-		DirectX::XMFLOAT3 target = player->GetPosition();
-		target.y = 63.75f;
+		//! フェードの更新処理
+		fade->Update(elapsedTime);
 
-		cameraController->SetTarget(target);
+		//! ムービー更新処理
+		UpdateMovie(elapsedTime);
+
+		if (!movieScene || (movieScene && player->GetRound() >= 2))
+		{
+			// カメラコントローラー更新処理
+			DirectX::XMFLOAT3 target = player->GetPosition();
+			target.y = 63.75f;
+
+			cameraController->SetTarget(target);
+		}
+		Camera::Instance().Update(elapsedTime);
+		cameraController->Update(elapsedTime);
+
+		// ステージ更新処理
+		StageManager::Instance().Update(elapsedTime);
+
+		// プレイヤー更新処理
+		player->Update(elapsedTime);
+
+		// エネミー更新処理
+		EnemyManager::Instance().Update(elapsedTime);
+
+		// エフェクト更新処理
+		EffectManager::Instance().Update(elapsedTime);
 	}
-	Camera::Instance().Update(elapsedTime);
-	cameraController->Update(elapsedTime);
-
-	// ステージ更新処理
-	StageManager::Instance().Update(elapsedTime);
-
-	// プレイヤー更新処理
-	player->Update(elapsedTime);
-
-	// エネミー更新処理
-	EnemyManager::Instance().Update(elapsedTime);
-
-	// エフェクト更新処理
-	EffectManager::Instance().Update(elapsedTime);
 }
 
 // 描画処理

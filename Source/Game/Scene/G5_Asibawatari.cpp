@@ -85,6 +85,8 @@ void G5_Asibawatari::Initialize()
 		1.0f, 0.0f,
 		1.0f, 0.5f);
 
+	pause = std::make_unique<Pause>();
+
 	BgmManager& bgm = BgmManager::Instance();
 	bgm.LoadBgm("足場渡り", "Data/Audio/Bgm/12.Asibawatari.wav");
 	bgm.PlayBgm("足場渡り", 0.5f);
@@ -106,35 +108,41 @@ void G5_Asibawatari::Finalize()
 // 更新処理
 void G5_Asibawatari::Update(float elapsedTime)
 {
-	//! フェードの更新処理
-	fade->Update(elapsedTime);
+	//! ポーズ画面の更新処理
+	pause->Update(elapsedTime);
 
-	//! ムービー更新処理
-	UpdateMovie(elapsedTime);
+	if(pause->GetPauseOpacity() <= 0.0f)
+	{
+		//! フェードの更新処理
+		fade->Update(elapsedTime);
 
-	// カメラコントローラー更新処理
-	Camera::Instance().Update(elapsedTime);
-	cameraController->Update(elapsedTime);
+		//! ムービー更新処理
+		UpdateMovie(elapsedTime);
 
-	// ステージ更新処理
-	if(!gameClear)
-		StageManager::Instance().Update(elapsedTime);
+		// カメラコントローラー更新処理
+		Camera::Instance().Update(elapsedTime);
+		cameraController->Update(elapsedTime);
 
-	//! ステージ生成処理
-	NewStage(elapsedTime);
+		// ステージ更新処理
+		if (!gameClear)
+			StageManager::Instance().Update(elapsedTime);
 
-	// プレイヤー更新処理
-	if (!gameClear)
-	player->Update(elapsedTime);
+		//! ステージ生成処理
+		NewStage(elapsedTime);
 
-	// エネミー更新処理
-	EnemyManager::Instance().Update(elapsedTime);
+		// プレイヤー更新処理
+		if (!gameClear)
+			player->Update(elapsedTime);
 
-	// エフェクト更新処理
-	EffectManager::Instance().Update(elapsedTime);
+		// エネミー更新処理
+		EnemyManager::Instance().Update(elapsedTime);
 
-	//! シーン切り替え処理
-	SceneChange();
+		// エフェクト更新処理
+		EffectManager::Instance().Update(elapsedTime);
+
+		//! シーン切り替え処理
+		SceneChange();
+	}
 }
 
 // 描画処理

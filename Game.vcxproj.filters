@@ -603,6 +603,9 @@
     <ClInclude Include="Source\Game\Stage\G1_StageEndHole.h">
       <Filter>Source\Stage\StageGame\G1_だるまさんが転んだ</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Graphics\Pause.h">
+      <Filter>Source\0_Settings 《🔧》\Graphics\Polygon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -976,6 +979,9 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Stage\G1_StageEndHole.cpp">
       <Filter>Source\Stage\StageGame\G1_だるまさんが転んだ</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Pause.cpp">
+      <Filter>Source\0_Settings 《🔧》\Graphics\Polygon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

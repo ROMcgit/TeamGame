@@ -118,6 +118,9 @@ void G4_OssanTataki::Initialize()
 	//! タイマー
 	timer = std::make_unique<Timer>(true, 1, 30);
 
+	//! ポーズ画面
+	pause = std::make_unique<Pause>();
+
 	BgmManager& bgm = BgmManager::Instance();
 	bgm.LoadBgm("おっさん叩き", "Data/Audio/Bgm/11.Ossantataki.wav");
 	bgm.PlayBgm("おっさん叩き", 0.3f);
@@ -139,45 +142,51 @@ void G4_OssanTataki::Finalize()
 // 更新処理
 void G4_OssanTataki::Update(float elapsedTime)
 {
-	//! フェードの更新処理
-	fade->Update(elapsedTime);
+	//! ポーズ画面
+	pause->Update(elapsedTime);
 
-	//! タイマーの更新処理
-	if(!movieScene)
-		timer->Update(elapsedTime);
+	if(pause->GetPauseOpacity() <= 0.0f)
+	{
+		//! フェードの更新処理
+		fade->Update(elapsedTime);
 
-	//! ムービー更新処理
-	UpdateMovie(elapsedTime);
+		//! タイマーの更新処理
+		if (!movieScene)
+			timer->Update(elapsedTime);
 
-	// 衝突攻撃の更新処理
-	collisionAttackManager.Update(elapsedTime);
+		//! ムービー更新処理
+		UpdateMovie(elapsedTime);
 
-	// カメラコントローラー更新処理
-	Camera::Instance().Update(elapsedTime);
-	cameraController->Update(elapsedTime);
+		// 衝突攻撃の更新処理
+		collisionAttackManager.Update(elapsedTime);
 
-	// ステージ更新処理
-	StageManager::Instance().Update(elapsedTime);
+		// カメラコントローラー更新処理
+		Camera::Instance().Update(elapsedTime);
+		cameraController->Update(elapsedTime);
 
-	// プレイヤー更新処理
-	if(!movieScene)
-	player->Update(elapsedTime);
+		// ステージ更新処理
+		StageManager::Instance().Update(elapsedTime);
 
-	// エネミー更新処理
-	if(timer->GetTimeM_Int() > 0 || (timer->GetTimeM_Int() == 0 && timer->GetTimeS_Int() > 0))
-		EnemyManager::Instance().Update(elapsedTime);
+		// プレイヤー更新処理
+		if (!movieScene)
+			player->Update(elapsedTime);
 
-	// エフェクト更新処理
-	EffectManager::Instance().Update(elapsedTime);
+		// エネミー更新処理
+		if (timer->GetTimeM_Int() > 0 || (timer->GetTimeM_Int() == 0 && timer->GetTimeS_Int() > 0))
+			EnemyManager::Instance().Update(elapsedTime);
 
-	// 敵生成処理
-	NewEnemy(elapsedTime);
+		// エフェクト更新処理
+		EffectManager::Instance().Update(elapsedTime);
 
-	// スコア更新処理
-	UpdateScore();
+		// 敵生成処理
+		NewEnemy(elapsedTime);
 
-	// シーン切り替え処理
-	SceneChange();
+		// スコア更新処理
+		UpdateScore();
+
+		// シーン切り替え処理
+		SceneChange();
+	}
 }
 
 // 描画処理

@@ -29,7 +29,7 @@ void G4_OssanTataki::Initialize()
 
 
 	Graphics& graphics = Graphics::Instance();
-	graphics.GetEnvironmentMap()->Load("Data/Environment/Cloud.hdr");
+	graphics.GetEnvironmentMap()->Load("Data/Environment/Evening.hdr");
 	graphics.GetEnvironmentMap()->Set(15);
 
 	//! ‹ó
@@ -56,7 +56,6 @@ void G4_OssanTataki::Initialize()
 	player = std::make_unique<Player4_OssanTataki>();
 
 	// ƒJƒƒ‰‰Šúİ’è
-	Graphics& graphics = Graphics::Instance();
 	Camera& camera = Camera::Instance();
 	camera.SetLookAt(
 		DirectX::XMFLOAT3(0, 10, -10),

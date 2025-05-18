@@ -20,7 +20,7 @@ int G2_Sundome::score[3] = { 0, 0, 0 };
 void G2_Sundome::Initialize()
 {
 	Graphics& graphics = Graphics::Instance();
-	graphics.GetEnvironmentMap()->Load("Data/Environment/Cloud.hdr");
+	graphics.GetEnvironmentMap()->Load("Data/Environment/BlueSky.hdr");
 	graphics.GetEnvironmentMap()->Set(15);
 
 	//! ‹ó
@@ -48,7 +48,6 @@ void G2_Sundome::Initialize()
 	player->SetPosition(DirectX::XMFLOAT3(215.0f, 70.0f, -2.0f));
 
 	// ƒJƒƒ‰‰Šúİ’è
-	Graphics& graphics = Graphics::Instance();
 	Camera& camera = Camera::Instance();
 	camera.SetLookAt(
 		DirectX::XMFLOAT3(0, 10, -10),

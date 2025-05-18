@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Game/GameObjectBase.h"
+#include "Game/Character/GameObjectBase.h"
 
 // ‘O•ûéŒ¾
 class Graphics;

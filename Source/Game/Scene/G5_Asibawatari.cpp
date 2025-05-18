@@ -28,7 +28,7 @@ void G5_Asibawatari::Initialize()
 	movieScene = true;
 
 	Graphics& graphics = Graphics::Instance();
-	graphics.GetEnvironmentMap()->Load("Data/Environment/Cloud.hdr");
+	graphics.GetEnvironmentMap()->Load("Data/Environment/SF_Night.hdr");
 	graphics.GetEnvironmentMap()->Set(15);
 
 	//! ‹ó
@@ -59,7 +59,6 @@ void G5_Asibawatari::Initialize()
 	//player->SetGravity(0.0f);
 
 	// ƒJƒƒ‰‰Šúİ’è
-	Graphics& graphics = Graphics::Instance();
 	Camera& camera = Camera::Instance();
 	camera.SetLookAt(
 		DirectX::XMFLOAT3(0, 10, -10),

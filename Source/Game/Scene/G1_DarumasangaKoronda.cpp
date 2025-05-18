@@ -25,7 +25,7 @@ void G1_DarumasangaKoronda::Initialize()
 	movieScene = true;
 
 	Graphics& graphics = Graphics::Instance();
-	graphics.GetEnvironmentMap()->Load("Data/Environment/Cloud.hdr");
+	graphics.GetEnvironmentMap()->Load("Data/Environment/DemonsWorld.hdr");
 	graphics.GetEnvironmentMap()->Set(15);
 
 	//! ‹ó
@@ -104,7 +104,6 @@ void G1_DarumasangaKoronda::Initialize()
 	EnemyManager::Instance().Register(std::move(oni));
 
 	// ƒJƒƒ‰‰Šúİ’è
-	Graphics& graphics = Graphics::Instance();
 	Camera& camera = Camera::Instance();
 	camera.SetLookAt(
 		DirectX::XMFLOAT3(0, 10, -10),

@@ -75,7 +75,6 @@ void SceneGameSelect::Initialize()
 	player->SetHeight(16.0f);
 
 	// ƒJƒƒ‰‰Šúİ’è
-	Graphics& graphics = Graphics::Instance();
 	Camera& camera = Camera::Instance();
 	camera.SetLookAt(
 		DirectX::XMFLOAT3(0, 10, -10),

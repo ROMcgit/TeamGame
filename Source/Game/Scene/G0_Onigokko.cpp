@@ -23,7 +23,7 @@ bool G0_Onigokko::movieScene = false;
 void G0_Onigokko::Initialize()
 {
 	Graphics& graphics = Graphics::Instance();
-	graphics.GetEnvironmentMap()->Load("Data/Environment/Cloud.hdr");
+	graphics.GetEnvironmentMap()->Load("Data/Environment/Barrier_Demons.hdr");
 	graphics.GetEnvironmentMap()->Set(15);
 
 	//! ‹ó
@@ -53,7 +53,6 @@ void G0_Onigokko::Initialize()
 	player->SetMovieAnimation(0, true);
 
 	// ƒJƒƒ‰‰Šúİ’è
-	Graphics& graphics = Graphics::Instance();
 	Camera& camera = Camera::Instance();
 	camera.SetLookAt(
 		DirectX::XMFLOAT3(0, 10, -10),

@@ -22,6 +22,7 @@ private:
 	struct CbScene
 	{
 		DirectX::XMFLOAT4X4	viewProjection;
+		DirectX::XMFLOAT4   cameraPosition;   // カメラの位置
 		DirectX::XMFLOAT4	lightDirection;   // ライトの向き
 		DirectX::XMFLOAT4   lightColor;       // ライトの色
 		DirectX::XMFLOAT3   lightPosition;    // ライトの位置

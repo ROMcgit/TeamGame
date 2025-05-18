@@ -256,6 +256,18 @@ void Framework::SceneSelectGUI()
 				ImGui::DragFloat(u8"終了(フォグ)", &Scene::debugFogEnd);
 			}
 
+			//-----------------------------------------------------------------------------------------------------//
+			ImGui::Spacing(); // 一行空ける
+			ImGui::Separator(); // セクションの間に区切り線を表示
+			ImGui::Spacing(); // 一行空ける
+			//-----------------------------------------------------------------------------------------------------//
+			if (ImGui::CollapsingHeader(u8"スカイマップ"))
+			{
+				ImGui::DragFloat3(u8"位置(スカイマップ)", &Scene::debugSkydomePosition.x, 0.01f);
+				ImGui::DragFloat3(u8"角度(スカイマップ)", &Scene::debugSkydomeAngle.x, 0.01f);
+				ImGui::DragFloat(u8"大きさ(スカイマップ)", &Scene::debugSkydomeScale, 0.001f);
+			}
+
 			ImGui::TreePop();
 		}
 #endif

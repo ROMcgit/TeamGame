@@ -85,6 +85,7 @@ void G5_Asibawatari::Initialize()
 		1.0f, 0.0f,
 		1.0f, 0.5f);
 
+	//! ƒ|[ƒY‰æ–Ê
 	pause = std::make_unique<Pause>();
 
 	BgmManager& bgm = BgmManager::Instance();

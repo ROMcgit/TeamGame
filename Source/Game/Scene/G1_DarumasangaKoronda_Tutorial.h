@@ -30,6 +30,8 @@ private:
 
 private:
 	std::unique_ptr<Sprite> backGround;
+	std::unique_ptr<Sprite> skip;
+
 	std::unique_ptr<Sprite> tutorialSpriteFrame;
 	std::unique_ptr<Sprite> tutorialSprite[3];
 	DirectX::XMFLOAT2       tutorialSpritePos[3];

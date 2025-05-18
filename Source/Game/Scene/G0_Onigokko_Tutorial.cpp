@@ -40,6 +40,9 @@ void G0_Onigokko_Tutorial::Initialize()
 
 	tutorialSpriteFrame = std::make_unique<Sprite>();
 
+	//! スキップ
+	skip = std::make_unique<Sprite>("Data/Sprite/Skip.png");
+
 	fade = std::make_unique<Fade>();
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 		1.0f, 0.0f,
@@ -104,6 +107,15 @@ void G0_Onigokko_Tutorial::Render()
 			textureWidth, textureHeight,
 			0,
 			0.5f, 0.5f, 0.5f, 1.0f);
+
+		//! スキップ
+		skip->Render(dc,
+			0, 0,
+			screenWidth, screenHeight,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1);
 
 		for (int i = 0; i < 3; i++)
 		{

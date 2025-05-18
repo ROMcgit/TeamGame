@@ -9,6 +9,7 @@
 #include "Graphics/ShadowMap.h"
 #include "Graphics/Fade.h"
 #include "Graphics/Pause.h"
+#include "Game/Sky.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 class G5_Asibawatari : public Scene
@@ -47,6 +48,8 @@ private:
 	bool setFade = false;
 
 	std::unique_ptr<Pause> pause;
+
+	std::unique_ptr<Sky> sky;
 
 	std::unique_ptr <Player5_AsibaWatari> player;
 	std::unique_ptr <CameraController> cameraController;

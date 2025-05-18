@@ -12,6 +12,7 @@
 #include "Graphics/Text.h"
 #include "Graphics/Timer.h"
 #include "Graphics/Pause.h"
+#include "Game/Sky.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 class G4_OssanTataki : public Scene
@@ -53,6 +54,8 @@ private:
 	DirectX::XMFLOAT2 scoreTextPos = { 1240.0f, 0.0f };
 
 	std::unique_ptr<Pause> pause;
+
+	std::unique_ptr<Sky> sky;
 
 	CollisionAttackManager collisionAttackManager;
 

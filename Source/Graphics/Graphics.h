@@ -10,6 +10,7 @@
 #include "Graphics/HDRTexture.h"
 #include "Graphics/DefaltLitShader.h"
 #include "Graphics/ShadowMapShader.h"
+#include "SkydomeShader.h"
 #include <mutex>
 
 // グラフィックス
@@ -42,6 +43,9 @@ public:
 
 	// デプスステンシルステートのゲッター
 	ID3D11DepthStencilState* GetDepthStencilState() const { return depthStencilState.Get(); }
+
+	// 環境マップを取得
+	HDRTexture* GetEnvironmentMap() const { return environmentMap.get(); }
 
 	/*! サンプラーステート */
 #if 1 
@@ -78,6 +82,9 @@ public:
 	// DefaultLitShader取得
 	Shader* GetDefaultLitShader() const { return defaultLitshader.get(); }
 
+	// SkydomeShader取得
+	Shader* GetSkydomeShader() const { return skydomeShader.get(); }
+
 	// スクリーン幅取得
 	float GetScreenWidth() const { return screenWidth; }
 
@@ -113,6 +120,8 @@ private:
 
 	std::unique_ptr<Shader>                         shadowMapShader; // シャドウマップシェーダー
 	std::unique_ptr<Shader>                         defaultLitshader; // デフォルトリットシェーダー
+	std::unique_ptr<Shader>                         skydomeShader;    // スカイドームシェーダー
+
 	std::unique_ptr<DebugRenderer>					debugRenderer;
 	std::unique_ptr<LineRenderer>					lineRenderer;
 	std::unique_ptr<ImGuiRenderer>					imguiRenderer;

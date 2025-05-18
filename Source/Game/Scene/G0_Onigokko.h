@@ -10,6 +10,7 @@
 #include "Graphics/Timer.h"
 #include "Graphics/Fade.h"
 #include "Graphics/Pause.h"
+#include "Game/Sky.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 class G0_Onigokko : public Scene
@@ -52,6 +53,8 @@ private:
 	DirectX::XMFLOAT3 target = { 0, 0, 0 };
 
 	std::unique_ptr<Pause> pause;
+
+	std::unique_ptr<Sky> sky;
 
 	std::unique_ptr <Player0_Onigokko> player;
 	std::unique_ptr <CameraController> cameraController;

@@ -10,6 +10,7 @@
 #include "Graphics/Fade.h"
 #include "Graphics/Timer.h"
 #include "Graphics/Pause.h"
+#include "Game/Sky.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 class G1_DarumasangaKoronda : public Scene
@@ -49,6 +50,8 @@ private:
 	bool sceneChange = false;
 
 	std::unique_ptr<Pause> pause;
+
+	std::unique_ptr<Sky> sky;
 
 	std::unique_ptr <Player1_DarumasangaKoronda> player;
 	std::unique_ptr <CameraController> cameraController;

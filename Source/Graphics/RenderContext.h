@@ -24,4 +24,8 @@ struct RenderContext
 	float                focusDistance; // フォーカス距離
 	float                focusRange;    // フォーカス範囲
 	float                blurStrength;  // ぼかし強度
+
+	DirectX::XMFLOAT3    skydomePosition; // スカイマップの位置
+	DirectX::XMFLOAT3    skydomeAngle;    // スカイマップの角度Z
+	float                skydomeScale;    // スカイマップの大きさ
 };

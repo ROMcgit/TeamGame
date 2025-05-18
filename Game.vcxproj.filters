@@ -606,6 +606,12 @@
     <ClInclude Include="Source\Graphics\Pause.h">
       <Filter>Source\0_Settings 《🔧》\Graphics\Polygon</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Graphics\SkydomeShader.h">
+      <Filter>Source\0_Settings 《🔧》\Graphics\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Sky.h">
+      <Filter>Source\Character</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -983,6 +989,12 @@
     <ClCompile Include="Source\Graphics\Pause.cpp">
       <Filter>Source\0_Settings 《🔧》\Graphics\Polygon</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\SkydomeShader.cpp">
+      <Filter>Source\0_Settings 《🔧》\Graphics\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Sky.cpp">
+      <Filter>Source\Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="HLSL\Debug.hlsli">
@@ -1003,8 +1015,11 @@
     <None Include="Source\Game\Scene\G0_Onigokko.h">
       <Filter>Source\Scene\GameScene\0.おにごっこ</Filter>
     </None>
-    <None Include="Shader\ShadowMap.hlsli">
+    <None Include="HLSL\ShadowMap.hlsli">
       <Filter>HLSL\ShadowMap</Filter>
+    </None>
+    <None Include="HLSL\Scene.hlsli">
+      <Filter>HLSL</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1038,16 +1053,16 @@
     <FxCompile Include="HLSL\SpriteVS.hlsl">
       <Filter>HLSL\Sprite</Filter>
     </FxCompile>
-    <FxCompile Include="Shader\PostEffectPS.hlsl">
+    <FxCompile Include="HLSL\PostEffectPS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="Shader\PostEffectVS.hlsl">
+    <FxCompile Include="HLSL\PostEffectVS.hlsl">
       <Filter>HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="Shader\ShadowMapPS.hlsl">
+    <FxCompile Include="HLSL\ShadowMapPS.hlsl">
       <Filter>HLSL\ShadowMap</Filter>
     </FxCompile>
-    <FxCompile Include="Shader\ShadowMapVS.hlsl">
+    <FxCompile Include="HLSL\ShadowMapVS.hlsl">
       <Filter>HLSL\ShadowMap</Filter>
     </FxCompile>
   </ItemGroup>

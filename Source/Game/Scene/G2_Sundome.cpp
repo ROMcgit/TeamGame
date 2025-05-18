@@ -19,9 +19,16 @@ int G2_Sundome::score[3] = { 0, 0, 0 };
 // 初期化
 void G2_Sundome::Initialize()
 {
-	ID3D11Device* device = Graphics::Instance().GetDevice();
-	float screenWidth = Graphics::Instance().GetScreenWidth();
-	float screenHeight = Graphics::Instance().GetScreenHeight();
+	Graphics& graphics = Graphics::Instance();
+	graphics.GetEnvironmentMap()->Load("Data/Environment/Cloud.hdr");
+	graphics.GetEnvironmentMap()->Set(15);
+
+	//! 空
+	sky = std::make_unique<Sky>();
+
+	ID3D11Device* device = graphics.GetDevice();
+	float screenWidth = graphics.GetScreenWidth();
+	float screenHeight = graphics.GetScreenHeight();
 
 	// レンダーターゲット
 	renderTarget = std::make_unique<RenderTarget>(device, screenWidth, screenHeight, DXGI_FORMAT_R8G8B8A8_UNORM);
@@ -210,6 +217,16 @@ void G2_Sundome::Render()
 	{
 		if (pause->GetPauseOpacity() < 1.0f)
 		{
+			//! スカイマップ
+			{
+				Shader* skyShader = graphics.GetSkydomeShader();
+				skyShader->Begin(dc, rc);
+
+				sky->Render(dc, skyShader);
+
+				skyShader->End(dc);
+			}
+
 			Shader* shader = graphics.GetDefaultLitShader();
 			shader->Begin(dc, rc);
 			// ステージ描画

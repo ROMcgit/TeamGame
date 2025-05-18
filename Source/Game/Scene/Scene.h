@@ -56,6 +56,10 @@ public:
 	static float             debugFogStart; // フォグの開始
 	static float             debugFogEnd;   // フォグの終了
 
+	static DirectX::XMFLOAT3 debugSkydomePosition; // スカイマップの位置
+	static DirectX::XMFLOAT3 debugSkydomeAngle;    // スカイマップの角度
+	static float             debugSkydomeScale;    // スカイマップの大きさ
+
 protected:
 	ID3D11DeviceContext* dc; // デバイスコンテキスト
 	ID3D11RenderTargetView* rtv; // レンダーターゲットビュー
@@ -93,6 +97,10 @@ protected:
 	DirectX::XMFLOAT3 fogColor = { 0.7f, 0.8f, 0.9f }; // フォグの色
 	float             fogStart = 80.0f;                // フォグの開始
 	float             fogEnd = 200.0f;               // フォグの終了
+
+	DirectX::XMFLOAT3 skydomePosition = { 0,0,0 }; // スカイマップの位置
+	DirectX::XMFLOAT3 skydomeAngle = { 0,0,0 }; // スカイマップの角度
+	float skydomeScale = 0.035f;    // スカイマップの大きさ
 
 public:
 	static float             contrastStatic;            // コントラスト

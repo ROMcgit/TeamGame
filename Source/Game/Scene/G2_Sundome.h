@@ -9,6 +9,7 @@
 #include "Graphics/ShadowMap.h"
 #include "Graphics/Fade.h"
 #include "Graphics/Pause.h"
+#include "Game/Sky.h"
 
 // ゲームシーン
 class G2_Sundome : public Scene
@@ -41,6 +42,8 @@ private:
 	std::unique_ptr<Fade> fade; // フェード
 
 	std::unique_ptr<Pause> pause;
+
+	std::unique_ptr<Sky> sky;
 
 	std::unique_ptr <Player2_Sundome> player;
 	std::unique_ptr <CameraController> cameraController;

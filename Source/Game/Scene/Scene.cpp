@@ -35,6 +35,14 @@ DirectX::XMFLOAT3 Scene::debugFogColor = { 0.7f, 0.8f, 0.9f }; // フォグの色
 float             Scene::debugFogStart = 80.0f;                // フォグの開始
 float             Scene::debugFogEnd = 200.0f;               // フォグの終了
 
+/*! スカイマップ */
+//! 位置
+DirectX::XMFLOAT3 Scene::debugSkydomePosition = { 0, 0, 0 };
+//! 角度
+DirectX::XMFLOAT3 Scene::debugSkydomeAngle = { 0, 0, 0 };
+//! 大きさ
+float Scene::debugSkydomeScale = 1.0f;
+
 /*! ポストエフェクト */
 //! コントラスト
 float Scene::contrastStatic = 0.0f;
@@ -120,6 +128,15 @@ void Scene::DrawingSettings(Graphics& graphics)
 		rc.fogEnd = this->debugFogEnd = this->fogEnd;
 
 
+		/*! スカイマップ */
+		// 位置Y
+		rc.skydomePosition = this->debugSkydomePosition = this->skydomePosition;
+		// 角度Z
+		rc.skydomeAngle = this->debugSkydomeAngle = this->skydomeAngle;
+		// 大きさ
+		rc.skydomeScale = this->debugSkydomeScale = this->skydomeScale;
+
+
 		/*! ポストエフェクト */
 		// コントラスト
 		contrastStatic = this->contrast;
@@ -180,6 +197,15 @@ void Scene::DrawingSettings(Graphics& graphics)
 		rc.fogStart = this->debugFogStart;
 		// フォグの終了
 		rc.fogEnd = this->debugFogEnd;
+
+
+		/*! スカイマップ */
+		// 位置Y
+		rc.skydomePosition = this->debugSkydomePosition;
+		// 角度Z
+		rc.skydomeAngle = this->debugSkydomeAngle;
+		// 大きさ
+		rc.skydomeScale = this->debugSkydomeScale;
 	}
 
 	// カメラパラメータ設定

@@ -209,6 +209,7 @@
     <ClInclude Include="Source\Game\Scene\G5_Asibawatari_Clear.h" />
     <ClInclude Include="Source\Game\Scene\G5_Asibawatari_GameOver.h" />
     <ClInclude Include="Source\Game\Scene\G5_Asibawatari_Tutorial.h" />
+    <ClInclude Include="Source\Game\Sky.h" />
     <ClInclude Include="Source\Game\Stage\G1_StageBumpiness.h" />
     <ClInclude Include="Source\Game\Stage\G1_StageDarumasangaKoronda.h" />
     <ClInclude Include="Source\Game\Stage\G2_StageSundome.h" />
@@ -227,6 +228,7 @@
     <ClInclude Include="Source\Graphics\ShaderSetting.h" />
     <ClInclude Include="Source\Graphics\ShadowMap.h" />
     <ClInclude Include="Source\Graphics\ShadowMapShader.h" />
+    <ClInclude Include="Source\Graphics\SkydomeShader.h" />
     <ClInclude Include="Source\Graphics\Timer.h" />
     <ClInclude Include="Source\Other\Collision.h" />
     <ClInclude Include="Source\Game\Effect\Effect.h" />
@@ -340,6 +342,7 @@
     <ClCompile Include="Source\Game\Scene\G5_Asibawatari_GameOver.cpp" />
     <ClCompile Include="Source\Game\Scene\G5_Asibawatari_Tutorial.cpp" />
     <ClCompile Include="Source\Game\Scene\Scene.cpp" />
+    <ClCompile Include="Source\Game\Sky.cpp" />
     <ClCompile Include="Source\Game\Stage\G1_StageDarumasangaKoronda.cpp" />
     <ClCompile Include="Source\Game\Stage\G1_StageBumpiness.cpp" />
     <ClCompile Include="Source\Game\Stage\G2_StageSundome.cpp" />
@@ -359,6 +362,7 @@
     <ClCompile Include="Source\Graphics\ShaderSetting.cpp" />
     <ClCompile Include="Source\Graphics\ShadowMap.cpp" />
     <ClCompile Include="Source\Graphics\ShadowMapShader.cpp" />
+    <ClCompile Include="Source\Graphics\SkydomeShader.cpp" />
     <ClCompile Include="Source\Graphics\Timer.cpp" />
     <ClCompile Include="Source\Other\Collision.cpp" />
     <ClCompile Include="Source\Game\Effect\Effect.cpp" />
@@ -404,7 +408,8 @@
     <None Include="HLSL\DefaltLit.hlsli" />
     <None Include="HLSL\Line.hlsli" />
     <None Include="HLSL\Sprite.hlsli" />
-    <None Include="Shader\ShadowMap.hlsli" />
+    <None Include="HLSL\Scene.hlsli" />
+    <None Include="HLSL\ShadowMap.hlsli" />
     <None Include="Source\Game\Scene\G0_Onigokko.h" />
   </ItemGroup>
   <ItemGroup>
@@ -512,25 +517,25 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="Shader\ShadowMapPS.hlsl">
+    <FxCompile Include="HLSL\ShadowMapPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Shader\PostEffectPS.hlsl">
+    <FxCompile Include="HLSL\PostEffectPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Shader\PostEffectVS.hlsl">
+    <FxCompile Include="HLSL\PostEffectVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="Shader\ShadowMapVS.hlsl">
+    <FxCompile Include="HLSL\ShadowMapVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>

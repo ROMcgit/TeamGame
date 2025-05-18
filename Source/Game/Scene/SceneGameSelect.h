@@ -8,6 +8,7 @@
 #include "Graphics/RenderTarget.h"
 #include "Graphics/ShadowMap.h"
 #include "Graphics/Fade.h"
+#include "Game/Sky.h"
 
 // ゲームシーン
 class SceneGameSelect: public Scene
@@ -82,6 +83,8 @@ public:
 private:
 	std::unique_ptr <Player0_Onigokko> player;
 	std::unique_ptr <CameraController> cameraController;
+
+	std::unique_ptr<Sky> sky;
 
 	std::unique_ptr<RenderTarget>  renderTarget; //! レンダーターゲット
 	ShadowMap                      shadowMap;    // シャドウマップの実体

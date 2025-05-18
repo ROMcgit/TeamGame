@@ -211,7 +211,7 @@ void G4_OssanTataki::Render()
 	//! シャドウマップ
 	{
 		// ポーズ画面じゃないなら
-		//if (pause->GetPause_BurioHuntersOpacity() < 1.0f)
+		if (pause->GetPauseOpacity() < 1.0f)
 		{
 			//! シャドウマップ開始
 			shadowMap.Begin(rc);
@@ -264,23 +264,26 @@ void G4_OssanTataki::Render()
 
 	// 3Dモデル描画
 	{
-		Shader* shader = graphics.GetDefaultLitShader();
-		shader->Begin(dc, rc);
-		// ステージ描画
-		StageManager::Instance().Render(dc, shader);
+		// ポーズ画面じゃないなら
+		if (pause->GetPauseOpacity() < 1.0f)
+		{
+			Shader* shader = graphics.GetDefaultLitShader();
+			shader->Begin(dc, rc);
+			// ステージ描画
+			StageManager::Instance().Render(dc, shader);
 
-		// プレイヤー描画
-		player->Render(dc, shader);
+			// プレイヤー描画
+			player->Render(dc, shader);
 
-		cameraController->RenderCameraTarget(dc, shader);
+			cameraController->RenderCameraTarget(dc, shader);
 
-		// 衝突攻撃の描画処理
-		collisionAttackManager.Render(dc, shader);
+			// 衝突攻撃の描画処理
+			collisionAttackManager.Render(dc, shader);
 
-		//エネミー描画
-		EnemyManager::Instance().Render(dc, shader);
-		shader->End(dc);
-
+			//エネミー描画
+			EnemyManager::Instance().Render(dc, shader);
+			shader->End(dc);
+		}
 	}
 
 	// 3Dエフェクト描画

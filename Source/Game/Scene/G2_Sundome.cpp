@@ -158,7 +158,7 @@ void G2_Sundome::Render()
 	//! シャドウマップ
 	{
 		// ポーズ画面じゃないなら
-		//if (pause->GetPause_BurioHuntersOpacity() < 1.0f)
+		if (pause->GetPauseOpacity() < 1.0f)
 		{
 			//! シャドウマップ開始
 			shadowMap.Begin(rc);
@@ -208,21 +208,23 @@ void G2_Sundome::Render()
 
 	// 3Dモデル描画
 	{
-		Shader* shader = graphics.GetDefaultLitShader();
-		shader->Begin(dc, rc);
-		// ステージ描画
-		StageManager::Instance().Render(dc, shader);
+		if (pause->GetPauseOpacity() < 1.0f)
+		{
+			Shader* shader = graphics.GetDefaultLitShader();
+			shader->Begin(dc, rc);
+			// ステージ描画
+			StageManager::Instance().Render(dc, shader);
 
-		// プレイヤー描画
-		player->Render(dc, shader);
+			// プレイヤー描画
+			player->Render(dc, shader);
 
-		// カメラの位置を描画
-		cameraController->RenderCameraTarget(dc, shader);
+			// カメラの位置を描画
+			cameraController->RenderCameraTarget(dc, shader);
 
-		//エネミー描画
-		EnemyManager::Instance().Render(dc, shader);
-		shader->End(dc);
-
+			//エネミー描画
+			EnemyManager::Instance().Render(dc, shader);
+			shader->End(dc);
+		}
 	}
 
 	// 3Dエフェクト描画

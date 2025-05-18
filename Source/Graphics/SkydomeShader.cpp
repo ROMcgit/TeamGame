@@ -9,7 +9,7 @@ SkydomeShader::SkydomeShader(ID3D11Device* device)
 	{
 		// ファイルを開く
 		FILE* fp = nullptr;
-		fopen_s(&fp, "Shader\\SkydomeVS.cso", "rb");
+		fopen_s(&fp, "HLSL\\SkydomeVS.cso", "rb");
 		_ASSERT_EXPR_A(fp, "CSO File not found");
 
 		// ファイルのサイズを求める
@@ -47,7 +47,7 @@ SkydomeShader::SkydomeShader(ID3D11Device* device)
 	{
 		// ファイルを開く
 		FILE* fp = nullptr;
-		fopen_s(&fp, "Shader\\SkydomePS.cso", "rb");
+		fopen_s(&fp, "HLSL\\SkydomePS.cso", "rb");
 		_ASSERT_EXPR_A(fp, "CSO File not found");
 
 		// ファイルのサイズを求める

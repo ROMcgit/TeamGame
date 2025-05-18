@@ -1021,6 +1021,9 @@
     <None Include="HLSL\Scene.hlsli">
       <Filter>HLSL</Filter>
     </None>
+    <None Include="HLSL\Skydome.hlsli">
+      <Filter>HLSL</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="HLSL\DebugPS.hlsl">
@@ -1064,6 +1067,12 @@
     </FxCompile>
     <FxCompile Include="HLSL\ShadowMapVS.hlsl">
       <Filter>HLSL\ShadowMap</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\SkydomePS.hlsl">
+      <Filter>HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="HLSL\SkydomeVS.hlsl">
+      <Filter>HLSL</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

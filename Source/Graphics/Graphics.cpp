@@ -168,6 +168,7 @@ Graphics::Graphics(HWND hWnd)
 	{
 		shadowMapShader = std::make_unique<ShadowMapShader>(device.Get());
 		defaultLitshader = std::make_unique<DefaltLitShader>(device.Get());
+		skydomeShader = std::make_unique<SkydomeShader>(device.Get());
 
 		environmentMap = std::make_unique<HDRTexture>();
 		environmentMap->Load(

@@ -11,7 +11,7 @@ struct VS_OUT
 cbuffer SkydomeTransform
 {
     float3 skydomePosition;
-    float  dummy;
+    float dummy;
     float3 skydomeAngle;
-    float  skydomeScale;
+    float skydomeScale;
 };

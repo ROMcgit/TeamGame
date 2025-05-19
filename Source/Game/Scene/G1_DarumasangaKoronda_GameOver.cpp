@@ -12,7 +12,7 @@ void G1_DarumasangaKoronda_GameOver::Initialize()
 {
 	BgmManager& bgm = BgmManager::Instance();
 	bgm.LoadBgm("ゲームオーバー", "Data/Audio/Bgm/5.GameOver.wav");
-	bgm.PlayBgm("ゲームオーバー", 0.6f);
+	bgm.PlayBgm("ゲームオーバー", 0.6f, 1.0f, false);
 
 	// 背景
 	backGround = std::make_unique<Sprite>("Data/Sprite/1.DarumasangaKoronda/Game.png");
@@ -41,7 +41,7 @@ void G1_DarumasangaKoronda_GameOver::Update(float elapsedTime)
 	const GamePadButton anyButton =
 		GamePad::BTN_A |
 		GamePad::BTN_B;
-	if (gamePad.GetButtonDown() & anyButton && !setFade && !fade->GetFade())
+	if (((gamePad.GetButtonDown() & anyButton) || !BgmManager::Instance().IsPlayingBgm()) && !setFade && !fade->GetFade())
 	{
 		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 			0.0f, 1.0f,

@@ -323,7 +323,7 @@ void Player3_SoratobuHusenWari::UpdateMoveState(float elapsedTime)
 	}
 
 	GamePadButton button =
-	GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
+	GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y | GamePad::BTN_SPACE;
 	if (gamePad.GetButtonHeld() & button)
 	{
 		velocity.y += 100 * elapsedTime;

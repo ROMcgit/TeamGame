@@ -59,6 +59,8 @@ private:
 	std::unique_ptr<Sprite> backGround;
 	DirectX::XMFLOAT3 backGroundColor = { 0, 0, 0 };
 
+	std::unique_ptr<Sprite> actionExplanation;
+
 	bool movieScene = false; // ムービー中か
 	float movieTime = 0.0f;  // ムービー時間
 	int   movieStep = 0;     // ムービーステップ

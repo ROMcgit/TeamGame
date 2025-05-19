@@ -20,7 +20,7 @@ public:
 	static const GamePadButton BTN_RIGHT_THUMB = (1 << 11);
 	static const GamePadButton BTN_LEFT_SHOULDER = (1 << 12);
 	static const GamePadButton BTN_RIGHT_SHOULDER = (1 << 13);
-	static const GamePadButton BTN_LEFT_TRIGGER = (1 << 14);
+	static const GamePadButton BTN_SPACE = (1 << 14);
 	static const GamePadButton BTN_RIGHT_TRIGGER = (1 << 15);
 
 public:

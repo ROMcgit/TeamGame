@@ -121,6 +121,8 @@ void G4_OssanTataki::Initialize()
 		1.0f, 0.0f,
 		1.0f, 0.5f);
 
+	actionExplanation = std::make_unique<Sprite>();
+
 	//! タイマー
 	timer = std::make_unique<Timer>(true, 1, 30);
 
@@ -350,6 +352,19 @@ void G4_OssanTataki::Render()
 			color = { 1, 0, 0 };
 
 		timer->Render(dc, graphics, DirectX::XMFLOAT2(30.0f, 0.0f), DirectX::XMFLOAT4(color.x, color.y, color.z, 1.0f));
+
+		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
+		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
+		float textureWidth = static_cast<float>(actionExplanation->GetTextureWidth());
+		float textureHeight = static_cast<float>(actionExplanation->GetTextureHeight());
+
+		actionExplanation->Render(dc,
+			0, 0,
+			screenWidth, screenHeight,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1);
 
 		//! フェードの描画処理
 		fade->Render(dc, graphics);

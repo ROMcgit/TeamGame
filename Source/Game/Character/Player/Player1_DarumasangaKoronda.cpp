@@ -167,7 +167,7 @@ bool Player1_DarumasangaKoronda::InputJump()
 {
 	GamePad& gamePad = Input::Instance().GetGamePad();
 	{
-		if ((gamePad.GetButtonHeld() & GamePad::BTN_A) || (gamePad.GetButtonHeld() & GamePad::BTN_LEFT_TRIGGER)) //Zキー
+		if ((gamePad.GetButtonHeld() & GamePad::BTN_A) || (gamePad.GetButtonHeld() & GamePad::BTN_LEFT_SHOULDER)) //Zキー
 		{
 			// ジャンプ
 			Jump(jumpSpeed);
@@ -210,7 +210,7 @@ void Player1_DarumasangaKoronda::UpdateWaitState(float elapsedTime)
 	}
 
 	//! ジャンプ処理
-	if ((gamePad.GetButtonDown() & GamePad::BTN_A) || (gamePad.GetButtonDown() & GamePad::BTN_LEFT_TRIGGER))
+	if ((gamePad.GetButtonDown() & GamePad::BTN_A) || (gamePad.GetButtonDown() & GamePad::BTN_SPACE))
 	{
 		InputJump();
 		TransitionJumpState();
@@ -264,7 +264,7 @@ void Player1_DarumasangaKoronda::UpdateMoveState(float elapsedTime)
 	}
 
 	//! ジャンプ処理
-	if (gamePad.GetButtonDown() & GamePad::BTN_A || (gamePad.GetButtonDown() & GamePad::BTN_LEFT_TRIGGER))
+	if (gamePad.GetButtonDown() & GamePad::BTN_A || (gamePad.GetButtonDown() & GamePad::BTN_SPACE))
 	{
 		InputJump();
 		TransitionJumpState();
@@ -348,7 +348,7 @@ void Player1_DarumasangaKoronda::UpdateDashState(float elapsedTime)
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
 	//! ジャンプ処理
-	if (gamePad.GetButtonDown() & GamePad::BTN_A || (gamePad.GetButtonDown() & GamePad::BTN_LEFT_TRIGGER))
+	if (gamePad.GetButtonDown() & GamePad::BTN_A || (gamePad.GetButtonDown() & GamePad::BTN_SPACE))
 	{
 		InputJump();
 		TransitionJumpState();

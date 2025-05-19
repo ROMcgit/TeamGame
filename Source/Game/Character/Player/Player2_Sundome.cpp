@@ -245,7 +245,7 @@ void Player2_Sundome::UpdateWaitState(float elapsedTime)
 	GamePad& gamePad = Input::Instance().GetGamePad();
 
 	GamePadButton button =
-	GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
+	GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y | GamePad::BTN_SPACE;
 
 	if (gamePad.GetButtonDown() & button)
 	{
@@ -312,7 +312,7 @@ void Player2_Sundome::UpdateMoveState(float elapsedTime)
 	velocityXSyosuten = (int)(velocityXSyosuten * 10);
 
 	GamePadButton button =
-		GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
+		GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y | GamePad::BTN_SPACE;
 
 	if ((gamePad.GetButtonHeld() & button && position.x < 205.0f))
 		isBrake = true;

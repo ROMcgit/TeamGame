@@ -63,6 +63,8 @@ private:
 	ShadowMap                      shadowMap;    // シャドウマップの実体
 	
 	std::unique_ptr<Sprite> backGround;
+	std::unique_ptr<Sprite> actionExplanation;
+
 	std::unique_ptr<Timer>  timer;
 
 	

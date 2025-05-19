@@ -175,6 +175,8 @@ void G0_Onigokko::Initialize()
 		1.0f, 0.0f,
 		1.0f, 0.5f);
 
+	actionExplanation = std::make_unique<Sprite>();
+
 	// タイマー
 	timer = std::make_unique<Timer>(true, 2);
 
@@ -424,6 +426,19 @@ void G0_Onigokko::Render()
 		else
 			timer->Render(dc, graphics, DirectX::XMFLOAT2(30, 0));
 	
+		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
+		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
+		float textureWidth = static_cast<float>(actionExplanation->GetTextureWidth());
+		float textureHeight = static_cast<float>(actionExplanation->GetTextureHeight());
+
+		actionExplanation->Render(dc,
+			0, 0,
+			screenWidth, screenHeight,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1);
+
 		fade->Render(dc, graphics);
 
 		pause->Render(dc, graphics);

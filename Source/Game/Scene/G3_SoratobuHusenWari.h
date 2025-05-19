@@ -68,6 +68,8 @@ private:
 	std::unique_ptr<Sprite> backGround;
 	DirectX::XMFLOAT3 backGroundColor = { 0, 0, 0 };
 
+	std::unique_ptr<Sprite> actionExplanation;
+
 	float newBalloonWaitTime = 0.0f;
 	float newCloudWaitTime = 0.0f;
 };

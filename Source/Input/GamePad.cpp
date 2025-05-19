@@ -34,7 +34,7 @@ void GamePad::Update()
 		if (pad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB)				newButtonState |= BTN_RIGHT_THUMB;	  // 右スティックの押し込み
 		if (pad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER)			newButtonState |= BTN_LEFT_SHOULDER;  // 左肩ボタン
 		if (pad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)			newButtonState |= BTN_RIGHT_SHOULDER; // 右肩ボタン
-		if (pad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)	newButtonState |= BTN_LEFT_TRIGGER;	  // LT(左トリガー)
+		if (pad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)	newButtonState |= BTN_SPACE;	  // LT(左トリガー)
 		if (pad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)	newButtonState |= BTN_RIGHT_TRIGGER;  // RT(右トリガー)
 
 		if ((pad.sThumbLX <  XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE && pad.sThumbLX > -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE) &&
@@ -100,7 +100,7 @@ void GamePad::Update()
 					if (joyInfo.dwButtons & JOY_BUTTON4)  newButtonState |= BTN_X;
 					if (joyInfo.dwButtons & JOY_BUTTON5)  newButtonState |= BTN_LEFT_SHOULDER;
 					if (joyInfo.dwButtons & JOY_BUTTON6)  newButtonState |= BTN_RIGHT_SHOULDER;
-					if (joyInfo.dwButtons & JOY_BUTTON7)  newButtonState |= BTN_LEFT_TRIGGER;
+					if (joyInfo.dwButtons & JOY_BUTTON7)  newButtonState |= BTN_SPACE;
 					if (joyInfo.dwButtons & JOY_BUTTON8)  newButtonState |= BTN_RIGHT_TRIGGER;
 					if (joyInfo.dwButtons & JOY_BUTTON9)  newButtonState |= BTN_BACK;
 					if (joyInfo.dwButtons & JOY_BUTTON10) newButtonState |= BTN_START;
@@ -135,10 +135,10 @@ void GamePad::Update()
 		float ly = 0.0f;
 		float rx = 0.0f;
 		float ry = 0.0f;
-		if (GetAsyncKeyState('A') & 0x8000)       lx = -1.0f;
-		if (GetAsyncKeyState('D') & 0x8000)       lx = 1.0f;
-		if (GetAsyncKeyState('S') & 0x8000)       ly = -1.0f;
-		if (GetAsyncKeyState('W') & 0x8000)       ly = 1.0f;
+		if (GetAsyncKeyState('A') & 0x8000)       newButtonState |= BTN_LEFT;
+		if (GetAsyncKeyState('D') & 0x8000)       newButtonState |= BTN_RIGHT;
+		if (GetAsyncKeyState('S') & 0x8000)       newButtonState |= BTN_DOWN;
+		if (GetAsyncKeyState('W') & 0x8000)       newButtonState |= BTN_UP;
 
 		if (GetAsyncKeyState('I') & 0x8000)       ry = 1.0f;
 		if (GetAsyncKeyState('J') & 0x8000)       rx = -1.0f;
@@ -146,7 +146,7 @@ void GamePad::Update()
 		if (GetAsyncKeyState('L') & 0x8000)       rx = 1.0f;
 		if (GetAsyncKeyState('Q') & 0x8000)       newButtonState |= BTN_LEFT_SHOULDER;
 		if (GetAsyncKeyState('E') & 0x8000)       newButtonState |= BTN_RIGHT_SHOULDER;
-		if (GetAsyncKeyState(VK_SPACE) & 0x8000)  newButtonState |= BTN_LEFT_TRIGGER;
+		if (GetAsyncKeyState(VK_SPACE) & 0x8000)  newButtonState |= BTN_SPACE;
 		if (GetAsyncKeyState('Z') & 0x8000)       newButtonState |= BTN_A;
 		if (GetAsyncKeyState('X') & 0x8000)       newButtonState |= BTN_B;
 		if (GetAsyncKeyState('C') & 0x8000)       newButtonState |= BTN_X;

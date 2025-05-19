@@ -116,7 +116,7 @@ CameraController::CameraController()
 
 	//SoundManager::Instance().LoadSound("ボス撃破", "Data/Audio/Sound/Enemy/Defeat.wav");
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 	//! カメラのターゲットを生成
 	std::unique_ptr<CameraTarget> cameraTarget = std::make_unique<CameraTarget>();
 	directorManager.Register(std::move(cameraTarget));
@@ -271,7 +271,7 @@ void CameraController::CameraLimit()
 // デバッグカメラ
 bool CameraController::UpdateDebugCamera(float elapsedTime)
 {
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	Mouse& mouse = Input::Instance().GetMouse();
 	//! ImGuiを操作中は処理をしない

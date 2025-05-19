@@ -144,7 +144,7 @@ void G4_OssanTataki_Result::Render()
 		fade->Render(dc, graphics);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 	{
 		if (ImGui::Begin("Debug"))
 		{

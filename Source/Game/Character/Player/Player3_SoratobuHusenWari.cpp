@@ -290,7 +290,7 @@ void Player3_SoratobuHusenWari::UpdateHpPinch(float elapsedTime)
 		hpSpriteColorP = { 1.0f, 1.0f, 1.0f }; // 白色
 	}
 
-	//!エミッシブの強さを変更する
+	//! エミッシブの強さを変更する
 	if (emissiveStrength == 0.0f)
 		SetEmissiveStrengthChange(DirectX::XMFLOAT3(1, 0, 0), 1.0f, 0.2f);
 	//! 0じゃないなら
@@ -522,7 +522,7 @@ void Player3_SoratobuHusenWari::DrawDebugPrimitive()
 {
 	DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 	// 衝突判定用のデバッグ円柱を描画
 	debugRenderer->DrawCylinder(collisionPos, radius, height,{ debugPrimitiveColor.x, debugPrimitiveColor.y, debugPrimitiveColor.z, 1 });
 

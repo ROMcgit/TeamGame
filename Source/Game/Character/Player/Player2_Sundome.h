@@ -7,6 +7,7 @@
 #include "Game/Effect/Effect.h"
 #include "Graphics/Fade.h"
 #include "Graphics/Text.h"
+#include "Graphics/Sprite.h"
 
 // ÉvÉåÉCÉÑÅ[
 class Player2_Sundome : public Character
@@ -118,6 +119,8 @@ private:
 private:
 	std::unique_ptr<Model> models[3];
 	std::unique_ptr<Fade> fade;
+
+	std::unique_ptr<Sprite> actionExplanation[2];
 
 	bool isBrake = false;
 	bool breakeSound = false;

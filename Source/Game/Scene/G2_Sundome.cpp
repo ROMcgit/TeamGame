@@ -82,8 +82,6 @@ void G2_Sundome::Initialize()
 		1.0f, 0.0f,
 		0.5f, 0.2f);
 
-	actionExplanation = std::make_unique<Sprite>();
-
 	//! ポーズ画面
 	pause = std::make_unique<Pause>();
 
@@ -282,19 +280,6 @@ void G2_Sundome::Render()
 
 	{
 		player->SpriteRender(dc, graphics);
-
-		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
-		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
-		float textureWidth = static_cast<float>(actionExplanation->GetTextureWidth());
-		float textureHeight = static_cast<float>(actionExplanation->GetTextureHeight());
-
-		actionExplanation->Render(dc,
-			0, 0,
-			screenWidth, screenHeight,
-			0, 0,
-			textureWidth, textureHeight,
-			0,
-			1, 1, 1, 1);
 
 		//! フェードの描画処理
 		fade->Render(dc, graphics);

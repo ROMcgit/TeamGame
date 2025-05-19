@@ -53,8 +53,6 @@ private:
 	std::unique_ptr<Sprite> backGround;
 	DirectX::XMFLOAT3 backGroundColor = { 0.46f, 1, 0.8f };
 
-	std::unique_ptr<Sprite> actionExplanation;
-
 	int movieStep   = 0;
 	float movieTime = 0.0f;
 };

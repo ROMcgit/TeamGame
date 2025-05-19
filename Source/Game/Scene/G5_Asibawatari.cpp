@@ -91,7 +91,7 @@ void G5_Asibawatari::Initialize()
 		1.0f, 0.0f,
 		1.0f, 0.5f);
 
-	actionExplanation = std::make_unique<Sprite>();
+	actionExplanation = std::make_unique<Sprite>("Data/Sprite/5.Asibawatari/ActionExplanation.png");
 
 	//! É|Å[ÉYâÊñ 
 	pause = std::make_unique<Pause>();

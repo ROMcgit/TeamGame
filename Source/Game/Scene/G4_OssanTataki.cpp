@@ -121,7 +121,7 @@ void G4_OssanTataki::Initialize()
 		1.0f, 0.0f,
 		1.0f, 0.5f);
 
-	actionExplanation = std::make_unique<Sprite>();
+	actionExplanation = std::make_unique<Sprite>("Data/Sprite/4.OssanTataki/ActionExplanation.png");
 
 	//! タイマー
 	timer = std::make_unique<Timer>(true, 1, 30);

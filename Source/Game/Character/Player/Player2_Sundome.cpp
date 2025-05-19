@@ -46,6 +46,10 @@ Player2_Sundome::Player2_Sundome()
 	// フェード
 	fade = std::make_unique<Fade>();
 
+	// 説明
+	actionExplanation[0] = std::make_unique<Sprite>("Data/Sprite/2.Sundome/ActionExplanation1.png");
+	actionExplanation[1] = std::make_unique<Sprite>("Data/Sprite/2.Sundome/ActionExplanation2.png");
+
 	// 加速度の数値
 	velocityText = std::make_unique<Text>();
 	velocityTextSyosuten = std::make_unique<Text>();
@@ -148,6 +152,34 @@ void Player2_Sundome::SpriteRender(ID3D11DeviceContext* dc, Graphics& graphics)
 				textureWidth, textureHeight,
 				0,
 				1, 0, 0, 1);
+
+			float screenWidth = static_cast<float>(graphics.GetScreenWidth());
+			float screenHeight = static_cast<float>(graphics.GetScreenHeight());
+			textureWidth = static_cast<float>(actionExplanation[0]->GetTextureWidth());
+			textureHeight = static_cast<float>(actionExplanation[0]->GetTextureHeight());
+
+			actionExplanation[0]->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+		}
+		else if (!isBrake)
+		{
+			float screenWidth = static_cast<float>(graphics.GetScreenWidth());
+			float screenHeight = static_cast<float>(graphics.GetScreenHeight());
+			textureWidth = static_cast<float>(actionExplanation[1]->GetTextureWidth());
+			textureHeight = static_cast<float>(actionExplanation[1]->GetTextureHeight());
+
+			actionExplanation[1]->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
 		}
 
 		float velocityX = abs((int)velocity.x);

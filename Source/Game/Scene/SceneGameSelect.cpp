@@ -140,6 +140,7 @@ void SceneGameSelect::Initialize()
 		hint[i] = std::make_unique<Sprite>(filePath.c_str());
 	}
 	
+	gameExplanation = std::make_unique<Sprite>("Data/Sprite/GameExplanation.png");
 	bonusExplanation = std::make_unique<Sprite>("Data/Sprite/BonusExplanation.png");
 
 	GameSelectManager& gameSelectManager = GameSelectManager::Instance();
@@ -458,11 +459,24 @@ void SceneGameSelect::Render()
 				bonusImageColor[i], bonusImageColor[i], bonusImageColor[i], bonusImageOpacity);
 		}
 
-		float textureWidth = static_cast<float>(bonusExplanation->GetTextureWidth());
-		float textureHeight = static_cast<float>(bonusExplanation->GetTextureHeight());
+		float textureWidth = static_cast<float>(gameExplanation->GetTextureWidth());
+		float textureHeight = static_cast<float>(gameExplanation->GetTextureHeight());
+
+		//! ゲームの説明
+		gameExplanation->Render(dc,
+			0, 0,
+			screenWidth, screenHeight,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 1, 1, gameExplanationOpacity);
+
+		textureWidth = static_cast<float>(bonusExplanation->GetTextureWidth());
+		textureHeight = static_cast<float>(bonusExplanation->GetTextureHeight());
 
 		float opacity = 1.0f - bonusImageOpacity;
 
+		//! ボーナスの説明
 		bonusExplanation->Render(dc,
 			0, 0,
 			screenWidth, screenHeight,
@@ -755,6 +769,9 @@ void SceneGameSelect::UpdateBonusImage(float elapsedTime)
 
 		SoundManager::Instance().PlaySound("決定");
 
+		//! ゲームの説明
+		gameExplanationOpacity = viewBonusImage ? 0.0f : 1.0f;
+		gameExplanationOpacityUp = viewBonusImage ? true : false;
 
 		float startFade = viewBonusImage ? 0.0f : 1.0f;
 		float endFade = viewBonusImage   ? 1.0f : 0.0f;
@@ -771,6 +788,16 @@ void SceneGameSelect::UpdateBonusImage(float elapsedTime)
 			bonusImageOpacity -= 3 * elapsedTime;
 		else
 			bonusImageOpacity = 0.0f;
+
+		gameExplanationOpacity += (0.5f * elapsedTime) * (gameExplanationOpacityUp ? 1 : -1);
+
+		//! ゲームの説明の不透明度が1以上または0以下なら
+		if (gameExplanationOpacity >= 1.0f || gameExplanationOpacity <= 0.0f)
+		{
+			gameExplanationOpacity = std::clamp(gameExplanationOpacity, 0.0f, 1.0f);
+
+			gameExplanationOpacityUp = !gameExplanationOpacityUp;
+		}
 
 		return;
 	}

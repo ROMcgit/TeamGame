@@ -35,9 +35,16 @@ void G3_SoratobuHusenWari::Initialize()
 	//! スコアの画像
 	scoreText = std::make_unique<Text>();
 
-	ID3D11Device* device = Graphics::Instance().GetDevice();
-	float screenWidth = Graphics::Instance().GetScreenWidth();
-	float screenHeight = Graphics::Instance().GetScreenHeight();
+	Graphics& graphics = Graphics::Instance();
+	graphics.GetEnvironmentMap()->Load("Data/Environment/SF_Night.hdr");
+	graphics.GetEnvironmentMap()->Set(15);
+
+	//! 空
+	sky = std::make_unique<Sky>();
+
+	ID3D11Device* device = graphics.GetDevice();
+	float screenWidth = graphics.GetScreenWidth();
+	float screenHeight = graphics.GetScreenHeight();
 
 	// レンダーターゲット
 	renderTarget = std::make_unique<RenderTarget>(device, screenWidth, screenHeight, DXGI_FORMAT_R8G8B8A8_UNORM);
@@ -75,9 +82,9 @@ void G3_SoratobuHusenWari::Initialize()
 	// プレイヤー初期化
 	player = std::make_unique<Player3_SoratobuHusenWari>();
 	player->SetPosition(DirectX::XMFLOAT3(0, 22, 0));
+	player->SetGravity(0.0f);
 
 	// カメラ初期設定
-	Graphics& graphics = Graphics::Instance();
 	Camera& camera = Camera::Instance();
 	camera.SetLookAt(
 		DirectX::XMFLOAT3(0, 10, -10),
@@ -140,6 +147,20 @@ void G3_SoratobuHusenWari::Update(float elapsedTime)
 
 	if (pause->GetPauseOpacity() <= 0.0f)
 	{
+		skydomeAngle.y -= DirectX::XMConvertToRadians(0.5f) * elapsedTime;
+
+		float bgmSpeed = 1.0f;
+		if (gameTimer < 30.0f)
+			bgmSpeed = 1.0f;
+		else if (gameTimer < 100.0f)
+			bgmSpeed = 1.3f;
+		else if (gameTimer < 150.0f)
+			bgmSpeed = 1.8f;
+		else
+			bgmSpeed = 2.5f;
+
+		BgmManager::Instance().ChangeBgmStatus("空飛ぶ風船割り", bgmSpeed);
+
 		if ((player->GetPosition().x < -2.5f && player->GetPosition().y < 18.0f) && actionExplanationOpacity > 0.0f)
 			actionExplanationOpacity -= 2 * elapsedTime;
 		else if(actionExplanationOpacity < 1.0f)
@@ -201,6 +222,9 @@ void G3_SoratobuHusenWari::Render()
 	fogColor = { 0,0,0 };
 	fogStart = 20.0f;
 	fogEnd   = 55.0f;
+
+	skydomePosition.y = -1.25f;
+	skydomeScale = 0.07f;
 
 	Graphics& graphics = Graphics::Instance();
 
@@ -264,6 +288,16 @@ void G3_SoratobuHusenWari::Render()
 		// ポーズ画面じゃないなら
 		if (pause->GetPauseOpacity() < 1.0f)
 		{
+			//! スカイマップ
+			{
+				Shader* skyShader = graphics.GetSkydomeShader();
+				skyShader->Begin(dc, rc);
+
+				sky->Render(dc, skyShader);
+
+				skyShader->End(dc);
+			}
+
 			Shader* shader = graphics.GetDefaultLitShader();
 			shader->Begin(dc, rc);
 			// ステージ描画
@@ -457,11 +491,11 @@ void G3_SoratobuHusenWari::NewBalloon(float elapsedTime)
 		}
 		newBalloonWaitTime = 1.3f;
 
-		if (G3_SoratobuHusenWari::gameTimer < 30.0f)
+		if (gameTimer < 30.0f)
 			newBalloonWaitTime = 1.3f;
-		else if (G3_SoratobuHusenWari::gameTimer < 100.0f)
+		else if (gameTimer < 100.0f)
 			newBalloonWaitTime = 1.2f;
-		else if (G3_SoratobuHusenWari::gameTimer < 150.0f)
+		else if (gameTimer < 150.0f)
 			newBalloonWaitTime = 1.0f;
 		else
 			newBalloonWaitTime = 0.7f;

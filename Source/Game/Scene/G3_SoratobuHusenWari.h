@@ -11,6 +11,7 @@
 #include "Game/Character/CollisionAttack/CollisionAttackManager.h"
 #include "Graphics/Text.h"
 #include "Graphics/Pause.h"
+#include "Game/Sky.h"
 
 // ÉQÅ[ÉÄÉVÅ[Éì
 class G3_SoratobuHusenWari : public Scene
@@ -51,6 +52,8 @@ public:
 
 private:
 	CollisionAttackManager collisionAttackManager;
+
+	std::unique_ptr<Sky> sky;
 
 	std::unique_ptr<Pause> pause;
 

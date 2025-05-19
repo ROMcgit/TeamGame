@@ -143,7 +143,7 @@ private:
 
 	std::unique_ptr<Sprite> velocitySprite;
 	std::unique_ptr<Sprite> velocitySpriteLimit;
-	DirectX::XMFLOAT2 spritePos   = { 1170.0f, 680.0f };
+	DirectX::XMFLOAT2 spritePos   = { 1170.0f, 640.0f };
 	DirectX::XMFLOAT2 spriteScale = { 76.0f, -400.0f };
 
 	std::unique_ptr<Text> velocityText;

@@ -52,7 +52,7 @@ void SceneLoading::Update(float elapsedTime)
 
 
 	// 次のシーンの準備が完了したらシーンを切り替える
-	if (nextScene->IsReady())
+	if (nextScene->IsReady() && !fade->GetFade())
 	{
 		if (!setFade)
 		{

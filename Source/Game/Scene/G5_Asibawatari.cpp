@@ -56,7 +56,7 @@ void G5_Asibawatari::Initialize()
 	player = std::make_unique<Player5_AsibaWatari>();
 	player->SetPosition(DirectX::XMFLOAT3(0, 5.0f, 0));
 	player->SetAngleY(DirectX::XMConvertToRadians(180));
-	player->SetGravity(0.0f);
+	//player->SetGravity(0.0f);
 
 	// ƒJƒƒ‰‰Šúİ’è
 	Camera& camera = Camera::Instance();

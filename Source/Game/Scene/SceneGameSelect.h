@@ -83,6 +83,10 @@ private:
 	std::unique_ptr <Player0_Onigokko> player;
 	std::unique_ptr <CameraController> cameraController;
 
+	std::unique_ptr<Sprite> gameExplanation;
+	float gameExplanationOpacity = 1.0f;
+	bool gameExplanationOpacityUp = false;
+
 	std::unique_ptr<Sprite> bonusExplanation;
 
 	std::unique_ptr<RenderTarget>  renderTarget; //! レンダーターゲット

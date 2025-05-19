@@ -46,9 +46,6 @@ void SceneGameSelect::Initialize()
 	graphics.GetEnvironmentMap()->Load("Data/Environment/Cloud.hdr");
 	graphics.GetEnvironmentMap()->Set(15);
 
-	//! 空
-	sky = std::make_unique<Sky>();
-
 	ID3D11Device* device = graphics.GetDevice();
 	float screenWidth = graphics.GetScreenWidth();
 	float screenHeight = graphics.GetScreenHeight();
@@ -143,6 +140,7 @@ void SceneGameSelect::Initialize()
 		hint[i] = std::make_unique<Sprite>(filePath.c_str());
 	}
 	
+	bonusExplanation = std::make_unique<Sprite>("Data/Sprite/BonusExplanation.png");
 
 	GameSelectManager& gameSelectManager = GameSelectManager::Instance();
 
@@ -372,16 +370,6 @@ void SceneGameSelect::Render()
 		// ボーナス画像を表示しないなら
 		if ((!viewBonusImage) || (viewBonusImage && fade->GetFadeOpacity() < 1.0f))
 		{
-			//! スカイマップ
-			{
-				Shader* skyShader = graphics.GetSkydomeShader();
-				skyShader->Begin(dc, rc);
-
-				sky->Render(dc, skyShader);
-
-				skyShader->End(dc);
-			}
-
 			Shader* shader = graphics.GetDefaultLitShader();
 			shader->Begin(dc, rc);
 			// ステージ描画
@@ -470,8 +458,21 @@ void SceneGameSelect::Render()
 				bonusImageColor[i], bonusImageColor[i], bonusImageColor[i], bonusImageOpacity);
 		}
 
-		float textureWidth = static_cast<float>(hint[0]->GetTextureWidth());
-		float textureHeight = static_cast<float>(hint[0]->GetTextureHeight());
+		float textureWidth = static_cast<float>(bonusExplanation->GetTextureWidth());
+		float textureHeight = static_cast<float>(bonusExplanation->GetTextureHeight());
+
+		float opacity = 1.0f - bonusImageOpacity;
+
+		bonusExplanation->Render(dc,
+			0, 0,
+			screenWidth, screenHeight,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 1, 1, opacity);
+
+		textureWidth = static_cast<float>(hint[0]->GetTextureWidth());
+		textureHeight = static_cast<float>(hint[0]->GetTextureHeight());
 
 		//! おにごっこ
 		if (!clear.onigokko)

@@ -15,6 +15,7 @@
 #include "G1_DarumasangaKoronda_Clear.h"
 #include "G1_DarumasangaKoronda_GameOver.h"
 #include "Audio/BgmManager.h"
+#include <algorithm>
 
 //! ムービー中か
 bool G1_DarumasangaKoronda::movieScene = false;
@@ -171,6 +172,13 @@ void G1_DarumasangaKoronda::Update(float elapsedTime)
 			timer->Update(elapsedTime);
 
 		pause->Update(elapsedTime);
+
+		if (player->GetPosition().x < -6.0f && actionExplanationOpacity > 0.0f)
+			actionExplanationOpacity -= 2 * elapsedTime;
+		else if(actionExplanationOpacity < 1.0f)
+			actionExplanationOpacity += 2 * elapsedTime;
+
+		actionExplanationOpacity = std::clamp(actionExplanationOpacity, 0.3f, 1.0f);
 	}
 
 	if (pause->GetPauseOpacity() <= 0.0f)
@@ -388,10 +396,13 @@ void G1_DarumasangaKoronda::Render()
 			0, 0,
 			textureWidth, textureHeight,
 			0,
-			1, 1, 1, 1);
+			1, 1, 1, actionExplanationOpacity);
 
 		//! フェードの描画処理
 		fade->Render(dc, graphics);
+
+		//! ポーズ画面
+		pause->Render(dc, graphics);
 	}
 
 #ifndef _DEBUG

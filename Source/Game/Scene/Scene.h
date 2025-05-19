@@ -33,6 +33,10 @@ public:
 	// 描画設定
 	void DrawingSettings(Graphics& graphics);
 
+private:
+	//! スカイマップの角度の制限
+	void SkydomeAngleLimit();
+
 public:
 	/*! デバッグ用 */
 	static bool debugControll; // デバッグ用に数値を変更できるようにするか

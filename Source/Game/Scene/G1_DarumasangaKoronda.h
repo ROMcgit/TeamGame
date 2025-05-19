@@ -62,6 +62,7 @@ private:
 	DirectX::XMFLOAT3 backGroundColor = { 0.6f, 0.35f, 0.67f };
 
 	std::unique_ptr<Sprite> actionExplanation;
+	float actionExplanationOpacity = 1.0f;
 
 	float movieTime = 0.0f; // ムービー時間
 	int   movieStep = 0;    // ムービーステップ

@@ -56,7 +56,7 @@ void G5_Asibawatari::Initialize()
 	player = std::make_unique<Player5_AsibaWatari>();
 	player->SetPosition(DirectX::XMFLOAT3(0, 5.0f, 0));
 	player->SetAngleY(DirectX::XMConvertToRadians(180));
-	//player->SetGravity(0.0f);
+	player->SetGravity(0.0f);
 
 	// カメラ初期設定
 	Camera& camera = Camera::Instance();
@@ -122,6 +122,8 @@ void G5_Asibawatari::Update(float elapsedTime)
 
 	if(pause->GetPauseOpacity() <= 0.0f)
 	{
+		skydomeAngle.y -= DirectX::XMConvertToRadians(1) * elapsedTime;
+
 		//! フェードの更新処理
 		fade->Update(elapsedTime);
 
@@ -167,6 +169,12 @@ void G5_Asibawatari::Render()
 	//! フォグ
 	fogStart = 2000.0f;
 	fogEnd = 2100.0f;
+
+	//! スカイマップ
+	skydomePosition.y = 165.0f;
+	skydomePosition.z = -120.0f;
+	skydomeAngle.x = DirectX::XMConvertToRadians(70);
+	skydomeScale = 1.0f;
 
 	Graphics& graphics = Graphics::Instance();
 
@@ -306,6 +314,9 @@ void G5_Asibawatari::Render()
 
 		//! フェードの描画処理
 		fade->Render(dc, graphics);
+
+		//! ポーズ画面
+		pause->Render(dc, graphics);
 	}
 
 #ifndef _DEBUG

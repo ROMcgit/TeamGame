@@ -202,14 +202,49 @@ void Scene::DrawingSettings(Graphics& graphics)
 		/*! スカイマップ */
 		// 位置Y
 		rc.skydomePosition = this->debugSkydomePosition;
-		// 角度Z
+		// 角度
 		rc.skydomeAngle = this->debugSkydomeAngle;
 		// 大きさ
 		rc.skydomeScale = this->debugSkydomeScale;
 	}
 
+	//! スカイマップの角度の制限
+	SkydomeAngleLimit();
+
 	// カメラパラメータ設定
 	Camera& camera = Camera::Instance();
 	rc.view = camera.GetView();
 	rc.projection = camera.GetProjection();
+}
+
+//! スカイマップの角度の制限
+void Scene::SkydomeAngleLimit()
+{
+	/// X軸の回転値を-3.14～3.14に収める
+	if (skydomeAngle.x < -DirectX::XM_PI)     skydomeAngle.x += DirectX::XM_2PI;
+	else if (skydomeAngle.x > DirectX::XM_PI) skydomeAngle.x -= DirectX::XM_2PI;
+
+	//! デバッグ
+	if (debugSkydomeAngle.x < -DirectX::XM_PI)     debugSkydomeAngle.x += DirectX::XM_2PI;
+	else if (debugSkydomeAngle.x > DirectX::XM_PI) debugSkydomeAngle.x -= DirectX::XM_2PI;
+
+//----------------------------------------------------------------------------------------------//
+
+	// Y軸の回転値を-3.14～3.14に収める
+	if (skydomeAngle.y < -DirectX::XM_PI)     skydomeAngle.y += DirectX::XM_2PI;
+	else if (skydomeAngle.y > DirectX::XM_PI) skydomeAngle.y -= DirectX::XM_2PI;
+
+	//! デバッグ
+	if (debugSkydomeAngle.y < -DirectX::XM_PI)     debugSkydomeAngle.y += DirectX::XM_2PI;
+	else if (debugSkydomeAngle.y > DirectX::XM_PI) debugSkydomeAngle.y -= DirectX::XM_2PI;
+
+//----------------------------------------------------------------------------------------------//
+
+	// Z軸の回転値を-3.14～3.14に収める
+	if (skydomeAngle.z < -DirectX::XM_PI)     skydomeAngle.z += DirectX::XM_2PI;
+	else if (skydomeAngle.z > DirectX::XM_PI) skydomeAngle.z -= DirectX::XM_2PI;
+
+	//! デバッグ
+	if (debugSkydomeAngle.z < -DirectX::XM_PI)     debugSkydomeAngle.z += DirectX::XM_2PI;
+	else if (debugSkydomeAngle.z > DirectX::XM_PI) debugSkydomeAngle.z -= DirectX::XM_2PI;
 }

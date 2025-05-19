@@ -140,6 +140,13 @@ void G3_SoratobuHusenWari::Update(float elapsedTime)
 
 	if (pause->GetPauseOpacity() <= 0.0f)
 	{
+		if ((player->GetPosition().x < -2.5f && player->GetPosition().y < 18.0f) && actionExplanationOpacity > 0.0f)
+			actionExplanationOpacity -= 2 * elapsedTime;
+		else if(actionExplanationOpacity < 1.0f)
+			actionExplanationOpacity += 2 * elapsedTime;
+		
+		actionExplanationOpacity = std::clamp(actionExplanationOpacity, 0.3f, 1.0f);
+
 		//! フェードの更新処理
 		fade->Update(elapsedTime);
 
@@ -339,10 +346,13 @@ void G3_SoratobuHusenWari::Render()
 			0, 0,
 			textureWidth, textureHeight,
 			0,
-			1, 1, 1, 1);
+			1, 1, 1, actionExplanationOpacity);
 
 		//! フェードの描画処理
 		fade->Render(dc, graphics);
+
+		//! ポーズ画面
+		pause->Render(dc, graphics);
 	}
 
 #ifndef _DEBUG

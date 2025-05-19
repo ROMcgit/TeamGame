@@ -29,7 +29,7 @@ void G4_OssanTataki::Initialize()
 
 
 	Graphics& graphics = Graphics::Instance();
-	graphics.GetEnvironmentMap()->Load("Data/Environment/Evening.hdr");
+	graphics.GetEnvironmentMap()->Load("Data/Environment/env_sky_002_sunset2.hdr");
 	graphics.GetEnvironmentMap()->Set(15);
 
 	//! 空
@@ -155,6 +155,8 @@ void G4_OssanTataki::Update(float elapsedTime)
 
 	if(pause->GetPauseOpacity() <= 0.0f)
 	{
+		skydomeAngle.y -= DirectX::XMConvertToRadians(5) * elapsedTime;
+
 		//! フェードの更新処理
 		fade->Update(elapsedTime);
 
@@ -206,6 +208,8 @@ void G4_OssanTataki::Render()
 	lightRange = 20000.0f;
 
 	shadowMapEyeOffset = { 0.7f, 23.0f, 6.0f };
+
+	skydomeScale = 0.117f;
 
 	//! フォグ
 	fogStart = 10.0f;
@@ -368,6 +372,9 @@ void G4_OssanTataki::Render()
 
 		//! フェードの描画処理
 		fade->Render(dc, graphics);
+
+		//! ポーズ画面
+		pause->Render(dc, graphics);
 	}
 
 #ifndef _DEBUG

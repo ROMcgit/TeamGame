@@ -111,6 +111,8 @@ void G2_Sundome::Update(float elapsedTime)
 
 	if(pause->GetPauseOpacity() <= 0.0f)
 	{
+		skydomeAngle.y -= DirectX::XMConvertToRadians(5) * elapsedTime;
+
 		//! フェードの更新処理
 		fade->Update(elapsedTime);
 
@@ -156,6 +158,11 @@ void G2_Sundome::Render()
 	//! フォグ
 	fogStart = 45.0f;
 	fogEnd   = 100.0f;
+
+	//! スカイマップ
+	skydomePosition.y = -178.0f;
+	skydomeAngle.x = 1.51f;
+	skydomeScale = 0.425f;
 
 	Graphics& graphics = Graphics::Instance();
 
@@ -283,6 +290,9 @@ void G2_Sundome::Render()
 
 		//! フェードの描画処理
 		fade->Render(dc, graphics);
+
+		//! ポーズ画面
+		pause->Render(dc, graphics);
 	}
 
 #ifndef _DEBUG
@@ -378,6 +388,12 @@ void G2_Sundome::UpdateMovie(float elapsedTime)
 				//! カメラの位置を変更する
 				cameraController->SetTargetChange(pos, 2.0f);
 
+				//! カメラの角度を変更する
+				DirectX::XMFLOAT3 angle = cameraController->angle;
+				angle.x = DirectX::XMConvertToRadians(34.0f);
+
+				cameraController->SetAngleChange(angle, 2.0f);
+				
 				//! カメラの範囲を変更する
 				cameraController->SetRangeChange(29.0f, 2.0f);
 

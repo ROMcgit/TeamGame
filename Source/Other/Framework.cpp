@@ -264,7 +264,17 @@ void Framework::SceneSelectGUI()
 			if (ImGui::CollapsingHeader(u8"スカイマップ"))
 			{
 				ImGui::DragFloat3(u8"位置(スカイマップ)", &Scene::debugSkydomePosition.x, 0.01f);
-				ImGui::DragFloat3(u8"角度(スカイマップ)", &Scene::debugSkydomeAngle.x, 0.01f);
+				
+				//! 角度
+				DirectX::XMFLOAT3 a;
+				a.x = DirectX::XMConvertToDegrees(Scene::debugSkydomeAngle.x);
+				a.y = DirectX::XMConvertToDegrees(Scene::debugSkydomeAngle.y);
+				a.z = DirectX::XMConvertToDegrees(Scene::debugSkydomeAngle.z);
+				ImGui::DragFloat3(u8"角度(スカイマップ)", &a.x, 0.01f);
+				Scene::debugSkydomeAngle.x = DirectX::XMConvertToRadians(a.x);
+				Scene::debugSkydomeAngle.y = DirectX::XMConvertToRadians(a.y);
+				Scene::debugSkydomeAngle.z = DirectX::XMConvertToRadians(a.z);
+
 				ImGui::DragFloat(u8"大きさ(スカイマップ)", &Scene::debugSkydomeScale, 0.001f);
 			}
 

@@ -255,7 +255,7 @@ void G2_Sundome::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -292,10 +292,10 @@ void G2_Sundome::Render()
 		fade->Render(dc, graphics);
 
 		//! ポーズ画面
-		pause->Render(dc, graphics);
+		//pause->Render(dc, graphics);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

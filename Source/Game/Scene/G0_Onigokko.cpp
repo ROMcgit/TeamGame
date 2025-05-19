@@ -400,7 +400,7 @@ void G0_Onigokko::Render()
 		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -431,20 +431,22 @@ void G0_Onigokko::Render()
 		float textureWidth = static_cast<float>(actionExplanation->GetTextureWidth());
 		float textureHeight = static_cast<float>(actionExplanation->GetTextureHeight());
 
-		actionExplanation->Render(dc,
-			0, 0,
-			screenWidth, screenHeight,
-			0, 0,
-			textureWidth, textureHeight,
-			0,
-			1, 1, 1, 1);
+		if(!movieScene)
+			actionExplanation->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
 
 		fade->Render(dc, graphics);
 
-		pause->Render(dc, graphics);
+		if (!movieScene)
+			pause->Render(dc, graphics);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

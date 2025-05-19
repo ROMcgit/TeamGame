@@ -383,29 +383,32 @@ void G1_DarumasangaKoronda::Render()
 		else
 			color = { 1, 0, 0 };
 
-		timer->Render(dc, graphics, DirectX::XMFLOAT2(30.0f, 0.0f), DirectX::XMFLOAT4(color.x, color.y, color.z, 1.0f));
+		if(!movieScene)
+			timer->Render(dc, graphics, DirectX::XMFLOAT2(30.0f, 0.0f), DirectX::XMFLOAT4(color.x, color.y, color.z, 1.0f));
 
 		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
 		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
 		float textureWidth = static_cast<float>(actionExplanation->GetTextureWidth());
 		float textureHeight = static_cast<float>(actionExplanation->GetTextureHeight());
 
-		actionExplanation->Render(dc,
-			0, 0,
-			screenWidth, screenHeight,
-			0, 0,
-			textureWidth, textureHeight,
-			0,
-			1, 1, 1, actionExplanationOpacity);
+		/*if (!movieScene)
+			actionExplanation->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, actionExplanationOpacity);*/
 
 		//! フェードの描画処理
 		fade->Render(dc, graphics);
 
-		//! ポーズ画面
-		pause->Render(dc, graphics);
+		//if (!movieScene)
+		//	//! ポーズ画面
+		//	pause->Render(dc, graphics);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

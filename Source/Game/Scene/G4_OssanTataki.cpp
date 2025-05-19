@@ -161,8 +161,8 @@ void G4_OssanTataki::Update(float elapsedTime)
 		fade->Update(elapsedTime);
 
 		//! タイマーの更新処理
-		if (!movieScene)
-			timer->Update(elapsedTime);
+		/*if (!movieScene)
+			timer->Update(elapsedTime);*/
 
 		//! ムービー更新処理
 		UpdateMovie(elapsedTime);
@@ -202,6 +202,7 @@ void G4_OssanTataki::Update(float elapsedTime)
 // 描画処理
 void G4_OssanTataki::Render()
 {
+	lightColor = { 0.84f, 0.73f, 0.55f };
 	lightPosition.x = 2.8f;
 	lightPosition.y = 43.5f;
 	lightPosition.z = -43.8f;
@@ -212,9 +213,9 @@ void G4_OssanTataki::Render()
 	skydomeScale = 0.117f;
 
 	//! フォグ
-	fogStart = 10.0f;
+	fogStart = 80.0f;
 	fogEnd   = 380.0f;
-	fogColor = { 0, 0.9f, 1.0f };
+	fogColor = { 1.0f, 0.436f, 0.0f };
 
 	Graphics& graphics = Graphics::Instance();
 
@@ -313,7 +314,7 @@ void G4_OssanTataki::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -362,22 +363,22 @@ void G4_OssanTataki::Render()
 		float textureWidth = static_cast<float>(actionExplanation->GetTextureWidth());
 		float textureHeight = static_cast<float>(actionExplanation->GetTextureHeight());
 
-		actionExplanation->Render(dc,
+		/*actionExplanation->Render(dc,
 			0, 0,
 			screenWidth, screenHeight,
 			0, 0,
 			textureWidth, textureHeight,
 			0,
-			1, 1, 1, 1);
+			1, 1, 1, 1);*/
 
 		//! フェードの描画処理
 		fade->Render(dc, graphics);
 
 		//! ポーズ画面
-		pause->Render(dc, graphics);
+		//pause->Render(dc, graphics);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

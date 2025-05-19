@@ -19,7 +19,7 @@ CollisionAttack::CollisionAttack(CollisionAttackManager* manager)
 // デバッグプリミティブ描画
 void CollisionAttack::DrawDebugPrimitive()
 {
-#ifdef _DEBUG
+#ifndef _DEBUG
 	DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
 
 	// 衝突判定用のデバッグを描画

@@ -155,6 +155,8 @@ void Player3_SoratobuHusenWari::Update(float elapsedTime)
 
 	// 位置制限
 	PositionControll(elapsedTime);
+
+	UpdateHpPinch(elapsedTime);
 }
 
 // 描画処理
@@ -255,6 +257,45 @@ bool Player3_SoratobuHusenWari::InputMove(float elapsedTime)
 
 	// 進行ベクトルがゼロベクトルでない場合は入力された
 	return !(moveVec.x == 0.0f && moveVec.z == 0.0f);
+}
+
+// HPピンチ更新処理
+void Player3_SoratobuHusenWari::UpdateHpPinch(float elapsedTime)
+{
+	//! HPがピンチじゃないなら、処理を止める
+	if (hp > maxHp * 0.28f || hpShake)
+	{
+		hpPinchTimer = 0.0f; // タイマーを0にする
+
+		//! マテリアルの色を1にする
+		materialColor.x = materialColor.y = materialColor.z = 1.0f;
+
+		//! エミッシブの強さを変更
+		if (emissiveStrength > 0.0f && !emissivePhaseChange)
+			SetEmissiveStrengthChange(DirectX::XMFLOAT3(0, 0, 0), 0.0f, 0.1f);
+
+		return;
+	}
+
+	//! タイマーを増やす
+	hpPinchTimer += elapsedTime;
+
+	//! タイマーに基づいて色を切り替え
+	const float blinkInterval = 0.15f; //! 点滅間隔
+	if (fmod(hpPinchTimer, blinkInterval * 2) < blinkInterval) {
+		hpSpriteColorP = { 1.0f, 0.412f, 0.706f }; // ピンク色
+	}
+	else
+	{
+		hpSpriteColorP = { 1.0f, 1.0f, 1.0f }; // 白色
+	}
+
+	//!エミッシブの強さを変更する
+	if (emissiveStrength == 0.0f)
+		SetEmissiveStrengthChange(DirectX::XMFLOAT3(1, 0, 0), 1.0f, 0.2f);
+	//! 0じゃないなら
+	else
+		SetEmissiveStrengthChange(DirectX::XMFLOAT3(1, 0, 0), 0.0f, 0.2f);
 }
 
 // 移動ステートへ遷移

@@ -49,6 +49,9 @@ private:
 	// 移動入力処理
 	bool InputMove(float elapsedTime);
 
+	// HPピンチ更新処理
+	void UpdateHpPinch(float elapsedTime);
+
 	/*! 当たり判定処理 */
 
 	// プレイヤーとエネミーとの衝突処理
@@ -102,6 +105,8 @@ private:
 	std::unique_ptr<Model> model;
 
 	std::unique_ptr<Sprite> uiSprite[4];
+
+	float hpPinchTimer = 0.0f;
 
 	// 衝突攻撃
 	CollisionAttackManager collisionAttackManager;

@@ -29,4 +29,6 @@ private:
 	std::unique_ptr<Sprite> gameClear;
 	std::unique_ptr<Fade> fade;
 	bool setFade = false; // フェードを設定したか
+
+	float sceneChangeTimer = 0.0f;
 };

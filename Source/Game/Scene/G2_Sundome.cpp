@@ -87,7 +87,7 @@ void G2_Sundome::Initialize()
 
 	BgmManager& bgm = BgmManager::Instance();
 	bgm.LoadBgm("寸止め", "Data/Audio/Bgm/9.Sundome.wav");
-	bgm.PlayBgm("寸止め", 1.0f);
+	bgm.PlayBgm("寸止め", 0.5f);
 }
 
 // 終了化
@@ -255,7 +255,7 @@ void G2_Sundome::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -295,7 +295,7 @@ void G2_Sundome::Render()
 		//pause->Render(dc, graphics);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

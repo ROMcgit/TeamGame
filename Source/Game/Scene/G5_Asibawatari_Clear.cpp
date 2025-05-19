@@ -39,11 +39,12 @@ void G5_Asibawatari_Clear::Update(float elapsedTime)
 
 	fade->Update(elapsedTime);
 
+	sceneChangeTimer += elapsedTime;
+
 	// なにかボタンを押したらローディングシーンを挟んでゲームシーンへ切り替え
-	const GamePadButton anyButton =
-		GamePad::BTN_A |
-		GamePad::BTN_B;
-	if (gamePad.GetButtonDown() & anyButton && !setFade && !fade->GetFade())
+	const GamePadButton anyButton = GamePad::BTN_A | GamePad::BTN_B | GamePad::BTN_X | GamePad::BTN_Y;
+
+	if (((gamePad.GetButtonDown() & anyButton) || sceneChangeTimer > 2.5f) && !setFade && !fade->GetFade())
 	{
 		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 			0.0f, 1.0f,

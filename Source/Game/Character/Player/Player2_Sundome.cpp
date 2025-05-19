@@ -59,7 +59,7 @@ Player2_Sundome::Player2_Sundome()
 	velocitySpriteLimit = std::make_unique<Sprite>();
 
 	SoundManager& sound = SoundManager::Instance();
-	sound.LoadSound("発射", "Data/Audio/Sound/Laughter.wav");
+	sound.LoadSound("発射", "Data/Audio/Sound/Launch.wav");
 	sound.LoadSound("ブレーキ", "Data/Audio/Sound/Brake.wav");
 
 	// 待機ステートへ遷移
@@ -614,7 +614,7 @@ void Player2_Sundome::DrawDebugPrimitive()
 {
 	DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 	// 衝突判定用のデバッグ円柱を描画
 	debugRenderer->DrawSphere(collisionPos, radius, { debugPrimitiveColor.x, debugPrimitiveColor.y, debugPrimitiveColor.z, 1 });
 

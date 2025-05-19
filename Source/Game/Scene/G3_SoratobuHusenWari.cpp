@@ -151,17 +151,31 @@ void G3_SoratobuHusenWari::Update(float elapsedTime)
 	{
 		skydomeAngle.y -= DirectX::XMConvertToRadians(0.5f) * elapsedTime;
 
+		float bgmVolume = 1.0f;
 		float bgmSpeed = 1.0f;
+		
 		if (gameTimer < 30.0f)
+		{
+			bgmVolume = 0.5f;
 			bgmSpeed = 1.0f;
+		}
 		else if (gameTimer < 100.0f)
-			bgmSpeed = 1.3f;
+		{
+			bgmVolume = 0.7f;
+			bgmSpeed = 1.2f;
+		}
 		else if (gameTimer < 150.0f)
-			bgmSpeed = 1.8f;
+		{
+			bgmVolume = 0.9f;
+			bgmSpeed = 1.5f;
+		}
 		else
-			bgmSpeed = 2.5f;
+		{
+			bgmVolume = 1.0f;
+			bgmSpeed = 2.0f;
+		}
 
-		BgmManager::Instance().ChangeBgmStatus("空飛ぶ風船割り", bgmSpeed);
+		BgmManager::Instance().ChangeBgmStatus("空飛ぶ風船割り", bgmVolume, bgmSpeed);
 
 		if ((player->GetPosition().x < -2.5f && player->GetPosition().y < 18.0f) && actionExplanationOpacity > 0.0f)
 			actionExplanationOpacity -= 2 * elapsedTime;
@@ -328,7 +342,7 @@ void G3_SoratobuHusenWari::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -391,7 +405,7 @@ void G3_SoratobuHusenWari::Render()
 		//pause->Render(dc, graphics);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

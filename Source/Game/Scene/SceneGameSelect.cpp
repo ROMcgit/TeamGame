@@ -395,7 +395,7 @@ void SceneGameSelect::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -587,7 +587,7 @@ void SceneGameSelect::Render()
 		}
 	}
 	
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 2DデバッグGUI描画
 	{
@@ -764,7 +764,7 @@ void SceneGameSelect::UpdateBonusImage(float elapsedTime)
 		BgmManager& bgm = BgmManager::Instance();
 		bgm.StopBgm();
 		std::string bgmPath = viewBonusImage ? "ボーナス" : "ゲーム選択";
-		float volume = viewBonusImage ? 0.5f : 0.8f;
+		float volume = viewBonusImage ? 0.25f : 0.8f;
 		bgm.PlayBgm(bgmPath.c_str(), volume);
 
 		SoundManager::Instance().PlaySound("決定");

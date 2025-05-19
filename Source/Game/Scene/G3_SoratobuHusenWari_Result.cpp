@@ -147,7 +147,7 @@ void G3_SoratobuHusenWari_Result::Render()
 		fade->Render(dc, graphics);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 	{
 		if (ImGui::Begin("Debug"))
 		{

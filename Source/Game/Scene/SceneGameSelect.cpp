@@ -33,7 +33,7 @@
 
 #include "Audio/SoundManager.h"
 
-SceneGameSelect::GameSelectA SceneGameSelect::gameSelect = SceneGameSelect::GameSelectA::Onigokko;
+SceneGameSelect::GameSelectA SceneGameSelect::gameSelect = SceneGameSelect::GameSelectA::GameSelect;
 bool SceneGameSelect::sceneChange = false;
 
 // クリア
@@ -62,14 +62,6 @@ void SceneGameSelect::Initialize()
 	StageManager& stageManager = StageManager::Instance();
 	std::unique_ptr<StageGameSelect> stageMain = std::make_unique<StageGameSelect>();
 	stageManager.Register(std::move(stageMain));
-
-	// プレイヤー初期化
-	player = std::make_unique<Player0_Onigokko>();
-	player->SetPosition(DirectX::XMFLOAT3(0, -5.2f, 0));
-	player->SetScale(DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f));
-	player->SetMoveSpeed(20.0f);
-	player->SetRadius(1.9f);
-	player->SetHeight(16.0f);
 
 	// カメラ初期設定
 	Camera& camera = Camera::Instance();
@@ -182,6 +174,79 @@ void SceneGameSelect::Initialize()
 	bgm.PlayBgm("ゲーム選択", 0.8f);
 
 	bgm.LoadBgm("ボーナス", "Data/Audio/Bgm/2.Bonus.wav");
+
+	// プレイヤー初期化
+	player = std::make_unique<Player0_Onigokko>();
+	player->SetScale(DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f));
+	player->SetMoveSpeed(20.0f);
+	player->SetRadius(1.9f);
+	player->SetHeight(16.0f);
+
+	DirectX::XMFLOAT3 pPos;
+	pPos.y = -5.2f;
+
+	switch (gameSelect)
+	{
+	case GameSelectA::GameSelect:
+	{
+		pPos.x = 0;
+		pPos.z = 0;
+	}
+		break;
+	case GameSelectA::Onigokko:
+	{
+		std::unique_ptr<GameSelect>& game = gameSelectManager.GetGameSelect(0);
+
+		pPos.x = game->GetPosition().x;
+		pPos.z = game->GetPosition().z - 50.0f;
+	}
+		break;
+	case GameSelectA::DarumasangaKoronda:
+	{
+		std::unique_ptr<GameSelect>& game = gameSelectManager.GetGameSelect(1);
+
+		pPos.x = game->GetPosition().x;
+		pPos.z = game->GetPosition().z - 50.0f;
+	}
+		break;
+	case GameSelectA::Sundome:
+	{
+		std::unique_ptr<GameSelect>& game = gameSelectManager.GetGameSelect(2);
+
+		pPos.x = game->GetPosition().x;
+		pPos.z = game->GetPosition().z - 50.0f;
+	}
+		break;
+	case GameSelectA::SoratobuHusenWari:
+	{
+		std::unique_ptr<GameSelect>& game = gameSelectManager.GetGameSelect(3);
+
+		pPos.x = game->GetPosition().x;
+		pPos.z = game->GetPosition().z - 50.0f;
+	}
+		break;
+	case GameSelectA::OssanTataki:
+	{
+		std::unique_ptr<GameSelect>& game = gameSelectManager.GetGameSelect(4);
+
+		pPos.x = game->GetPosition().x;
+		pPos.z = game->GetPosition().z - 50.0f;
+	}
+		break;
+	case GameSelectA::Asibawatari:
+	{
+		std::unique_ptr<GameSelect>& game = gameSelectManager.GetGameSelect(5);
+
+		pPos.x = game->GetPosition().x;
+		pPos.z = game->GetPosition().z - 50.0f;
+	}
+		break;
+	default:
+		break;
+	}
+
+	player->SetPosition(pPos);
+	
 
 	SoundManager& sound = SoundManager::Instance();
 	sound.LoadSound("決定", "Data/Audio/Sound/Decision.wav");
@@ -395,7 +460,7 @@ void SceneGameSelect::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -587,7 +652,7 @@ void SceneGameSelect::Render()
 		}
 	}
 	
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

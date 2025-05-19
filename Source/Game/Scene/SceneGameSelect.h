@@ -52,6 +52,7 @@ public:
 #if 1
 	enum class GameSelectA
 	{
+		GameSelect,
 		Onigokko,           // Ç®Ç…Ç≤Ç¡Ç±
 		DarumasangaKoronda, // ÇæÇÈÇ‹Ç≥ÇÒÇ™ì]ÇÒÇæ
 		Sundome,            // ê°é~Çﬂ

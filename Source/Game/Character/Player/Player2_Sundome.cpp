@@ -524,9 +524,16 @@ void Player2_Sundome::UpdateDeathState(float elapsedTimae)
 			SetColorFilterChange(DirectX::XMFLOAT3(colorF), 0.5f);
 
 			if (round < 3)
+			{
+				isBrake = false;
+				breakeSound = false;
+
 				round++;
+			}
 			else
 			{
+				BgmManager::Instance().UnloadBgm("寸止め");
+
 				std::unique_ptr<SceneLoading> loadingScene = std::make_unique<SceneLoading>(std::make_unique<G2_Sundome_Result>());
 
 				// シーンマネージャーにローディングシーンへの切り替えを指示

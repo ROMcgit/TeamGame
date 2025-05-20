@@ -6,6 +6,7 @@
 #include "SceneLoading.h"
 #include "Graphics/Fade.h"
 #include "Audio/BgmManager.h"
+#include "Audio/SoundManager.h"
 
 // 初期化
 void SceneTitle::Initialize()
@@ -14,8 +15,12 @@ void SceneTitle::Initialize()
 	bgm.LoadBgm("タイトル", "Data/Audio/Bgm/0.Title.wav");
 	bgm.PlayBgm("タイトル", 0.7f);
 
+	SoundManager::Instance().LoadSound("決定", "Data/Audio/Sound/Decision.wav");
+
 	// スプライト初期化
 	sprite = std::make_unique<Sprite>("Data/Sprite/Title.png");
+
+	text = std::make_unique<Sprite>("Data/Sprite/TitleButton.png");
 
 	fade = std::make_unique<Fade>();
 	fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
@@ -41,12 +46,15 @@ void SceneTitle::Update(float elapsedTime)
 		GamePad::BTN_B |
 		GamePad::BTN_X |
 		GamePad::BTN_Y |
-		GamePad::BTN_START;
+		GamePad::BTN_START |
+		GamePad::BTN_SPACE;
 	if (gamePad.GetButtonDown() & anyButton && !setFade && !fade->GetFade())
 	{
 		fade->SetFade(DirectX::XMFLOAT3(0, 0, 0),
 			0.0f, 1.0f,
-			0.5f, 0.2f);
+			0.5f, 0.5f);
+
+		SoundManager::Instance().PlaySound("決定");
 
 		setFade = true;
 	}
@@ -59,6 +67,19 @@ void SceneTitle::Update(float elapsedTime)
 		// シーンマネージャーにローディングシーンへの切り替えを指示
 		SceneManager::Instance().ChangeScene(std::move(loadingScene));
 	}
+
+	if(!fade->GetFade())
+		textOpacity += (1.5f * elapsedTime) * (textOpacityUp ? 1 : -1);
+
+	if (textOpacity <= 0.0f || textOpacity >= 1.0f)
+	{
+		textOpacity = std::clamp(textOpacity, 0.0f, 1.0f);
+
+		textOpacityUp = !textOpacityUp;
+	}
+
+	if (setFade)
+		textTimer += elapsedTime;
 }
 
 // 描画処理
@@ -87,6 +108,31 @@ void SceneTitle::Render()
 			0, 0, textureWidth, textureHeight,
 			0,
 			1, 1, 1, 1);
+
+		//! 表示時間
+		const float viewTimer = 0.1f;
+
+		//! タイトル説明
+		if (!setFade)
+		{
+			text->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, textOpacity);
+		}
+		else if (fmod(textTimer, viewTimer * 2) < viewTimer)
+		{
+			text->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, 1);
+		}
 
 		fade->Render(dc, graphics);
 	}

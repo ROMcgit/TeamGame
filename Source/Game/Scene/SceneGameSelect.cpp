@@ -178,7 +178,7 @@ void SceneGameSelect::Initialize()
 	// ƒvƒŒƒCƒ„[‰Šú‰»
 	player = std::make_unique<Player0_Onigokko>();
 	player->SetScale(DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f));
-	player->SetMoveSpeed(20.0f);
+	player->SetMoveSpeed(25.0f);
 	player->SetRadius(1.9f);
 	player->SetHeight(16.0f);
 

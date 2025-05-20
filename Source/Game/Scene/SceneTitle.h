@@ -28,4 +28,9 @@ private:
 	std::unique_ptr<Sprite> sprite;
 	std::unique_ptr<Fade> fade;
 	bool setFade = false; // フェードを設定したか
+
+	std::unique_ptr<Sprite> text;
+	float textOpacity = 1.0f;
+	bool textOpacityUp = false;
+	float textTimer = 0.0f;
 };

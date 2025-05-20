@@ -611,10 +611,10 @@ void G0_Onigokko::UpdateCameraMovie(float elapsedTime)
 
 		std::unique_ptr<Enemy>& oni = EnemyManager::Instance().GetEnemy(0);
 
-		cameraController->SetRange(30);
+		cameraController->SetRange(10);
 		cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(10), 0, 0));
 		target = oni->GetPosition();
-		target.y = oni->GetHeight() * 0.8f;
+		target.y = oni->GetHeight() * 0.6f;
 
 		if (cameraMovieTime > 4.0f)
 		{

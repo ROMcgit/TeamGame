@@ -71,7 +71,7 @@ void Pause::Render(ID3D11DeviceContext* dc, Graphics& graphics)
 		0, 0,
 		textureWidth, textureHeight,
 		0,
-		0.8f, 0.8f, 0.8f, opacity);
+		1.0f, 1.0f, 1.0f, opacity);
 
 	textureWidth = static_cast<float>(pauseBG->GetTextureWidth());
 	textureHeight = static_cast<float>(pauseBG->GetTextureHeight());

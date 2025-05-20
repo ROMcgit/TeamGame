@@ -4,6 +4,7 @@
 #include "Graphics/Graphics.h"
 #include "Other/Mathf.h"
 #include "Item.h"
+#include "Game/Effect/Effect.h"
 
 // •—‘D_ƒvƒ‰ƒX
 class Balloon_Minus : public Item
@@ -59,6 +60,8 @@ private:
 	State state = State::Move;
 
 private:
+	std::unique_ptr<Effect> effect;
+
 	std::unique_ptr<Model> model;
 
 	float positionResetY = 0.0f;

@@ -16,6 +16,9 @@ Balloon_Minus::Balloon_Minus()
 {
 	model = std::make_unique<Model>("Data/Model/3.SoratobuHusenWari/Balloon_Minus/Balloon_Minus.mdl");
 
+	//! エフェクト
+	effect = std::make_unique<Effect>("Data/Effect/Minus.efk");
+
 	// 位置Yのリセット
 	positionResetY = position.y;
 
@@ -169,6 +172,11 @@ void Balloon_Minus::UpdateMoveState(float elapsedTime)
 void Balloon_Minus::TransitionBreakState()
 {
 	state = State::Break;
+
+	DirectX::XMFLOAT3 e = position;
+	e.y += height * 0.5f;
+
+	effect->Play(e, { 1.2f, 1.2f, 1.2f });
 
 	SoundManager::Instance().PlaySound("破裂");
 

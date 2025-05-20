@@ -155,7 +155,7 @@ void Player4_OssanTataki::TransitionAttackState()
 	sound.StopSound("攻撃");
 	sound.PlaySound("攻撃");
 
-	stateChangeWaitTimer = 0.5f;
+	stateChangeWaitTimer = 0.1f;
 }
 
 // 攻撃ステート更新処理

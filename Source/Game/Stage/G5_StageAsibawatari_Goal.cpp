@@ -9,6 +9,9 @@ G5_StageAsibawatari_Goal::G5_StageAsibawatari_Goal()
 	model = std::make_unique <Model>("Data/Model/Stage/5.Asibawatari/2.Goal/StageGoal.mdl");
 
 	scale.x = scale.y = scale.z = 0.1f;
+
+	opacity = 0.0f;
+	SetOpacityChange(1.0f, 0.7f);
 }
 
 G5_StageAsibawatari_Goal::~G5_StageAsibawatari_Goal()
@@ -39,7 +42,7 @@ void G5_StageAsibawatari_Goal::Render(ID3D11DeviceContext* dc, Shader* shader)
 
 	// シェーダーにモデルを描画してもらう
 	if(noViewTime <= 0.0f)
-		shader->Draw(dc, model.get());
+		shader->Draw(dc, model.get(), materialColor, opacity);
 }
 
 // レイキャスト

@@ -159,7 +159,7 @@ void Player4_OssanTataki::UpdateWaitState(float elapsedTime)
 				enemy->GetHeight(),
 				outPosition))
 			{
-				e.y += enemy->GetHeight();
+				e.y = enemy->GetPosition().y + enemy->GetHeight();
 			}
 		}
 

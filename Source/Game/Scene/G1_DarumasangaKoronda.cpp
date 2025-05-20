@@ -376,36 +376,38 @@ void G1_DarumasangaKoronda::Render()
 	}
 
 	{
-		//! タイマー
-		DirectX::XMFLOAT3 color;
-		if (timer->GetTimeM_Int() > 0 || (timer->GetTimeM_Int() == 0 && timer->GetTimeS_Int() > 30))
-			color = { 1, 1, 1 };
-		else
-			color = { 1, 0, 0 };
+		if(!movieTime)
+		{
+			//! タイマー
+			DirectX::XMFLOAT3 color;
+			if (timer->GetTimeM_Int() > 0 || (timer->GetTimeM_Int() == 0 && timer->GetTimeS_Int() > 30))
+				color = { 1, 1, 1 };
+			else
+				color = { 1, 0, 0 };
 
-		if(!movieScene)
 			timer->Render(dc, graphics, DirectX::XMFLOAT2(30.0f, 0.0f), DirectX::XMFLOAT4(color.x, color.y, color.z, 1.0f));
 
-		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
-		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
-		float textureWidth = static_cast<float>(actionExplanation->GetTextureWidth());
-		float textureHeight = static_cast<float>(actionExplanation->GetTextureHeight());
+			float screenWidth = static_cast<float>(graphics.GetScreenWidth());
+			float screenHeight = static_cast<float>(graphics.GetScreenHeight());
+			float textureWidth = static_cast<float>(actionExplanation->GetTextureWidth());
+			float textureHeight = static_cast<float>(actionExplanation->GetTextureHeight());
 
-		/*if (!movieScene)
-			actionExplanation->Render(dc,
-				0, 0,
-				screenWidth, screenHeight,
-				0, 0,
-				textureWidth, textureHeight,
-				0,
-				1, 1, 1, actionExplanationOpacity);*/
+			if (!movieScene)
+				actionExplanation->Render(dc,
+					0, 0,
+					screenWidth, screenHeight,
+					0, 0,
+					textureWidth, textureHeight,
+					0,
+					1, 1, 1, actionExplanationOpacity);
+		}
 
 		//! フェードの描画処理
 		fade->Render(dc, graphics);
 
-		//if (!movieScene)
-		//	//! ポーズ画面
-		//	pause->Render(dc, graphics);
+		if (!movieScene)
+			//! ポーズ画面
+			pause->Render(dc, graphics);
 	}
 
 #ifndef _DEBUG

@@ -292,7 +292,7 @@ void G2_Sundome::Render()
 		fade->Render(dc, graphics);
 
 		//! ƒ|[ƒY‰æ–Ê
-		//pause->Render(dc, graphics);
+		pause->Render(dc, graphics);
 	}
 
 #ifndef _DEBUG

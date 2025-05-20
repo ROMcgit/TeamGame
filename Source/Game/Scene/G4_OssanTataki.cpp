@@ -363,19 +363,19 @@ void G4_OssanTataki::Render()
 		float textureWidth = static_cast<float>(actionExplanation->GetTextureWidth());
 		float textureHeight = static_cast<float>(actionExplanation->GetTextureHeight());
 
-		/*actionExplanation->Render(dc,
+		actionExplanation->Render(dc,
 			0, 0,
 			screenWidth, screenHeight,
 			0, 0,
 			textureWidth, textureHeight,
 			0,
-			1, 1, 1, 1);*/
+			1, 1, 1, 1);
 
 		//! フェードの描画処理
 		fade->Render(dc, graphics);
 
 		//! ポーズ画面
-		//pause->Render(dc, graphics);
+		pause->Render(dc, graphics);
 	}
 
 #ifndef _DEBUG

@@ -5,6 +5,7 @@
 #include "Game/Character/Character.h"
 #include "Game/Character/Projectile/ProjectileManager.h"
 #include "Game/Effect/Effect.h"
+#include "graphics/Graphics.h"
 
 // プレイヤー
 class Player0_Onigokko : public Character
@@ -23,7 +24,7 @@ public:
 	void Render(ID3D11DeviceContext* dc, Shader* shader);
 
 	// HPなどのUI描画
-	void SpriteRender(ID3D11DeviceContext* dc);
+	void SpriteRender(ID3D11DeviceContext* dc, Graphics& graphics);
 
 	// デバッグ用GUI描画
 	void DrawDebugGUI();
@@ -113,6 +114,8 @@ public:
 
 private:
 	std::unique_ptr<Model> model;
+
+	std::unique_ptr<Sprite> heart[3];
 
 	float turnSpeed = DirectX::XMConvertToRadians(720);
 

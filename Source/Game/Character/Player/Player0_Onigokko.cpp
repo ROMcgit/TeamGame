@@ -30,6 +30,13 @@ Player0_Onigokko::Player0_Onigokko()
 	//! 体力
 	hp = 3;
 
+	for(int i = 0; i < 3; i++)
+	{
+		std::string filePath = "Data/Sprite/0.Onigokko/Heart" + std::to_string(i + 1) + ".png";
+
+		heart[i] = std::make_unique<Sprite>(filePath.c_str());
+	}
+
 	// モデル読み込み
 	model = std::make_unique <Model>("Data/Model/Ai/Ai.mdl");
 
@@ -145,8 +152,25 @@ void Player0_Onigokko::Render(ID3D11DeviceContext* dc, Shader* shader)
 }
 
 // HPなどのUI描画
-void Player0_Onigokko::SpriteRender(ID3D11DeviceContext* dc)
+void Player0_Onigokko::SpriteRender(ID3D11DeviceContext* dc, Graphics& graphics)
 {
+	float screenWidth = static_cast<float>(graphics.GetScreenWidth());
+	float screenHeight = static_cast<float>(graphics.GetScreenHeight());
+
+	for(int i = 0; i < hp; i++)
+	{
+		float textureWidth = static_cast<float>(heart[i]->GetTextureWidth());
+		float textureHeight = static_cast<float>(heart[i]->GetTextureHeight());
+
+		//! ハート
+		heart[i]->Render(dc,
+			0, 0,
+			screenWidth, screenHeight,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1);
+	}
 }
 
 // 移動入力処理

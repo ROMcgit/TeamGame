@@ -139,7 +139,7 @@ void G1_DarumasangaKoronda::Initialize()
 	actionExplanation = std::make_unique<Sprite>("Data/Sprite/1.DarumasangaKoronda/ActionExplanation.png");
 
 	//! タイマー
-	timer = std::make_unique<Timer>(true, 2, 30);
+	timer = std::make_unique<Timer>(true, 3);
 
 	//! ポーズ
 	pause = std::make_unique<Pause>();
@@ -380,7 +380,7 @@ void G1_DarumasangaKoronda::Render()
 		{
 			//! タイマー
 			DirectX::XMFLOAT3 color;
-			if (timer->GetTimeM_Int() > 0 || (timer->GetTimeM_Int() == 0 && timer->GetTimeS_Int() > 30))
+			if (timer->GetTimeM_Int() > 0)
 				color = { 1, 1, 1 };
 			else
 				color = { 1, 0, 0 };

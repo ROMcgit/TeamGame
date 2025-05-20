@@ -103,6 +103,8 @@ private:
 	};
 
 private:
+	std::unique_ptr<Effect> effect;
+
 	std::unique_ptr<Model> model;
 
 	float turnSpeed = DirectX::XMConvertToRadians(720);

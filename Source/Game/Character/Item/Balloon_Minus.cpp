@@ -173,8 +173,10 @@ void Balloon_Minus::TransitionBreakState()
 {
 	state = State::Break;
 
-	DirectX::XMFLOAT3 e = position;
+	Player3_SoratobuHusenWari& player = Player3_SoratobuHusenWari::Instance();
+	DirectX::XMFLOAT3 e = player.GetPosition();
 	e.y += height * 0.5f;
+	e.z = player.GetPosition().z - (player.GetRadius() * 2.0f);
 
 	effect->Play(e, { 1.2f, 1.2f, 1.2f });
 

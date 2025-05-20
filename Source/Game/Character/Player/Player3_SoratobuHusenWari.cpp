@@ -33,7 +33,9 @@ Player3_SoratobuHusenWari::Player3_SoratobuHusenWari()
 	debugPrimitiveColor = { 0, 0, 1 };
 
 	radius = 1.1f;
-	height = 3.35f;
+	height = 3.1f;
+
+	collisionOffset.z = -0.17f;
 
 	opacity = 0.8f;
 

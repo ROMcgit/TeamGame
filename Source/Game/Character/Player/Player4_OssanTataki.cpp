@@ -25,6 +25,8 @@ Player4_OssanTataki::Player4_OssanTataki()
 	// モデル読み込み
 	model = std::make_unique <Model>("Data/Model/Ai/Ai.mdl");
 
+	effect = std::make_unique<Effect>("Data/Effect/Attack.efk");
+
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.03f;
 
@@ -139,6 +141,30 @@ void Player4_OssanTataki::UpdateWaitState(float elapsedTime)
 
 	if (gamePad.GetButtonDown() & button)
 	{
+		DirectX::XMFLOAT3 e = pos;
+
+		EnemyManager& enemyManager = EnemyManager::Instance();
+		int enemyCount = enemyManager.GetEnemyCount();
+		for(int i = 0; i < enemyCount; i++)
+		{
+			std::unique_ptr<Enemy>& enemy = enemyManager.GetEnemy(i);
+			CollisionAttack* collisionAttack = collisionAttackManager.GetCollisionAttack(0);
+
+			DirectX::XMFLOAT3 outPosition;
+			if (Collision::IntersectSphereVsCylinder
+				(collisionAttack->GetPosition(),
+					collisionAttack->GetRadius(),
+				enemy->GetPosition(),
+				enemy->GetRadius(),
+				enemy->GetHeight(),
+				outPosition))
+			{
+				e.y += enemy->GetHeight();
+			}
+		}
+
+		effect->Play(e, { 1.5f,1.5f,1.5f });
+
 		tataki->SetRadius(3.0f);
 
 		//! 攻撃ステートへ遷移

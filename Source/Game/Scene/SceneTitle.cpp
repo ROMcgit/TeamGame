@@ -112,6 +112,9 @@ void SceneTitle::Render()
 		//! 表示時間
 		const float viewTimer = 0.1f;
 
+		textureWidth = static_cast<float>(text->GetTextureWidth());
+		textureHeight = static_cast<float>(text->GetTextureHeight());
+
 		//! タイトル説明
 		if (!setFade)
 		{

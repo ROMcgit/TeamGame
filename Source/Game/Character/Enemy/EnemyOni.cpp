@@ -120,7 +120,7 @@ void EnemyOni::Render(ID3D11DeviceContext* dc, Shader* shader)
 	float vx = targetPosition.x - position.x;
 	float vz = targetPosition.z - position.z;
 	dist = vx * vx + vz * vz;
-	if ((dist < 7000 || G0_Onigokko::movieScene) && opacity > 0)
+	if ((dist < (searchRange * searchRange) * 5 || G0_Onigokko::movieScene) && opacity > 0)
 		shader->Draw(dc, model.get(), materialColor, opacity);
 }
 

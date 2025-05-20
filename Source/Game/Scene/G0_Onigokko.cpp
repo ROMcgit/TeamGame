@@ -178,7 +178,7 @@ void G0_Onigokko::Initialize()
 	actionExplanation = std::make_unique<Sprite>("Data/Sprite/0.Onigokko/ActionExplanation.png");
 
 	// タイマー
-	timer = std::make_unique<Timer>(true, 2);
+	timer = std::make_unique<Timer>(true, 1, 30);
 
 	// ムービーシーンにする
 	movieScene = true;
@@ -421,17 +421,21 @@ void G0_Onigokko::Render()
 	}
 
 	{
-		if (timer->GetTimeM_Int() == 0 && timer->GetTimeS_Int() == 0)
-			timer->Render(dc, graphics, DirectX::XMFLOAT2(30, 0), DirectX::XMFLOAT4(1, 1, 0, 1));
-		else
-			timer->Render(dc, graphics, DirectX::XMFLOAT2(30, 0));
-	
-		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
-		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
-		float textureWidth = static_cast<float>(actionExplanation->GetTextureWidth());
-		float textureHeight = static_cast<float>(actionExplanation->GetTextureHeight());
-
 		if(!movieScene)
+		{
+			//! プレイヤーの画像
+			player->SpriteRender(dc, graphics);
+
+			if (timer->GetTimeM_Int() == 0 && timer->GetTimeS_Int() == 0)
+				timer->Render(dc, graphics, DirectX::XMFLOAT2(30, 0), DirectX::XMFLOAT4(1, 1, 0, 1));
+			else
+				timer->Render(dc, graphics, DirectX::XMFLOAT2(30, 0));
+
+			float screenWidth = static_cast<float>(graphics.GetScreenWidth());
+			float screenHeight = static_cast<float>(graphics.GetScreenHeight());
+			float textureWidth = static_cast<float>(actionExplanation->GetTextureWidth());
+			float textureHeight = static_cast<float>(actionExplanation->GetTextureHeight());
+
 			actionExplanation->Render(dc,
 				0, 0,
 				screenWidth, screenHeight,
@@ -439,6 +443,7 @@ void G0_Onigokko::Render()
 				textureWidth, textureHeight,
 				0,
 				1, 1, 1, 1);
+		}
 
 		fade->Render(dc, graphics);
 

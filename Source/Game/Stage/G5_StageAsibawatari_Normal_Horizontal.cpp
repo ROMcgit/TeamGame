@@ -13,6 +13,9 @@ G5_StageAsibawatari_Normal_Horizontal::G5_StageAsibawatari_Normal_Horizontal()
 	materialColor.x = materialColor.y = materialColor.z = 0.8f;
 
 	emissiveStrength = 0.5f;
+
+	opacity = 0.0f;
+	SetOpacityChange(1.0f, 0.7f);
 }
 
 G5_StageAsibawatari_Normal_Horizontal::~G5_StageAsibawatari_Normal_Horizontal()
@@ -129,7 +132,7 @@ void G5_StageAsibawatari_Normal_Horizontal::UpdateMove(float elapsedTime)
 {
 	position.x -= moveSpeed * elapsedTime;
 
-	if (position.x < -50.0f)
+	if (position.x < -60.0f)
 		Destroy();
 
 	float numX = 100;

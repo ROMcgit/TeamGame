@@ -22,10 +22,16 @@ public:
 	// デバッグGUI
 	void DrawDebugGUI() override;
 
+	//
+	void SetMoveDown() { this->moveDown = true; }
+
 private:
 	// 移動処理
 	void UpdateMove(float elapsedTime);
 
 private:
 	std::unique_ptr<Model> model;
+
+	bool moveDown = false;
+	float moveTimer = 0.0f;
 };

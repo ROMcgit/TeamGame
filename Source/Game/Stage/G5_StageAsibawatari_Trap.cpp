@@ -10,6 +10,9 @@ G5_StageAsibawatari_Trap::G5_StageAsibawatari_Trap()
 	scale.x = scale.y = scale.z = 0.1f;
 
 	opacity = 0.5f;
+
+	opacity = 0.0f;
+	SetOpacityChange(0.5f, 0.7f);
 }
 
 G5_StageAsibawatari_Trap::~G5_StageAsibawatari_Trap()
@@ -79,6 +82,6 @@ void G5_StageAsibawatari_Trap::UpdateMove(float elapsedTime)
 {
 	position.x -= moveSpeed * elapsedTime;
 
-	if (position.x < -50.0f)
+	if (position.x < -60.0f)
 		Destroy();
 }

@@ -50,6 +50,7 @@ void G5_Asibawatari::Initialize()
 	StageManager& stageManager = StageManager::Instance();
 	std::unique_ptr<G5_StageAsibawatari_Normal> stageMain = std::make_unique<G5_StageAsibawatari_Normal>();
 	stageMain->SetMoveSpeed(0.0f);
+	stageMain->SetMoveDown();
 	stageManager.Register(std::move(stageMain));
 
 	// ƒvƒŒƒCƒ„[‰Šú‰»

@@ -19,6 +19,9 @@ EnemyChara::EnemyChara()
 	models[0] = std::make_unique<Model>("Data/Model/4.OssanTataki/Ossan/Ossan.mdl");
 	models[1] = std::make_unique<Model>("Data/Model/4.OssanTataki/Girl/Girl.mdl");
 
+	effectMinus = std::make_unique<Effect>("Data/Effect/Minus.efk");
+	effectPlus = std::make_unique<Effect>("Data/Effect/Plus.efk");
+
 	// モデルが大きいのでスケーリング
 	scale.x = scale.y = scale.z = 0.15f;
 
@@ -318,10 +321,25 @@ void EnemyChara::TransitionDamageState()
 
 	stateChangeWaitTimer = 1.0f;
 
+	DirectX::XMFLOAT3 e = position;
+	e.y += height * 0.9f;
+
 	switch (modelNum)
 	{
-	case 0: G4_OssanTataki::score += 5; break;
-	case 1: G4_OssanTataki::score -= 3; break;
+	case 0:
+	{
+		G4_OssanTataki::score += 5;
+
+		effectPlus->Play(e, { 4.5f, 4.5f, 4.5f });
+	}
+		break;
+	case 1: 
+	{
+		G4_OssanTataki::score -= 3;
+
+		effectMinus->Play(e, { 3, 3, 3 });
+	}
+		break;
 	default:
 		break;
 	}

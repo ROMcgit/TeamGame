@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "Graphics/Graphics.h"
 #include "Other/Mathf.h"
+#include "Game/Effect/Effect.h"
 
 // ‚¨‚Á‚³‚ñ
 class EnemyChara : public Enemy
@@ -88,6 +89,9 @@ private:
 
 private:
 	std::unique_ptr<Model> model;
+
+	std::unique_ptr<Effect> effectMinus;
+	std::unique_ptr<Effect> effectPlus;
 
 	int modelNum = 0;
 };

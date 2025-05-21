@@ -31,6 +31,8 @@ Pause::Pause()
 
 	pauseExplanation = std::make_unique<Sprite>("Data/Sprite/Pause/PauseExplanation.png");
 
+	pauseButton = std::make_unique<Sprite>("Data/Sprite/Pause/PauseButton.png");
+
 	//! フェード
 	fade = std::make_unique<Fade>();
 }
@@ -85,6 +87,17 @@ void Pause::Render(ID3D11DeviceContext* dc, Graphics& graphics)
 		0,
 		0.5f, 0.5f, 0.5f, pauseOpacity);
 
+	textureWidth = static_cast<float>(pauseButton->GetTextureWidth());
+	textureHeight = static_cast<float>(pauseButton->GetTextureHeight());
+
+	pauseButton->Render(dc,
+		0, 0,
+		screenWidth, screenHeight,
+		0, 0,
+		textureWidth, textureHeight,
+		0,
+		1, 1, 1, pauseOpacity);
+
 /************************************************************************************************************/
 
 	//! ポーズ画面のボード
@@ -137,6 +150,7 @@ void Pause::UpdatePause(float elapsedTime)
 		if (gamePad.GetButtonDown() & GamePad::BTN_START && pauseOpacity <= 0.0f)
 		{
 			//! ポーズ画面にする
+			sound.StopSound("表示");
 			sound.PlaySound("表示");
 			pause = true;
 		}
@@ -166,6 +180,7 @@ void Pause::UpdatePause(float elapsedTime)
 				case GamePad::BTN_B:
 				{
 					//! ポーズ画面を終了
+					sound.StopSound("表示");
 					sound.PlaySound("表示");
 					pause = false;
 				}
@@ -195,6 +210,7 @@ void Pause::UpdatePause(float elapsedTime)
 					case 1:
 					{
 						//! ポーズ画面を終了
+						sound.StopSound("表示");
 						sound.PlaySound("表示");
 						pause = false;
 					}

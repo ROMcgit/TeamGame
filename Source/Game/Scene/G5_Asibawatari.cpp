@@ -280,7 +280,7 @@ void G5_Asibawatari::Render()
 		renderTarget->Render();
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -289,15 +289,15 @@ void G5_Asibawatari::Render()
 
 		// エネミーデバッグプリミティブ描画
 		EnemyManager::Instance().DrawDebugPrimitive();
-
-		// ラインレンダラ描画実行
-		graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
-
-		// デバッグレンダラ描画実行
-		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 	}
 
 #endif // !_DEBUG
+
+	// ラインレンダラ描画実行
+	graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
+
+	// デバッグレンダラ描画実行
+	graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 
 	{
 		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
@@ -320,7 +320,7 @@ void G5_Asibawatari::Render()
 		pause->Render(dc, graphics);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

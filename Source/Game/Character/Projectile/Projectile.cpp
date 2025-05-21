@@ -15,7 +15,7 @@ void Projectile::DrawDebugPrimitive()
 {
 	DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	debugRenderer->DrawSphere(collisionPos, radius, DirectX::XMFLOAT4(0, 0, 1, 1));
 

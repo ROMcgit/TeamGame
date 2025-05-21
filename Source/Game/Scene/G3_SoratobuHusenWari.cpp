@@ -342,7 +342,7 @@ void G3_SoratobuHusenWari::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -357,14 +357,14 @@ void G3_SoratobuHusenWari::Render()
 
 		// 衝突攻撃
 		collisionAttackManager.DrawDebugPrimitive();
-
-		// ラインレンダラ描画実行
-		graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
-
-		// デバッグレンダラ描画実行
-		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 	}
 #endif // _DEBUG
+
+	// ラインレンダラ描画実行
+	graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
+
+	// デバッグレンダラ描画実行
+	graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 
 	//! シェーダーを出す
 	{
@@ -405,7 +405,7 @@ void G3_SoratobuHusenWari::Render()
 		pause->Render(dc, graphics);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

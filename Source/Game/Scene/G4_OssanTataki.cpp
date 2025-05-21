@@ -314,7 +314,7 @@ void G4_OssanTataki::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -323,15 +323,15 @@ void G4_OssanTataki::Render()
 
 		// エネミーデバッグプリミティブ描画
 		EnemyManager::Instance().DrawDebugPrimitive();
-
-		// ラインレンダラ描画実行
-		graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
-
-		// デバッグレンダラ描画実行
-		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 	}
 
 #endif // !_DEBUG
+
+	// ラインレンダラ描画実行
+	graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
+
+	// デバッグレンダラ描画実行
+	graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 
 	//! シェーダーを出す
 	{
@@ -378,7 +378,7 @@ void G4_OssanTataki::Render()
 		pause->Render(dc, graphics);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

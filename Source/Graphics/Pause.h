@@ -34,6 +34,7 @@ private:
 	std::unique_ptr<Sprite> pauseBG;    // ポーズ画面の背景
 	std::unique_ptr<Sprite> pauseSelectImage[2]; // ポーズ選択画面
 	std::unique_ptr<Sprite> pauseExplanation; // ポーズ画面の説明
+	std::unique_ptr<Sprite> pauseButton;
 
 	/*! 共通変数 */
 	bool  pause = false; // ポーズ中か

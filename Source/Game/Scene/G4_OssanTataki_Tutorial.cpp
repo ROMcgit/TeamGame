@@ -8,6 +8,7 @@
 #include "Graphics/Fade.h"
 #include "Other/Easing.h"
 #include "Audio/BgmManager.h"
+#include "Audio/SoundManager.h"
 
 // 初期化
 void G4_OssanTataki_Tutorial::Initialize()
@@ -15,6 +16,8 @@ void G4_OssanTataki_Tutorial::Initialize()
 	BgmManager& bgm = BgmManager::Instance();
 	bgm.LoadBgm("チュートリアル", "Data/Audio/Bgm/3.Tutorial.wav");
 	bgm.PlayBgm("チュートリアル", 1.0f);
+
+	SoundManager::Instance().LoadSound("決定", "Data/Audio/Sound/Decision.wav");
 
 	backGround = std::make_unique<Sprite>("Data/Sprite/GameSelect/4.png");
 
@@ -191,24 +194,21 @@ void G4_OssanTataki_Tutorial::SpriteDirector(float elapsedTime)
 		}
 		else
 		{
-			if (gamePad.GetButtonDown() & button)
+			if (gamePad.GetButtonDown() & button && tutorialNum < 3)
 			{
-				if (tutorialNum >= 2)
+				for (int i = 0; i < 3; i++)
 				{
-					directorStep++;
+					startPos[i].x = tutorialSpritePos[i].x;
+					endPos[i].x -= screenWidth * 1.7f;
 				}
-				else
-				{
-					for (int i = 0; i < 3; i++)
-					{
-						startPos[i].x = tutorialSpritePos[i].x;
-						endPos[i].x -= screenWidth * 1.7f;
-					}
 
-					tutorialNum++;
-				}
+				tutorialNum++;
 
 				directorTime = 0.0f;
+			}
+			else if (tutorialNum >= 3)
+			{
+				directorStep++;
 			}
 		}
 	}

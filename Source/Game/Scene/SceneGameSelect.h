@@ -90,6 +90,8 @@ private:
 
 	std::unique_ptr<Sprite> bonusExplanation;
 	std::unique_ptr<Sprite> bonusUnlock;
+	std::unique_ptr<Sprite> bonusL;
+	std::unique_ptr<Sprite> bonusR;
 
 	std::unique_ptr<RenderTarget>  renderTarget; //! レンダーターゲット
 	ShadowMap                      shadowMap;    // シャドウマップの実体

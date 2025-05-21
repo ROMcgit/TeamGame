@@ -135,6 +135,8 @@ void SceneGameSelect::Initialize()
 	gameExplanation = std::make_unique<Sprite>("Data/Sprite/GameExplanation.png");
 	bonusExplanation = std::make_unique<Sprite>("Data/Sprite/BonusExplanation.png");
 	bonusUnlock = std::make_unique<Sprite>("Data/Sprite/BonusUnlock.png");
+	bonusL = std::make_unique<Sprite>("Data/Sprite/BonusDirectionL.png");
+	bonusR = std::make_unique<Sprite>("Data/Sprite/BonusDirectionR.png");
 
 	GameSelectManager& gameSelectManager = GameSelectManager::Instance();
 
@@ -548,6 +550,31 @@ void SceneGameSelect::Render()
 				textureWidth, textureHeight,
 				0,
 				bonusImageColor[i], bonusImageColor[i], bonusImageColor[i], bonusImageOpacity);
+		}
+
+		textureWidth = static_cast<float>(bonusL->GetTextureWidth());
+		textureHeight = static_cast<float>(bonusL->GetTextureHeight());
+
+		if(bonusImageNum > 1 && !bonusImageMove)
+		{
+			bonusL->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, bonusImageOpacity);
+		}
+
+		if (bonusImageNum < 7 && !bonusImageMove)
+		{
+			bonusR->Render(dc,
+				0, 0,
+				screenWidth, screenHeight,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				1, 1, 1, bonusImageOpacity);
 		}
 
 		textureWidth = static_cast<float>(bonusUnlock->GetTextureWidth());

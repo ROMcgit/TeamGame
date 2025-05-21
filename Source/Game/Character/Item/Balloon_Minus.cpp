@@ -188,6 +188,7 @@ void Balloon_Minus::TransitionBreakState()
 	ePos.y += height * 0.5f;
 
 	//! ‰ó‚ê‚é
+	scale.x = scale.y = scale.z = 0.7f;
 	breakEffect->Play(ePos, scale);
 
 	SoundManager::Instance().PlaySound("”j—ô");

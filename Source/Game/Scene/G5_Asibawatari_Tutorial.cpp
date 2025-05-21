@@ -17,7 +17,9 @@ void G5_Asibawatari_Tutorial::Initialize()
 	bgm.LoadBgm("チュートリアル", "Data/Audio/Bgm/3.Tutorial.wav");
 	bgm.PlayBgm("チュートリアル", 1.0f);
 
-	SoundManager::Instance().LoadSound("決定", "Data/Audio/Sound/Decision.wav");
+	SoundManager& sound = SoundManager::Instance();
+	sound.LoadSound("次", "Data/Audio/Sound/NextButton.wav");
+	sound.LoadSound("決定", "Data/Audio/Sound/Decision.wav");
 
 	backGround = std::make_unique<Sprite>("Data/Sprite/GameSelect/5.png");
 
@@ -195,6 +197,12 @@ void G5_Asibawatari_Tutorial::SpriteDirector(float elapsedTime)
 		{
 			if (gamePad.GetButtonDown() & button &&  tutorialNum < 3)
 			{
+				SoundManager& sound = SoundManager::Instance();
+				if (tutorialNum < 2)
+					sound.PlaySound("次");
+				else
+					sound.PlaySound("決定");
+
 				for (int i = 0; i < 3; i++)
 				{
 					startPos[i].x = tutorialSpritePos[i].x;

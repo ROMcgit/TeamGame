@@ -17,8 +17,9 @@ void SceneTitle::Initialize()
 
 	SoundManager::Instance().LoadSound("決定", "Data/Audio/Sound/Decision.wav");
 
-	// スプライト初期化
-	sprite = std::make_unique<Sprite>("Data/Sprite/Title.png");
+	// タイトル画面
+	title = std::make_unique<Sprite>("Data/Sprite/Title.png");
+	titleText = std::make_unique<Sprite>("Data/Sprite/TitleText.png");
 
 	text = std::make_unique<Sprite>("Data/Sprite/TitleButton.png");
 
@@ -100,10 +101,19 @@ void SceneTitle::Render()
 	{
 		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
 		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
-		float textureWidth = static_cast<float>(sprite->GetTextureWidth());
-		float textureHeight = static_cast<float>(sprite->GetTextureHeight());
+		float textureWidth = static_cast<float>(title->GetTextureWidth());
+		float textureHeight = static_cast<float>(title->GetTextureHeight());
 		// タイトルスプライト描画
-		sprite->Render(dc,
+		title->Render(dc,
+			0, 0, screenWidth, screenHeight,
+			0, 0, textureWidth, textureHeight,
+			0,
+			1, 1, 1, 1);
+
+		textureWidth = static_cast<float>(titleText->GetTextureWidth());
+		textureHeight = static_cast<float>(titleText->GetTextureHeight());
+
+		titleText->Render(dc,
 			0, 0, screenWidth, screenHeight,
 			0, 0, textureWidth, textureHeight,
 			0,

@@ -484,7 +484,7 @@ void Framework::CalculateFrameStats()
 
 		std::ostringstream outs;
 		outs.precision(6);
-		outs << "‘åã•½–ìƒ‰ƒ“ƒh " "FPS : " << fps << " / " << "Frame Time : " << mspf << " (ms)";
+		outs << "AI‚¿‚á‚ñ‚Æ•½–ìƒ[ƒ‹ƒh " "FPS : " << fps << " / " << "Frame Time : " << mspf << " (ms)";
 		SetWindowTextA(hWnd, outs.str().c_str());
 
 		// Reset for next average.

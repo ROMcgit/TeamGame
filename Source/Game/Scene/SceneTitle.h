@@ -25,7 +25,8 @@ public:
 	void Render() override;
 
 private:
-	std::unique_ptr<Sprite> sprite;
+	std::unique_ptr<Sprite> title;
+	std::unique_ptr<Sprite> titleText;
 	std::unique_ptr<Fade> fade;
 	bool setFade = false; // フェードを設定したか
 

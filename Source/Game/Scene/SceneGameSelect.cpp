@@ -463,7 +463,7 @@ void SceneGameSelect::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -691,12 +691,19 @@ void SceneGameSelect::Render()
 		}
 	}
 	
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 2DデバッグGUI描画
 	{
 		if (ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_None))
 		{
+			ImGui::Checkbox("OnigokkoClear", &clear.onigokko);
+			ImGui::Checkbox("DarumaClear", &clear.darumasangaKoronda);
+			ImGui::Checkbox("SundomeClear", &clear.sundome);
+			ImGui::Checkbox("SoratobuClear", &clear.soratobuHusenWari);
+			ImGui::Checkbox("OssanClear", &clear.ossanTataki);
+			ImGui::Checkbox("AsibaClear", &clear.asibawatari);
+
 			ImGui::ColorEdit3("BonusImageFrameColor", &bonusImageFrameColor.x);
 			ImGui::InputFloat3("BonusImageFrameColorNum", &bonusImageFrameColor.x);
 

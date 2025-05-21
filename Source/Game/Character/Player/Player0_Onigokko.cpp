@@ -363,7 +363,7 @@ void Player0_Onigokko::DrawDebugPrimitive()
 {
 	DebugRenderer* debugRenderer = Graphics::Instance().GetDebugRenderer();
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 	// 衝突判定用のデバッグ円柱を描画
 	debugRenderer->DrawCylinder(collisionPos, radius, height, { debugPrimitiveColor.x, debugPrimitiveColor.y, debugPrimitiveColor.z, 1 });
 

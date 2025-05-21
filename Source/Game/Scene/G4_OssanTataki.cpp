@@ -314,7 +314,7 @@ void G4_OssanTataki::Render()
 		EffectManager::Instance().Render(rc.view, rc.projection);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -378,7 +378,7 @@ void G4_OssanTataki::Render()
 		pause->Render(dc, graphics);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

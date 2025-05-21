@@ -400,7 +400,7 @@ void G0_Onigokko::Render()
 		graphics.GetDebugRenderer()->Render(dc, rc.view, rc.projection);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -451,7 +451,7 @@ void G0_Onigokko::Render()
 			pause->Render(dc, graphics);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

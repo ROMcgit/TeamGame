@@ -426,7 +426,7 @@ void G1_DarumasangaKoronda::Render()
 			pause->Render(dc, graphics);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

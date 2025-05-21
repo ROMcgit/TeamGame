@@ -280,7 +280,7 @@ void G5_Asibawatari::Render()
 		renderTarget->Render();
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 3Dデバッグ描画
 	{
@@ -320,7 +320,7 @@ void G5_Asibawatari::Render()
 		pause->Render(dc, graphics);
 	}
 
-#ifdef _DEBUG
+#ifndef _DEBUG
 
 	// 2DデバッグGUI描画
 	{

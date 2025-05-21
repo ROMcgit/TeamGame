@@ -17,7 +17,8 @@ Balloon_Plus::Balloon_Plus()
 	model = std::make_unique<Model>("Data/Model/3.SoratobuHusenWari/Balloon_Plus/Balloon_Plus.mdl");
 
 	//! エフェクト
-	effect = std::make_unique<Effect>("Data/Effect/Plus.efk");
+	plus = std::make_unique<Effect>("Data/Effect/Plus.efk");
+	breakEffect = std::make_unique<Effect>("Data/Effect/BreakRed.efk");
 
 	// 位置Yのリセット
 	positionResetY = position.y;
@@ -178,7 +179,15 @@ void Balloon_Plus::TransitionBreakState()
 	e.y += height * 0.3f;
 	e.z = player.GetPosition().z - (player.GetRadius() * 2.0f);
 
-	effect->Play(e, { 2, 2, 2 });
+	DirectX::XMFLOAT3 scale;
+	scale.x = scale.y = scale.z = 2;
+	plus->Play(e, scale);
+
+	DirectX::XMFLOAT3 ePos = position;
+	ePos.y += height * 0.5f;
+
+	//! 壊れる
+	breakEffect->Play(ePos, scale);
 
 	SoundManager::Instance().PlaySound("破裂");
 

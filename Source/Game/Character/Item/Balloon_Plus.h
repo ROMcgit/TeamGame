@@ -60,7 +60,9 @@ private:
 	State state = State::Move;
 
 private:
-	std::unique_ptr<Effect> effect;
+	std::unique_ptr<Effect> plus;
+	std::unique_ptr<Effect> breakEffect;
+
 	std::unique_ptr<Model> model;
 
 	float positionResetY = 0.0f;

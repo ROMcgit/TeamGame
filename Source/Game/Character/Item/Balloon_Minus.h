@@ -60,7 +60,8 @@ private:
 	State state = State::Move;
 
 private:
-	std::unique_ptr<Effect> effect;
+	std::unique_ptr<Effect> minus;
+	std::unique_ptr<Effect> breakEffect;
 
 	std::unique_ptr<Model> model;
 

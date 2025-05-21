@@ -17,7 +17,8 @@ Balloon_Minus::Balloon_Minus()
 	model = std::make_unique<Model>("Data/Model/3.SoratobuHusenWari/Balloon_Minus/Balloon_Minus.mdl");
 
 	//! エフェクト
-	effect = std::make_unique<Effect>("Data/Effect/Minus.efk");
+	minus = std::make_unique<Effect>("Data/Effect/Minus.efk");
+	breakEffect = std::make_unique<Effect>("Data/Effect/BreakBlue.efk");
 
 	// 位置Yのリセット
 	positionResetY = position.y;
@@ -178,7 +179,16 @@ void Balloon_Minus::TransitionBreakState()
 	e.y += height * 0.5f;
 	e.z = player.GetPosition().z - (player.GetRadius() * 2.0f);
 
-	effect->Play(e, { 1.2f, 1.2f, 1.2f });
+	DirectX::XMFLOAT3 scale;
+	scale.x = scale.y = scale.z = 1.2f;
+	//! マイナス
+	minus->Play(e, scale);
+
+	DirectX::XMFLOAT3 ePos = position;
+	ePos.y += height * 0.5f;
+
+	//! 壊れる
+	breakEffect->Play(ePos, scale);
 
 	SoundManager::Instance().PlaySound("破裂");
 

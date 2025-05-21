@@ -619,7 +619,7 @@ void G0_Onigokko::UpdateCameraMovie(float elapsedTime)
 		cameraController->SetRange(10);
 		cameraController->SetAngle(DirectX::XMFLOAT3(DirectX::XMConvertToRadians(10), 0, 0));
 		target = oni->GetPosition();
-		target.y = oni->GetHeight() * 0.6f;
+		target.y += oni->GetHeight() * 0.6f;
 
 		if (cameraMovieTime > 4.0f)
 		{

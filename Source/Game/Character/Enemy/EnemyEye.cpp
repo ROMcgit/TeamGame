@@ -101,7 +101,12 @@ void EnemyEye::DrawDebugPrimitive()
 	// 基底クラスのデバッグプリミティブ描画
 	//Enemy::DrawDebugPrimitive();
 
-	if(!G0_Onigokko::movieScene)
+	targetPosition = Player0_Onigokko::Instance().GetPosition();
+	float vx = targetPosition.x - position.x;
+	float vz = targetPosition.z - position.z;
+	dist = vx * vx + vz * vz;
+
+	if(!G0_Onigokko::movieScene && dist < 2000)
 	{
 		DebugRenderer* debugRender = Graphics::Instance().GetDebugRenderer();
 

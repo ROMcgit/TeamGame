@@ -135,7 +135,12 @@ void EnemyOni::DrawDebugPrimitive()
 	// 基底クラスのデバッグプリミティブ描画
 	//Enemy::DrawDebugPrimitive();
 
-	if(!G0_Onigokko::movieScene)
+	targetPosition = Player0_Onigokko::Instance().GetPosition();
+	float vx = targetPosition.x - position.x;
+	float vz = targetPosition.z - position.z;
+	dist = vx * vx + vz * vz;
+
+	if(!G0_Onigokko::movieScene && (dist < (searchRange * searchRange) * 5.5f))
 	{
 		DebugRenderer* debugRender = Graphics::Instance().GetDebugRenderer();
 
@@ -354,7 +359,7 @@ void EnemyOni::TransitionTrackingState()
 {
 	state = State::Tracking;
 
-	stateChangeWaitTimer = 5.0f;
+	stateChangeWaitTimer = 6.0f;
 
 	model->PlayAnimation(Anim_Tracking, true);
 }

@@ -134,6 +134,7 @@ void SceneGameSelect::Initialize()
 	
 	gameExplanation = std::make_unique<Sprite>("Data/Sprite/GameExplanation.png");
 	bonusExplanation = std::make_unique<Sprite>("Data/Sprite/BonusExplanation.png");
+	bonusUnlock = std::make_unique<Sprite>("Data/Sprite/BonusUnlock.png");
 
 	GameSelectManager& gameSelectManager = GameSelectManager::Instance();
 
@@ -497,33 +498,8 @@ void SceneGameSelect::Render()
 	{
 		RenderGameSprite(dc, rc.view, rc.projection);
 
-		fade->Render(dc, graphics);
-
 		float screenWidth = static_cast<float>(graphics.GetScreenWidth());
 		float screenHeight = static_cast<float>(graphics.GetScreenHeight());
-		
-		for (int i = 0; i < 7; i++)
-		{
-			float textureWidth = static_cast<float>(bonusImage[i]->GetTextureWidth());
-			float textureHeight = static_cast<float>(bonusImage[i]->GetTextureHeight());
-
-			bonusImageFrame[i]->RenderCenter(dc,
-				bonusImagePosX[i], screenHeight * 0.5,
-				screenWidth * 0.77f, screenHeight * 0.78f,
-				0, 0,
-				textureWidth, textureHeight,
-				0,
-				bonusImageFrameColor.x, bonusImageFrameColor.y, bonusImageFrameColor.z, bonusImageOpacity);
-
-			bonusImage[i]->RenderCenter(dc,
-				bonusImagePosX[i], screenHeight * 0.5f,
-				screenWidth * 0.75f, screenHeight * 0.75f,
-				0, 0,
-				textureWidth, textureHeight,
-				0,
-				bonusImageColor[i], bonusImageColor[i], bonusImageColor[i], bonusImageOpacity);
-		}
-
 		float textureWidth = static_cast<float>(gameExplanation->GetTextureWidth());
 		float textureHeight = static_cast<float>(gameExplanation->GetTextureHeight());
 
@@ -549,6 +525,42 @@ void SceneGameSelect::Render()
 			textureWidth, textureHeight,
 			0,
 			1, 1, 1, opacity);
+
+		fade->Render(dc, graphics);
+		
+		for (int i = 0; i < 7; i++)
+		{
+			textureWidth = static_cast<float>(bonusImage[i]->GetTextureWidth());
+			textureHeight = static_cast<float>(bonusImage[i]->GetTextureHeight());
+
+			bonusImageFrame[i]->RenderCenter(dc,
+				bonusImagePosX[i], screenHeight * 0.5,
+				screenWidth * 0.77f, screenHeight * 0.78f,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				bonusImageFrameColor.x, bonusImageFrameColor.y, bonusImageFrameColor.z, bonusImageOpacity);
+
+			bonusImage[i]->RenderCenter(dc,
+				bonusImagePosX[i], screenHeight * 0.5f,
+				screenWidth * 0.75f, screenHeight * 0.75f,
+				0, 0,
+				textureWidth, textureHeight,
+				0,
+				bonusImageColor[i], bonusImageColor[i], bonusImageColor[i], bonusImageOpacity);
+		}
+
+		textureWidth = static_cast<float>(bonusUnlock->GetTextureWidth());
+		textureHeight = static_cast<float>(bonusUnlock->GetTextureHeight());
+
+		//! ボーナスの解除説明
+		bonusUnlock->Render(dc,
+			0, 0,
+			screenWidth, screenHeight,
+			0, 0,
+			textureWidth, textureHeight,
+			0,
+			1, 1, 1, bonusImageOpacity);
 
 		textureWidth = static_cast<float>(hint[0]->GetTextureWidth());
 		textureHeight = static_cast<float>(hint[0]->GetTextureHeight());
@@ -835,8 +847,8 @@ void SceneGameSelect::UpdateBonusImage(float elapsedTime)
 		SoundManager::Instance().PlaySound("決定");
 
 		//! ゲームの説明
-		gameExplanationOpacity = viewBonusImage ? 0.0f : 1.0f;
-		gameExplanationOpacityUp = viewBonusImage ? true : false;
+		if (!viewBonusImage) gameExplanationOpacity = 0.0f;
+		if (!viewBonusImage) gameExplanationOpacityUp = true;
 
 		float startFade = viewBonusImage ? 0.0f : 1.0f;
 		float endFade = viewBonusImage   ? 1.0f : 0.0f;

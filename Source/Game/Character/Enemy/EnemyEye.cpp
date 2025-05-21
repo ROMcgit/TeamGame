@@ -101,9 +101,12 @@ void EnemyEye::DrawDebugPrimitive()
 	// 基底クラスのデバッグプリミティブ描画
 	//Enemy::DrawDebugPrimitive();
 
-	DebugRenderer* debugRender = Graphics::Instance().GetDebugRenderer();
+	if(!G0_Onigokko::movieScene)
+	{
+		DebugRenderer* debugRender = Graphics::Instance().GetDebugRenderer();
 
-	debugRender->DrawCylinder(position, searchRange, 2.0f, { 1,1,1,1 });
+		debugRender->DrawCylinder(position, searchRange, 2.0f, { 1,1,1,1 });
+	}
 
 	// 縄張り範囲をデバッグ円柱描画
 	//debugRender->DrawCylinder(territoryOrigin, territoryRange, 1.0f,

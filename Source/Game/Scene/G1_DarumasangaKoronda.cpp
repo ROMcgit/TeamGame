@@ -183,6 +183,19 @@ void G1_DarumasangaKoronda::Update(float elapsedTime)
 
 	if (pause->GetPauseOpacity() <= 0.0f)
 	{
+		if (timer->GetTimeM_Int() > 1)
+		{
+			skydomeAngle.y -= DirectX::XMConvertToRadians(2.5f) * elapsedTime;
+		}
+		else if (timer->GetTimeM_Int() > 0)
+		{
+			skydomeAngle.y -= DirectX::XMConvertToRadians(5.0f) * elapsedTime;
+		}
+		else
+		{
+			skydomeAngle.y -= DirectX::XMConvertToRadians(10) * elapsedTime;
+		}
+
 		//! フェードを更新処理
 		fade->Update(elapsedTime);
 
@@ -239,10 +252,11 @@ void G1_DarumasangaKoronda::Update(float elapsedTime)
 // 描画処理
 void G1_DarumasangaKoronda::Render()
 {
+	lightColor = { 0.835f, 0.57f, 0.86f };
 	lightPosition.x = CameraController::target.x;
 	lightPosition.y = 150.0f;
 	lightPosition.z = CameraController::target.z - 25.0f;
-	lightRange = 20000.0f;
+	lightRange = 800.0f;
 
 	shadowMapEyeOffset = { 4.0f, 17.0f, 9.0f };
 
@@ -380,8 +394,10 @@ void G1_DarumasangaKoronda::Render()
 		{
 			//! タイマー
 			DirectX::XMFLOAT3 color;
-			if (timer->GetTimeM_Int() > 0)
+			if (timer->GetTimeM_Int() > 1)
 				color = { 1, 1, 1 };
+			else if (timer->GetTimeM_Int() > 0)
+				color = { 1, 0.5f, 0.5f };
 			else
 				color = { 1, 0, 0 };
 

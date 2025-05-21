@@ -178,7 +178,7 @@ void G0_Onigokko::Initialize()
 	actionExplanation = std::make_unique<Sprite>("Data/Sprite/0.Onigokko/ActionExplanation.png");
 
 	// タイマー
-	timer = std::make_unique<Timer>(true, 1, 30);
+	timer = std::make_unique<Timer>(true, 2);
 
 	// ムービーシーンにする
 	movieScene = true;

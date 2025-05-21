@@ -30,7 +30,7 @@ void Timer::Update(float elapsedTime)
 	countdown ? timeS -= elapsedTime : timeS += elapsedTime;
 
 	//! カウントダウンではなく60より大きい、またはカウントダウンで、0より小さいなら
-	if ((!countdown && (int)timeS >= 60) || (countdown && (int)timeS < 0))
+	if ((!countdown && (int)timeS >= 60) || (countdown && timeS < 0.0f))
 	{
 		//! 分が0より大きいかつ99より小さいなら
 		if (((int)timeM > 0 && (int)timeM < 99))

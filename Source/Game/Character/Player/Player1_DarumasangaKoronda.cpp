@@ -292,7 +292,7 @@ void Player1_DarumasangaKoronda::TransitionJumpState()
 {
 	state = State::Jump;
 
-	SoundManager::Instance().PlaySound("ジャンプ");
+	SoundManager::Instance().PlaySound("ジャンプ", 2.0f);
 
 	model->PlayAnimation(Anim_Jump, false);
 }
@@ -396,7 +396,7 @@ void Player1_DarumasangaKoronda::UpdateDamageState(float elapsedTime)
 	{
 		if(!setVelocityY)
 		{
-			SoundManager::Instance().PlaySound("攻撃");
+			SoundManager::Instance().PlaySound("攻撃", 7.0f);
 
 			setVelocityY = true;
 			velocity.y = 20.0f;

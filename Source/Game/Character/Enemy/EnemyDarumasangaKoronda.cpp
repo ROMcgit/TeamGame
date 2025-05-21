@@ -300,7 +300,7 @@ void EnemyDarumasangaKoronda::TransitionAttackState()
 
 	stateChangeWaitTimer = 2.2f;
 
-	SoundManager::Instance().PlaySound("笑い声", 3.0f);
+	SoundManager::Instance().PlaySound("笑い声", 5.0f);
 
 	// 攻撃アニメーション再生
 	model->PlayAnimation(Anim_Attack, false);

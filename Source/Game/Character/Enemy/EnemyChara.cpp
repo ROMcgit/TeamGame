@@ -240,6 +240,14 @@ void EnemyChara::TransitionUpState()
 
 	hp = 99;
 
+	switch (modelNum)
+	{
+	case 0: height = 25.5f; break;
+	case 1: height = 21.8f;  break;
+	default:
+		break;
+	}
+
 	emissiveStrength = 0.0f;
 
 	//! ˆÊ’uY‚ğ•ÏX‚·‚é

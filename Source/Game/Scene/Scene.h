@@ -140,6 +140,9 @@ protected:
 	float focusRange = 3.0f;  // ピントが合う範囲
 	float dofBlurStrength = 15.0f; // 被写界深度のブラー強度
 
+protected:
+	bool setEnvironmentMap = false;
+
 private:
 	bool ready = false;
 };

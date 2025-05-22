@@ -43,9 +43,6 @@ SceneGameSelect::Clear SceneGameSelect::clear;
 void SceneGameSelect::Initialize()
 {
 	Graphics& graphics = Graphics::Instance();
-	graphics.GetEnvironmentMap()->Load("Data/Environment/Cloud.hdr");
-	graphics.GetEnvironmentMap()->Set(15);
-
 	ID3D11Device* device = graphics.GetDevice();
 	float screenWidth = graphics.GetScreenWidth();
 	float screenHeight = graphics.GetScreenHeight();
@@ -381,6 +378,14 @@ void SceneGameSelect::Render()
 	Graphics& graphics = Graphics::Instance();
 	
 	DrawingSettings(graphics);
+
+	if (!setEnvironmentMap)
+	{
+		graphics.GetEnvironmentMap()->Load("Data/Environment/Cloud.hdr");
+		graphics.GetEnvironmentMap()->Set(15);
+
+		setEnvironmentMap = true;
+	}
 
 	//! シャドウマップ
 	{

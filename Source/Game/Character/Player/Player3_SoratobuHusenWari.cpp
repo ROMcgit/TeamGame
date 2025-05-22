@@ -211,8 +211,8 @@ void Player3_SoratobuHusenWari::SpriteRender(ID3D11DeviceContext* dc)
 			hpSpriteColorP.z,
 			1);
 
-		textureWidth = static_cast<float>(uiSprite[0]->GetTextureWidth());
-		textureHeight = static_cast<float>(uiSprite[0]->GetTextureHeight());
+		//textureWidth = static_cast<float>(uiSprite[0]->GetTextureWidth());
+		//textureHeight = static_cast<float>(uiSprite[0]->GetTextureHeight());
 
 		// ƒvƒŒƒCƒ„[UI‰æ‘œ
 		/*uiSprite[0]->Render(dc,

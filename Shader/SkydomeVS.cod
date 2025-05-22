@@ -60,42 +60,166 @@
 // TEXCOORD                 0   xy          1     NONE   float   xy  
 //
 vs_5_0
-dcl_globalFlags refactoringAllowed
+dcl_globalFlags refactoringAllowed | skipOptimization
 dcl_constantbuffer CB0[5], immediateIndexed
 dcl_constantbuffer CB1[2], immediateIndexed
 dcl_input v0.xyzw
 dcl_input v1.xy
 dcl_output_siv o0.xyzw, position
 dcl_output o1.xy
-dcl_temps 7
-mul r0.xyz, v0.xyzx, cb1[1].wwww
-sincos r1.xyz, r2.xyz, cb1[1].xyzx
-mov r3.xyz, -r1.xyzx
-mul r4.xyz, r2.xyyx, r3.yxzy
-mov r5.y, r1.z
-mov r4.w, r1.x
-mov r5.xw, r2.zzzx
-dp2 r6.x, r5.xyxx, r4.xwxx
-mov r3.w, r5.x
-dp2 r6.y, r3.zwzz, r4.xwxx
-mul r2.xy, r2.xyxx, r2.yzyy
-mov r6.z, r2.x
-dp3 r6.z, r0.xyzx, r6.xyzx
-mul r5.z, r1.x, r1.y
-mov r2.w, r1.y
-dp2 r1.y, r3.zwzz, r5.zwzz
-dp2 r1.x, r5.xyxx, r5.zwzz
-mov r1.z, r4.y
-mov r2.z, r4.z
-dp3 r6.x, r0.xyzx, r2.yzwy
-dp3 r6.y, r0.xyzx, r1.xyzx
-add r0.xyz, r6.xyzx, cb1[0].xyzx
+dcl_temps 16
+//
+// Initial variable locations:
+//   v0.x <- position.x; v0.y <- position.y; v0.z <- position.z; v0.w <- position.w; 
+//   v1.x <- texcoord.x; v1.y <- texcoord.y; 
+//   o1.x <- <main return value>.texcoord.x; o1.y <- <main return value>.texcoord.y; 
+//   o0.x <- <main return value>.position.x; o0.y <- <main return value>.position.y; o0.z <- <main return value>.position.z; o0.w <- <main return value>.position.w
+//
+#line 52 "C:\Users\2230018\Desktop\授業\3年\チE웈制作\3回目\チE"
+mul r0.xyz, v0.xyzx, cb1[1].wwww  // r0.x <- position.x; r0.y <- position.y; r0.z <- position.z
+
+#line 55
+nop 
+mov r1.x, cb1[1].x
+
+#line 7
+sincos null, r2.z, r1.x  // r2.z <- c
+
+#line 8
+sincos r2.y, null, r1.x  // r2.y <- s
+
+#line 9
+mov r1.z, -r2.y  // r1.z <- <RotationX return value>._m21
+itof r3.xyzw, l(1, 0, 0, 0)  // r3.x <- <RotationX return value>._m00; r3.y <- <RotationX return value>._m10; r3.z <- <RotationX return value>._m20; r3.w <- <RotationX return value>._m30
+itof r4.xyzw, l(0, 0, 0, 1)  // r4.x <- <RotationX return value>._m03; r4.y <- <RotationX return value>._m13; r4.z <- <RotationX return value>._m23; r4.w <- <RotationX return value>._m33
+itof r5.xyzw, l(0, 0, 0, 0)
+mov r1.xw, r5.xxxz  // r1.x <- <RotationX return value>._m01; r1.w <- <RotationX return value>._m31
+mov r1.y, r2.z  // r1.y <- <RotationX return value>._m11
+mov r2.xw, r5.yyyw  // r2.x <- <RotationX return value>._m02; r2.w <- <RotationX return value>._m32
+mov r2.y, r2.y  // r2.y <- <RotationX return value>._m12
+mov r2.z, r2.z  // r2.z <- <RotationX return value>._m22
+
+#line 55
+mov r3.xyzw, r3.xyzw  // r3.x <- rotX._m00; r3.y <- rotX._m10; r3.z <- rotX._m20; r3.w <- rotX._m30
+mov r1.xyzw, r1.xyzw  // r1.x <- rotX._m01; r1.y <- rotX._m11; r1.z <- rotX._m21; r1.w <- rotX._m31
+mov r2.xyzw, r2.xyzw  // r2.x <- rotX._m02; r2.y <- rotX._m12; r2.z <- rotX._m22; r2.w <- rotX._m32
+mov r4.xyzw, r4.xyzw  // r4.x <- rotX._m03; r4.y <- rotX._m13; r4.z <- rotX._m23; r4.w <- rotX._m33
+
+#line 56
+nop 
+mov r5.x, cb1[1].y
+
+#line 20
+sincos null, r6.z, r5.x  // r6.z <- c
+
+#line 21
+sincos r6.x, null, r5.x  // r6.x <- s
+
+#line 22
+mov r5.z, -r6.x  // r5.z <- <RotationY return value>._m02
+itof r7.xyzw, l(0, 1, 0, 0)  // r7.x <- <RotationY return value>._m10; r7.y <- <RotationY return value>._m11; r7.z <- <RotationY return value>._m12; r7.w <- <RotationY return value>._m13
+itof r8.xyzw, l(0, 0, 0, 1)  // r8.x <- <RotationY return value>._m30; r8.y <- <RotationY return value>._m31; r8.z <- <RotationY return value>._m32; r8.w <- <RotationY return value>._m33
+itof r9.xyzw, l(0, 0, 0, 0)
+mov r5.x, r6.z  // r5.x <- <RotationY return value>._m00
+mov r5.yw, r9.xxxy  // r5.y <- <RotationY return value>._m01; r5.w <- <RotationY return value>._m03
+mov r6.x, r6.x  // r6.x <- <RotationY return value>._m20
+mov r6.yw, r9.zzzw  // r6.y <- <RotationY return value>._m21; r6.w <- <RotationY return value>._m23
+mov r6.z, r6.z  // r6.z <- <RotationY return value>._m22
+
+#line 56
+mov r5.xyzw, r5.xyzw  // r5.x <- rotY._m00; r5.y <- rotY._m01; r5.z <- rotY._m02; r5.w <- rotY._m03
+mov r7.xyzw, r7.xyzw  // r7.x <- rotY._m10; r7.y <- rotY._m11; r7.z <- rotY._m12; r7.w <- rotY._m13
+mov r6.xyzw, r6.xyzw  // r6.x <- rotY._m20; r6.y <- rotY._m21; r6.z <- rotY._m22; r6.w <- rotY._m23
+mov r8.xyzw, r8.xyzw  // r8.x <- rotY._m30; r8.y <- rotY._m31; r8.z <- rotY._m32; r8.w <- rotY._m33
+
+#line 57
+nop 
+mov r9.x, cb1[1].z
+
+#line 33
+sincos null, r10.y, r9.x  // r10.y <- c
+
+#line 34
+sincos r9.y, null, r9.x  // r9.y <- s
+
+#line 36
+mov r10.x, -r9.y  // r10.x <- <RotationZ return value>._m10
+itof r11.xyzw, l(0, 0, 1, 0)  // r11.x <- <RotationZ return value>._m20; r11.y <- <RotationZ return value>._m21; r11.z <- <RotationZ return value>._m22; r11.w <- <RotationZ return value>._m23
+itof r12.xyzw, l(0, 0, 0, 1)  // r12.x <- <RotationZ return value>._m30; r12.y <- <RotationZ return value>._m31; r12.z <- <RotationZ return value>._m32; r12.w <- <RotationZ return value>._m33
+itof r13.xyzw, l(0, 0, 0, 0)
+mov r9.x, r10.y  // r9.x <- <RotationZ return value>._m00
+mov r9.y, r9.y  // r9.y <- <RotationZ return value>._m01
+mov r9.zw, r13.xxxy  // r9.z <- <RotationZ return value>._m02; r9.w <- <RotationZ return value>._m03
+mov r10.y, r10.y  // r10.y <- <RotationZ return value>._m11
+mov r10.zw, r13.zzzw  // r10.z <- <RotationZ return value>._m12; r10.w <- <RotationZ return value>._m13
+
+#line 57
+mov r9.xyzw, r9.xyzw  // r9.x <- rotZ._m00; r9.y <- rotZ._m01; r9.z <- rotZ._m02; r9.w <- rotZ._m03
+mov r10.xyzw, r10.xyzw  // r10.x <- rotZ._m10; r10.y <- rotZ._m11; r10.z <- rotZ._m12; r10.w <- rotZ._m13
+mov r11.xyzw, r11.xyzw  // r11.x <- rotZ._m20; r11.y <- rotZ._m21; r11.z <- rotZ._m22; r11.w <- rotZ._m23
+mov r12.xyzw, r12.xyzw  // r12.x <- rotZ._m30; r12.y <- rotZ._m31; r12.z <- rotZ._m32; r12.w <- rotZ._m33
+
+#line 59
+dp4 r13.x, r5.xyzw, r3.xyzw
+dp4 r14.x, r5.xyzw, r1.xyzw
+dp4 r15.x, r5.xyzw, r2.xyzw
+dp4 r5.x, r5.xyzw, r4.xyzw
+dp4 r13.y, r7.xyzw, r3.xyzw
+dp4 r14.y, r7.xyzw, r1.xyzw
+dp4 r15.y, r7.xyzw, r2.xyzw
+dp4 r5.y, r7.xyzw, r4.xyzw
+dp4 r13.z, r6.xyzw, r3.xyzw
+dp4 r14.z, r6.xyzw, r1.xyzw
+dp4 r15.z, r6.xyzw, r2.xyzw
+dp4 r5.z, r6.xyzw, r4.xyzw
+dp4 r13.w, r8.xyzw, r3.xyzw
+dp4 r14.w, r8.xyzw, r1.xyzw
+dp4 r15.w, r8.xyzw, r2.xyzw
+dp4 r5.w, r8.xyzw, r4.xyzw
+dp4 r1.x, r9.xyzw, r13.xyzw  // r1.x <- rot._m00
+dp4 r2.x, r9.xyzw, r14.xyzw  // r2.x <- rot._m01
+dp4 r3.x, r9.xyzw, r15.xyzw  // r3.x <- rot._m02
+dp4 r4.x, r9.xyzw, r5.xyzw  // r4.x <- rot._m03
+dp4 r1.y, r10.xyzw, r13.xyzw  // r1.y <- rot._m10
+dp4 r2.y, r10.xyzw, r14.xyzw  // r2.y <- rot._m11
+dp4 r3.y, r10.xyzw, r15.xyzw  // r3.y <- rot._m12
+dp4 r4.y, r10.xyzw, r5.xyzw  // r4.y <- rot._m13
+dp4 r1.z, r11.xyzw, r13.xyzw  // r1.z <- rot._m20
+dp4 r2.z, r11.xyzw, r14.xyzw  // r2.z <- rot._m21
+dp4 r3.z, r11.xyzw, r15.xyzw  // r3.z <- rot._m22
+dp4 r4.z, r11.xyzw, r5.xyzw  // r4.z <- rot._m23
+dp4 r1.w, r12.xyzw, r13.xyzw  // r1.w <- rot._m30
+dp4 r2.w, r12.xyzw, r14.xyzw  // r2.w <- rot._m31
+dp4 r3.w, r12.xyzw, r15.xyzw  // r3.w <- rot._m32
+dp4 r4.w, r12.xyzw, r5.xyzw  // r4.w <- rot._m33
+
+#line 60
 mov r0.w, v0.w
+dp4 r1.x, r0.xyzw, r1.xyzw  // r1.x <- position.x
+dp4 r1.y, r0.xyzw, r2.xyzw  // r1.y <- position.y
+dp4 r1.z, r0.xyzw, r3.xyzw  // r1.z <- position.z
+dp4 r0.w, r0.xyzw, r4.xyzw  // r0.w <- position.w
+
+#line 63
+add r0.xyz, r1.xyzx, cb1[0].xyzx  // r0.x <- position.x; r0.y <- position.y; r0.z <- position.z
+
+#line 66
 add r0.xyzw, r0.xyzw, cb0[4].xyzw
-mul r1.xyzw, r0.yyyy, cb0[1].xyzw
-mad r1.xyzw, r0.xxxx, cb0[0].xyzw, r1.xyzw
-mad r1.xyzw, r0.zzzz, cb0[2].xyzw, r1.xyzw
-mad o0.xyzw, r0.wwww, cb0[3].xyzw, r1.xyzw
-mov o1.xy, v1.xyxx
+
+#line 68
+mul r1.xyzw, r0.xxxx, cb0[0].xyzw
+mul r2.xyzw, r0.yyyy, cb0[1].xyzw
+add r1.xyzw, r1.xyzw, r2.xyzw
+mul r2.xyzw, r0.zzzz, cb0[2].xyzw
+add r1.xyzw, r1.xyzw, r2.xyzw
+mul r0.xyzw, r0.wwww, cb0[3].xyzw
+add r0.xyzw, r0.xyzw, r1.xyzw  // r0.x <- vout.position.x; r0.y <- vout.position.y; r0.z <- vout.position.z; r0.w <- vout.position.w
+
+#line 69
+mov r1.xy, v1.xyxx  // r1.x <- vout.texcoord.x; r1.y <- vout.texcoord.y
+
+#line 70
+mov o0.xyzw, r0.xyzw
+mov o1.xy, r1.xyxx
 ret 
-// Approximately 30 instruction slots used
+// Approximately 102 instruction slots used

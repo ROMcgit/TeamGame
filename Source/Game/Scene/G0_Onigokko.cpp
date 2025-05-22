@@ -23,8 +23,6 @@ bool G0_Onigokko::movieScene = false;
 void G0_Onigokko::Initialize()
 {
 	Graphics& graphics = Graphics::Instance();
-	graphics.GetEnvironmentMap()->Load("Data/Environment/Barrier_Demons.hdr");
-	graphics.GetEnvironmentMap()->Set(15);
 
 	//! 空
 	sky = std::make_unique<Sky>();
@@ -300,6 +298,14 @@ void G0_Onigokko::Render()
 	Graphics& graphics = Graphics::Instance();
 
 	DrawingSettings(graphics);
+
+	if (!setEnvironmentMap)
+	{
+		graphics.GetEnvironmentMap()->Load("Data/Environment/Barrier_Demons.hdr");
+		graphics.GetEnvironmentMap()->Set(15);
+
+		setEnvironmentMap = true;
+	}
 
 	//! シャドウマップ
 	{

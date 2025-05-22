@@ -36,8 +36,6 @@ void G3_SoratobuHusenWari::Initialize()
 	scoreText = std::make_unique<Text>();
 
 	Graphics& graphics = Graphics::Instance();
-	graphics.GetEnvironmentMap()->Load("Data/Environment/SF_Night.hdr");
-	graphics.GetEnvironmentMap()->Set(15);
 
 	//! 空
 	sky = std::make_unique<Sky>();
@@ -245,6 +243,14 @@ void G3_SoratobuHusenWari::Render()
 	Graphics& graphics = Graphics::Instance();
 
 	DrawingSettings(graphics);
+
+	if (!setEnvironmentMap)
+	{
+		graphics.GetEnvironmentMap()->Load("Data/Environment/SF_Night.hdr");
+		graphics.GetEnvironmentMap()->Set(15);
+
+		setEnvironmentMap = true;
+	}
 
 	//! シャドウマップ
 	{

@@ -20,8 +20,6 @@ int G2_Sundome::score[3] = { 0, 0, 0 };
 void G2_Sundome::Initialize()
 {
 	Graphics& graphics = Graphics::Instance();
-	graphics.GetEnvironmentMap()->Load("Data/Environment/BlueSky.hdr");
-	graphics.GetEnvironmentMap()->Set(15);
 
 	//! 空
 	sky = std::make_unique<Sky>();
@@ -167,6 +165,14 @@ void G2_Sundome::Render()
 	Graphics& graphics = Graphics::Instance();
 
 	DrawingSettings(graphics);
+
+	if (!setEnvironmentMap)
+	{
+		graphics.GetEnvironmentMap()->Load("Data/Environment/BlueSky.hdr");
+		graphics.GetEnvironmentMap()->Set(15);
+
+		setEnvironmentMap = true;
+	}
 
 	//! シャドウマップ
 	{

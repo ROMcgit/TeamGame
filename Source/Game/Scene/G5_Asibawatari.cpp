@@ -28,8 +28,6 @@ void G5_Asibawatari::Initialize()
 	movieScene = true;
 
 	Graphics& graphics = Graphics::Instance();
-	graphics.GetEnvironmentMap()->Load("Data/Environment/SF_Night.hdr");
-	graphics.GetEnvironmentMap()->Set(15);
 
 	//! 空
 	sky = std::make_unique<Sky>();
@@ -180,6 +178,14 @@ void G5_Asibawatari::Render()
 	Graphics& graphics = Graphics::Instance();
 
 	DrawingSettings(graphics);
+
+	if (!setEnvironmentMap)
+	{
+		graphics.GetEnvironmentMap()->Load("Data/Environment/SF_Night.hdr");
+		graphics.GetEnvironmentMap()->Set(15);
+
+		setEnvironmentMap = true;
+	}
 
 	//! シャドウマップ
 	{

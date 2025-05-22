@@ -29,8 +29,6 @@ void G4_OssanTataki::Initialize()
 
 
 	Graphics& graphics = Graphics::Instance();
-	graphics.GetEnvironmentMap()->Load("Data/Environment/env_sky_002_sunset2.hdr");
-	graphics.GetEnvironmentMap()->Set(15);
 
 	//! 空
 	sky = std::make_unique<Sky>();
@@ -220,6 +218,14 @@ void G4_OssanTataki::Render()
 	Graphics& graphics = Graphics::Instance();
 
 	DrawingSettings(graphics);
+
+	if (!setEnvironmentMap)
+	{
+		graphics.GetEnvironmentMap()->Load("Data/Environment/env_sky_002_sunset2.hdr");
+		graphics.GetEnvironmentMap()->Set(15);
+
+		setEnvironmentMap = true;
+	}
 
 	//! シャドウマップ
 	{

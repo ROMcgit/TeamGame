@@ -149,28 +149,6 @@ SkydomeShader::SkydomeShader(ID3D11Device* device)
 		HRESULT hr = device->CreateRasterizerState(&desc, rasterizerState.GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
 	}
-
-	// サンプラステート
-	{
-		D3D11_SAMPLER_DESC desc;
-		::memset(&desc, 0, sizeof(desc));
-		desc.MipLODBias = 0.0f;
-		desc.MaxAnisotropy = 1;
-		desc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-		desc.MinLOD = -FLT_MAX;
-		desc.MaxLOD = FLT_MAX;
-		desc.BorderColor[0] = 1.0f;
-		desc.BorderColor[1] = 1.0f;
-		desc.BorderColor[2] = 1.0f;
-		desc.BorderColor[3] = 1.0f;
-		desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-		desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-		desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-		desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-
-		HRESULT hr = device->CreateSamplerState(&desc, Graphics::Instance().GetSamplerStateAddressOf_Shader());
-		_ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
-	}
 }
 
 // 描画開始

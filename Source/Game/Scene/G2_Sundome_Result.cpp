@@ -168,7 +168,7 @@ void G2_Sundome_Result::Render()
 		fade->Render(dc, graphics);
 	}
 
-#ifndef _DEBUG
+#ifdef _DEBUG
 
 	{
 		if (ImGui::Begin("Debug"))

@@ -3,7 +3,7 @@
 #include <wrl.h>
 #include <d3d11.h>
 #include "Graphics.h"
-#include "Graphics/Extension/HDRTexture.h"
+#include "Graphics/HDRTexture.h"
 
 // 描画ターゲットバッファ
 class RenderTarget

@@ -188,7 +188,7 @@ void ShadowMapShader::Begin(ID3D11DeviceContext* dc, const RenderContext& rc)
 	dc->OMSetBlendState(blendState.Get(), blend_factor, 0xFFFFFFFF);
 	dc->OMSetDepthStencilState(depthStencilState.Get(), 0);
 	dc->RSSetState(rasterizerState.Get());
-	dc->PSSetSamplers(0, 1, Graphics::Instance().GetSamplerStateAddressOf_ShadowMap());
+	dc->PSSetSamplers(3, 1, Graphics::Instance().GetSamplerStateAddressOf_ShadowMap());
 
 	// シーン用定数バッファ更新
 	CbScene cbScene;

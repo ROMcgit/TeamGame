@@ -348,9 +348,6 @@
     <ClInclude Include="Source\Graphics\ShaderSetting.h">
       <Filter>Source\0_Settings 《🔧》\Graphics\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\HDRTexture.h">
-      <Filter>Source\0_Settings 《🔧》\Graphics\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Graphics\RenderTarget.h">
       <Filter>Source\0_Settings 《🔧》\Graphics\Render</Filter>
     </ClInclude>
@@ -612,6 +609,9 @@
     <ClInclude Include="Source\Game\Sky.h">
       <Filter>Source\Character</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Graphics\HDRTexture.h">
+      <Filter>Source\0_Settings 《🔧》\Graphics\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -726,9 +726,6 @@
       <Filter>Source\0_Settings 《🔧》\Graphics\Polygon</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\ShaderSetting.cpp">
-      <Filter>Source\0_Settings 《🔧》\Graphics\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\HDRTexture.cpp">
       <Filter>Source\0_Settings 《🔧》\Graphics\Shader</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\RenderTarget.cpp">
@@ -994,6 +991,9 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Sky.cpp">
       <Filter>Source\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\HDRTexture.cpp">
+      <Filter>Source\0_Settings 《🔧》\Graphics\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -41,6 +41,14 @@ void RenderTarget::End()
 {
 	ID3D11DeviceContext* dc = Graphics::Instance().GetDeviceContext();
 	dc->OMSetRenderTargets(4, orgRtv, orgDsv);
+
+	for (int i = 0; i < 4; ++i)
+	{
+		if (orgRtv[i]) orgRtv[i]->Release();
+		orgRtv[i] = nullptr;
+	}
+	if (orgDsv) orgDsv->Release();
+	orgDsv = nullptr;
 }
 
 // ピクセルシェーダーのスロットを設定
@@ -52,6 +60,9 @@ void RenderTarget::SetPSSlot(int slot)
 
 RenderTarget::RenderTarget(ID3D11Device* device, UINT width, UINT height, DXGI_FORMAT format, bool depth)
 {
+	//! 環境マップ
+	environmentMap = std::make_unique<HDRTexture>();
+
 	texture2dDesc = {};
 	texture2dDesc.Width = width;
 	texture2dDesc.Height = height;
@@ -162,21 +173,24 @@ RenderTarget::RenderTarget(ID3D11Device* device, UINT width, UINT height, DXGI_F
 			pixelShader.GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), HRTrace(hr));
 	}
-
 }
 
 RenderTarget::~RenderTarget()
 {
+	shaderResourceView.Reset();
+	renderTargetView.Reset();
+	depthStencilView.Reset();
 }
 
 void RenderTarget::Render()
 {
 	ID3D11DeviceContext* dc = Graphics::Instance().GetDeviceContext();
 
-	dc->PSSetSamplers(0, 1, Graphics::Instance().GetSamplerStateAddressOf_Shader());
-	dc->PSSetSamplers(1, 1, Graphics::Instance().GetSamplerStateAddressOf_EnvironmentMap());
-	dc->PSSetSamplers(2, 1, Graphics::Instance().GetSamplerStateAddressOf_Shader());
-	dc->PSSetSamplers(3, 1, Graphics::Instance().GetSamplerStateAddressOf_ShadowMap());
+	Graphics& graphics = Graphics::Instance();
+	dc->PSSetSamplers(0, 1, graphics.GetSamplerStateAddressOf_Shader());
+	dc->PSSetSamplers(1, 1, environmentMap->GetSamplerStateAddressOf());
+	dc->PSSetSamplers(2, 1, graphics.GetSamplerStateAddressOf_Shader());
+	dc->PSSetSamplers(3, 1, graphics.GetSamplerStateAddressOf_ShadowMap());
 
 	// GPUに描画するためのデータを渡す
 	UINT stride = sizeof(Vertex);

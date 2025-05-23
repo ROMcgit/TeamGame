@@ -3,6 +3,7 @@
 #include <wrl.h>
 #include <d3d11.h>
 #include "Graphics.h"
+#include "Graphics/Extension/HDRTexture.h"
 
 // 描画ターゲットバッファ
 class RenderTarget
@@ -56,6 +57,9 @@ public:
 	// シェーダーリソースビューを取得
 	ID3D11ShaderResourceView* GetSRV() { return shaderResourceView.Get(); }
 
+	// 環境マップを取得
+	HDRTexture* GetEnvironmentMap() { return environmentMap.get(); }
+
 public:
 	ID3D11RenderTargetView* orgRtv[4];
 	ID3D11DepthStencilView* orgDsv;
@@ -65,5 +69,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView>	 renderTargetView;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>	 depthStencilView;
 	D3D11_TEXTURE2D_DESC							 texture2dDesc;
+
+	std::unique_ptr<HDRTexture> environmentMap; // 環境マップ
 };
 

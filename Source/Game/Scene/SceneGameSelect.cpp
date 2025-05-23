@@ -381,8 +381,8 @@ void SceneGameSelect::Render()
 
 	if (!setEnvironmentMap)
 	{
-		graphics.GetEnvironmentMap()->Load("Data/Environment/Cloud.hdr");
-		graphics.GetEnvironmentMap()->Set(15);
+		renderTarget->GetEnvironmentMap()->Load("Data/Environment/Cloud.hdr");
+		renderTarget->GetEnvironmentMap()->Set(15);
 
 		setEnvironmentMap = true;
 	}

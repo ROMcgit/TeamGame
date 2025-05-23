@@ -168,8 +168,8 @@ void G2_Sundome::Render()
 
 	if (!setEnvironmentMap)
 	{
-		graphics.GetEnvironmentMap()->Load("Data/Environment/BlueSky.hdr");
-		graphics.GetEnvironmentMap()->Set(15);
+		renderTarget->GetEnvironmentMap()->Load("Data/Environment/BlueSky.hdr");
+		renderTarget->GetEnvironmentMap()->Set(15);
 
 		setEnvironmentMap = true;
 	}

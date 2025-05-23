@@ -301,8 +301,8 @@ void G0_Onigokko::Render()
 
 	if (!setEnvironmentMap)
 	{
-		graphics.GetEnvironmentMap()->Load("Data/Environment/Barrier_Demons.hdr");
-		graphics.GetEnvironmentMap()->Set(15);
+		renderTarget->GetEnvironmentMap()->Load("Data/Environment/Barrier_Demons.hdr");
+		renderTarget->GetEnvironmentMap()->Set(15);
 
 		setEnvironmentMap = true;
 	}

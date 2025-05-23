@@ -270,8 +270,8 @@ void G1_DarumasangaKoronda::Render()
 
 	if (!setEnvironmentMap)
 	{
-		graphics.GetEnvironmentMap()->Load("Data/Environment/DemonsWorld.hdr");
-		graphics.GetEnvironmentMap()->Set(15);
+		renderTarget->GetEnvironmentMap()->Load("Data/Environment/DemonsWorld.hdr");
+		renderTarget->GetEnvironmentMap()->Set(15);
 
 		setEnvironmentMap = true;
 	}

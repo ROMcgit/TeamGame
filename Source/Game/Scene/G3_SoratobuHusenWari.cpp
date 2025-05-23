@@ -246,8 +246,8 @@ void G3_SoratobuHusenWari::Render()
 
 	if (!setEnvironmentMap)
 	{
-		graphics.GetEnvironmentMap()->Load("Data/Environment/SF_Night.hdr");
-		graphics.GetEnvironmentMap()->Set(15);
+		renderTarget->GetEnvironmentMap()->Load("Data/Environment/SF_Night.hdr");
+		renderTarget->GetEnvironmentMap()->Set(15);
 
 		setEnvironmentMap = true;
 	}

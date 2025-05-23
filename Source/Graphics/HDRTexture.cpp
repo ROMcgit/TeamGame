@@ -1,8 +1,18 @@
 #include "HDRTexture.h"
 #include "Graphics/Graphics.h"
 
-HDRTexture::HDRTexture() { width = 0; height = 0; }
-HDRTexture::~HDRTexture() {}
+HDRTexture::HDRTexture()
+{
+	width = 1280;
+	height = 720;
+}
+
+HDRTexture::~HDRTexture()
+{
+	samplerState.Reset();
+	SRV.Reset();
+	texture2d.Reset();
+}
 
 bool HDRTexture::Load(const char* filename)
 {
@@ -31,7 +41,6 @@ bool HDRTexture::Load(const char* filename)
 	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
 	desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
-	Microsoft::WRL::ComPtr<ID3D11Texture2D>	texture2d;
 	device->CreateTexture2D(&desc, NULL, texture2d.GetAddressOf());
 	dc->UpdateSubresource(texture2d.Get(), 0, 0, buf, sizeof(float) * 4 * width, 0);
 
@@ -59,10 +68,10 @@ bool HDRTexture::Load(const char* filename)
 		ssdesc.MaxLOD = FLT_MAX;
 		ssdesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
 
-		HRESULT hr = device->CreateSamplerState(&ssdesc, Graphics::Instance().GetSamplerStateAddressOf_EnvironmentMap());
+		HRESULT hr = device->CreateSamplerState(&ssdesc, samplerState.GetAddressOf());
 
-		//サンプラーステートのSlot4にセット
-		dc->PSSetSamplers(15, 1, Graphics::Instance().GetSamplerStateAddressOf_EnvironmentMap());
+		//サンプラーステートのSlot1にセット
+		dc->PSSetSamplers(1, 1, samplerState.GetAddressOf());
 	}
 
 	return true;

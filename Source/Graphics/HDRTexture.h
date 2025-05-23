@@ -8,7 +8,9 @@ class HDRTexture
 {
 private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> SRV;
-	Microsoft::WRL::ComPtr<ID3D11SamplerState> EnvironmentSS;
+	Microsoft::WRL::ComPtr<ID3D11Texture2D>	texture2d;
+	Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
+
 	int width;
 	int height;
 
@@ -24,6 +26,8 @@ public:
 
 	int GetWidth() { return width; }
 	int GetHeight() { return height; }
+
+	ID3D11SamplerState** GetSamplerStateAddressOf() { return samplerState.GetAddressOf(); }
 
 private:
 	void HDR_CheckHeader(FILE* fp);

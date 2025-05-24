@@ -63,16 +63,6 @@ void Player5_AsibaWatari::Update(float elapsedTime)
 	// ムービー中なら待機ステートへ遷移
 	if (movieScene)
 	{
-		// 全ての弾を破棄する
-		int projectileCount = projectileManager.GetProjectileCount();
-		for (int i = 0; i < projectileCount; ++i)
-		{
-			Projectile* projectile = projectileManager.GetProjectile(i);
-
-			// 弾破棄
-			projectile->Destroy();
-		}
-
 		// ムービー中のアニメーション
 		if (!movieAnimation)
 		{
@@ -111,9 +101,6 @@ void Player5_AsibaWatari::Update(float elapsedTime)
 	// キャラクター状態更新処理
 	UpdateGameObjectBaseState(elapsedTime);
 
-	// 弾丸更新処理
-	projectileManager.Update(elapsedTime);
-
 	// 衝突攻撃の更新処理
 	collisionAttackManager.Update(elapsedTime);
 
@@ -128,9 +115,6 @@ void Player5_AsibaWatari::Update(float elapsedTime)
 void Player5_AsibaWatari::Render(ID3D11DeviceContext* dc, Shader* shader, bool shadowMap)
 {
 	shader->Draw(dc, model.get());
-
-	// 弾丸描画処理
-	projectileManager.Render(dc, shader);
 
 	if(!shadowMap)
 		collisionAttackManager.Render(dc, shader);
@@ -164,10 +148,6 @@ bool Player5_AsibaWatari::InputJump()
 	{
 		if ((gamePad.GetButtonHeld() & GamePad::BTN_A) || (gamePad.GetButtonHeld() & GamePad::BTN_SPACE)) //Zキー
 		{
-			// ジャンプ
-			Jump(jumpSpeed);
-			jumpCount++;
-
 			// ジャンプ入力した
 			return true;
 

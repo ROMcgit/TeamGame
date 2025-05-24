@@ -54,9 +54,6 @@ private:
 
 	/*! 当たり判定処理 */
 
-	// プレイヤーとエネミーとの衝突処理
-	void CollisionPlayer3_SoratobuHusenWariVsEnemies();
-
 	// 移動ステートへ遷移
 	void TransitionMoveState();
 
@@ -115,21 +112,7 @@ private:
 
 	float jumpSpeed = 13.0f;
 
-	int jumpCount = 0;
-	bool jumpFlipAnimation = false;
-	int jumpLimit = 2;
-
-	ProjectileManager projectileManager;
-
-	std::unique_ptr<Effect> hitEffect;
-
 	State state = State::Move;
-
-	float playerAnimeCount = 0.0f;
-
-	float leftHandRadius = 0.4f;
-
-	bool attackCollisionFlag = false;
 
 	bool gameStart = false;
 };

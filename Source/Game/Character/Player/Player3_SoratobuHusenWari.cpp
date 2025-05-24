@@ -46,10 +46,10 @@ Player3_SoratobuHusenWari::Player3_SoratobuHusenWari()
 	//uiSprite[0] = std::make_unique <Sprite>("Data/Sprite/5.UI/CuppyUI.png");
 	for (int i = 0; i < 3; i++)
 	{
-		uiSprite[i + 1] = std::make_unique <Sprite>(); // HPゲージ
-		//[1] 灰色
-		//[2] 赤色
-		//[3] 緑色
+		uiSprite[i] = std::make_unique <Sprite>(); // HPゲージ
+		//[0] 灰色
+		//[1] 赤色
+		//[2] 緑色
 	}
 
 	hp = maxHp = hpDamage = 200;
@@ -85,16 +85,6 @@ void Player3_SoratobuHusenWari::Update(float elapsedTime)
 	// ムービー中なら待機ステートへ遷移
 	if (movieScene)
 	{
-		// 全ての弾を破棄する
-		int projectileCount = projectileManager.GetProjectileCount();
-		for (int i = 0; i < projectileCount; ++i)
-		{
-			Projectile* projectile = projectileManager.GetProjectile(i);
-
-			// 弾破棄
-			projectile->Destroy();
-		}
-
 		// ムービー中のアニメーション
 		if (!movieAnimation)
 		{
@@ -146,14 +136,8 @@ void Player3_SoratobuHusenWari::Update(float elapsedTime)
 		}
 	}
 
-	// 弾丸更新処理
-	projectileManager.Update(elapsedTime);
-
 	// 衝突攻撃更新処理
 	collisionAttackManager.Update(elapsedTime);
-
-	// プレイヤーと敵との衝突処理
-	CollisionPlayer3_SoratobuHusenWariVsEnemies();
 
 	// 位置制限
 	PositionControll(elapsedTime);
@@ -165,9 +149,6 @@ void Player3_SoratobuHusenWari::Update(float elapsedTime)
 void Player3_SoratobuHusenWari::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	shader->Draw(dc, model.get(), materialColor, opacity, emissiveColor, emissiveStrength);
-
-	// 弾丸描画処理
-	projectileManager.Render(dc, shader);
 
 	// 衝突攻撃描画処理
 	collisionAttackManager.Render(dc, shader);
@@ -182,7 +163,7 @@ void Player3_SoratobuHusenWari::SpriteRender(ID3D11DeviceContext* dc)
 	if (!hideSprites)
 	{
 		// ゲージの裏(灰色)
-		uiSprite[1]->Render(dc,
+		uiSprite[0]->Render(dc,
 			hpSpritePos.x, hpSpritePos.y,
 			playerHpSpriteWidth, 40,
 			0, 0, textureWidth, textureHeight,
@@ -193,7 +174,7 @@ void Player3_SoratobuHusenWari::SpriteRender(ID3D11DeviceContext* dc)
 		float hpDamageWidth = (static_cast<float>(hpDamage) / maxHp) * playerHpSpriteWidth; // HPダメージの横の長さ
 
 		// ダメージ(赤色)
-		uiSprite[2]->Render(dc,
+		uiSprite[1]->Render(dc,
 			hpSpritePos.x, hpSpritePos.y,
 			hpDamageWidth, 40,
 			0, 0, textureWidth, textureHeight,
@@ -201,7 +182,7 @@ void Player3_SoratobuHusenWari::SpriteRender(ID3D11DeviceContext* dc)
 			1, 0, 0, 1);
 
 		// HPゲージ
-		uiSprite[3]->Render(dc,
+		uiSprite[2]->Render(dc,
 			hpSpritePos.x, hpSpritePos.y,
 			hpWidth, 40,
 			0, 0, textureWidth, textureHeight,
@@ -210,20 +191,6 @@ void Player3_SoratobuHusenWari::SpriteRender(ID3D11DeviceContext* dc)
 			hpSpriteColorP.y,
 			hpSpriteColorP.z,
 			1);
-
-		//textureWidth = static_cast<float>(uiSprite[0]->GetTextureWidth());
-		//textureHeight = static_cast<float>(uiSprite[0]->GetTextureHeight());
-
-		// プレイヤーUI画像
-		/*uiSprite[0]->Render(dc,
-			hpImagePos.x, hpImagePos.y,
-			241, 84,
-			0, 0, textureWidth, textureHeight,
-			0,
-			hpImageColor.x,
-			hpImageColor.y,
-			hpImageColor.z,
-			1);*/
 	}
 }
 
@@ -447,76 +414,6 @@ void Player3_SoratobuHusenWari::TransitionDeathState()
 // 死亡ステート更新処理
 void Player3_SoratobuHusenWari::UpdateDeathState(float elapsedTimae)
 {
-}
-
-// プレイヤーとエネミーとの衝突処理
-void Player3_SoratobuHusenWari::CollisionPlayer3_SoratobuHusenWariVsEnemies()
-{
-	EnemyManager& enemyManager = EnemyManager::Instance();
-
-	// 全ての敵と総当たりで衝突処理
-	int enemyCount = enemyManager.GetEnemyCount();
-	for (int i = 0; i < enemyCount; ++i)
-	{
-		std::unique_ptr<Enemy>& enemy = enemyManager.GetEnemy(i);
-
-		// 衝突処理
-		DirectX::XMFLOAT3 outPosition;
-		//if (Collision::IntersectSphereVsSphere(
-		//	Player3_SoratobuHusenWari::GetPosition(),
-		//	Player3_SoratobuHusenWari::GetRadius(),
-		//	enemy->GetPosition(),
-		//	enemy->GetRadius(),
-		//	outPosition
-		//))
-		//{
-		//	// 押し出しの後の位置設定
-		//	enemy->SetPosition(outPosition);
-		//}
-
-
-		if (Collision::IntersectCylinderVsCylinder(
-			position,
-			radius,
-			height,
-			enemy->GetPosition(),
-			enemy->GetRadius(),
-			enemy->GetHeight(),
-			outPosition
-		))
-		{
-			//// プレイヤーが敵の上にいるかを判定する
-			//float diff = Player3_SoratobuHusenWari::GetPosition().y - ( enemy->GetPosition().y + enemy->GetHeight());
-			//if (diff < -0.2f)
-			//{
-			//	Player3_SoratobuHusenWari::Jump(10);
-			//	// 小ジャンプさせるためにY方向の速度を設定する
-			//}
-
-			//// 押し出しの後の位置設定
-			//enemy->SetPosition(outPosition);
-
-			DirectX::XMVECTOR P = DirectX::XMLoadFloat3(&position);
-			DirectX::XMVECTOR E = DirectX::XMLoadFloat3(&enemy->GetPosition());
-			DirectX::XMVECTOR V = DirectX::XMVectorSubtract(P, E);
-			DirectX::XMVECTOR N = DirectX::XMVector3Normalize(V);
-			DirectX::XMFLOAT3 normal;
-			DirectX::XMStoreFloat3(&normal, N);
-			// 上から踏んづけた場合は小ジャンプする
-			if (normal.y > 0.8f)
-			{
-				// 小ジャンプする
-				Jump(jumpSpeed * 0.5f);
-			}
-			else
-			{
-				// 押し出し後の位置設定
-				enemy->SetPosition(outPosition);
-			}
-
-		}
-
-	}
 }
 
 //デバッグプリミティブ描画

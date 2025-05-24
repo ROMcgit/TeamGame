@@ -131,23 +131,9 @@ private:
 
 	float turnSpeed = DirectX::XMConvertToRadians(720);
 
-	bool setVelocityY = false;
+	bool setVelocityY = false; // â¡ë¨ìxÇÃê›íË
 
 	float jumpSpeed = 20.0f;
 
-	int jumpCount = 0;
-	bool jumpFlipAnimation = false;
-	int jumpLimit = 2;
-
-	ProjectileManager projectileManager;
-
-	std::unique_ptr<Effect> hitEffect;
-
 	State state = State::Wait;
-
-	float playerAnimeCount = 0.0f;
-
-	float leftHandRadius = 0.4f;
-
-	bool attackCollisionFlag = false;
 };

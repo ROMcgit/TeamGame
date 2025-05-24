@@ -78,9 +78,6 @@ void Player4_OssanTataki::Update(float elapsedTime)
 	// 衝突攻撃更新処理
 	collisionAttackManager.Update(elapsedTime);
 
-	// プレイヤーと敵との衝突処理
-	CollisionPlayer4_OssanTatakiVsEnemies();
-
 	// モデルアニメーション更新処理
 	model->UpdateAnimation(elapsedTime);
 
@@ -230,76 +227,6 @@ void Player4_OssanTataki::TransitionDeathState()
 // 死亡ステート更新処理
 void Player4_OssanTataki::UpdateDeathState(float elapsedTimae)
 {
-}
-
-// プレイヤーとエネミーとの衝突処理
-void Player4_OssanTataki::CollisionPlayer4_OssanTatakiVsEnemies()
-{
-	EnemyManager& enemyManager = EnemyManager::Instance();
-
-	// 全ての敵と総当たりで衝突処理
-	int enemyCount = enemyManager.GetEnemyCount();
-	for (int i = 0; i < enemyCount; ++i)
-	{
-		std::unique_ptr<Enemy>& enemy = enemyManager.GetEnemy(i);
-
-		// 衝突処理
-		DirectX::XMFLOAT3 outPosition;
-		//if (Collision::IntersectSphereVsSphere(
-		//	Player4_OssanTataki::GetPosition(),
-		//	Player4_OssanTataki::GetRadius(),
-		//	enemy->GetPosition(),
-		//	enemy->GetRadius(),
-		//	outPosition
-		//))
-		//{
-		//	// 押し出しの後の位置設定
-		//	enemy->SetPosition(outPosition);
-		//}
-
-
-		if (Collision::IntersectCylinderVsCylinder(
-			position,
-			radius,
-			height,
-			enemy->GetPosition(),
-			enemy->GetRadius(),
-			enemy->GetHeight(),
-			outPosition
-		))
-		{
-			//// プレイヤーが敵の上にいるかを判定する
-			//float diff = Player4_OssanTataki::GetPosition().y - ( enemy->GetPosition().y + enemy->GetHeight());
-			//if (diff < -0.2f)
-			//{
-			//	Player4_OssanTataki::Jump(10);
-			//	// 小ジャンプさせるためにY方向の速度を設定する
-			//}
-
-			//// 押し出しの後の位置設定
-			//enemy->SetPosition(outPosition);
-
-			DirectX::XMVECTOR P = DirectX::XMLoadFloat3(&position);
-			DirectX::XMVECTOR E = DirectX::XMLoadFloat3(&enemy->GetPosition());
-			DirectX::XMVECTOR V = DirectX::XMVectorSubtract(P, E);
-			DirectX::XMVECTOR N = DirectX::XMVector3Normalize(V);
-			DirectX::XMFLOAT3 normal;
-			DirectX::XMStoreFloat3(&normal, N);
-			// 上から踏んづけた場合は小ジャンプする
-			if (normal.y > 0.8f)
-			{
-				// 小ジャンプする
-				Jump(jumpSpeed * 0.5f);
-			}
-			else
-			{
-				// 押し出し後の位置設定
-				enemy->SetPosition(outPosition);
-			}
-
-		}
-
-	}
 }
 
 //デバッグプリミティブ描画

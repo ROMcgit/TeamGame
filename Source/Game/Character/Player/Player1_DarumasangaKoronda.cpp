@@ -71,16 +71,6 @@ void Player1_DarumasangaKoronda::Update(float elapsedTime)
 	// ムービー中なら待機ステートへ遷移
 	if (movieScene)
 	{
-		// 全ての弾を破棄する
-		int projectileCount = projectileManager.GetProjectileCount();
-		for (int i = 0; i < projectileCount; ++i)
-		{
-			Projectile* projectile = projectileManager.GetProjectile(i);
-
-			// 弾破棄
-			projectile->Destroy();
-		}
-
 		// ムービー中のアニメーション
 		if (!movieAnimation)
 		{
@@ -122,9 +112,6 @@ void Player1_DarumasangaKoronda::Update(float elapsedTime)
 	// キャラクター状態更新処理
 	UpdateGameObjectBaseState(elapsedTime);
 
-	// 弾丸更新処理
-	projectileManager.Update(elapsedTime);
-
 	// モデルアニメーション更新処理
 	model->UpdateAnimation(elapsedTime);
 
@@ -136,9 +123,6 @@ void Player1_DarumasangaKoronda::Update(float elapsedTime)
 void Player1_DarumasangaKoronda::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	shader->Draw(dc, model.get());
-
-	// 弾丸描画処理
-	projectileManager.Render(dc, shader);
 }
 
 // HPなどのUI描画
@@ -171,7 +155,6 @@ bool Player1_DarumasangaKoronda::InputJump()
 		{
 			// ジャンプ
 			Jump(jumpSpeed);
-			jumpCount++;
 
 			// ジャンプ入力した
 			return true;

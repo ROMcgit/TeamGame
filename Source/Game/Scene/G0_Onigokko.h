@@ -62,8 +62,8 @@ private:
 	std::unique_ptr<RenderTarget>  renderTarget; //! レンダーターゲット
 	ShadowMap                      shadowMap;    // シャドウマップの実体
 	
-	std::unique_ptr<Sprite> backGround;
-	std::unique_ptr<Sprite> actionExplanation;
+	std::unique_ptr<Sprite> backGround;        // 背景
+	std::unique_ptr<Sprite> actionExplanation; // 操作説明
 
 	std::unique_ptr<Timer>  timer;
 

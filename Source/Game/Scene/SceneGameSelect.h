@@ -52,7 +52,7 @@ public:
 #if 1
 	enum class GameSelectA
 	{
-		GameSelect,
+		GameSelect,         // ゲーム選択
 		Onigokko,           // おにごっこ
 		DarumasangaKoronda, // だるまさんが転んだ
 		Sundome,            // 寸止め
@@ -84,39 +84,39 @@ private:
 	std::unique_ptr <Player0_Onigokko> player;
 	std::unique_ptr <CameraController> cameraController;
 
-	std::unique_ptr<Sprite> gameExplanation;
-	float gameExplanationOpacity = 1.0f;
-	bool gameExplanationOpacityUp = false;
+	std::unique_ptr<Sprite> gameExplanation; // ゲームの説明
+	float gameExplanationOpacity = 1.0f;     // ゲームの説明の不透明度
+	bool gameExplanationOpacityUp = false;   // ゲームの説明に不透明度を上昇させるか
 
-	std::unique_ptr<Sprite> bonusExplanation;
-	std::unique_ptr<Sprite> bonusUnlock;
-	std::unique_ptr<Sprite> bonusL;
-	std::unique_ptr<Sprite> bonusR;
+	std::unique_ptr<Sprite> bonusExplanation; // ボーナスの説明
+	std::unique_ptr<Sprite> bonusUnlock;      // ボーナスの解放条件
+	std::unique_ptr<Sprite> bonusL;           // 選択の左矢印
+	std::unique_ptr<Sprite> bonusR;           // 選択の右矢印
 
 	std::unique_ptr<RenderTarget>  renderTarget; //! レンダーターゲット
 	ShadowMap                      shadowMap;    // シャドウマップの実体
 
-	std::unique_ptr<Sprite> backGround;
-	std::unique_ptr<Sprite> gameSelectSprite[6];
-	DirectX::XMFLOAT2 gameSelectSpritePos;
+	std::unique_ptr<Sprite> backGround;          // 背景
+	std::unique_ptr<Sprite> gameSelectSprite[6]; // ゲーム選択
+	DirectX::XMFLOAT2 gameSelectSpritePos;       // ゲーム選択の位置
 
-	bool viewBonusImage = false;
-	std::unique_ptr<Sprite> hint[7];
-	std::unique_ptr<Sprite> bonusImage[7];
-	std::unique_ptr<Sprite> bonusImageFrame[7];
-	DirectX::XMFLOAT3 bonusImageFrameColor = { 0, 0.69f, 1.0f };
-	bool gameComplete = false;
+	bool viewBonusImage = false;                // ボーナス画像を表示するか
+	std::unique_ptr<Sprite> hint[7];            // ボーナスのヒント
+	std::unique_ptr<Sprite> bonusImage[7];      // ボーナス画像
+	std::unique_ptr<Sprite> bonusImageFrame[7]; // ボーナス画像の枠
+	DirectX::XMFLOAT3 bonusImageFrameColor = { 0, 0.69f, 1.0f }; // ボーナス画像の枠の色
+	bool gameComplete = false; // ゲームをコンプリートしたか
 
-	int   bonusImageNum = 1;
-	float bonusImageOpacity = 0.0f;
-	float bonusImagePosX[7];
-	float startBonusImagePosX[7];
-	float endBonusImagePosX[7];
-	float bonusImageColor[7];
-	bool bonusImageMove = false;
-	float bonusImageElapsedTime = 0.0f;
-	float inputWaitTime = 0.0f;
+	int   bonusImageNum = 1;        // ボーナス画像の番号
+	float bonusImageOpacity = 0.0f; // ボーナス画像の不透明度
+	float bonusImagePosX[7];        // ボーナス画像の位置
+	float startBonusImagePosX[7];   // ボーナス画像の移動開始位置
+	float endBonusImagePosX[7];     // ボーナス画像の移動終了位置
+	float bonusImageColor[7];       // ボーナス画像色
+	bool bonusImageMove = false;    // ボーナス画像の移動させるか
+	float bonusImageElapsedTime = 0.0f; // ボーナス画像の移動の経過時間
+	float inputWaitTime = 0.0f;         // 入力待ち時間
 
-	std::unique_ptr<Fade> fade;
-	bool setFade = false;
+	std::unique_ptr<Fade> fade; // フェード
+	bool setFade = false;       // フェードを設定したか
 };

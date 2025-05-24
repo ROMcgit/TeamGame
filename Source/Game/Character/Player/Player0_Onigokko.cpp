@@ -82,16 +82,6 @@ void Player0_Onigokko::Update(float elapsedTime)
 	// ムービー中なら待機ステートへ遷移
 	if (movieScene)
 	{
-		// 全ての弾を破棄する
-		int projectileCount = projectileManager.GetProjectileCount();
-		for (int i = 0; i < projectileCount; ++i)
-		{
-			Projectile* projectile = projectileManager.GetProjectile(i);
-
-			// 弾破棄
-			projectile->Destroy();
-		}
-
 		// ムービー中のアニメーション
 		if (!movieAnimation)
 		{
@@ -129,12 +119,6 @@ void Player0_Onigokko::Update(float elapsedTime)
 	// キャラクター状態更新処理
 	UpdateGameObjectBaseState(elapsedTime);
 
-	// 弾丸更新処理
-	projectileManager.Update(elapsedTime);
-
-	// プレイヤーと敵との衝突処理
-	//CollisionPlayer0_OnigokkoVsEnemies();
-
 	// モデルアニメーション更新処理
 	model->UpdateAnimation(elapsedTime);
 
@@ -146,9 +130,6 @@ void Player0_Onigokko::Update(float elapsedTime)
 void Player0_Onigokko::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
 	shader->Draw(dc, model.get(), materialColor, opacity);
-
-	// 弾丸描画処理
-	projectileManager.Render(dc, shader);
 }
 
 // HPなどのUI描画
@@ -286,76 +267,6 @@ void Player0_Onigokko::TransitionDeathState()
 // 死亡ステート更新処理
 void Player0_Onigokko::UpdateDeathState(float elapsedTimae)
 {
-}
-
-// プレイヤーとエネミーとの衝突処理
-void Player0_Onigokko::CollisionPlayer0_OnigokkoVsEnemies()
-{
-	EnemyManager& enemyManager = EnemyManager::Instance();
-
-	// 全ての敵と総当たりで衝突処理
-	int enemyCount = enemyManager.GetEnemyCount();
-	for (int i = 0; i < enemyCount; ++i)
-	{
-		std::unique_ptr<Enemy>& enemy = enemyManager.GetEnemy(i);
-
-		// 衝突処理
-		DirectX::XMFLOAT3 outPosition;
-		//if (Collision::IntersectSphereVsSphere(
-		//	Player0_Onigokko::GetPosition(),
-		//	Player0_Onigokko::GetRadius(),
-		//	enemy->GetPosition(),
-		//	enemy->GetRadius(),
-		//	outPosition
-		//))
-		//{
-		//	// 押し出しの後の位置設定
-		//	enemy->SetPosition(outPosition);
-		//}
-
-
-		if (Collision::IntersectCylinderVsCylinder(
-			position,
-			radius,
-			height,
-			enemy->GetPosition(),
-			enemy->GetRadius(),
-			enemy->GetHeight(),
-			outPosition
-		))
-		{
-			//// プレイヤーが敵の上にいるかを判定する
-			//float diff = Player0_Onigokko::GetPosition().y - ( enemy->GetPosition().y + enemy->GetHeight());
-			//if (diff < -0.2f)
-			//{
-			//	Player0_Onigokko::Jump(10);
-			//	// 小ジャンプさせるためにY方向の速度を設定する
-			//}
-
-			//// 押し出しの後の位置設定
-			//enemy->SetPosition(outPosition);
-
-			DirectX::XMVECTOR P = DirectX::XMLoadFloat3(&position);
-			DirectX::XMVECTOR E = DirectX::XMLoadFloat3(&enemy->GetPosition());
-			DirectX::XMVECTOR V = DirectX::XMVectorSubtract(P, E);
-			DirectX::XMVECTOR N = DirectX::XMVector3Normalize(V);
-			DirectX::XMFLOAT3 normal;
-			DirectX::XMStoreFloat3(&normal, N);
-			// 上から踏んづけた場合は小ジャンプする
-			if (normal.y > 0.8f)
-			{
-				// 小ジャンプする
-				Jump(jumpSpeed * 0.5f);
-			}
-			else
-			{
-				// 押し出し後の位置設定
-				enemy->SetPosition(outPosition);
-			}
-
-		}
-
-	}
 }
 
 //デバッグプリミティブ描画

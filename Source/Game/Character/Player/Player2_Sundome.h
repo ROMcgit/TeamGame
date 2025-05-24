@@ -54,9 +54,6 @@ private:
 
 	/*! 当たり判定処理 */
 
-	// プレイヤーとエネミーとの衝突処理
-	void CollisionPlayer2_SundomeVsEnemies();
-
 /******************************************************************************************/
 
 	/*! 行動制御 */
@@ -129,27 +126,18 @@ private:
 
 	float jumpSpeed = 13.0f;
 
-	int jumpCount = 0;
-	bool jumpFlipAnimation = false;
-	int jumpLimit = 2;
-
-	ProjectileManager projectileManager;
-
-	std::unique_ptr<Effect> hitEffect;
-
 	State state = State::Wait;
 
-	float playerAnimeCount = 0.0f;
+	std::unique_ptr<Sprite> velocitySprite;               // 加速度のメーター
+	std::unique_ptr<Sprite> velocitySpriteLimit;          // 加速度の最大値
+	DirectX::XMFLOAT2 spritePos   = { 1170.0f, 640.0f };  // 加速度の画像の位置
+	DirectX::XMFLOAT2 spriteScale = { 76.0f, -400.0f };   // 加速度の画像の大きさ
 
-	std::unique_ptr<Sprite> velocitySprite;
-	std::unique_ptr<Sprite> velocitySpriteLimit;
-	DirectX::XMFLOAT2 spritePos   = { 1170.0f, 640.0f };
-	DirectX::XMFLOAT2 spriteScale = { 76.0f, -400.0f };
+	std::unique_ptr<Text> velocityText;                    // 加速度の数値
+	std::unique_ptr<Text> velocityTextSyosuten;            // 加速度の数値(小数点)
+	DirectX::XMFLOAT2 velocityTextPos = { 1150.0f, 0.0f }; // 加速度の数値の位置
 
-	std::unique_ptr<Text> velocityText;
-	std::unique_ptr<Text> velocityTextSyosuten;
-	DirectX::XMFLOAT2 velocityTextPos = { 1150.0f, 0.0f };
-
+	//! 加速度の限界値
 	struct VelocityLimit
 	{
 		float min = 0.0f;
@@ -157,11 +145,9 @@ private:
 	}velocityLimit;
 
 	bool velocityDown = false; // 加速度を下げるか
-	float setVelocityX = 0.0f;
+	float setVelocityX = 0.0f; // 加速度の設定
 
-	float brake = 0;
-
-	int round = 1;
-
-	float boundTimer = 0.0f;
+	float brake       = 0;   // ブレーキ
+	int round        = 1;    // ラウンド
+	float boundTimer = 0.0f; // バウンドの時間
 };

@@ -122,20 +122,7 @@ private:
 
 	float jumpSpeed = 20.0f;
 
-	int jumpCount = 0;
-	bool jumpFlipAnimation = false;
-	int jumpLimit = 2;
-
-	ProjectileManager projectileManager;
 	CollisionAttackManager collisionAttackManager;
 
-	std::unique_ptr<Effect> hitEffect;
-
 	State state = State::Wait;
-
-	float playerAnimeCount = 0.0f;
-
-	float leftHandRadius = 0.4f;
-
-	bool attackCollisionFlag = false;
 };

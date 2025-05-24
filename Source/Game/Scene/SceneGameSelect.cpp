@@ -540,6 +540,7 @@ void SceneGameSelect::Render()
 			textureWidth = static_cast<float>(bonusImage[i]->GetTextureWidth());
 			textureHeight = static_cast<float>(bonusImage[i]->GetTextureHeight());
 
+			//! ボーナス画像の枠
 			bonusImageFrame[i]->RenderCenter(dc,
 				bonusImagePosX[i], screenHeight * 0.5,
 				screenWidth * 0.77f, screenHeight * 0.78f,
@@ -548,6 +549,7 @@ void SceneGameSelect::Render()
 				0,
 				bonusImageFrameColor.x, bonusImageFrameColor.y, bonusImageFrameColor.z, bonusImageOpacity);
 
+			//! ボーナス画像
 			bonusImage[i]->RenderCenter(dc,
 				bonusImagePosX[i], screenHeight * 0.5f,
 				screenWidth * 0.75f, screenHeight * 0.75f,
@@ -560,6 +562,7 @@ void SceneGameSelect::Render()
 		textureWidth = static_cast<float>(bonusL->GetTextureWidth());
 		textureHeight = static_cast<float>(bonusL->GetTextureHeight());
 
+		//! 選択の左矢印
 		if(bonusImageNum > 1 && !bonusImageMove)
 		{
 			bonusL->Render(dc,
@@ -571,6 +574,7 @@ void SceneGameSelect::Render()
 				1, 1, 1, bonusImageOpacity);
 		}
 
+		//! 選択の右矢印
 		if (bonusImageNum < 7 && !bonusImageMove)
 		{
 			bonusR->Render(dc,
@@ -676,6 +680,7 @@ void SceneGameSelect::Render()
 #endif
 		}
 
+		//! ゲームをコンプリートしているなら
 		if (clear.onigokko
 		 && clear.darumasangaKoronda
 		 && clear.sundome

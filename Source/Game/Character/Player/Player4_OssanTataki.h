@@ -43,11 +43,6 @@ protected:
 
 private:
 
-	/*! 当たり判定処理 */
-
-	// プレイヤーとエネミーとの衝突処理
-	void CollisionPlayer4_OssanTatakiVsEnemies();
-
 /******************************************************************************************/
 
 	/*! 行動制御 */
@@ -111,19 +106,7 @@ private:
 
 	float jumpSpeed = 13.0f;
 
-	int jumpCount = 0;
-	bool jumpFlipAnimation = false;
-	int jumpLimit = 2;
-
 	CollisionAttackManager collisionAttackManager;
 
-	std::unique_ptr<Effect> hitEffect;
-
 	State state = State::Wait;
-
-	float playerAnimeCount = 0.0f;
-
-	float leftHandRadius = 0.4f;
-
-	bool attackCollisionFlag = false;
 };
